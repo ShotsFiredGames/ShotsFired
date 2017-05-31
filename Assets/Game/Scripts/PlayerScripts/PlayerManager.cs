@@ -26,23 +26,77 @@ public class PlayerManager : MonoBehaviour
 
     private void Update()
     {
-        if(controls.Move)
-            playerMovement.Move(controls.Move.X, controls.Move.Y);
+        //Movement Input
+        if (controls.Move)
+            Moving();
+        if (controls.Look)
+            Looking();
 
-        if(controls.Look)
-            playerMovement.Turn(controls.Look.X);
-
-        if(controls.Sprint.WasPressed)
-            playerMovement.Sprinting();
+        if (controls.Sprint.WasPressed)
+            Sprinting();
 
         if (controls.Sprint.WasReleased)
-            playerMovement.StoppedSprinting();
+            StoppedSprinting();
 
-        if(controls.Jump.WasPressed)
-            playerMovement.Jump();
+        if (controls.Jump.WasPressed)
+            Jumping();
 
-        if(controls.Crouch.WasPressed)
-            playerMovement.Crouch();
+        if (controls.Crouch.WasPressed)
+            Crouching();
+
+        //Shooting Input
+        if (controls.Fire.IsPressed)
+            Firing();
+            
+    }
+
+    ////Player States////
+
+    void Moving()
+    {
+        playerMovement.Move(controls.Move.X, controls.Move.Y);
+        //animationManager.IsMoving();
+    }
+
+    void Looking()
+    {
+        playerMovement.Turn(controls.Look.X);
+        //animationManager.IsLooking();
+    }
+
+    void Sprinting()
+    {
+        playerMovement.Sprinting();
+        //animationManager.IsSprinting();
+    }
+
+    void StoppedSprinting()
+    {
+        playerMovement.StoppedSprinting();
+        //animationManager.StoppedSprinting();
+    }
+
+    void Jumping()
+    {
+        playerMovement.Jump();
+        //animationManager.IsJumping();
+    }
+
+    void Crouching()
+    {
+        playerMovement.Crouch();
+        //animationManager.IsCrouching();
+    }
+
+    void Firing()
+    {
+        //shooting.Fire();
+        //animationManager.IsFiring();
+    }
+
+    void Dead()
+    {
+        //animationManager.IsDead();
     }
 
     void SaveBindings()
@@ -50,7 +104,6 @@ public class PlayerManager : MonoBehaviour
         saveData = controls.Save();
         PlayerPrefs.SetString("Bindings", saveData);
     }
-
 
     void LoadBindings()
     {
