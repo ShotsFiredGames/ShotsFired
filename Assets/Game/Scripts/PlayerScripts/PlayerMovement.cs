@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
-using InControl;
 
 public class PlayerMovement : NetworkBehaviour
 {
@@ -12,13 +11,9 @@ public class PlayerMovement : NetworkBehaviour
     public LayerMask ground;
 
     Rigidbody rb;
-    InputDevice inputDevice;
     GameCustomization customization;
 
     float speed;
-    float vertical;
-    float horizontal;
-    float horizontal2;
     Vector3 direction;
     Vector3 velocity;
     Quaternion rotation;
@@ -31,61 +26,44 @@ public class PlayerMovement : NetworkBehaviour
 
         rb = GetComponent<Rigidbody>();
 	}
-	
-	void FixedUpdate ()
+
+    public void Move(float horizontal, float vertical)
     {
-        inputDevice = InputManager.ActiveDevice;
+        if (speed != customization.playerSpeed)
+            speed = customization.playerSpeed;
 
-        vertical = inputDevice.LeftStickY;
-        horizontal = inputDevice.LeftStickX;
-        horizontal2 = inputDevice.RightStickX;
-
-        Move();
-        Turn();
-
-        if (inputDevice.Action1.WasPressed && Grounded())
-            Jump();
-
-        if (inputDevice.LeftStickButton.IsPressed)
-        {
-            if(speed != customization.sprintSpeed)
-                speed = customization.sprintSpeed;
-        }
-        else
-        {
-            if (speed != customization.playerSpeed)
-                speed = customization.playerSpeed;
-        }
-
-        if (inputDevice.RightStick.WasPressed)
-            Crouch();
-	}
-
-    void Move()
-    {
         direction = new Vector3(horizontal * speed * Time.deltaTime, 0, vertical * speed * Time.deltaTime);
         transform.Translate(direction);
     }
 
-    void Turn()
+    public void Sprint()
+    {
+        if (speed != customization.sprintSpeed)
+            speed = customization.sprintSpeed;
+    }
+
+    public void Turn(float horizontal2)
     {
         transform.Rotate(0, horizontal2 * rotationSpeed * Time.deltaTime, 0);
     }
 
-    void Jump()
+    public void Jump()
     {
+        if(Grounded())
         rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
     }
 
-    void Crouch()
+    public void Crouch()
     {
         if(!crouching)
-        { 
-            //crouch
+        {
+            crouching = true;
+            print("I am crouching");
         }
         else
         {
-            //stop crouching
+            crouching = false;
+            print("I am not crouching");
         }
     }
 
