@@ -12,12 +12,14 @@ public class PlayerMovement : NetworkBehaviour
 
     Rigidbody rb;
     GameCustomization customization;
+    PlayerManager playerManager;
 
     float speed;
     Vector3 direction;
     Vector3 velocity;
     Quaternion rotation;
     bool crouching;
+    bool isJumping;
 
     void Start ()
     {
@@ -25,7 +27,17 @@ public class PlayerMovement : NetworkBehaviour
         speed = customization.playerSpeed;
 
         rb = GetComponent<Rigidbody>();
+        playerManager = GetComponent<PlayerManager>();
 	}
+
+    private void Update()
+    {
+        if(isJumping && Physics.Raycast(transform.position, Vector3.down, distToGrounded, ground))
+        {
+            playerManager.Landed();
+            isJumping = false;
+        }
+    }
 
     public void Move(float horizontal, float vertical)
     {
@@ -52,7 +64,10 @@ public class PlayerMovement : NetworkBehaviour
     public void Jump()
     {
         if(Grounded())
-        rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
+        {
+            isJumping = true;
+            rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
+        }
     }
 
     public void Crouch()

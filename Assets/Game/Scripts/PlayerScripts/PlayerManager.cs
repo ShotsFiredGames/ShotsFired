@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerManager : MonoBehaviour
 {
     PlayerMovement playerMovement;
+    AnimationManager animationManager;
 
     Controls controls;
     string saveData;
@@ -12,6 +13,7 @@ public class PlayerManager : MonoBehaviour
     private void Start()
     {
         playerMovement = GetComponent<PlayerMovement>();
+        animationManager = GetComponent<AnimationManager>();
     }
 
     void OnEnable()
@@ -27,10 +29,10 @@ public class PlayerManager : MonoBehaviour
     private void Update()
     {
         //Movement Input
-        if (controls.Move)
+        if (controls.Move.Value != Vector2.zero)
             Moving();
-        if (controls.Look)
-            Looking();
+        else
+            Idling();
 
         if (controls.Sprint.WasPressed)
             Sprinting();
@@ -55,37 +57,42 @@ public class PlayerManager : MonoBehaviour
     void Moving()
     {
         playerMovement.Move(controls.Move.X, controls.Move.Y);
-        //animationManager.IsMoving();
+        animationManager.IsMoving(controls.Move.X, controls.Move.Y);
     }
 
-    void Looking()
+    void Idling()
     {
         playerMovement.Turn(controls.Look.X);
-        //animationManager.IsLooking();
+        animationManager.IsIdle(controls.Look.X);
     }
 
     void Sprinting()
     {
         playerMovement.Sprinting();
-        //animationManager.IsSprinting();
+        animationManager.IsSprinting(controls.Move.X, controls.Move.Y);
     }
 
     void StoppedSprinting()
     {
         playerMovement.StoppedSprinting();
-        //animationManager.StoppedSprinting();
+        animationManager.StoppedSprinting();
     }
 
     void Jumping()
     {
         playerMovement.Jump();
-        //animationManager.IsJumping();
+        animationManager.IsJumping();
+    }
+
+    public void Landed()
+    {
+        animationManager.IsLanding();
     }
 
     void Crouching()
     {
         playerMovement.Crouch();
-        //animationManager.IsCrouching();
+        animationManager.IsCrouching(controls.Move.X, controls.Move.Y);
     }
 
     void Firing()
