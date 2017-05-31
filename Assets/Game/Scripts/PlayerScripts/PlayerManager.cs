@@ -32,8 +32,11 @@ public class PlayerManager : MonoBehaviour
         if(controls.Look)
             playerMovement.Turn(controls.Look.X);
 
-        if(controls.Sprint.IsPressed)
-            playerMovement.Sprint();
+        if(controls.Sprint.WasPressed)
+            playerMovement.Sprinting();
+
+        if (controls.Sprint.WasReleased)
+            playerMovement.StoppedSprinting();
 
         if(controls.Jump.WasPressed)
             playerMovement.Jump();

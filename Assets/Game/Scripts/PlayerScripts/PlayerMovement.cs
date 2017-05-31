@@ -29,17 +29,18 @@ public class PlayerMovement : NetworkBehaviour
 
     public void Move(float horizontal, float vertical)
     {
-        if (speed != customization.playerSpeed)
-            speed = customization.playerSpeed;
-
         direction = new Vector3(horizontal * speed * Time.deltaTime, 0, vertical * speed * Time.deltaTime);
         transform.Translate(direction);
     }
 
-    public void Sprint()
+    public void Sprinting()
     {
-        if (speed != customization.sprintSpeed)
-            speed = customization.sprintSpeed;
+        speed = customization.sprintSpeed;
+    }
+
+    public void StoppedSprinting()
+    {
+        speed = customization.playerSpeed;
     }
 
     public void Turn(float horizontal2)
