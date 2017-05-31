@@ -15,83 +15,9 @@ Platform assembly: C:\Users\Hector\Documents\GitHub\ShotsFired\FirstBuild_Data\M
 Loading C:\Users\Hector\Documents\GitHub\ShotsFired\FirstBuild_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
 Platform assembly: C:\Users\Hector\Documents\GitHub\ShotsFired\FirstBuild_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
 Loading C:\Users\Hector\Documents\GitHub\ShotsFired\FirstBuild_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
-- Completed reload, in  0.731 seconds
+- Completed reload, in  0.028 seconds
 Platform assembly: C:\Users\Hector\Documents\GitHub\ShotsFired\FirstBuild_Data\Managed\System.Core.dll (this message is harmless)
 Platform assembly: C:\Users\Hector\Documents\GitHub\ShotsFired\FirstBuild_Data\Managed\System.dll (this message is harmless)
 desktop: 1920x1080 60Hz; virtual: 5760x1276 at 0,0
 <RI> Initializing input.
 <RI> Input initialized.
-<RI> Initialized touch support.
-UnloadTime: 1.340139 ms
-Setting up 2 worker threads for Enlighten.
-  Thread -> id: 15a8 -> priority: 1 
-  Thread -> id: 1d54 -> priority: 1 
-Initialize engine version: 5.6.1f1 (2860b30f0b54)
-GfxDevice: creating device client; threaded=1
-Direct3D:
-    Version:  Direct3D 11.0 [level 11.1]
-    Renderer: NVIDIA GeForce GTX 1060 6GB (ID=0x1c03)
-    Vendor:   NVIDIA
-    VRAM:     3072 MB
-    Driver:   21.21.13.7892
-Begin MonoManager ReloadAssembly
-Platform assembly: C:\Users\Hector\Documents\GitHub\ShotsFired\FirstBuild_Data\Managed\UnityEngine.dll (this message is harmless)
-Loading C:\Users\Hector\Documents\GitHub\ShotsFired\FirstBuild_Data\Managed\UnityEngine.dll into Unity Child Domain
-Platform assembly: C:\Users\Hector\Documents\GitHub\ShotsFired\FirstBuild_Data\Managed\Assembly-CSharp.dll (this message is harmless)
-Loading C:\Users\Hector\Documents\GitHub\ShotsFired\FirstBuild_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
-Platform assembly: C:\Users\Hector\Documents\GitHub\ShotsFired\FirstBuild_Data\Managed\UnityEngine.UI.dll (this message is harmless)
-Loading C:\Users\Hector\Documents\GitHub\ShotsFired\FirstBuild_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
-Platform assembly: C:\Users\Hector\Documents\GitHub\ShotsFired\FirstBuild_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
-Loading C:\Users\Hector\Documents\GitHub\ShotsFired\FirstBuild_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
-- Completed reload, in  0.076 seconds
-Platform assembly: C:\Users\Hector\Documents\GitHub\ShotsFired\FirstBuild_Data\Managed\System.Core.dll (this message is harmless)
-Platform assembly: C:\Users\Hector\Documents\GitHub\ShotsFired\FirstBuild_Data\Managed\System.dll (this message is harmless)
-desktop: 1920x1080 60Hz; virtual: 5760x1276 at 0,0
-<RI> Initializing input.
-<RI> Input initialized.
-desktop: 1920x1080 60Hz; virtual: 5760x1276 at 0,0
-<RI> Initialized touch support.
-UnloadTime: 1.383159 ms
-Setting up 2 worker threads for Enlighten.
-  Thread -> id: 1e80 -> priority: 1 
-  Thread -> id: 23d0 -> priority: 1 
-Initialize engine version: 5.6.1f1 (2860b30f0b54)
-GfxDevice: creating device client; threaded=1
-Direct3D:
-    Version:  Direct3D 11.0 [level 11.1]
-    Renderer: NVIDIA GeForce GTX 1060 6GB (ID=0x1c03)
-    Vendor:   NVIDIA
-    VRAM:     3072 MB
-    Driver:   21.21.13.7892
-Begin MonoManager ReloadAssembly
-Platform assembly: C:\Users\Hector\Documents\GitHub\ShotsFired\FirstBuild_Data\Managed\UnityEngine.dll (this message is harmless)
-Loading C:\Users\Hector\Documents\GitHub\ShotsFired\FirstBuild_Data\Managed\UnityEngine.dll into Unity Child Domain
-Platform assembly: C:\Users\Hector\Documents\GitHub\ShotsFired\FirstBuild_Data\Managed\Assembly-CSharp.dll (this message is harmless)
-Loading C:\Users\Hector\Documents\GitHub\ShotsFired\FirstBuild_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
-Platform assembly: C:\Users\Hector\Documents\GitHub\ShotsFired\FirstBuild_Data\Managed\UnityEngine.UI.dll (this message is harmless)
-Loading C:\Users\Hector\Documents\GitHub\ShotsFired\FirstBuild_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
-Platform assembly: C:\Users\Hector\Documents\GitHub\ShotsFired\FirstBuild_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
-Loading C:\Users\Hector\Documents\GitHub\ShotsFired\FirstBuild_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
-- Completed reload, in  0.170 seconds
-Platform assembly: C:\Users\Hector\Documents\GitHub\ShotsFired\FirstBuild_Data\Managed\System.Core.dll (this message is harmless)
-Platform assembly: C:\Users\Hector\Documents\GitHub\ShotsFired\FirstBuild_Data\Managed\System.dll (this message is harmless)
-desktop: 1920x1080 60Hz; virtual: 5760x1276 at 0,0
-<RI> Initializing input.
-<RI> Input initialized.
-<RI> Initialized touch support.
-UnloadTime: 1.432689 ms
-Setting up 2 worker threads for Enlighten.
-  Thread -> id: 255c -> priority: 1 
-  Thread -> id: 2560 -> priority: 1 
-Joystick disconnected ("Controller (Xbox One For Windows)").
- 
-(Filename:  Line: 1258)
-
-Joystick disconnected ("Controller (Xbox One For Windows)").
- 
-(Filename:  Line: 1258)
-
-Joystick disconnected ("Controller (Xbox One For Windows)").
- 
-(Filename:  Line: 1258)
-
