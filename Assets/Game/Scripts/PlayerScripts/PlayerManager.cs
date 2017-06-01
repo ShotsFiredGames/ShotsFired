@@ -9,6 +9,8 @@ public class PlayerManager : MonoBehaviour
 
     Controls controls;
     string saveData;
+    bool isSprinting;
+    bool isCrouching;
 
     private void Start()
     {
@@ -28,25 +30,27 @@ public class PlayerManager : MonoBehaviour
 
     private void Update()
     {
-        //Movement Input
-        if (controls.Move.Value != Vector2.zero)
-            Moving();
-        else
+        ApplyMovementInput();
+
+        if (controls.Crouch.WasPressed)
+            isCrouching = !isCrouching;
+
+        if (!isCrouching && controls.Move.Value.Equals(Vector2.zero))
             Idling();
+        else if (isCrouching && controls.Move.Value.Equals(Vector2.zero))
+            CrouchIdling();
 
-        if (controls.Sprint.WasPressed)
+        if (isCrouching && !controls.Move.Value.Equals(Vector2.zero))
+            Crouching();
+        else if (!isCrouching && !controls.Move.Value.Equals(Vector2.zero))
+            Moving();
+
+        if (controls.Sprint.IsPressed)
             Sprinting();
-
-        if (controls.Sprint.WasReleased)
-            StoppedSprinting();
 
         if (controls.Jump.WasPressed)
             Jumping();
-
-        if (controls.Crouch.WasPressed)
-            Crouching();
-
-        //Shooting Input
+        
         if (controls.Fire.IsPressed)
             Firing();
             
@@ -54,28 +58,32 @@ public class PlayerManager : MonoBehaviour
 
     ////Player States////
 
+    void ApplyMovementInput()
+    {
+        animationManager.ApplyMovementInput(controls.Move.X, controls.Move.Y, controls.Look.X);
+    }
     void Moving()
     {
         playerMovement.Move(controls.Move.X, controls.Move.Y);
-        animationManager.IsMoving(controls.Move.X, controls.Move.Y);
+        animationManager.IsMoving();
     }
 
     void Idling()
     {
         playerMovement.Turn(controls.Look.X);
-        animationManager.IsIdle(controls.Look.X);
+        animationManager.IsIdle();
+    }
+
+    void CrouchIdling()
+    {
+        playerMovement.Turn(controls.Look.X);
+        animationManager.IsCrouchIdle();
     }
 
     void Sprinting()
     {
-        playerMovement.Sprinting();
-        animationManager.IsSprinting(controls.Move.X, controls.Move.Y);
-    }
-
-    void StoppedSprinting()
-    {
-        playerMovement.StoppedSprinting();
-        animationManager.StoppedSprinting();
+        playerMovement.Sprinting(controls.Move.X, controls.Move.Y);
+        animationManager.IsSprinting();
     }
 
     void Jumping()
@@ -92,7 +100,7 @@ public class PlayerManager : MonoBehaviour
     void Crouching()
     {
         playerMovement.Crouch();
-        animationManager.IsCrouching(controls.Move.X, controls.Move.Y);
+        animationManager.IsCrouching();
     }
 
     void Firing()

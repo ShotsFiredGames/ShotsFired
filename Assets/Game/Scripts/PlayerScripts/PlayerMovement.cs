@@ -15,6 +15,7 @@ public class PlayerMovement : NetworkBehaviour
     PlayerManager playerManager;
 
     float speed;
+    float sprintSpeed;
     Vector3 direction;
     Vector3 velocity;
     Quaternion rotation;
@@ -25,6 +26,8 @@ public class PlayerMovement : NetworkBehaviour
     {
         customization = GameObject.Find("GameManager").GetComponent<GameCustomization>();
         speed = customization.playerSpeed;
+
+        sprintSpeed = customization.sprintSpeed;
 
         rb = GetComponent<Rigidbody>();
         playerManager = GetComponent<PlayerManager>();
@@ -46,14 +49,11 @@ public class PlayerMovement : NetworkBehaviour
         rb.MovePosition(transform.position + direction);
     }
 
-    public void Sprinting()
+    public void Sprinting(float horizontal, float vertical)
     {
-        speed = customization.sprintSpeed;
-    }
-
-    public void StoppedSprinting()
-    {
-        speed = customization.playerSpeed;
+        direction = new Vector3(horizontal * sprintSpeed * Time.deltaTime, 0, vertical * speed * Time.deltaTime);
+        direction = transform.TransformDirection(direction);
+        rb.MovePosition(transform.position + direction);
     }
 
     public void Turn(float horizontal2)

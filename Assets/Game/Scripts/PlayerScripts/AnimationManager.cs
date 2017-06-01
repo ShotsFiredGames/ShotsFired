@@ -11,47 +11,47 @@ public class AnimationManager : MonoBehaviour
         anim = GetComponent<Animator>();	
 	}
 
-    public void IsIdle(float xInput)
+    public void ApplyMovementInput(float leftStickX, float leftStickY, float rightStickX)
     {
-        if(!anim.GetBool("IsIdle"))
-        {
-            ResetAnimations();
-            anim.SetBool("IsIdle", true);
-        }
-
-        anim.SetFloat("RightStickX", xInput);
+        anim.SetFloat("LeftStickX", leftStickX);
+        anim.SetFloat("LeftStickY", leftStickY);
+        anim.SetFloat("RightStickX", rightStickX);
     }
 
-    public void IsMoving(float xInput, float yInput)
-    {
-        if(anim.GetBool("IsIdle"))
-        {
-            ResetAnimations();
-            anim.SetBool("IsIdle", false);
-        }
+    public void IsIdle() //still have to change all this
 
-        anim.SetFloat("LeftStickX", xInput);
-        anim.SetFloat("LeftStickY", yInput);
+    {
+        anim.SetBool("IsSprinting", false);
+        anim.SetBool("IsCrouching", false);
+        anim.SetBool("IsIdle", true);
     }
 
-    public void IsSprinting(float xInput, float yInput)
+    public void IsCrouchIdle()
     {
-        if (!anim.GetBool("Sprinting"))
-        {
-            ResetAnimations();
-            anim.SetBool("Sprinting", true);
-        }
-
-        anim.SetFloat("LeftStickX", xInput);
-        anim.SetFloat("LeftStickY", yInput);
+        anim.SetBool("IsSprinting", false);
+        anim.SetBool("IsIdle", true);
+        anim.SetBool("IsCrouching", true);
     }
-    
-    public void StoppedSprinting()
+
+    public void IsMoving()
     {
-        if (anim.GetBool("Sprinting"))
-        {
-            anim.SetBool("Sprinting", false);
-        }
+        anim.SetBool("IsIdle", false);
+        anim.SetBool("IsSprinting", false);
+        anim.SetBool("IsCrouching", false);
+    }
+
+    public void IsSprinting()
+    {
+        anim.SetBool("IsIdle", false);
+        anim.SetBool("IsCrouching", false);
+        anim.SetBool("IsSprinting", true);
+    }
+
+    public void IsCrouching()
+    {
+        anim.SetBool("IsIdle", false);
+        anim.SetBool("IsSprinting", false);
+        anim.SetBool("IsCrouching", true);
     }
 
     public void IsJumping()
@@ -62,24 +62,5 @@ public class AnimationManager : MonoBehaviour
     public void IsLanding()
     {
         anim.SetBool("IsJumping", false);
-    }
-
-    public void IsCrouching(float xInput, float yInput)
-    {
-        if (!anim.GetBool("IsCrouching"))
-        {
-            ResetAnimations();
-            anim.SetBool("IsCrouching", true);
-        }
-
-        anim.SetFloat("LeftStickX", xInput);
-        anim.SetFloat("LeftStickY", yInput);
-    }
-
-    void ResetAnimations()
-    {
-        anim.SetBool("IsIdle", false);
-        anim.SetBool("IsCrouching", false);
-        anim.SetBool("IsSprinting", false);
     }
 }
