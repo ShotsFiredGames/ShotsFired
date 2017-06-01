@@ -99,7 +99,6 @@ public class PlayerManager : MonoBehaviour
 
     void Crouching()
     {
-        playerMovement.Crouch();
         animationManager.IsCrouching();
     }
 

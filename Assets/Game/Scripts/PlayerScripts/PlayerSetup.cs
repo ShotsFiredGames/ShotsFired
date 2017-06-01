@@ -4,6 +4,7 @@ using UnityEngine;
 public class PlayerSetup : NetworkBehaviour
 {
     public Behaviour[] componentsToDisable;
+    public GameObject thirdPersonAnimations;
 
     private void Start()
     {
@@ -14,5 +15,8 @@ public class PlayerSetup : NetworkBehaviour
                 componentsToDisable[i].enabled = false;
             }
         }
+        else
+            thirdPersonAnimations.SetActive(false);
+
     }
 }

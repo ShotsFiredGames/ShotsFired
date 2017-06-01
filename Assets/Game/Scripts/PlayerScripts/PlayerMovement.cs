@@ -35,10 +35,9 @@ public class PlayerMovement : NetworkBehaviour
 
     private void Update()
     {
-        if(isJumping && Physics.Raycast(transform.position, Vector3.down, distToGrounded, ground))
+        if(Grounded())
         {
             playerManager.Landed();
-            isJumping = false;
         }
     }
 
@@ -63,24 +62,9 @@ public class PlayerMovement : NetworkBehaviour
 
     public void Jump()
     {
-        if(Grounded())
+        if (Grounded())
         {
-            isJumping = true;
             rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
-        }
-    }
-
-    public void Crouch()
-    {
-        if(!crouching)
-        {
-            crouching = true;
-            print("I am crouching");
-        }
-        else
-        {
-            crouching = false;
-            print("I am not crouching");
         }
     }
 
