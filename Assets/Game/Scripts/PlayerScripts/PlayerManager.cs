@@ -11,6 +11,7 @@ public class PlayerManager : MonoBehaviour
     string saveData;
     bool isSprinting;
     bool isCrouching;
+    bool isArmed;
 
     private void Start()
     {
@@ -57,6 +58,12 @@ public class PlayerManager : MonoBehaviour
     }
 
     ////Player States////
+
+    public void WeaponStateChange()
+    {
+        isArmed = !isArmed;
+        animationManager.WeaponStateChanged(isArmed);
+    }
 
     void ApplyMovementInput()
     {
