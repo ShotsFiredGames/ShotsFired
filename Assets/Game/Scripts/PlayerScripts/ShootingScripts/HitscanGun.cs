@@ -22,14 +22,16 @@ public class HitscanGun : Gun
             {
                 if (hit.transform.tag == "Collision")
                 {
-                    Debug.LogError(hit.transform.parent.transform.parent.name);
                     //CmdPlayerShot(hit.transform.parent.transform.parent.name);
                 }
                 else
                 {
+                    print("I hit something");
                     Vector3 position = hit.point + (hit.normal * .1f);
                     Quaternion rotation = Quaternion.LookRotation(hit.normal);
-                    CmdBulletHole(position, rotation);                                                                    //Spawn the bullet hole where the raycast hit.
+                    CmdBulletHole(position, rotation);
+
+                    RpcPrint();
                 }
             }
 
@@ -40,11 +42,17 @@ public class HitscanGun : Gun
         }
     }
 
+    [ClientRpc]
+    void RpcPrint()
+    {
+
+        print("Spawn bullet hole");
+    }
+
     [Command]
     void CmdBulletHole(Vector3 position, Quaternion rotation)
     {
-        Debug.LogError("Hit or something so we know it is working");
-        if (bulletHole == null) return;
+        RpcPrint();
         GameObject hole = Instantiate(bulletHole, position, rotation) as GameObject;
         NetworkServer.Spawn(hole);
     }

@@ -8,13 +8,14 @@ public class Shooting : MonoBehaviour
 
     public void Firing()
     {
-        if (currentGun != null)
-            currentGun.GetComponent<Gun>().Fire();
+        print("IsFirin' N' Stuff");
+        //if (currentGun != null)
+            StartCoroutine(currentGun.GetComponent<Gun>().Fire());
     }
 
-    public void RemoveWeapon()
-    {
-        currentGun.SetActive(false);
-        currentGun = null;
-    }
+    //public void RemoveWeapon()
+    //{
+    //    currentGun.SetActive(false);
+    //    currentGun = null;
+    //}
 }

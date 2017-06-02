@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
 {
+    AnimationManager animationManager;
     PlayerMovement playerMovement;
     Shooting shooting;
-    AnimationManager animationManager;
 
     Controls controls;
     string saveData;
@@ -35,7 +35,7 @@ public class PlayerManager : MonoBehaviour
 
     public void Disarm()
     {
-        shooting.RemoveWeapon();
+        //shooting.RemoveWeapon();
         isDisarmed = true;
         ///aninmator.disarmed;
     }
@@ -63,7 +63,7 @@ public class PlayerManager : MonoBehaviour
         if (controls.Jump.WasPressed)
             Jumping();
         
-        if (controls.Fire.IsPressed)
+        if (controls.Fire)
             Firing();
             
     }
@@ -116,6 +116,7 @@ public class PlayerManager : MonoBehaviour
 
     void Firing()
     {
+        print("Shoot");
         shooting.Firing();
         //animationManager.IsFiring();
 
