@@ -5,17 +5,22 @@ using UnityEngine;
 public class PlayerManager : MonoBehaviour
 {
     PlayerMovement playerMovement;
+    Shooting shooting;
     AnimationManager animationManager;
 
     Controls controls;
     string saveData;
     bool isSprinting;
     bool isCrouching;
+    bool isDisarmed;
+
+    int shotsFired = 5;
 
     private void Start()
     {
         playerMovement = GetComponent<PlayerMovement>();
         animationManager = GetComponent<AnimationManager>();
+        shooting = GetComponent<Shooting>();
     }
 
     void OnEnable()
@@ -26,6 +31,13 @@ public class PlayerManager : MonoBehaviour
     void OnDisable()
     {
         controls.Destroy();
+    }
+
+    public void Disarm()
+    {
+        shooting.RemoveWeapon();
+        isDisarmed = true;
+        ///aninmator.disarmed;
     }
 
     private void Update()
@@ -104,8 +116,13 @@ public class PlayerManager : MonoBehaviour
 
     void Firing()
     {
-        //shooting.Fire();
+        shooting.Firing();
         //animationManager.IsFiring();
+
+        shotsFired--;
+
+        if (shotsFired < 1)
+            Disarm();
     }
 
     void Dead()

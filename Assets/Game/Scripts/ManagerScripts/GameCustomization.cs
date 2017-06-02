@@ -2,6 +2,7 @@
 
 public class GameCustomization : MonoBehaviour
 {
-    public float playerSpeed;
-    public float sprintSpeed;
+    public static float playerSpeed;
+    public static float sprintSpeed;
+    public static bool isAmmoUnlimited;
 }
