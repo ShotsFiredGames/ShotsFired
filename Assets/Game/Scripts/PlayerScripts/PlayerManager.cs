@@ -106,6 +106,7 @@ public class PlayerManager : MonoBehaviour
 
     void Crouching()
     {
+        playerMovement.Move(controls.Move.X, controls.Move.Y);
         animationManager.IsCrouching();
     }
 

@@ -50,7 +50,7 @@ public class PlayerMovement : NetworkBehaviour
 
     public void Sprinting(float horizontal, float vertical)
     {
-        direction = new Vector3(horizontal * sprintSpeed * Time.deltaTime, 0, vertical * speed * Time.deltaTime);
+        direction = new Vector3(horizontal * sprintSpeed * Time.deltaTime, 0, vertical * sprintSpeed * Time.deltaTime);
         direction = transform.TransformDirection(direction);
         rb.MovePosition(transform.position + direction);
     }
