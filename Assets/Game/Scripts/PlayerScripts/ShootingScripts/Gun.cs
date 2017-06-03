@@ -11,6 +11,8 @@ public abstract class Gun : NetworkBehaviour
     public float fireFreq;
     public GameObject muzzleFlash;
     public Transform spawnPoint;
+    public Vector3 basePosition;
+    public Vector3 aimPosition;
 
     [HideInInspector]
     public bool isFiring = false;

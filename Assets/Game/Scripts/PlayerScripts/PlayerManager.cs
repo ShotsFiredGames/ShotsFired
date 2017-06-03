@@ -6,6 +6,7 @@ public class PlayerManager : MonoBehaviour
 {
     AnimationManager animationManager;
     PlayerMovement playerMovement;
+    PlayerCamera playerCamera;
     Shooting shooting;
 
     Controls controls;
@@ -20,6 +21,7 @@ public class PlayerManager : MonoBehaviour
     {
         playerMovement = GetComponent<PlayerMovement>();
         animationManager = GetComponent<AnimationManager>();
+        playerCamera = GetComponent<PlayerCamera>();
         shooting = GetComponent<Shooting>();
     }
 
@@ -58,6 +60,15 @@ public class PlayerManager : MonoBehaviour
 
         if (controls.Fire)
             Firing();
+
+        if(controls.Aim)
+        {
+            playerCamera.Aim();
+        }
+        else
+        {
+            playerCamera.StopAim();
+        }
 
     }
 
