@@ -8,8 +8,13 @@ public class HitscanGun : Gun
 {
     public GameObject bulletHole;
     public LayerMask layermask;
+    public PlayerManager playerManager;
     RaycastHit hit;
 
+    private void Start()
+    {
+        print("Shooting: " + currentAmmo);
+    }
     public override IEnumerator Fire()
     {
         if (!isFiring)
@@ -40,6 +45,23 @@ public class HitscanGun : Gun
             yield return new WaitForSeconds(fireFreq);
             isFiring = false;
         }
+    }
+
+    public override void UseAmmo()
+    {
+        if (isAmmoUnlimited) return;
+
+        currentAmmo--;
+        print("Shooting: " + currentAmmo);
+        if (currentAmmo <= 0)
+        {
+            Discard();
+        }
+    }
+
+    public override void Discard()
+    {
+        playerManager.Disarm();
     }
 
     [ClientRpc]

@@ -16,7 +16,6 @@ public class PlayerManager : MonoBehaviour
 
     int shotsFired = 5;
 
-
     private void Start()
     {
         playerMovement = GetComponent<PlayerMovement>();
@@ -32,13 +31,6 @@ public class PlayerManager : MonoBehaviour
     void OnDisable()
     {
         controls.Destroy();
-    }
-
-    public void Disarm()
-    {
-        //shooting.RemoveWeapon();
-        isArmed = false;
-        ///aninmator.disarmed;
     }
 
     private void Update()
@@ -70,12 +62,6 @@ public class PlayerManager : MonoBehaviour
     }
 
     ////Player States////
-
-    public void WeaponStateChange()
-    {
-        isArmed = !isArmed;
-        animationManager.WeaponStateChanged(isArmed);
-    }
 
     void ApplyMovementInput()
     {
@@ -133,6 +119,22 @@ public class PlayerManager : MonoBehaviour
         if (shotsFired < 1)
             Disarm();
     }
+
+
+    public void WeaponPickedUp(GameObject newGun)
+    {
+        isArmed = true;
+        animationManager.Armed();
+        shooting.SetWeapon(newGun);
+    }
+
+    public void Disarm()
+    {
+        isArmed = false;
+        animationManager.Disarmed();
+        //shooting.RemoveWeapon();
+    }
+
 
     void Dead()
     {

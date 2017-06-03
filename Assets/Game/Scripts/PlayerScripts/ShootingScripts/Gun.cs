@@ -15,16 +15,15 @@ public abstract class Gun : NetworkBehaviour
     [HideInInspector]
     public bool isFiring = false;
 
-    bool isAmmoUnlimited;
-
-    int currentAmmo;
+    [HideInInspector]
+    public bool isAmmoUnlimited;
+    [HideInInspector]
+    public int currentAmmo;
 
 	public abstract IEnumerator Fire();
 
-    public void Discard()
-    {
-        //PlayerManager.SetState("Disarmed");
-    }
+    public abstract void Discard();
+  
     //public void Overcharge();
 
     void Start()
@@ -33,17 +32,7 @@ public abstract class Gun : NetworkBehaviour
         currentAmmo = ammo;
     }
 
-    public void UseAmmo()
-    {
-        if (isAmmoUnlimited) return;
-
-        currentAmmo--;
-
-        if (currentAmmo <= 0)
-        {
-            Discard();
-        }
-    }
+    public abstract void UseAmmo();
 
     [Command]
     public void CmdStartMuzzleFlash()

@@ -13,9 +13,14 @@ public class Shooting : MonoBehaviour
             StartCoroutine(currentGun.GetComponent<Gun>().Fire());
     }
 
-    //public void RemoveWeapon()
-    //{
-    //    currentGun.SetActive(false);
-    //    currentGun = null;
-    //}
+    public void SetWeapon(GameObject weapon)
+    {
+        currentGun = weapon;
+    }
+
+    public void RemoveWeapon()
+    {
+        currentGun.SetActive(false);
+        currentGun = null;
+    }
 }
