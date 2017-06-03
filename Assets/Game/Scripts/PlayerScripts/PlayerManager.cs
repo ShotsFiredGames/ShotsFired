@@ -12,9 +12,10 @@ public class PlayerManager : MonoBehaviour
     string saveData;
     bool isSprinting;
     bool isCrouching;
-    bool isDisarmed;
 
     int shotsFired = 5;
+
+    public bool isArmed;
 
     private void Start()
     {
@@ -36,7 +37,7 @@ public class PlayerManager : MonoBehaviour
     public void Disarm()
     {
         //shooting.RemoveWeapon();
-        isDisarmed = true;
+        isArmed = false;
         ///aninmator.disarmed;
     }
 
@@ -62,13 +63,19 @@ public class PlayerManager : MonoBehaviour
 
         if (controls.Jump.WasPressed)
             Jumping();
-        
+
         if (controls.Fire)
             Firing();
-            
+
     }
 
     ////Player States////
+
+    public void WeaponStateChange()
+    {
+        isArmed = !isArmed;
+        animationManager.WeaponStateChanged(isArmed);
+    }
 
     void ApplyMovementInput()
     {
@@ -111,6 +118,7 @@ public class PlayerManager : MonoBehaviour
 
     void Crouching()
     {
+        playerMovement.Move(controls.Move.X, controls.Move.Y);
         animationManager.IsCrouching();
     }
 
