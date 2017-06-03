@@ -12,6 +12,7 @@ public class PlayerManager : MonoBehaviour
     string saveData;
     bool isSprinting;
     bool isCrouching;
+    public bool isArmed;
 
     int shotsFired = 5;
 

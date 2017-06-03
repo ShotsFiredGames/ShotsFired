@@ -11,6 +11,19 @@ public class AnimationManager : MonoBehaviour
         anim = GetComponent<Animator>();	
 	}
 
+    public void WeaponStateChanged(bool isArmed)
+    {
+        if(isArmed)
+        {
+            anim.SetLayerWeight(1, 1);
+            anim.SetLayerWeight(2, 0);
+        }
+        else
+        {
+            anim.SetLayerWeight(2, 1);
+            anim.SetLayerWeight(1, 0);
+        }
+    }
     public void ApplyMovementInput(float leftStickX, float leftStickY, float rightStickX)
     {
         anim.SetFloat("LeftStickX", leftStickX);
