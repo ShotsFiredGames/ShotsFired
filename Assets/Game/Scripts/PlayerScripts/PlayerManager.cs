@@ -16,7 +16,6 @@ public class PlayerManager : MonoBehaviour
 
     int shotsFired = 5;
 
-    public bool isArmed;
 
     private void Start()
     {
