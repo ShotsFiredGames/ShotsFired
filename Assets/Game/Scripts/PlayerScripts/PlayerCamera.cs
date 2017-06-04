@@ -51,6 +51,10 @@ public class PlayerCamera : MonoBehaviour
 
     public void SetFieldOfView(int view)
     {
+        if(myCamera == null)
+        {
+            myCamera = transform.Find("Main Camera").gameObject.GetComponent<Camera>();
+        }
         myCamera.fieldOfView = view;
     }
 

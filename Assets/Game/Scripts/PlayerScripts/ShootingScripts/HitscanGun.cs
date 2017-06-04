@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-[System.Serializable]
 public class HitscanGun : Gun
 {
     public GameObject bulletHole;
