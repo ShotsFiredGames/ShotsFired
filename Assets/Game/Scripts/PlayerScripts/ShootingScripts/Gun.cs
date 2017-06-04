@@ -10,7 +10,6 @@ public abstract class Gun : NetworkBehaviour
     public int damage;
     public int ammo;
     public float fireFreq;
-    public GameObject muzzleFlash;
     public Transform spawnPoint;
     public Vector3 basePosition;
     public Vector3 aimPosition;
@@ -64,25 +63,4 @@ public abstract class Gun : NetworkBehaviour
         }
            
     }
-
-    [Command]
-    public void CmdStartMuzzleFlash()
-    {
-        if (muzzleFlash == null) return;
-        RpcStartMuzzleFlash();
-    }
-
-    [ClientRpc]
-    void RpcStartMuzzleFlash()
-    {
-        StartCoroutine(MuzzleFlash());                                                                  //Activate the MuzzleFlash
-    }
-
-    IEnumerator MuzzleFlash()                                                                                   //Activate and DeActivate the muzzle flash
-    {
-        muzzleFlash.SetActive(true);
-        yield return new WaitForSeconds(.05f);
-        muzzleFlash.SetActive(false);
-    }
-
 }

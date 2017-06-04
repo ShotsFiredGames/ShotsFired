@@ -6,13 +6,15 @@ using UnityEngine.Networking;
 
 public class HitscanGun : Gun
 {
-    public GameObject bulletHole;
     public LayerMask layermask;
     RaycastHit hit;
+    Shooting shooting;
 
     void Start()
     {
         SetAmmo();
+        //NetworkServer.Spawn(this.gameObject);
+        shooting = transform.root.GetComponent<Shooting>();
         print("Shooting: " + currentAmmo);
     }
     public override IEnumerator Fire()
@@ -21,7 +23,7 @@ public class HitscanGun : Gun
         {
             isFiring = true;
 
-            CmdStartMuzzleFlash();
+            shooting.CmdStartMuzzleFlash();
 
             if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, 1000, layermask))
             {
@@ -34,9 +36,9 @@ public class HitscanGun : Gun
                     print("I hit something");
                     Vector3 position = hit.point + (hit.normal * .1f);
                     Quaternion rotation = Quaternion.LookRotation(hit.normal);
-                    CmdBulletHole(position, rotation);
+                    shooting.CmdBulletHole(position, rotation);
 
-                    RpcPrint();
+                    shooting.RpcPrint();
                 }
             }
 
@@ -51,20 +53,5 @@ public class HitscanGun : Gun
     {
         print("discared");
         playerManager.CmdDisarm();
-    }
-
-    [ClientRpc]
-    void RpcPrint()
-    {
-
-        print("Spawn bullet hole");
-    }
-
-    [Command]
-    void CmdBulletHole(Vector3 position, Quaternion rotation)
-    {
-        RpcPrint();
-        GameObject hole = Instantiate(bulletHole, position, rotation) as GameObject;
-        NetworkServer.Spawn(hole);
     }
 }

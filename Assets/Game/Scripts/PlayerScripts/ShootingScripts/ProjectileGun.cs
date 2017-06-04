@@ -7,7 +7,6 @@ using UnityEngine.Networking;
 public class ProjectileGun : Gun
 {
     public Projectile projectile;
-    public PlayerManager playerManager;
     public double speed;
 
     [Client]
@@ -26,7 +25,7 @@ public class ProjectileGun : Gun
             bullet.transform.rotation = transform.rotation;
 
             bullet.SetSpeed(speed);
-            CmdStartMuzzleFlash();
+            //CmdStartMuzzleFlash();
             UseAmmo();
 
             yield return new WaitForSeconds(fireFreq);
