@@ -4,15 +4,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
+[System.Serializable]
 public class HitscanGun : Gun
 {
     public GameObject bulletHole;
     public LayerMask layermask;
-    public PlayerManager playerManager;
     RaycastHit hit;
 
-    private void Start()
+    void Start()
     {
+        SetAmmo();
         print("Shooting: " + currentAmmo);
     }
     public override IEnumerator Fire()
@@ -47,21 +48,10 @@ public class HitscanGun : Gun
         }
     }
 
-    public override void UseAmmo()
-    {
-        if (isAmmoUnlimited) return;
-
-        currentAmmo--;
-        print("Shooting: " + currentAmmo);
-        if (currentAmmo <= 0)
-        {
-            Discard();
-        }
-    }
-
     public override void Discard()
     {
-        playerManager.Disarm();
+        print("discared");
+        playerManager.CmdDisarm();
     }
 
     [ClientRpc]

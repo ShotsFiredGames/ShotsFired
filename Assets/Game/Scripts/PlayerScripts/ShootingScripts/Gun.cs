@@ -5,6 +5,7 @@ using UnityEngine.Networking;
 
 public abstract class Gun : NetworkBehaviour
 {
+    public GameObject thirdPersonGun;
     public string gunName;
     public int damage;
     public int ammo;
@@ -14,6 +15,8 @@ public abstract class Gun : NetworkBehaviour
     public Vector3 basePosition;
     public Vector3 aimPosition;
 
+    public PlayerManager playerManager;
+
     [HideInInspector]
     public bool isFiring = false;
 
@@ -22,19 +25,45 @@ public abstract class Gun : NetworkBehaviour
     [HideInInspector]
     public int currentAmmo;
 
+
 	public abstract IEnumerator Fire();
 
     public abstract void Discard();
   
     //public void Overcharge();
 
-    void Start()
+    public void SetAmmo()
     {
         this.isAmmoUnlimited = GameCustomization.isAmmoUnlimited;
         currentAmmo = ammo;
     }
 
-    public abstract void UseAmmo();
+    public void UseAmmo()
+    {
+        if (isAmmoUnlimited) return;
+
+        currentAmmo--;
+        print("Shooting: " + currentAmmo);
+        if (currentAmmo <= 0)
+        {
+            Discard();
+        }
+    }
+
+    public void SetActiveGun(bool isActive)
+    {
+        if (playerManager.isActiveAndEnabled)
+        {
+            Debug.LogError("is local");
+            gameObject.SetActive(isActive);
+        }
+        else
+        {
+            Debug.LogError("is not local");
+            thirdPersonGun.SetActive(isActive);
+        }
+           
+    }
 
     [Command]
     public void CmdStartMuzzleFlash()

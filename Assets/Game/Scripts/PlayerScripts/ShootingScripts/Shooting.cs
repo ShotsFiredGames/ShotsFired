@@ -1,15 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class Shooting : MonoBehaviour
+public class Shooting : NetworkBehaviour
 {
     public GameObject currentGun;
 
     public void Firing()
     {
         print("IsFirin' N' Stuff");
-        //if (currentGun != null)
+        if (currentGun != null)
             StartCoroutine(currentGun.GetComponent<Gun>().Fire());
     }
 
@@ -20,7 +21,7 @@ public class Shooting : MonoBehaviour
 
     public void RemoveWeapon()
     {
-        currentGun.SetActive(false);
+        currentGun.GetComponent<Gun>().SetActiveGun(false);
         currentGun = null;
     }
 }

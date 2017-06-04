@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class PlayerManager : MonoBehaviour
+public class PlayerManager : NetworkBehaviour
 {
     AnimationManager animationManager;
     PlayerMovement playerMovement;
@@ -14,6 +15,7 @@ public class PlayerManager : MonoBehaviour
     bool isSprinting;
     bool isCrouching;
     public bool isArmed;
+    public Gun[] guns;
 
     int shotsFired = 5;
 
@@ -37,6 +39,8 @@ public class PlayerManager : MonoBehaviour
 
     private void Update()
     {
+        if (!isLocalPlayer) return;
+
         ApplyMovementInput();
 
         if (controls.Crouch.WasPressed)
@@ -56,7 +60,10 @@ public class PlayerManager : MonoBehaviour
             Sprinting();
 
         if (controls.Jump.WasPressed)
+        {
             Jumping();
+            CmdWeaponPickedUp("Scorpion");
+        }        
 
         if (controls.Fire)
             Firing();
@@ -124,32 +131,61 @@ public class PlayerManager : MonoBehaviour
         print("Shoot");
         shooting.Firing();
         //animationManager.IsFiring();
-
-        shotsFired--;
-
-        if (shotsFired < 1)
-            Disarm();
     }
 
+    [Command]
+    public void CmdWeaponPickedUp(string gunName)
+    {
+        Debug.LogError("We've pickup up a " + gunName);
+        RpcWeaponPickedUp(gunName);
+    }
 
-    public void WeaponPickedUp(GameObject newGun)
+    [ClientRpc]
+    public void RpcWeaponPickedUp(string gunName)
     {
         isArmed = true;
         animationManager.Armed();
+        GameObject newGun = FindGun(gunName);
+
+        if (newGun == null) Debug.LogError("Incorrect Name of Gun");
+
         shooting.SetWeapon(newGun);
+        newGun.GetComponent<Gun>().SetAmmo();
+
+        newGun.GetComponent<Gun>().SetActiveGun(true);
     }
 
-    public void Disarm()
+    [Command]
+    public void CmdDisarm()
+    {
+        RpcDisarm();
+    }
+
+    [ClientRpc]
+    public void RpcDisarm()
     {
         isArmed = false;
         animationManager.Disarmed();
-        //shooting.RemoveWeapon();
+        shooting.RemoveWeapon();
+        playerCamera.SetFieldOfView(60);
     }
 
 
     void Dead()
     {
         //animationManager.IsDead();
+    }
+
+    GameObject FindGun(string gunName)
+    {
+        Debug.LogError("There are" + guns.Length + " guns " + gunName);
+        foreach (Gun gun in guns)
+        {
+            if (gun.gunName.Equals(gunName))
+                return gun.gameObject;
+        }
+
+        return null;
     }
 
     void SaveBindings()

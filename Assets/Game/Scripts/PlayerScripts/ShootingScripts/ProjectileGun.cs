@@ -35,20 +35,8 @@ public class ProjectileGun : Gun
         
     }
 
-    public override void UseAmmo()
-    {
-        if (isAmmoUnlimited) return;
-
-        currentAmmo--;
-
-        if (currentAmmo <= 0)
-        {
-            Discard();
-        }
-    }
-
     public override void Discard()
     {
-        playerManager.Disarm();
+        playerManager.CmdDisarm();
     }
 }
