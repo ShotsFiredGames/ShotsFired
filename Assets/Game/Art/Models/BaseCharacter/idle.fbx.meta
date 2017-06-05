@@ -345,7 +345,7 @@ ModelImporter:
     normalImportMode: 0
     tangentImportMode: 3
   importAnimation: 1
-  copyAvatar: 0
+  copyAvatar: 1
   humanDescription:
     serializedVersion: 2
     human: []
@@ -362,7 +362,7 @@ ModelImporter:
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
-  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: 093a142ff633c584fad212d803c3de7d,
+  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: 9cc306fdf0ac8d74ab2e6ac830644596,
     type: 3}
   animationType: 2
   humanoidOversampling: 1

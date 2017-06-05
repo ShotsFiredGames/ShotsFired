@@ -18,7 +18,6 @@ public class PlayerManager : NetworkBehaviour
     public Gun[] guns;
 
     int shotsFired = 5;
-    float yRotationValue;
 
     private void Start()
     {
@@ -64,22 +63,18 @@ public class PlayerManager : NetworkBehaviour
         {
             Jumping();
             CmdWeaponPickedUp("Scorpion");
-        }
+        }        
 
         if (controls.Fire)
             Firing();
-        else
-            StopFiring();
 
         if(controls.Aim)
         {
             playerCamera.Aim();
-            Aim();
         }
         else
         {
             playerCamera.StopAim();
-            StopAiming();
         }
 
     }
@@ -89,16 +84,11 @@ public class PlayerManager : NetworkBehaviour
         playerCamera.Look(controls.Look.Y, controls.Look.X);
     }
 
-    public void SetRotationValue(float value)
-    {
-        yRotationValue = value;
-        print(yRotationValue);
-    }
     ////Player States////
 
     void ApplyMovementInput()
     {
-        animationManager.ApplyMovementInput(controls.Move.X, controls.Move.Y, controls.Look.X, yRotationValue);
+        animationManager.ApplyMovementInput(controls.Move.X, controls.Move.Y, controls.Look.X);
     }
     void Moving()
     {
@@ -144,32 +134,17 @@ public class PlayerManager : NetworkBehaviour
         animationManager.IsCrouching();
     }
 
-    void Aim()
-    {
-        if (!isArmed) return;
-        animationManager.IsAiming();
-    }
-
-    void StopAiming()
-    {
-        animationManager.StoppedAiming();
-    }
-
     void Firing()
     {
-        if (!isArmed) return;
+        print("Shoot");
         shooting.Firing();
-        animationManager.IsFiring();
-    }
-
-    void StopFiring()
-    {
-        animationManager.StoppedFiring();
+        //animationManager.IsFiring();
     }
 
     [Command]
     public void CmdWeaponPickedUp(string gunName)
     {
+        Debug.LogError("We've pickup up a " + gunName);
         RpcWeaponPickedUp(gunName);
     }
 
@@ -211,11 +186,13 @@ public class PlayerManager : NetworkBehaviour
 
     GameObject FindGun(string gunName)
     {
+        Debug.LogError("There are" + guns.Length + " guns " + gunName);
         foreach (Gun gun in guns)
         {
             if (gun.gunName.Equals(gunName))
                 return gun.gameObject;
         }
+
         return null;
     }
 
