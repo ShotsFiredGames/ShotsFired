@@ -22,11 +22,12 @@ public class AnimationManager : MonoBehaviour
         anim.SetLayerWeight(2, 1);
         anim.SetLayerWeight(1, 0);
     }
-    public void ApplyMovementInput(float leftStickX, float leftStickY, float rightStickX)
+    public void ApplyMovementInput(float leftStickX, float leftStickY, float rightStickX, float rightStickY)
     {
         anim.SetFloat("LeftStickX", leftStickX);
         anim.SetFloat("LeftStickY", leftStickY);
         anim.SetFloat("RightStickX", rightStickX);
+        anim.SetFloat("RightStickY", rightStickY);
     }
 
     public void IsIdle() //still have to change all this
@@ -73,5 +74,25 @@ public class AnimationManager : MonoBehaviour
     public void IsLanding()
     {
         anim.SetBool("IsJumping", false);
+    }
+
+    public void IsAiming()
+    {
+        anim.SetBool("IsAiming", true);
+    }
+
+    public void StoppedAiming()
+    {
+        anim.SetBool("IsAiming", false);
+    }
+
+    public void IsFiring()
+    {
+        anim.SetBool("IsFiring", true);
+    }
+
+    public void StoppedFiring()
+    {
+        anim.SetBool("IsFiring", false);
     }
 }
