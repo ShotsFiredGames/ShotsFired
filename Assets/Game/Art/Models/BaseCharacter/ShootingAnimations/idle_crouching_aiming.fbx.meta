@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 6517c67c8924a6c46b888075ee962f21
-timeCreated: 1496240385
+guid: 653ae4fb3de12434d9d97f9986f9c897
+timeCreated: 1496678422
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -137,7 +137,7 @@ ModelImporter:
     400126: mixamorig:Spine
     400128: mixamorig:Spine1
     400130: mixamorig:Spine2
-    7400000: Idle
+    7400000: crouch_aim
     9500000: //RootNode
   materials:
     importMaterials: 1
@@ -155,7 +155,7 @@ ModelImporter:
     animationImportWarnings: 
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
-    animationCompression: 3
+    animationCompression: 1
     animationRotationError: 0.5
     animationPositionError: 0.5
     animationScaleError: 0.5
@@ -163,7 +163,7 @@ ModelImporter:
     extraExposedTransformPaths: []
     clipAnimations:
     - serializedVersion: 16
-      name: Idle
+      name: crouch_aim
       takeName: mixamo.com
       firstFrame: 0
       lastFrame: 63
@@ -362,8 +362,7 @@ ModelImporter:
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
-  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: 093a142ff633c584fad212d803c3de7d,
-    type: 3}
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
   animationType: 2
   humanoidOversampling: 1
   additionalBone: 0

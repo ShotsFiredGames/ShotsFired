@@ -53,12 +53,10 @@ public abstract class Gun : NetworkBehaviour
     {
         if (playerManager.isActiveAndEnabled)
         {
-            Debug.LogError("is local");
             gameObject.SetActive(isActive);
         }
         else
         {
-            Debug.LogError("is not local");
             thirdPersonGun.SetActive(isActive);
         }
            
