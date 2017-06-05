@@ -18,7 +18,6 @@ public class PlayerMovement : NetworkBehaviour
     Vector3 direction;
     Vector3 velocity;
     Quaternion rotation;
-    bool crouching;
     bool isJumping;
 
     void Start ()

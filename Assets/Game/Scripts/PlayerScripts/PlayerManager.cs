@@ -13,7 +13,6 @@ public class PlayerManager : NetworkBehaviour
     Controls controls;
     string saveData;
     bool isSprinting;
-    bool isCrouching;
     public bool isArmed;
     public Gun[] guns;
 
@@ -44,17 +43,9 @@ public class PlayerManager : NetworkBehaviour
 
         ApplyMovementInput();
 
-        if (controls.Crouch.WasPressed)
-            isCrouching = !isCrouching;
-
-        if (!isCrouching && controls.Move.Value.Equals(Vector2.zero))
+        if (controls.Move.Value.Equals(Vector2.zero))
             Idling();
-        else if (isCrouching && controls.Move.Value.Equals(Vector2.zero))
-            CrouchIdling();
-
-        if (isCrouching && !controls.Move.Value.Equals(Vector2.zero))
-            Crouching();
-        else if (!isCrouching && !controls.Move.Value.Equals(Vector2.zero))
+        else
             Moving();
 
         if (controls.Sprint.IsPressed)
@@ -113,12 +104,6 @@ public class PlayerManager : NetworkBehaviour
         animationManager.IsIdle();
     }
 
-    void CrouchIdling()
-    {
-        playerMovement.Turn(controls.Look.X);
-        animationManager.IsCrouchIdle();
-    }
-
     void Sprinting()
     {
         playerMovement.Sprinting(controls.Move.X, controls.Move.Y);
@@ -135,13 +120,6 @@ public class PlayerManager : NetworkBehaviour
     public void Landed()
     {
         animationManager.IsLanding();
-    }
-
-    void Crouching()
-    {
-        playerMovement.Move(controls.Move.X, controls.Move.Y);
-        playerMovement.Turn(controls.Look.X);
-        animationManager.IsCrouching();
     }
 
     void Aim()

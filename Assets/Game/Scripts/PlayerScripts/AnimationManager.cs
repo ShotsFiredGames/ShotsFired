@@ -21,6 +21,7 @@ public class AnimationManager : MonoBehaviour
     {
         anim.SetLayerWeight(2, 1);
         anim.SetLayerWeight(1, 0);
+        anim.SetLayerWeight(6, 0);
     }
     public void ApplyMovementInput(float leftStickX, float leftStickY, float rightStickX, float rightStickY)
     {
@@ -30,11 +31,9 @@ public class AnimationManager : MonoBehaviour
         anim.SetFloat("RightStickY", rightStickY);
     }
 
-    public void IsIdle() //still have to change all this
-
+    public void IsIdle()
     {
         anim.SetBool("IsSprinting", false);
-        anim.SetBool("IsCrouching", false);
         anim.SetBool("IsIdle", true);
     }
 
@@ -42,28 +41,18 @@ public class AnimationManager : MonoBehaviour
     {
         anim.SetBool("IsSprinting", false);
         anim.SetBool("IsIdle", true);
-        anim.SetBool("IsCrouching", true);
     }
 
     public void IsMoving()
     {
         anim.SetBool("IsIdle", false);
         anim.SetBool("IsSprinting", false);
-        anim.SetBool("IsCrouching", false);
     }
 
     public void IsSprinting()
     {
         anim.SetBool("IsIdle", false);
-        anim.SetBool("IsCrouching", false);
         anim.SetBool("IsSprinting", true);
-    }
-
-    public void IsCrouching()
-    {
-        anim.SetBool("IsIdle", false);
-        anim.SetBool("IsSprinting", false);
-        anim.SetBool("IsCrouching", true);
     }
 
     public void IsJumping()
