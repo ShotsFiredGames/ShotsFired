@@ -88,6 +88,7 @@ public class PlayerManager : NetworkBehaviour
     void Moving()
     {
         playerMovement.Move(controls.Move.X, controls.Move.Y);
+        playerMovement.Turn(controls.Look.X);
         animationManager.IsMoving();
     }
 
@@ -106,6 +107,7 @@ public class PlayerManager : NetworkBehaviour
     void Sprinting()
     {
         playerMovement.Sprinting(controls.Move.X, controls.Move.Y);
+        playerMovement.Turn(controls.Look.X);
         animationManager.IsSprinting();
     }
 
@@ -123,6 +125,7 @@ public class PlayerManager : NetworkBehaviour
     void Crouching()
     {
         playerMovement.Move(controls.Move.X, controls.Move.Y);
+        playerMovement.Turn(controls.Look.X);
         animationManager.IsCrouching();
     }
 
