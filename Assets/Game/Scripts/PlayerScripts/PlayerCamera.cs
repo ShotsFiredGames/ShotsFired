@@ -14,7 +14,6 @@ public class PlayerCamera : MonoBehaviour
     GameObject currentGun;
     Vector3 basePosition;
     Vector3 aimPosition;
-    PlayerManager playerManager;
 
     float xRotationValue;
     float yRotationValue;
@@ -25,7 +24,6 @@ public class PlayerCamera : MonoBehaviour
     {
         myCamera = transform.Find("Main Camera").gameObject.GetComponent<Camera>();
         rotationSpeed = GetComponent<PlayerMovement>().rotationSpeed;
-        playerManager = GetComponent<PlayerManager>();
     }
 
     public void Look(float rightStickY, float righStickX)
@@ -34,13 +32,7 @@ public class PlayerCamera : MonoBehaviour
         yRotationValue += -rightStickY * lookSpeed * Time.deltaTime;
         yRotationValue = ClampAngle(yRotationValue, -clampValue, clampValue);
         cameraYRotation = Quaternion.Euler(yRotationValue, xRotationValue, 0);
-        SendRotationValue(yRotationValue);
         myCamera.transform.rotation = cameraYRotation;
-    }
-
-    void SendRotationValue(float value)
-    {
-        playerManager.SetRotationValue(value);
     }
 
     public static float ClampAngle(float angle, float min, float max)              
