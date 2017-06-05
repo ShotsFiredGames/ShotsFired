@@ -79,6 +79,11 @@ public class PlayerManager : NetworkBehaviour
 
     }
 
+    private void LateUpdate()
+    {
+        playerCamera.Look(controls.Look.Y, controls.Look.X);
+    }
+
     ////Player States////
 
     void ApplyMovementInput()

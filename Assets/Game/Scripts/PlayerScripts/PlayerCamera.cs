@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerCamera : MonoBehaviour
 {
+    public float lookSpeed;
+    public float clampValue;
     public float aimSpeed;
     public float baseFieldOfView;
     public float aimFieldOfView;
@@ -13,9 +15,33 @@ public class PlayerCamera : MonoBehaviour
     Vector3 basePosition;
     Vector3 aimPosition;
 
+    float xRotationValue;
+    float yRotationValue;
+    float rotationSpeed;
+    Quaternion cameraYRotation;
+
     public void Start()
     {
         myCamera = transform.Find("Main Camera").gameObject.GetComponent<Camera>();
+        rotationSpeed = GetComponent<PlayerMovement>().rotationSpeed;
+    }
+
+    public void Look(float rightStickY, float righStickX)
+    {
+        xRotationValue -= -righStickX * rotationSpeed * Time.deltaTime;
+        yRotationValue += -rightStickY * lookSpeed * Time.deltaTime;
+        yRotationValue = ClampAngle(yRotationValue, -clampValue, clampValue);
+        cameraYRotation = Quaternion.Euler(yRotationValue, xRotationValue, 0);
+        myCamera.transform.rotation = cameraYRotation;
+    }
+
+    public static float ClampAngle(float angle, float min, float max)              
+    {
+        if (angle < -360.0f)
+            angle += 360.0f;
+        if (angle > 360.0f)
+            angle -= 360.0f;
+        return Mathf.Clamp(angle, min, max);
     }
 
     public void Aim()
