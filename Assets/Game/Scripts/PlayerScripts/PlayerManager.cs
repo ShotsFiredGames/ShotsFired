@@ -1,22 +1,30 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class PlayerManager : MonoBehaviour
+public class PlayerManager : NetworkBehaviour
 {
-    PlayerMovement playerMovement;
     AnimationManager animationManager;
+    PlayerMovement playerMovement;
+    PlayerCamera playerCamera;
+    Shooting shooting;
 
     Controls controls;
     string saveData;
     bool isSprinting;
     bool isCrouching;
     public bool isArmed;
+    public Gun[] guns;
+
+    int shotsFired = 5;
 
     private void Start()
     {
         playerMovement = GetComponent<PlayerMovement>();
         animationManager = GetComponent<AnimationManager>();
+        playerCamera = GetComponent<PlayerCamera>();
+        shooting = GetComponent<Shooting>();
     }
 
     void OnEnable()
@@ -31,6 +39,8 @@ public class PlayerManager : MonoBehaviour
 
     private void Update()
     {
+        if (!isLocalPlayer) return;
+
         ApplyMovementInput();
 
         if (controls.Crouch.WasPressed)
@@ -50,20 +60,31 @@ public class PlayerManager : MonoBehaviour
             Sprinting();
 
         if (controls.Jump.WasPressed)
+        {
             Jumping();
-        
-        if (controls.Fire.IsPressed)
+            CmdWeaponPickedUp("Scorpion");
+        }        
+
+        if (controls.Fire)
             Firing();
-            
+
+        if(controls.Aim)
+        {
+            playerCamera.Aim();
+        }
+        else
+        {
+            playerCamera.StopAim();
+        }
+
+    }
+
+    private void LateUpdate()
+    {
+        playerCamera.Look(controls.Look.Y, controls.Look.X);
     }
 
     ////Player States////
-
-    public void WeaponStateChange()
-    {
-        isArmed = !isArmed;
-        animationManager.WeaponStateChanged(isArmed);
-    }
 
     void ApplyMovementInput()
     {
@@ -72,6 +93,7 @@ public class PlayerManager : MonoBehaviour
     void Moving()
     {
         playerMovement.Move(controls.Move.X, controls.Move.Y);
+        playerMovement.Turn(controls.Look.X);
         animationManager.IsMoving();
     }
 
@@ -90,6 +112,7 @@ public class PlayerManager : MonoBehaviour
     void Sprinting()
     {
         playerMovement.Sprinting(controls.Move.X, controls.Move.Y);
+        playerMovement.Turn(controls.Look.X);
         animationManager.IsSprinting();
     }
 
@@ -107,18 +130,70 @@ public class PlayerManager : MonoBehaviour
     void Crouching()
     {
         playerMovement.Move(controls.Move.X, controls.Move.Y);
+        playerMovement.Turn(controls.Look.X);
         animationManager.IsCrouching();
     }
 
     void Firing()
     {
-        //shooting.Fire();
+        print("Shoot");
+        shooting.Firing();
         //animationManager.IsFiring();
     }
+
+    [Command]
+    public void CmdWeaponPickedUp(string gunName)
+    {
+        Debug.LogError("We've pickup up a " + gunName);
+        RpcWeaponPickedUp(gunName);
+    }
+
+    [ClientRpc]
+    public void RpcWeaponPickedUp(string gunName)
+    {
+        isArmed = true;
+        animationManager.Armed();
+        GameObject newGun = FindGun(gunName);
+
+        if (newGun == null) Debug.LogError("Incorrect Name of Gun");
+
+        shooting.SetWeapon(newGun);
+        newGun.GetComponent<Gun>().SetAmmo();
+
+        newGun.GetComponent<Gun>().SetActiveGun(true);
+    }
+
+    [Command]
+    public void CmdDisarm()
+    {
+        RpcDisarm();
+    }
+
+    [ClientRpc]
+    public void RpcDisarm()
+    {
+        isArmed = false;
+        animationManager.Disarmed();
+        shooting.RemoveWeapon();
+        playerCamera.SetFieldOfView(60);
+    }
+
 
     void Dead()
     {
         //animationManager.IsDead();
+    }
+
+    GameObject FindGun(string gunName)
+    {
+        Debug.LogError("There are" + guns.Length + " guns " + gunName);
+        foreach (Gun gun in guns)
+        {
+            if (gun.gunName.Equals(gunName))
+                return gun.gameObject;
+        }
+
+        return null;
     }
 
     void SaveBindings()

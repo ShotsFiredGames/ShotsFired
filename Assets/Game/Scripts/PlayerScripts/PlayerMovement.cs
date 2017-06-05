@@ -11,7 +11,6 @@ public class PlayerMovement : NetworkBehaviour
     public LayerMask ground;
 
     Rigidbody rb;
-    GameCustomization customization;
     PlayerManager playerManager;
 
     float speed;
@@ -24,10 +23,9 @@ public class PlayerMovement : NetworkBehaviour
 
     void Start ()
     {
-        customization = GameObject.Find("GameManager").GetComponent<GameCustomization>();
-        speed = customization.playerSpeed;
+        speed = GameCustomization.playerSpeed;
 
-        sprintSpeed = customization.sprintSpeed;
+        sprintSpeed = GameCustomization.sprintSpeed;
 
         rb = GetComponent<Rigidbody>();
         playerManager = GetComponent<PlayerManager>();

@@ -1,5 +1,6 @@
 ﻿using UnityEngine.Networking;
 using UnityEngine;
+using System.Collections;
 
 public class PlayerSetup : NetworkBehaviour
 {
@@ -17,6 +18,5 @@ public class PlayerSetup : NetworkBehaviour
         }
         else
             thirdPersonAnimations.SetActive(false);
-
     }
 }

@@ -10,19 +10,17 @@ public class AnimationManager : MonoBehaviour
     {
         anim = GetComponent<Animator>();	
 	}
-
-    public void WeaponStateChanged(bool isArmed)
+    
+    public void Armed()
     {
-        if(isArmed)
-        {
-            anim.SetLayerWeight(1, 1);
-            anim.SetLayerWeight(2, 0);
-        }
-        else
-        {
-            anim.SetLayerWeight(2, 1);
-            anim.SetLayerWeight(1, 0);
-        }
+        anim.SetLayerWeight(1, 1);
+        anim.SetLayerWeight(2, 0);
+    }
+
+    public void Disarmed()
+    {
+        anim.SetLayerWeight(2, 1);
+        anim.SetLayerWeight(1, 0);
     }
     public void ApplyMovementInput(float leftStickX, float leftStickY, float rightStickX)
     {
