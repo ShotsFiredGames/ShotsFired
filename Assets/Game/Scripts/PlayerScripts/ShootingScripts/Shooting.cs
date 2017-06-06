@@ -11,7 +11,6 @@ public class Shooting : NetworkBehaviour
 
     public void Firing()
     {
-        print("IsFirin' N' Stuff");
         if (currentGun != null)
             StartCoroutine(currentGun.GetComponent<Gun>().Fire());
     }
@@ -37,7 +36,6 @@ public class Shooting : NetworkBehaviour
     [ClientRpc]
     void RpcStartMuzzleFlash()
     {
-        print("muzzle should flash");
         StartCoroutine(MuzzleFlash());                                                                  //Activate the MuzzleFlash
     }
 
@@ -48,17 +46,9 @@ public class Shooting : NetworkBehaviour
         muzzleFlash.SetActive(false);
     }
 
-    [ClientRpc]
-    public void RpcPrint()
-    {
-
-        print("Spawn bullet hole");
-    }
-
     [Command]
     public void CmdBulletHole(Vector3 position, Quaternion rotation)
     {
-        RpcPrint();
         GameObject hole = Instantiate(bulletHole, position, rotation) as GameObject;
         NetworkServer.Spawn(hole);
     }

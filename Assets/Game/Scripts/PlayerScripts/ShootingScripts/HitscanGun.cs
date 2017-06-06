@@ -13,9 +13,7 @@ public class HitscanGun : Gun
     void Start()
     {
         SetAmmo();
-        //NetworkServer.Spawn(this.gameObject);
         shooting = transform.root.GetComponent<Shooting>();
-        print("Shooting: " + currentAmmo);
     }
     public override IEnumerator Fire()
     {
@@ -33,12 +31,9 @@ public class HitscanGun : Gun
                 }
                 else
                 {
-                    print("I hit something");
                     Vector3 position = hit.point + (hit.normal * .1f);
                     Quaternion rotation = Quaternion.LookRotation(hit.normal);
                     shooting.CmdBulletHole(position, rotation);
-
-                    shooting.RpcPrint();
                 }
             }
 
@@ -51,7 +46,6 @@ public class HitscanGun : Gun
 
     public override void Discard()
     {
-        print("discared");
         playerManager.CmdDisarm();
     }
 }

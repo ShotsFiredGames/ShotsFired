@@ -15,9 +15,10 @@ public class PlayerMovement : NetworkBehaviour
 
     float speed;
     float sprintSpeed;
+    float xRotationValue;
+    Quaternion rotation;
     Vector3 direction;
     Vector3 velocity;
-    Quaternion rotation;
     bool isJumping;
 
     void Start ()
@@ -54,7 +55,9 @@ public class PlayerMovement : NetworkBehaviour
 
     public void Turn(float horizontal2)
     {
-        transform.Rotate(0, horizontal2 * rotationSpeed * Time.deltaTime, 0);
+        xRotationValue -= -horizontal2 * rotationSpeed * Time.deltaTime;
+        rotation = Quaternion.Euler(0, xRotationValue, 0);
+        transform.rotation = rotation;
     }
 
     public void Jump()
