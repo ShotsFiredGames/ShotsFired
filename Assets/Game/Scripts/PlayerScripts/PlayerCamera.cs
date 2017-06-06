@@ -55,7 +55,6 @@ public class PlayerCamera : MonoBehaviour
     public void Aim()
     {
         GetGun();
-
         if (currentGun != null)
         {
             if (currentGun.transform.localPosition != aimPosition)
@@ -64,14 +63,11 @@ public class PlayerCamera : MonoBehaviour
             if (myCamera.fieldOfView != 20)
                 myCamera.fieldOfView = Mathf.Lerp(myCamera.fieldOfView, aimFieldOfView, aimSpeed * Time.deltaTime);
         }
-
-        
     }
 
     public void StopAim()
     {
         GetGun();
-
         if (currentGun != null)
         {
             if (currentGun.transform.localPosition != basePosition)
@@ -79,7 +75,6 @@ public class PlayerCamera : MonoBehaviour
 
             if (myCamera.fieldOfView != 60)
                 myCamera.fieldOfView = Mathf.Lerp(myCamera.fieldOfView, baseFieldOfView, aimSpeed * Time.deltaTime);
-
         }
     }
 

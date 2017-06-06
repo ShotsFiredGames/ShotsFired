@@ -24,9 +24,7 @@ public class PlayerMovement : NetworkBehaviour
     void Start ()
     {
         speed = GameCustomization.playerSpeed;
-
         sprintSpeed = GameCustomization.sprintSpeed;
-
         rb = GetComponent<Rigidbody>();
         playerManager = GetComponent<PlayerManager>();
 	}

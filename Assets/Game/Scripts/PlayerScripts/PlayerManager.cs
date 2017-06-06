@@ -72,7 +72,6 @@ public class PlayerManager : NetworkBehaviour
             playerCamera.StopAim();
             StopAiming();
         }
-
     }
 
     private void LateUpdate()
@@ -83,7 +82,6 @@ public class PlayerManager : NetworkBehaviour
     public void SetRotationValue(float value)
     {
         yRotationValue = value;
-        print(yRotationValue);
     }
     ////Player States////
 
@@ -180,7 +178,6 @@ public class PlayerManager : NetworkBehaviour
         shooting.RemoveWeapon();
         playerCamera.SetFieldOfView(60);
     }
-
 
     void Dead()
     {

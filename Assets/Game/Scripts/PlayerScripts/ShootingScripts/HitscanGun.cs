@@ -20,9 +20,7 @@ public class HitscanGun : Gun
         if (!isFiring)
         {
             isFiring = true;
-
             shooting.CmdStartMuzzleFlash();
-
             if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, 1000, layermask))
             {
                 if (hit.transform.tag == "Collision")
@@ -36,9 +34,7 @@ public class HitscanGun : Gun
                     shooting.CmdBulletHole(position, rotation);
                 }
             }
-
             UseAmmo();
-
             yield return new WaitForSeconds(fireFreq);
             isFiring = false;
         }
