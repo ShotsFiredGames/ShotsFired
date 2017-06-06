@@ -67,7 +67,14 @@ public class Shooting : NetworkBehaviour
     [Command]
     public void CmdSpawnProjectile(Vector3 position, Quaternion rotation, Vector3 direction, double speed, int projectileNum)
     {
-        Debug.LogError("Fire Gun");
+        Debug.LogError("Fire Gun Command");
+        RpcSpawnProjectile(position, rotation, direction, speed, projectileNum);
+    }
+
+    [ClientRpc]
+    public void RpcSpawnProjectile(Vector3 position, Quaternion rotation, Vector3 direction, double speed, int projectileNum)
+    {
+        Debug.LogError("Fire Gun RPC");
         Projectile bullet = projectiles[projectileNum].GetPooledInstance<Projectile>();
 
         if (bullet == null)
