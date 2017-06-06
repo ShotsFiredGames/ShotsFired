@@ -9,22 +9,18 @@ public class ProjectileGun : Gun
     public Projectile projectile;
     public double speed;
 
-    [Client]
+    public void Start()
+    {
+        SetAmmo();
+        shooting = transform.root.GetComponent<Shooting>();
+    }
+
     public override IEnumerator Fire()
     {
         if (!isFiring)
         {
             isFiring = true;
-            Projectile bullet = projectile.GetPooledInstance<Projectile>();
-
-            if (bullet == null)
-            {
-                yield break;
-            }
-            bullet.transform.position = spawnPoint.position;
-            bullet.transform.rotation = transform.rotation;
-
-            bullet.SetSpeed(speed);
+            shooting.CmdSpawnProjectile(transform.position, transform.rotation, transform.up, speed, 0);
             //CmdStartMuzzleFlash();
             UseAmmo();
 

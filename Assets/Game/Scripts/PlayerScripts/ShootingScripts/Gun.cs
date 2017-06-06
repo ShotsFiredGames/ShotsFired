@@ -15,6 +15,7 @@ public abstract class Gun : NetworkBehaviour
     public Vector3 aimPosition;
 
     public PlayerManager playerManager;
+    public Shooting shooting;
 
     [HideInInspector]
     public bool isFiring = false;
@@ -53,12 +54,12 @@ public abstract class Gun : NetworkBehaviour
     {
         if (playerManager.isActiveAndEnabled)
         {
-            Debug.LogError("is local");
+            //Debug.LogError("is local");
             gameObject.SetActive(isActive);
         }
         else
         {
-            Debug.LogError("is not local");
+            //Debug.LogError("is not local");
             thirdPersonGun.SetActive(isActive);
         }
            

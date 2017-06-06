@@ -8,7 +8,7 @@ public class HitscanGun : Gun
 {
     public LayerMask layermask;
     RaycastHit hit;
-    Shooting shooting;
+    
 
     void Start()
     {

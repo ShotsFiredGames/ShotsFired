@@ -8,6 +8,7 @@ public class Shooting : NetworkBehaviour
     public GameObject currentGun;
     public GameObject bulletHole;
     public GameObject muzzleFlash;
+    public Projectile[] projectiles;
 
     public void Firing()
     {
@@ -61,5 +62,21 @@ public class Shooting : NetworkBehaviour
         RpcPrint();
         GameObject hole = Instantiate(bulletHole, position, rotation) as GameObject;
         NetworkServer.Spawn(hole);
+    }
+
+    [Command]
+    public void CmdSpawnProjectile(Vector3 position, Quaternion rotation, Vector3 direction, double speed, int projectileNum)
+    {
+        Debug.LogError("Fire Gun");
+        Projectile bullet = projectiles[projectileNum].GetPooledInstance<Projectile>();
+
+        if (bullet == null)
+        {
+            return;
+        }
+        bullet.transform.position = position;
+        bullet.transform.rotation = rotation;
+
+        bullet.SetSpeed(speed);
     }
 }

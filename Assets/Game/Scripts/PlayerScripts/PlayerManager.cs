@@ -62,7 +62,7 @@ public class PlayerManager : NetworkBehaviour
         if (controls.Jump.WasPressed)
         {
             Jumping();
-            CmdWeaponPickedUp("Scorpion");
+            CmdWeaponPickedUp("Other");
         }        
 
         if (controls.Fire)
@@ -144,7 +144,7 @@ public class PlayerManager : NetworkBehaviour
     [Command]
     public void CmdWeaponPickedUp(string gunName)
     {
-        Debug.LogError("We've pickup up a " + gunName);
+        //Debug.LogError("We've pickup up a " + gunName);
         RpcWeaponPickedUp(gunName);
     }
 
