@@ -76,14 +76,13 @@ public class Shooting : NetworkBehaviour
     {
         Debug.LogError("Fire Gun RPC");
         Projectile bullet = projectiles[projectileNum].GetPooledInstance<Projectile>();
-
+        
         if (bullet == null)
         {
             return;
         }
         bullet.transform.position = position;
         bullet.transform.rotation = rotation;
-
-        bullet.SetSpeed(speed);
+        bullet.SetVariables(speed, direction);
     }
 }

@@ -7,14 +7,15 @@ using UnityEngine.Networking;
 public class HitscanGun : Gun
 {
     public LayerMask layermask;
+    GameObject myCamera;
     RaycastHit hit;
-    
 
     void Start()
     {
         SetAmmo();
         //NetworkServer.Spawn(this.gameObject);
         shooting = transform.root.GetComponent<Shooting>();
+        myCamera = transform.root.Find("Main Camera").gameObject;
         print("Shooting: " + currentAmmo);
     }
     public override IEnumerator Fire()
@@ -25,7 +26,7 @@ public class HitscanGun : Gun
 
             shooting.CmdStartMuzzleFlash();
 
-            if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, 1000, layermask))
+            if (Physics.Raycast(myCamera.transform.position, myCamera.transform.forward, out hit, 1000, layermask))
             {
                 if (hit.transform.tag == "Collision")
                 {

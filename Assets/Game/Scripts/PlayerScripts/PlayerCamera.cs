@@ -32,6 +32,9 @@ public class PlayerCamera : MonoBehaviour
         yRotationValue += -rightStickY * lookSpeed * Time.deltaTime;
         yRotationValue = ClampAngle(yRotationValue, -clampValue, clampValue);
         cameraYRotation = Quaternion.Euler(yRotationValue, xRotationValue, 0);
+        if(myCamera == null)
+            myCamera = transform.Find("Main Camera").gameObject.GetComponent<Camera>();
+
         myCamera.transform.rotation = cameraYRotation;
     }
 

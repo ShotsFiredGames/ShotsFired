@@ -6,6 +6,7 @@ using UnityEngine.Networking;
 public abstract class Gun : NetworkBehaviour
 {
     public GameObject thirdPersonGun;
+    public GameObject thirdPersoGunbarrel;
     public string gunName;
     public int damage;
     public int ammo;
