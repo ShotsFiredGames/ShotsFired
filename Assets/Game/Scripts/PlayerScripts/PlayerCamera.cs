@@ -10,8 +10,8 @@ public class PlayerCamera : MonoBehaviour
     public float baseFieldOfView;
     public float aimFieldOfView;
 
-    Camera myCamera;
-    GameObject currentGun;
+    public Camera myCamera;
+    Gun currentGun;
     Vector3 basePosition;
     Vector3 aimPosition;
 
@@ -22,7 +22,7 @@ public class PlayerCamera : MonoBehaviour
 
     public void Start()
     {
-        myCamera = transform.Find("Main Camera").gameObject.GetComponent<Camera>();
+        //myCamera = transform.Find("Main Camera").gameObject.GetComponent<Camera>();
         rotationSpeed = GetComponent<PlayerMovement>().rotationSpeed;
     }
 
@@ -91,8 +91,8 @@ public class PlayerCamera : MonoBehaviour
             currentGun = GetComponent<Shooting>().currentGun;
             if (currentGun == null) return;
 
-            basePosition = currentGun.GetComponent<Gun>().basePosition;
-            aimPosition = currentGun.GetComponent<Gun>().aimPosition;
+            basePosition = currentGun.basePosition;
+            aimPosition = currentGun.aimPosition;
         }
     }
 }

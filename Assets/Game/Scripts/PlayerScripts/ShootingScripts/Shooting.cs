@@ -5,26 +5,55 @@ using UnityEngine.Networking;
 
 public class Shooting : NetworkBehaviour
 {
-    public GameObject currentGun;
+    public Gun currentGun;
     public GameObject bulletHole;
     public GameObject muzzleFlash;
+    public LayerMask layermask;
 
-    public void Firing()
+    GameObject cam;
+
+    void Start()
     {
-        print("IsFirin' N' Stuff");
-        if (currentGun != null)
-            StartCoroutine(currentGun.GetComponent<Gun>().Fire());
+        cam = transform.Find("Main Camera").gameObject;
     }
 
-    public void SetWeapon(GameObject weapon)
+    [Client]
+    public IEnumerator Firing()
+    {
+        if (currentGun.isActiveAndEnabled && !currentGun.isFiring)
+        {
+            currentGun.isFiring = true;
+            switch (currentGun.weaponType)
+            {
+                case Gun.WeaponType.Hitscan:
+                    HitscanShot();
+                    break;
+                case Gun.WeaponType.Projectile:
+                    ProjectileShot();
+                    break;
+                case Gun.WeaponType.Sustained:
+                    SustainedShot();
+                    break;
+                default:
+                    break;
+            }
+            
+            yield return new WaitForSeconds(currentGun.fireFreq);
+            Debug.LogError(currentGun);
+            currentGun.isFiring = false;
+            currentGun.UseAmmo();
+        }
+    }
+
+    public void SetWeapon(Gun weapon)
     {
         currentGun = weapon;
     }
 
     public void RemoveWeapon()
     {
-        currentGun.GetComponent<Gun>().SetActiveGun(false);
-        currentGun = null;
+        currentGun.SetActiveGun(false);
+        //currentGun = null;
     }
 
     [Command]
@@ -37,7 +66,6 @@ public class Shooting : NetworkBehaviour
     [ClientRpc]
     void RpcStartMuzzleFlash()
     {
-        print("muzzle should flash");
         StartCoroutine(MuzzleFlash());                                                                  //Activate the MuzzleFlash
     }
 
@@ -48,18 +76,53 @@ public class Shooting : NetworkBehaviour
         muzzleFlash.SetActive(false);
     }
 
-    [ClientRpc]
-    public void RpcPrint()
-    {
-
-        print("Spawn bullet hole");
-    }
-
     [Command]
     public void CmdBulletHole(Vector3 position, Quaternion rotation)
     {
-        RpcPrint();
         GameObject hole = Instantiate(bulletHole, position, rotation) as GameObject;
         NetworkServer.Spawn(hole);
+    }
+
+    [Command]
+    void CmdPlayerShot(string hitPlayer, string hitCollider)
+    {
+        PlayerWrangler.GetPlayer(hitPlayer).transform.Find("CollisionDetection").transform.Find(hitCollider).GetComponent<CollisionDetection>().OnHit(currentGun.damage);
+        //hitPlayer.OnHit(damage);
+    }
+
+    RaycastHit CastMyRay()
+    {
+        RaycastHit hit;
+        Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, 1000, layermask);
+        return hit;
+    }
+
+    [Client]
+    void HitscanShot()
+    {        
+        CmdStartMuzzleFlash();
+        RaycastHit hit = CastMyRay();
+        if (hit.transform.tag.Equals("Collision"))
+        {
+            CmdPlayerShot(hit.transform.root.name, hit.transform.name);
+        }
+        else
+        {
+            Vector3 position = hit.point + (hit.normal * .1f);
+            Quaternion rotation = Quaternion.LookRotation(hit.normal);
+            CmdBulletHole(position, rotation);
+        }        
+    }
+
+    [Client]
+    void ProjectileShot()
+    {
+
+    }
+
+    [Client]
+    void SustainedShot()
+    {
+
     }
 }

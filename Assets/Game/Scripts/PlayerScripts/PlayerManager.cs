@@ -5,9 +5,13 @@ using UnityEngine.Networking;
 
 public class PlayerManager : NetworkBehaviour
 {
+    [SyncVar]
+    public byte playerID;
+
     AnimationManager animationManager;
     PlayerMovement playerMovement;
     PlayerCamera playerCamera;
+    PlayerHealth playerHealth;
     Shooting shooting;
 
     Controls controls;
@@ -19,12 +23,21 @@ public class PlayerManager : NetworkBehaviour
 
     int shotsFired = 5;
 
+    public bool isDead;
+
+    void Awake()
+    {
+        playerHealth = GetComponent<PlayerHealth>();
+    }
+
     private void Start()
     {
         playerMovement = GetComponent<PlayerMovement>();
         animationManager = GetComponent<AnimationManager>();
         playerCamera = GetComponent<PlayerCamera>();
+        playerHealth.playerID = playerID;
         shooting = GetComponent<Shooting>();
+        playerHealth.Init();
     }
 
     void OnEnable()
@@ -40,6 +53,7 @@ public class PlayerManager : NetworkBehaviour
     private void Update()
     {
         if (!isLocalPlayer) return;
+        if (isDead) return;
 
         ApplyMovementInput();
 
@@ -76,11 +90,11 @@ public class PlayerManager : NetworkBehaviour
         {
             playerCamera.StopAim();
         }
-
     }
 
     private void LateUpdate()
     {
+        if (isDead) return;
         playerCamera.Look(controls.Look.Y, controls.Look.X);
     }
 
@@ -136,15 +150,13 @@ public class PlayerManager : NetworkBehaviour
 
     void Firing()
     {
-        print("Shoot");
-        shooting.Firing();
+        StartCoroutine(shooting.Firing());
         //animationManager.IsFiring();
     }
 
     [Command]
     public void CmdWeaponPickedUp(string gunName)
     {
-        Debug.LogError("We've pickup up a " + gunName);
         RpcWeaponPickedUp(gunName);
     }
 
@@ -153,14 +165,14 @@ public class PlayerManager : NetworkBehaviour
     {
         isArmed = true;
         animationManager.Armed();
-        GameObject newGun = FindGun(gunName);
+        Gun newGun = FindGun(gunName);
 
         if (newGun == null) Debug.LogError("Incorrect Name of Gun");
 
         shooting.SetWeapon(newGun);
-        newGun.GetComponent<Gun>().SetAmmo();
+        newGun.SetAmmo();
 
-        newGun.GetComponent<Gun>().SetActiveGun(true);
+        newGun.SetActiveGun(true);
     }
 
     [Command]
@@ -179,18 +191,41 @@ public class PlayerManager : NetworkBehaviour
     }
 
 
-    void Dead()
+    public void Dead(CollisionDetection.CollisionFlag collisionLocation)
     {
+        Debug.LogError("Am Ded from: " + collisionLocation.ToString());
+        isDead = true;
+
+        //switch (collisionLocation)
+        //{
+        //    case CollisionDetection.CollisionFlag.FrontHeadShot:
+        //        anim.SetBool("FrontHeadShot", true);
+        //        break;
+        //    case CollisionDetection.CollisionFlag.BackHeadShot:
+        //        anim.SetBool("BackHeadShot", true);
+        //        break;
+        //    case CollisionDetection.CollisionFlag.Front:
+        //        anim.SetBool("Front", true);
+        //        break;
+        //    case CollisionDetection.CollisionFlag.Back:
+        //        anim.SetBool("Back", true);
+        //        break;
+        //    case CollisionDetection.CollisionFlag.Left:
+        //        anim.SetBool("Left", true);
+        //        break;
+        //    case CollisionDetection.CollisionFlag.Right:
+        //        anim.SetBool("Right", true);
+        //        break;
+        //}
         //animationManager.IsDead();
     }
 
-    GameObject FindGun(string gunName)
+    Gun FindGun(string gunName)
     {
-        Debug.LogError("There are" + guns.Length + " guns " + gunName);
         foreach (Gun gun in guns)
         {
             if (gun.gunName.Equals(gunName))
-                return gun.gameObject;
+                return gun;
         }
 
         return null;
