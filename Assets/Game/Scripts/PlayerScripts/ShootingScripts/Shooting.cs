@@ -73,15 +73,16 @@ public class Shooting : NetworkBehaviour
 
     IEnumerator MuzzleFlash()                                                                                   //Activate and DeActivate the muzzle flash
     {
-        _bulletHole.SetActive(true);
+        _muzzleFlash.SetActive(true);
         yield return new WaitForSeconds(.05f);
-        _bulletHole.SetActive(false);
+        _muzzleFlash.SetActive(false);
     }
 
     [Command]
     public void CmdBulletHole(Vector3 position, Quaternion rotation)
     {
         GameObject hole = Instantiate(_bulletHole, position, rotation) as GameObject;
+        hole.SetActive(true);
         NetworkServer.Spawn(hole);
     }
 
