@@ -31,14 +31,19 @@ public class PlayerCamera : MonoBehaviour
         rotationSpeed = GetComponent<PlayerMovement>().rotationSpeed;        
     }
 
-    public void Look(float rightStickY, float righStickX)
+    public void Look(float rightStickY, float rightStickX)
     {
-        xRotationValue -= -righStickX * rotationSpeed * Time.deltaTime;
+       // xRotationValue -= -righStickX * rotationSpeed * Time.deltaTime;
         yRotationValue += -rightStickY * lookSpeed * Time.deltaTime;
         yRotationValue = ClampAngle(yRotationValue, -clampValue, clampValue);
-        cameraYRotation = Quaternion.Euler(yRotationValue, xRotationValue, 0);
+        cameraYRotation = Quaternion.Euler(yRotationValue, 0, 0);
         SendRotationValue(yRotationValue);
         myCamera.transform.rotation = cameraYRotation;
+
+        
+        cameraYRotation *= Quaternion.Euler(0f, (float)rightStickX * rotationSpeed * Time.deltaTime, 0f);
+        myCamera.transform.localRotation = Quaternion.Slerp(myCamera.transform.localRotation, cameraYRotation, 1);
+        
     }
 
     void SendRotationValue(float value)
