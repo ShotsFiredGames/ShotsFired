@@ -77,6 +77,7 @@ public class PlayerManager : NetworkBehaviour
 
         if(controls.Aim)
         {
+            if (!isArmed) return;
             playerCamera.Aim();
             Aim();
         }
