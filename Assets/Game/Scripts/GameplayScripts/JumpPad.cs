@@ -7,7 +7,7 @@ public class JumpPad : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.name == "Player")
+        if (other.tag.Equals("Player"))
             Lift(other.gameObject);
     }
     private void Lift(GameObject _liftedObject)
