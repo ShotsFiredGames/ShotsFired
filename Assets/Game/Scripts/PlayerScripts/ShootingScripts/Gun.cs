@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Gun : MonoBehaviour
+public class Gun : MonoBehaviour
 {
     public enum WeaponType
     {
@@ -32,12 +32,21 @@ public abstract class Gun : MonoBehaviour
     [HideInInspector]
     public int currentAmmo;
 
+    // Projectile Variables
+    public Projectile projectile;
+    public double speed;
 
-	//public abstract IEnumerator Fire();
+    // Hitscan Variables
+    public GameObject bulletHole;
 
-    public abstract void Discard();
-  
+    public GameObject muzzleFlash;
+
     //public void Overcharge();
+
+    void Start()
+    {
+        SetAmmo();
+    }
 
     public void SetAmmo()
     {
@@ -52,7 +61,7 @@ public abstract class Gun : MonoBehaviour
         currentAmmo--;
         if (currentAmmo <= 0)
         {
-            Discard();
+            playerManager.CmdDisarm();
         }
     }
 

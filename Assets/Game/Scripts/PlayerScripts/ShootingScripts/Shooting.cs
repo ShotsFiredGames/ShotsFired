@@ -6,8 +6,8 @@ using UnityEngine.Networking;
 public class Shooting : NetworkBehaviour
 {
     public Gun currentGun;
-    public GameObject bulletHole;
-    public GameObject muzzleFlash;
+    GameObject _bulletHole;
+    GameObject _muzzleFlash;
     public LayerMask layermask;
 
     GameObject cam;
@@ -48,6 +48,8 @@ public class Shooting : NetworkBehaviour
     public void SetWeapon(Gun weapon)
     {
         currentGun = weapon;
+        _bulletHole = currentGun.bulletHole;
+        _muzzleFlash = currentGun.muzzleFlash;
     }
 
     public void RemoveWeapon()
@@ -59,7 +61,7 @@ public class Shooting : NetworkBehaviour
     [Command]
     public void CmdStartMuzzleFlash()
     {
-        if (muzzleFlash == null) return;
+        if (_bulletHole == null) return;
         RpcStartMuzzleFlash();
     }
 
@@ -71,15 +73,15 @@ public class Shooting : NetworkBehaviour
 
     IEnumerator MuzzleFlash()                                                                                   //Activate and DeActivate the muzzle flash
     {
-        muzzleFlash.SetActive(true);
+        _bulletHole.SetActive(true);
         yield return new WaitForSeconds(.05f);
-        muzzleFlash.SetActive(false);
+        _bulletHole.SetActive(false);
     }
 
     [Command]
     public void CmdBulletHole(Vector3 position, Quaternion rotation)
     {
-        GameObject hole = Instantiate(bulletHole, position, rotation) as GameObject;
+        GameObject hole = Instantiate(_bulletHole, position, rotation) as GameObject;
         NetworkServer.Spawn(hole);
     }
 
