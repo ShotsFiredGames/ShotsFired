@@ -35,6 +35,7 @@ public class Gun : MonoBehaviour
     // Projectile Variables
     public Projectile projectile;
     public double speed;
+    public GameObject gunbarrel;
 
     // Hitscan Variables
     public GameObject bulletHole;

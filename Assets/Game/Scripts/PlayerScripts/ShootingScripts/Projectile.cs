@@ -5,28 +5,33 @@ using UnityEngine;
 public class Projectile : PooledObject
 {
     float speed;
+    Vector3 direction;
+    Rigidbody rb;
 
-    public void SetSpeed(double speed)
+    private void Start()
     {
-        this.speed = (float)speed;
+        rb = GetComponent<Rigidbody>();
     }
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update ()
+    public void SetVariables(double speed, Vector3 _direction)
     {
-        transform.Translate(transform.forward * Time.deltaTime * speed);
-	}
+        this.speed = (float)speed;
+        this.direction = _direction;
+    }
+
+    void Update()
+    {
+        transform.LookAt(direction);
+        rb.velocity = (direction - transform.position).normalized * (speed * 10) * Time.deltaTime;
+        //transform.position = Vector3.Lerp(transform.position, direction, speed * Time.deltaTime);
+    }
 
     void OnTriggerEnter(Collider other)
     {
         if (other.tag.Equals("Collision"))
         {
             //other.GetComponent<CollisionDetection>().OnHit();
+            print("Hit");
         }
 
         ReturnToPool();

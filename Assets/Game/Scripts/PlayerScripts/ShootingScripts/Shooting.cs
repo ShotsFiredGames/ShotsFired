@@ -87,6 +87,28 @@ public class Shooting : NetworkBehaviour
     }
 
     [Command]
+    public void CmdSpawnProjectile(Vector3 position, Quaternion rotation, Vector3 direction, double speed)
+    {
+        Debug.LogError("Fire Gun Command");
+        RpcSpawnProjectile(position, rotation, direction, speed);
+    }
+
+    [ClientRpc]
+    public void RpcSpawnProjectile(Vector3 position, Quaternion rotation, Vector3 direction, double speed)
+    {
+        Debug.LogError("Fire Gun RPC");
+        Projectile bullet = currentGun.projectile.GetPooledInstance<Projectile>();
+
+        if (bullet == null)
+        {
+            return;
+        }
+        bullet.transform.position = position;
+        bullet.transform.rotation = rotation;
+        bullet.SetVariables(speed, direction);
+    }
+
+    [Command]
     void CmdPlayerShot(string hitPlayer, string hitCollider)
     {
         PlayerWrangler.GetPlayer(hitPlayer).transform.Find("CollisionDetection").transform.Find(hitCollider).GetComponent<CollisionDetection>().OnHit(currentGun.damage);
@@ -124,6 +146,7 @@ public class Shooting : NetworkBehaviour
         CmdStartMuzzleFlash();
         RaycastHit hit = CastMyRay();
         if (hit.point == Vector3.zero) return;
+        else CmdSpawnProjectile(currentGun.gunbarrel.transform.position, transform.root.rotation, hit.point, currentGun.speed);
     }
 
     [Client]
