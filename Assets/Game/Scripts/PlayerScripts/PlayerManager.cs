@@ -196,7 +196,7 @@ public class PlayerManager : NetworkBehaviour
     public void Dead(CollisionDetection.CollisionFlag collisionLocation)
     {
         isDead = true;
-        //animationManager.IsDead();
+        animationManager.IsDead(collisionLocation);
     }
 
     Gun FindGun(string gunName)

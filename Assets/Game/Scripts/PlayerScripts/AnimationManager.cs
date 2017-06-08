@@ -84,4 +84,29 @@ public class AnimationManager : MonoBehaviour
     {
         anim.SetBool("IsFiring", false);
     }
+
+    public void IsDead(CollisionDetection.CollisionFlag collisionLocation)
+    {
+        switch (collisionLocation)                                                                                         
+        {
+            case CollisionDetection.CollisionFlag.FrontHeadShot:
+                anim.SetInteger("Died", 1);                          
+                break;
+            case CollisionDetection.CollisionFlag.BackHeadShot:
+                anim.SetInteger("Died", 2);
+                break;
+            case CollisionDetection.CollisionFlag.Front:
+                anim.SetInteger("Died", 3);
+                break;
+            case CollisionDetection.CollisionFlag.Back:
+                anim.SetInteger("Died", 4);
+                break;
+            case CollisionDetection.CollisionFlag.Left:
+                anim.SetInteger("Died", 5);
+                break;
+            case CollisionDetection.CollisionFlag.Right:
+                anim.SetInteger("Died", 6);
+                break;
+        }
+    }
 }
