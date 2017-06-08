@@ -9,30 +9,30 @@ public class ProjectileGun : Gun
     public Projectile projectile;
     public double speed;
 
-    [Client]
-    public override IEnumerator Fire()
-    {
-        if (!isFiring)
-        {
-            isFiring = true;
-            Projectile bullet = projectile.GetPooledInstance<Projectile>();
+    //[Client]
+    //public override IEnumerator Fire()
+    //{
+    //    if (!isFiring)
+    //    {
+    //        isFiring = true;
+    //        Projectile bullet = projectile.GetPooledInstance<Projectile>();
 
-            if (bullet == null)
-            {
-                yield break;
-            }
-            bullet.transform.position = spawnPoint.position;
-            bullet.transform.rotation = transform.rotation;
+    //        if (bullet == null)
+    //        {
+    //            yield break;
+    //        }
+    //        bullet.transform.position = spawnPoint.position;
+    //        bullet.transform.rotation = transform.rotation;
 
-            bullet.SetSpeed(speed);
-            //CmdStartMuzzleFlash();
-            UseAmmo();
+    //        bullet.SetSpeed(speed);
+    //        //CmdStartMuzzleFlash();
+    //        UseAmmo();
 
-            yield return new WaitForSeconds(fireFreq);
-            isFiring = false;
-        } 
+    //        yield return new WaitForSeconds(fireFreq);
+    //        isFiring = false;
+    //    } 
         
-    }
+    //}
 
     public override void Discard()
     {

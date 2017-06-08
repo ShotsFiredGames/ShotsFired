@@ -8,23 +8,35 @@ public class PlayerManager : NetworkBehaviour
     AnimationManager animationManager;
     PlayerMovement playerMovement;
     PlayerCamera playerCamera;
+
+    PlayerHealth playerHealth;
+    public bool isDead;
+
     Shooting shooting;
 
     Controls controls;
     string saveData;
     bool isSprinting;
+
     public bool isArmed;
     public Gun[] guns;
-
     int shotsFired = 5;
+
     float yRotationValue;
+
+    void Awake()
+    {
+        playerHealth = GetComponent<PlayerHealth>();
+        playerCamera = GetComponent<PlayerCamera>();
+    }
 
     private void Start()
     {
         playerMovement = GetComponent<PlayerMovement>();
         animationManager = GetComponent<AnimationManager>();
-        playerCamera = GetComponent<PlayerCamera>();
+        
         shooting = GetComponent<Shooting>();
+        playerHealth.Init();
     }
 
     void OnEnable()
@@ -40,6 +52,7 @@ public class PlayerManager : NetworkBehaviour
     private void Update()
     {
         if (!isLocalPlayer) return;
+        if (isDead) return;
 
         ApplyMovementInput();
 
@@ -76,6 +89,7 @@ public class PlayerManager : NetworkBehaviour
 
     private void LateUpdate()
     {
+        if (isDead) return;
         playerCamera.Look(controls.Look.Y, controls.Look.X);
     }
 
@@ -134,7 +148,7 @@ public class PlayerManager : NetworkBehaviour
     void Firing()
     {
         if (!isArmed) return;
-        shooting.Firing();
+        StartCoroutine(shooting.Firing());
         animationManager.IsFiring();
     }
 
@@ -154,7 +168,7 @@ public class PlayerManager : NetworkBehaviour
     {
         isArmed = true;
         animationManager.Armed();
-        GameObject newGun = FindGun(gunName);
+        Gun newGun = FindGun(gunName);
 
         if (newGun == null) Debug.LogError("Incorrect Name of Gun");
 
@@ -179,17 +193,18 @@ public class PlayerManager : NetworkBehaviour
         playerCamera.SetFieldOfView(60);
     }
 
-    void Dead()
+    public void Dead(CollisionDetection.CollisionFlag collisionLocation)
     {
+        isDead = true;
         //animationManager.IsDead();
     }
 
-    GameObject FindGun(string gunName)
+    Gun FindGun(string gunName)
     {
         foreach (Gun gun in guns)
         {
             if (gun.gunName.Equals(gunName))
-                return gun.gameObject;
+                return gun;
         }
         return null;
     }

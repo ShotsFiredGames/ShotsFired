@@ -10,7 +10,7 @@ public class PlayerCamera : MonoBehaviour
     public float baseFieldOfView;
     public float aimFieldOfView;
 
-    Camera myCamera;
+    public Camera myCamera;
     GameObject currentGun;
     Vector3 basePosition;
     Vector3 aimPosition;
@@ -21,11 +21,14 @@ public class PlayerCamera : MonoBehaviour
     float rotationSpeed;
     Quaternion cameraYRotation;
 
+    void Awake()
+    {
+        playerManager = GetComponent<PlayerManager>();
+    }
+
     public void Start()
     {
-        myCamera = transform.Find("Main Camera").gameObject.GetComponent<Camera>();
-        rotationSpeed = GetComponent<PlayerMovement>().rotationSpeed;
-        playerManager = GetComponent<PlayerManager>();
+        rotationSpeed = GetComponent<PlayerMovement>().rotationSpeed;        
     }
 
     public void Look(float rightStickY, float righStickX)
@@ -91,7 +94,7 @@ public class PlayerCamera : MonoBehaviour
     {
         if (currentGun != GetComponent<Shooting>().currentGun)
         {
-            currentGun = GetComponent<Shooting>().currentGun;
+            currentGun = GetComponent<Shooting>().currentGun.gameObject;
             if (currentGun == null) return;
 
             basePosition = currentGun.GetComponent<Gun>().basePosition;

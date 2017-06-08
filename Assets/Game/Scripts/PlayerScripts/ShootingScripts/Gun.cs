@@ -1,10 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
 
-public abstract class Gun : NetworkBehaviour
+public abstract class Gun : MonoBehaviour
 {
+    public enum WeaponType
+    {
+        Hitscan,
+        Projectile,
+        Sustained
+    };
+
+    public WeaponType weaponType;
+
     public GameObject thirdPersonGun;
     public string gunName;
     public int damage;
@@ -25,7 +33,7 @@ public abstract class Gun : NetworkBehaviour
     public int currentAmmo;
 
 
-	public abstract IEnumerator Fire();
+	//public abstract IEnumerator Fire();
 
     public abstract void Discard();
   
@@ -42,7 +50,6 @@ public abstract class Gun : NetworkBehaviour
         if (isAmmoUnlimited) return;
 
         currentAmmo--;
-        print("Shooting: " + currentAmmo);
         if (currentAmmo <= 0)
         {
             Discard();

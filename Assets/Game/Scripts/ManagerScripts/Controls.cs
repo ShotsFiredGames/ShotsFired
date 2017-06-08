@@ -79,20 +79,20 @@ public class Controls : PlayerActionSet
         controls.Up.AddDefaultBinding(InputControlType.LeftStickUp);
         controls.Down.AddDefaultBinding(InputControlType.LeftStickDown);
 
-        controls.LookLeft.AddDefaultBinding(InputControlType.RightStickLeft);
-        controls.LookRight.AddDefaultBinding(InputControlType.RightStickRight);
-        controls.LookUp.AddDefaultBinding(InputControlType.RightStickUp);
-        controls.LookDown.AddDefaultBinding(InputControlType.RightStickDown);
-
         controls.Left.AddDefaultBinding(InputControlType.DPadLeft);
         controls.Right.AddDefaultBinding(InputControlType.DPadRight);
         controls.Up.AddDefaultBinding(InputControlType.DPadUp);
         controls.Down.AddDefaultBinding(InputControlType.DPadDown);
 
-        controls.LookUp.AddDefaultBinding(Mouse.PositiveY);
-        controls.LookDown.AddDefaultBinding(Mouse.NegativeY);
+        controls.LookLeft.AddDefaultBinding(InputControlType.RightStickLeft);
+        controls.LookRight.AddDefaultBinding(InputControlType.RightStickRight);
+        controls.LookUp.AddDefaultBinding(InputControlType.RightStickUp);
+        controls.LookDown.AddDefaultBinding(InputControlType.RightStickDown);
+
         controls.LookLeft.AddDefaultBinding(Mouse.NegativeX);
         controls.LookRight.AddDefaultBinding(Mouse.PositiveX);
+        controls.LookUp.AddDefaultBinding(Mouse.PositiveY);
+        controls.LookDown.AddDefaultBinding(Mouse.NegativeY);        
 
         controls.ListenOptions.IncludeUnknownControllers = true;
         controls.ListenOptions.MaxAllowedBindings = 4;
