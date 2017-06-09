@@ -1,11 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Networking;
 
 public class PlayerHealth : NetworkBehaviour
 {
     PlayerManager playerManager;
+
+    public Image dmgIndicatorLeft;
+    public Image dmgIndicatorRight;
+    public Image dmgIndicatorTop;
+    public Image dmgIndicatorBottom;
 
     public AudioSource source;
     public AudioClip hitSound;
@@ -51,7 +57,7 @@ public class PlayerHealth : NetworkBehaviour
     {
         Debug.LogError("apply damage");
         currentHealth -= damage;
-
+        Hit(collisionLocation);
         if (!source.isPlaying)
         {
             source.PlayOneShot(hitSound);
@@ -67,7 +73,7 @@ public class PlayerHealth : NetworkBehaviour
     public void CmdHeadshotDamage(int headshotDamage, CollisionDetection.CollisionFlag collisionLocation)
     {
         RpcHeadshotDamage(headshotDamage, collisionLocation);
-    }    
+    }
 
     [ClientRpc]
     public void RpcHeadshotDamage(int headshotDamage, CollisionDetection.CollisionFlag collisionLocation)    //This is called from CollisionDetection to determine the damage and the location of the incoming collision.
@@ -77,7 +83,7 @@ public class PlayerHealth : NetworkBehaviour
         {
             source.PlayOneShot(hitSound);
         }
-
+        Hit(collisionLocation);
         currentHealth -= headshotDamage;
 
         if (currentHealth <= 0)
@@ -105,5 +111,39 @@ public class PlayerHealth : NetworkBehaviour
         transform.rotation = respawnpoint.rotation;
 
         Init();
+    }
+
+    [Client]
+    void Hit(CollisionDetection.CollisionFlag collisionLocation)
+    {
+        switch (collisionLocation)
+        {
+            case CollisionDetection.CollisionFlag.FrontHeadShot:
+                StartCoroutine(IndicateDamage(dmgIndicatorTop));
+                break;
+            case CollisionDetection.CollisionFlag.BackHeadShot:
+                StartCoroutine(IndicateDamage(dmgIndicatorBottom));
+                break;
+            case CollisionDetection.CollisionFlag.Front:
+                StartCoroutine(IndicateDamage(dmgIndicatorTop));
+                break;
+            case CollisionDetection.CollisionFlag.Back:
+                StartCoroutine(IndicateDamage(dmgIndicatorBottom));
+                break;
+            case CollisionDetection.CollisionFlag.Left:
+                StartCoroutine(IndicateDamage(dmgIndicatorLeft));
+                break;
+            case CollisionDetection.CollisionFlag.Right:
+                StartCoroutine(IndicateDamage(dmgIndicatorRight));
+                break;
+        }
+    }
+
+    IEnumerator IndicateDamage(Image indicator)
+    {
+        indicator.enabled = true;
+        Debug.LogError("Indicate");
+        yield return new WaitForSeconds(0.05f);
+        indicator.enabled = false;
     }
 }
