@@ -67,7 +67,6 @@ public class PlayerManager : NetworkBehaviour
         if (controls.Jump.WasPressed)
         {
             Jumping();
-            CmdWeaponPickedUp("Scorpion");
         }
 
         if (controls.Fire)
@@ -156,6 +155,16 @@ public class PlayerManager : NetworkBehaviour
     void StopFiring()
     {
         animationManager.StoppedFiring();
+    }
+
+    public void WeaponPickedUp(string weaponName)
+    {
+        CmdWeaponPickedUp(weaponName);
+    }
+
+    public void AbilityPickedUp(string abilityName)
+    {
+
     }
 
     [Command]
