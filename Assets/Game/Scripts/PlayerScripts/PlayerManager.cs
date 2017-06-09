@@ -67,7 +67,7 @@ public class PlayerManager : NetworkBehaviour
         if (controls.Jump.WasPressed)
         {
             Jumping();
-            CmdWeaponPickedUp("Scorpion");
+            CmdWeaponPickedUp("Other");
         }
 
         if (controls.Fire)

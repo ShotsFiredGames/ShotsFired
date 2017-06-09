@@ -145,8 +145,9 @@ public class Shooting : NetworkBehaviour
     {
         CmdStartMuzzleFlash();
         RaycastHit hit = CastMyRay();
-        if (hit.point == Vector3.zero) return;
-        else CmdSpawnProjectile(currentGun.gunbarrel.transform.position, transform.root.rotation, hit.point, currentGun.speed);
+        //if (hit.point == Vector3.zero) return;
+
+        CmdSpawnProjectile(currentGun.gunbarrel.transform.position, transform.root.rotation, hit.point, currentGun.speed);
     }
 
     [Client]
