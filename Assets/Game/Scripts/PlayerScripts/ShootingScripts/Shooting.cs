@@ -11,10 +11,12 @@ public class Shooting : NetworkBehaviour
     public LayerMask layermask;
 
     GameObject cam;
+    NetworkedPoolingScript objectPooling;
 
     void Start()
     {
         cam = transform.Find("Main Camera").gameObject;
+        objectPooling = GameObject.Find("GameManager").GetComponent<NetworkedPoolingScript>();
     }
 
     [Client]
@@ -97,7 +99,10 @@ public class Shooting : NetworkBehaviour
     public void RpcSpawnProjectile(Vector3 position, Quaternion rotation, Vector3 direction, double speed)
     {
         Debug.LogError("Fire Gun RPC");
-        Projectile bullet = currentGun.projectile.GetPooledInstance<Projectile>();
+        //Projectile bullet = currentGun.projectile.GetPooledInstance<Projectile>();
+        if (objectPooling == null) objectPooling = GameObject.Find("GameManager").GetComponent<NetworkedPoolingScript>();
+
+        GameObject bullet = objectPooling.GetFromPool(position);
 
         if (bullet == null)
         {
@@ -105,7 +110,7 @@ public class Shooting : NetworkBehaviour
         }
         bullet.transform.position = position;
         bullet.transform.rotation = rotation;
-        bullet.SetVariables(speed, direction);
+        bullet.GetComponent<Projectile>().SetVariables(speed, direction);
     }
 
     [Command]

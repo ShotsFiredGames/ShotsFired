@@ -1,16 +1,24 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class Projectile : PooledObject
 {
     float speed;
     Vector3 direction;
     Rigidbody rb;
+    NetworkedPoolingScript objectPool;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
+        objectPool = GameObject.Find("GameManager").GetComponent<NetworkedPoolingScript>();
+    }
+
+    void OnEnable()
+    {
+        DestroyBullet(5);
     }
 
     public void SetVariables(double speed, Vector3 _direction)
@@ -35,5 +43,12 @@ public class Projectile : PooledObject
         }
 
         ReturnToPool();
+    }
+
+    IEnumerator DestroyBullet(float waitTime)
+    {
+        yield return new WaitForSeconds(waitTime);
+        objectPool.UnSpawnObject(gameObject);
+       // NetworkServer.UnSpawn(gameObject);
     }
 }
