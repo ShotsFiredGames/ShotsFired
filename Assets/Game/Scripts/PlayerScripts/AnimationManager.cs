@@ -109,4 +109,9 @@ public class AnimationManager : MonoBehaviour
                 break;
         }
     }
+
+    public void IsRespawning()
+    {
+        anim.SetInteger("Died", 0);
+    }
 }

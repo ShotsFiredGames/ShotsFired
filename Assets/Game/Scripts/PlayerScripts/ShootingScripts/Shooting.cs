@@ -55,7 +55,6 @@ public class Shooting : NetworkBehaviour
     public void RemoveWeapon()
     {
         currentGun.SetActiveGun(false);
-        //currentGun = null;
     }
 
     [Command]
@@ -96,7 +95,6 @@ public class Shooting : NetworkBehaviour
     void CmdPlayerShot(string hitPlayer, string hitCollider)
     {
         PlayerWrangler.GetPlayer(hitPlayer).transform.Find("CollisionDetection").transform.Find(hitCollider).GetComponent<CollisionDetection>().OnHit(currentGun.damage);
-        //hitPlayer.OnHit(damage);
     }
 
     RaycastHit CastMyRay()

@@ -219,6 +219,12 @@ public class PlayerManager : NetworkBehaviour
         animationManager.IsDead(collisionLocation);
     }
 
+    public void Respawn()
+    {
+        animationManager.IsRespawning();
+        isDead = false;
+    }
+
     Gun FindGun(string gunName)
     {
         foreach (Gun gun in guns)

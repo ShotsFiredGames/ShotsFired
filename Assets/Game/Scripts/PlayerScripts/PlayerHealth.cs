@@ -36,7 +36,6 @@ public class PlayerHealth : NetworkBehaviour
     public void Init()
     {
         isDead = false;
-        playerManager.isDead = false;
         currentHealth = maxHealth;
         if (!isLocalPlayer)
         {
@@ -111,6 +110,7 @@ public class PlayerHealth : NetworkBehaviour
         transform.rotation = respawnpoint.rotation;
 
         Init();
+        playerManager.Respawn();
     }
 
     [Client]

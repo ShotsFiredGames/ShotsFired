@@ -6,6 +6,7 @@ public class PlayerSetup : NetworkBehaviour
 {
     public Behaviour[] componentsToDisable;
     public GameObject thirdPersonAnimations;
+    public GameObject damageIndicators;
     GameObject collisionDetection;
 
     private void Start()
@@ -18,7 +19,11 @@ public class PlayerSetup : NetworkBehaviour
             }
         }
         else
+        {
             thirdPersonAnimations.SetActive(false);
+            damageIndicators.SetActive(true);
+        }
+
 
         if (isLocalPlayer)
         {
