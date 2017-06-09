@@ -21,7 +21,7 @@ public class PickUpManager : NetworkBehaviour
                 playerManager.CmdWeaponPickedUp(pickUp);
                 break;
             case "Ability":
-                //playerManager.RpcAbilityPickedUp(pickUp);
+                playerManager.CmdAbilityPickedUp(pickUp);
                 break;
         }
     }

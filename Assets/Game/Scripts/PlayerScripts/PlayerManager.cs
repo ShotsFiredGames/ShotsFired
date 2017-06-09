@@ -34,7 +34,7 @@ public class PlayerManager : NetworkBehaviour
     {
         playerMovement = GetComponent<PlayerMovement>();
         animationManager = GetComponent<AnimationManager>();
-        
+
         shooting = GetComponent<Shooting>();
         playerHealth.Init();
     }
@@ -74,7 +74,7 @@ public class PlayerManager : NetworkBehaviour
         else
             StopFiring();
 
-        if(controls.Aim)
+        if (controls.Aim)
         {
             if (!isArmed) return;
             playerCamera.Aim();
@@ -157,14 +157,24 @@ public class PlayerManager : NetworkBehaviour
         animationManager.StoppedFiring();
     }
 
-    public void WeaponPickedUp(string weaponName)
+    [Command]
+    public void CmdAbilityPickedUp(string abilityName)
     {
-        CmdWeaponPickedUp(weaponName);
+        RpcAbilityPickedUp(abilityName);
     }
 
-    public void AbilityPickedUp(string abilityName)
+    [ClientRpc]
+    void RpcAbilityPickedUp(string abilityName)
     {
-
+        switch(abilityName)
+        {
+            case "SuperBoots":
+                playerMovement.SuperBoots();
+                break;
+            case "Juggernaut":
+                //playerMovement.SuperBoots();
+                break;
+        }
     }
 
     [Command]
