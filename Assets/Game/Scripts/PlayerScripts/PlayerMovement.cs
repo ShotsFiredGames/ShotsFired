@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
+using System.Collections;
 
 public class PlayerMovement : NetworkBehaviour
 {
@@ -15,11 +16,13 @@ public class PlayerMovement : NetworkBehaviour
 
     float speed;
     float sprintSpeed;
+    float _jump;
     float xRotationValue;
     Quaternion rotation;
     Vector3 direction;
     Vector3 velocity;
     bool isJumping;
+    bool isUsingBoots;
 
     void Start ()
     {
@@ -27,6 +30,7 @@ public class PlayerMovement : NetworkBehaviour
         sprintSpeed = GameCustomization.sprintSpeed;
         rb = GetComponent<Rigidbody>();
         playerManager = GetComponent<PlayerManager>();
+        _jump = jumpForce;
 	}
 
     private void Update()
@@ -63,7 +67,28 @@ public class PlayerMovement : NetworkBehaviour
         if (Grounded())
         {
             rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
+            SuperBoots();
         }
+    }
+
+    public void SuperBoots()
+    {
+        StartCoroutine(BootsAbilty());
+    }
+
+    IEnumerator BootsAbilty()
+    {
+        if (!isUsingBoots)
+        {
+            isUsingBoots = true;
+            speed = speed * 2;
+            jumpForce = jumpForce * 2;
+            yield return new WaitForSeconds(3f);
+            isUsingBoots = false;
+            speed = GameCustomization.playerSpeed;
+            jumpForce = _jump;
+        }
+       
     }
 
     bool Grounded()
