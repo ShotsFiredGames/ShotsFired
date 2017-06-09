@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Networking;
 
 public class Shooting : NetworkBehaviour
@@ -9,6 +10,7 @@ public class Shooting : NetworkBehaviour
     public GameObject bulletHole;
     public GameObject muzzleFlash;
     public LayerMask layermask;
+    public Image hitMarker;
 
     GameObject cam;
 
@@ -76,6 +78,13 @@ public class Shooting : NetworkBehaviour
         muzzleFlash.SetActive(false);
     }
 
+    IEnumerator HitMarker()
+    {
+        hitMarker.enabled = true;
+        yield return new WaitForSeconds(0.05f);
+        hitMarker.enabled = false;
+    }
+
     [Command]
     public void CmdBulletHole(Vector3 position, Quaternion rotation)
     {
@@ -105,6 +114,7 @@ public class Shooting : NetworkBehaviour
         if (hit.point == Vector3.zero) return;
         if (hit.transform.tag.Equals("Collision"))
         {
+            StartCoroutine(HitMarker());
             CmdPlayerShot(hit.transform.root.name, hit.transform.name);
         }
         else
