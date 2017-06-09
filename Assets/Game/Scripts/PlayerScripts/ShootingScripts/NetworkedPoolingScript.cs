@@ -36,11 +36,12 @@ public class NetworkedPoolingScript : MonoBehaviour {
     {
         foreach (var obj in m_Pool)
         {
+            if (obj == null) continue;
             if (!obj.activeInHierarchy)
             {
                 obj.transform.position = position;
                 obj.SetActive(true);
-                return obj;
+                return obj;                
             }
         }
         Debug.LogError("Could not grab object from pool, nothing available");
@@ -55,5 +56,6 @@ public class NetworkedPoolingScript : MonoBehaviour {
     public void UnSpawnObject(GameObject spawned)
     {
         spawned.SetActive(false);
+        Debug.LogError("Unspawned:" + spawned);
     }
 }

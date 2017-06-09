@@ -7,6 +7,7 @@ public class Projectile : PooledObject
 {
     float speed;
     Vector3 direction;
+    bool isLocalBullet;
     Rigidbody rb;
     NetworkedPoolingScript objectPool;
 
@@ -16,15 +17,12 @@ public class Projectile : PooledObject
         objectPool = GameObject.Find("GameManager").GetComponent<NetworkedPoolingScript>();
     }
 
-    void OnEnable()
-    {
-        DestroyBullet(5);
-    }
-
-    public void SetVariables(double speed, Vector3 _direction)
+    public void SetVariables(double speed, Vector3 _direction, bool isLocalBullet)
     {
         this.speed = (float)speed;
         this.direction = _direction;
+        this.isLocalBullet = isLocalBullet;
+        StartCoroutine((DestroyBullet(3f)));        
     }
 
     void Update()
@@ -38,8 +36,11 @@ public class Projectile : PooledObject
     {
         if (other.tag.Equals("Collision"))
         {
-            //other.GetComponent<CollisionDetection>().OnHit();
-            print("Hit");
+            if (isLocalBullet)
+            {
+                //other.GetComponent<CollisionDetection>().OnHit();
+                print("Hit");
+            }
         }
 
         ReturnToPool();
@@ -47,6 +48,7 @@ public class Projectile : PooledObject
 
     IEnumerator DestroyBullet(float waitTime)
     {
+        Debug.LogError("Going to destory bullet");
         yield return new WaitForSeconds(waitTime);
         objectPool.UnSpawnObject(gameObject);
        // NetworkServer.UnSpawn(gameObject);
