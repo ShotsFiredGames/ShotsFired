@@ -5,31 +5,22 @@ using UnityEngine.Networking;
 
 public class Projectile : PooledObject
 {
+    public float destoryTime = 5f;
     float speed;
     Vector3 direction;
     bool isLocalBullet;
-    Rigidbody rb;
     NetworkedPoolingScript objectPool;
 
     private void Start()
     {
-        rb = GetComponent<Rigidbody>();
         objectPool = GameObject.Find("GameManager").GetComponent<NetworkedPoolingScript>();
     }
 
-    public void SetVariables(double speed, Vector3 _direction, bool isLocalBullet)
+    public void SetVariables(double speed, bool isLocalBullet)
     {
         this.speed = (float)speed;
-        this.direction = _direction;
         this.isLocalBullet = isLocalBullet;
-        StartCoroutine((DestroyBullet(3f)));        
-    }
-
-    void Update()
-    {
-        transform.LookAt(direction);
-        rb.velocity = (direction - transform.position).normalized * (speed * 10) * Time.deltaTime;
-        //transform.position = Vector3.Lerp(transform.position, direction, speed * Time.deltaTime);
+        StartCoroutine((DestroyBullet(destoryTime)));        
     }
 
     void OnTriggerEnter(Collider other)

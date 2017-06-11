@@ -49,18 +49,7 @@ public class Gun : MonoBehaviour
     void Start()
     {
         SetAmmo();
-        FindThirdPersonInfo();
         print(thirdPersonGunBarrel + " " + thirdPersonMuzzle);
-    }
-
-    public void FindThirdPersonInfo()
-    {
-        if (thirdPersonMuzzle != null)
-        {
-            thirdPersonGunBarrel = thirdPersonGun.transform.Find("GunBarrel").gameObject;
-            thirdPersonMuzzle = thirdPersonGun.transform.Find("MuzzleFlash").gameObject;
-            thirdPersonMuzzle.SetActive(false);
-        }
     }
 
     public void SetAmmo()

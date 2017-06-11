@@ -19,6 +19,19 @@ public class Shooting : NetworkBehaviour
         objectPooling = GameObject.Find("GameManager").GetComponent<NetworkedPoolingScript>();
     }
 
+    public void SetWeapon(Gun weapon)
+    {
+        currentGun = weapon;
+        _bulletHole = currentGun.bulletHole;
+        _muzzleFlash = currentGun.muzzleFlash;
+    }
+
+    public void RemoveWeapon()
+    {
+        currentGun.SetActiveGun(false);
+        //currentGun = null;
+    }
+
     [Client]
     public IEnumerator Firing()
     {
@@ -26,6 +39,7 @@ public class Shooting : NetworkBehaviour
         {
             currentGun.isFiring = true;
             StartCoroutine(LocalMuzzleFlash());
+            CmdStartMuzzleFlash();
             switch (currentGun.weaponType)
             {
                 case Gun.WeaponType.Hitscan:
@@ -48,17 +62,59 @@ public class Shooting : NetworkBehaviour
         }
     }
 
-    public void SetWeapon(Gun weapon)
+    [Client]
+    void HitscanShot()
     {
-        currentGun = weapon;
-        _bulletHole = currentGun.bulletHole;
-        _muzzleFlash = currentGun.muzzleFlash;
+        RaycastHit hit = CastMyRay();
+        if (hit.point == Vector3.zero) return;
+        if (hit.transform.tag.Equals("Collision"))
+        {
+            CmdPlayerShot(hit.transform.root.name, hit.transform.name);
+        }
+        else
+        {
+            Vector3 position = hit.point + (hit.normal * .1f);
+            Quaternion rotation = Quaternion.LookRotation(hit.normal);
+            CmdBulletHole(position, rotation);
+        }
     }
 
-    public void RemoveWeapon()
+    [Client]
+    void ProjectileShot()
     {
-        currentGun.SetActiveGun(false);
-        //currentGun = null;
+        //Shoot Projectile Over Network
+        CmdSpawnProjectile(currentGun.thirdPersonGunBarrel.transform.position, transform.root.rotation, currentGun.thirdPersonGunBarrel.transform.forward, currentGun.speed);
+
+        //Shoot Different Projectile Locally//
+        Debug.LogError("Shoot Locally");
+
+        if (objectPooling == null)
+        {
+            objectPooling = GameObject.Find("GameManager").GetComponent<NetworkedPoolingScript>();
+            Debug.LogError("object pooling was null");
+        }
+
+        Vector3 position = currentGun.gunbarrel.transform.position;
+
+        GameObject bullet = objectPooling.GetFromPool(position);
+
+        if (bullet == null)
+        {
+            Debug.LogError("There is no bullet");
+            return;
+        }
+
+        bullet.GetComponent<Rigidbody>().velocity = currentGun.gunbarrel.transform.forward * (float)currentGun.speed;
+
+        bullet.transform.position = position;
+        bullet.transform.rotation = transform.root.rotation;
+        bullet.GetComponent<Projectile>().SetVariables(currentGun.speed, true);
+    }
+
+    [Client]
+    void SustainedShot()
+    {
+
     }
 
     [Command]
@@ -76,7 +132,6 @@ public class Shooting : NetworkBehaviour
 
     IEnumerator ThirdMuzzleFlash()                                                                                   //Activate and DeActivate the muzzle flash
     {
-        if (currentGun.thirdPersonMuzzle == null) currentGun.FindThirdPersonInfo();
         currentGun.thirdPersonMuzzle.SetActive(true);
         yield return new WaitForSeconds(.50f);
         currentGun.thirdPersonMuzzle.SetActive(false);
@@ -126,9 +181,11 @@ public class Shooting : NetworkBehaviour
             return;
         }
 
+        bullet.GetComponent<Rigidbody>().velocity = direction * (float)currentGun.speed;
+
         bullet.transform.position = position;
         bullet.transform.rotation = rotation;
-        bullet.GetComponent<Projectile>().SetVariables(speed, direction, false);
+        bullet.GetComponent<Projectile>().SetVariables(speed, false);
     }
 
     [Command]
@@ -143,62 +200,5 @@ public class Shooting : NetworkBehaviour
         RaycastHit hit;
         Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, 1000, layermask);
         return hit;
-    }
-
-    [Client]
-    void HitscanShot()
-    {
-        CmdStartMuzzleFlash();
-        RaycastHit hit = CastMyRay();
-        if (hit.point == Vector3.zero) return;
-        if (hit.transform.tag.Equals("Collision"))
-        {
-            CmdPlayerShot(hit.transform.root.name, hit.transform.name);
-        }
-        else
-        {
-            Vector3 position = hit.point + (hit.normal * .1f);
-            Quaternion rotation = Quaternion.LookRotation(hit.normal);
-            CmdBulletHole(position, rotation);
-        }
-    }
-
-    [Client]
-    void ProjectileShot()
-    {
-        CmdStartMuzzleFlash();
-        RaycastHit hit = CastMyRay();
-        //if (hit.point == Vector3.zero) return;
-
-        CmdSpawnProjectile(currentGun.thirdPersonGunBarrel.transform.position, transform.root.rotation, hit.point, currentGun.speed);
-
-        //Shoot Different Projectile Locally//
-        Debug.LogError("Shoot Locally");
-
-        if (objectPooling == null)
-        {
-            objectPooling = GameObject.Find("GameManager").GetComponent<NetworkedPoolingScript>();
-            Debug.LogError("object pooling was null");
-        }
-
-        Vector3 position = currentGun.gunbarrel.transform.position;
-
-        GameObject bullet = objectPooling.GetFromPool(position);
-
-        if (bullet == null)
-        {
-            Debug.LogError("There is no bullet");
-            return;
-        }
-
-        bullet.transform.position = position;
-        bullet.transform.rotation = transform.root.rotation;
-        bullet.GetComponent<Projectile>().SetVariables(currentGun.speed, hit.point, true);
-    }
-
-    [Client]
-    void SustainedShot()
-    {
-
     }
 }
