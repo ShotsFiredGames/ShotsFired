@@ -27,9 +27,14 @@ public class Projectile : PooledObject
 
     void Update()
     {
-        transform.LookAt(direction);
-        rb.velocity = (direction - transform.position).normalized * (speed * 10) * Time.deltaTime;
-        //transform.position = Vector3.Lerp(transform.position, direction, speed * Time.deltaTime);
+        if (gameObject.activeSelf)
+        {
+            float step = speed * Time.deltaTime;
+            transform.position = Vector3.MoveTowards(transform.position, direction, step);
+            //transform.LookAt(direction);
+            //rb.velocity = (direction - transform.position).normalized * (speed * 10) * Time.deltaTime;
+            //transform.position = Vector3.Lerp(transform.position, direction, speed * Time.deltaTime);
+        }
     }
 
     void OnTriggerEnter(Collider other)
@@ -42,8 +47,6 @@ public class Projectile : PooledObject
                 print("Hit");
             }
         }
-
-        ReturnToPool();
     }
 
     IEnumerator DestroyBullet(float waitTime)

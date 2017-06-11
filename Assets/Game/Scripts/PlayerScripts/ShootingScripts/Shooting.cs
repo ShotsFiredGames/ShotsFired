@@ -129,6 +129,8 @@ public class Shooting : NetworkBehaviour
         bullet.transform.position = position;
         bullet.transform.rotation = rotation;
         bullet.GetComponent<Projectile>().SetVariables(speed, direction, false);
+
+        Debug.LogError("Shoot Online " + bullet);
     }
 
     [Command]
@@ -173,8 +175,6 @@ public class Shooting : NetworkBehaviour
         CmdSpawnProjectile(currentGun.thirdPersonGunBarrel.transform.position, transform.root.rotation, hit.point, currentGun.speed);
 
         //Shoot Different Projectile Locally//
-        Debug.LogError("Shoot Locally");
-
         if (objectPooling == null)
         {
             objectPooling = GameObject.Find("GameManager").GetComponent<NetworkedPoolingScript>();
@@ -182,6 +182,7 @@ public class Shooting : NetworkBehaviour
         }
 
         Vector3 position = currentGun.gunbarrel.transform.position;
+        Debug.LogError("Position is: " + position);
 
         GameObject bullet = objectPooling.GetFromPool(position);
 
@@ -191,9 +192,13 @@ public class Shooting : NetworkBehaviour
             return;
         }
 
-        bullet.transform.position = position;
+        //bullet.transform.position = position;
+        //bullet.GetComponent<Rigidbody>().velocity = hit.point * (float)currentGun.speed;
+
         bullet.transform.rotation = transform.root.rotation;
         bullet.GetComponent<Projectile>().SetVariables(currentGun.speed, hit.point, true);
+
+        Debug.LogError("Shoot Locally " + bullet);
     }
 
     [Client]
