@@ -6,7 +6,7 @@ public class PlayerMovement : NetworkBehaviour
 {
     public float rotationSpeed;
     public float jumpForce;
-
+    public float gravity;
     [Tooltip("This will change depending on the hieght of the character.")]
     public float distToGrounded = 1.1f;
     public LayerMask ground;
@@ -24,7 +24,7 @@ public class PlayerMovement : NetworkBehaviour
     bool isJumping;
     bool isUsingBoots;
     float airSpeed;
-
+    bool aimAssist;
 
     void Start ()
     {
@@ -36,6 +36,18 @@ public class PlayerMovement : NetworkBehaviour
 
         airSpeed = speed * .5f;
 	}
+
+    public void AimAssist()
+    {
+        if(!aimAssist)
+        aimAssist = true;
+    }
+
+    public void StopAimAssist()
+    {
+        if(aimAssist)
+        aimAssist = false;
+    }
 
     private void Update()
     {
@@ -52,6 +64,8 @@ public class PlayerMovement : NetworkBehaviour
         {
             if (speed != airSpeed)
                 speed = airSpeed;
+
+            rb.velocity += Physics.gravity * gravity * Time.fixedDeltaTime;
         }
     }
 
@@ -66,16 +80,35 @@ public class PlayerMovement : NetworkBehaviour
     {
         if(!playerCamera.isAiming)
         {
-            xRotationValue -= -horizontal2 * rotationSpeed * Time.deltaTime;
-            rotation = Quaternion.Euler(0, xRotationValue, 0);
-            transform.rotation = rotation;
+
+            if (!aimAssist)
+            {
+                xRotationValue -= -horizontal2 * rotationSpeed * Time.deltaTime;
+                rotation = Quaternion.Euler(0, xRotationValue, 0);
+                transform.rotation = rotation;
+            }
+            else
+                ApplyAimAssist(horizontal2);
+
         }
         else
         {
-            xRotationValue -= -horizontal2 * (rotationSpeed * .25f) * Time.deltaTime;
-            rotation = Quaternion.Euler(0, xRotationValue, 0);
-            transform.rotation = rotation;
+            if(!aimAssist)
+            {
+                xRotationValue -= -horizontal2 * (rotationSpeed * .25f) * Time.deltaTime;
+                rotation = Quaternion.Euler(0, xRotationValue, 0);
+                transform.rotation = rotation;
+            }
+            else
+            ApplyAimAssist(horizontal2);
         }
+    }
+
+    void ApplyAimAssist(float horizontal2)
+    {
+        xRotationValue -= -horizontal2 * (rotationSpeed * .1f) * Time.deltaTime;
+        rotation = Quaternion.Euler(0, xRotationValue, 0);
+        transform.rotation = rotation;
     }
 
     public void Jump()

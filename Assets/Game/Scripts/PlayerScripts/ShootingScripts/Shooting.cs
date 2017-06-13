@@ -100,7 +100,7 @@ public class Shooting : NetworkBehaviour
         PlayerWrangler.GetPlayer(hitPlayer).transform.Find("CollisionDetection").transform.Find(hitCollider).GetComponent<CollisionDetection>().OnHit(currentGun.damage);
     }
 
-    RaycastHit CastMyRay()
+    public RaycastHit CastMyRay()
     {
         RaycastHit hit;
         Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, 1000, layermask);

@@ -53,6 +53,11 @@ public class PlayerManager : NetworkBehaviour
         if (!isLocalPlayer) return;
         if (isDead) return;
 
+        if (isArmed && !shooting.CastMyRay().Equals(null) && shooting.CastMyRay().transform.tag.Equals("Collision"))
+            playerMovement.AimAssist();
+        else
+            playerMovement.StopAimAssist();
+
         ApplyMovementInput();
 
         if (controls.Move.Value.Equals(Vector2.zero))
