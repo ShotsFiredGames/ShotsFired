@@ -19,7 +19,7 @@ public class PickUpLoacation : NetworkBehaviour
         NetworkServer.Spawn(activePickUp);
     }
 
-    [Server]
+    [ServerCallback]
     void Update()
     {
         if(!isSpawning && activePickUp == null)

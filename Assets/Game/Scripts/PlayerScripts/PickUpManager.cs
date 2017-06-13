@@ -26,7 +26,7 @@ public class PickUpManager : NetworkBehaviour
         }
     }
 
-    [Server]
+    [ServerCallback]
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag.Equals("PickUp"))
