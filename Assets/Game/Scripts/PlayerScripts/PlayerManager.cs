@@ -49,7 +49,7 @@ public class PlayerManager : NetworkBehaviour
         controls.Destroy();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (!isLocalPlayer) return;
         if (isDead) return;

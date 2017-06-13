@@ -13,6 +13,7 @@ public class PlayerMovement : NetworkBehaviour
 
     Rigidbody rb;
     PlayerManager playerManager;
+    PlayerCamera playerCamera;
 
     float speed;
     float sprintSpeed;
@@ -32,6 +33,7 @@ public class PlayerMovement : NetworkBehaviour
         rb = GetComponent<Rigidbody>();
         playerManager = GetComponent<PlayerManager>();
         _jump = jumpForce;
+        playerCamera = GetComponent<PlayerCamera>();
 	}
 
     private void Update()
@@ -58,9 +60,18 @@ public class PlayerMovement : NetworkBehaviour
 
     public void Turn(float horizontal2)
     {
-        xRotationValue -= -horizontal2 * rotationSpeed * Time.deltaTime;
-        rotation = Quaternion.Euler(0, xRotationValue, 0);
-        transform.rotation = rotation;
+        if(!playerCamera.isAiming)
+        {
+            xRotationValue -= -horizontal2 * rotationSpeed * Time.deltaTime;
+            rotation = Quaternion.Euler(0, xRotationValue, 0);
+            transform.rotation = rotation;
+        }
+        else
+        {
+            xRotationValue -= -horizontal2 * (rotationSpeed * .5f) * Time.deltaTime;
+            rotation = Quaternion.Euler(0, xRotationValue, 0);
+            transform.rotation = rotation;
+        }
     }
 
     public void Jump()

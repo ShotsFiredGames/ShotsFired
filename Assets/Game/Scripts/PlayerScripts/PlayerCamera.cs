@@ -20,6 +20,8 @@ public class PlayerCamera : MonoBehaviour
     float yRotationValue;
     float rotationSpeed;
     Quaternion cameraYRotation;
+    [HideInInspector]
+    public bool isAiming;
 
     void Awake()
     {
@@ -40,10 +42,16 @@ public class PlayerCamera : MonoBehaviour
         SendRotationValue(yRotationValue);
         myCamera.transform.rotation = cameraYRotation;
 
-        
-        cameraYRotation *= Quaternion.Euler(0f, (float)rightStickX * rotationSpeed * Time.deltaTime, 0f);
-        myCamera.transform.localRotation = Quaternion.Slerp(myCamera.transform.localRotation, cameraYRotation, 1);
-        
+        if(!isAiming)
+        {
+            cameraYRotation *= Quaternion.Euler(0f, (float)rightStickX * rotationSpeed * Time.deltaTime, 0f);
+            myCamera.transform.localRotation = Quaternion.Slerp(myCamera.transform.localRotation, cameraYRotation, 1);
+        }
+        else
+        {
+            cameraYRotation *= Quaternion.Euler(0f, (float)rightStickX * (rotationSpeed * .5f) * Time.deltaTime, 0f);
+            myCamera.transform.localRotation = Quaternion.Slerp(myCamera.transform.localRotation, cameraYRotation, 1);
+        }
     }
 
     void SendRotationValue(float value)
@@ -62,6 +70,9 @@ public class PlayerCamera : MonoBehaviour
 
     public void Aim()
     {
+        if (!isAiming)
+            isAiming = true;
+
         GetGun();
         if (currentGun != null)
         {
@@ -75,6 +86,9 @@ public class PlayerCamera : MonoBehaviour
 
     public void StopAim()
     {
+        if (isAiming)
+            isAiming = false;
+
         GetGun();
         if (currentGun != null)
         {
