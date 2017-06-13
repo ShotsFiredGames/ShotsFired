@@ -10,6 +10,7 @@ public class PlayerCamera : MonoBehaviour
     public float baseFieldOfView;
     public float aimFieldOfView;
 
+    public GameObject cameraObject;
     public Camera myCamera;
     GameObject currentGun;
     Vector3 basePosition;
@@ -33,25 +34,18 @@ public class PlayerCamera : MonoBehaviour
         rotationSpeed = GetComponent<PlayerMovement>().rotationSpeed;        
     }
 
-    public void Look(float rightStickY, float rightStickX)
+    public void Look(float rightStickY)
     {
-       // xRotationValue -= -righStickX * rotationSpeed * Time.deltaTime;
-        yRotationValue += -rightStickY * lookSpeed * Time.deltaTime;
+        if(!isAiming)
+            yRotationValue += -rightStickY * lookSpeed * Time.deltaTime;
+        else
+            yRotationValue += -rightStickY * (lookSpeed * .25f) * Time.deltaTime;
+
         yRotationValue = ClampAngle(yRotationValue, -clampValue, clampValue);
         cameraYRotation = Quaternion.Euler(yRotationValue, 0, 0);
         SendRotationValue(yRotationValue);
-        myCamera.transform.rotation = cameraYRotation;
-
-        if(!isAiming)
-        {
-            cameraYRotation *= Quaternion.Euler(0f, (float)rightStickX * rotationSpeed * Time.deltaTime, 0f);
-            myCamera.transform.localRotation = Quaternion.Slerp(myCamera.transform.localRotation, cameraYRotation, 1);
-        }
-        else
-        {
-            cameraYRotation *= Quaternion.Euler(0f, (float)rightStickX * (rotationSpeed * .5f) * Time.deltaTime, 0f);
-            myCamera.transform.localRotation = Quaternion.Slerp(myCamera.transform.localRotation, cameraYRotation, 1);
-        }
+        cameraObject.transform.rotation = cameraYRotation;
+        cameraObject.transform.localRotation = Quaternion.Slerp(myCamera.transform.localRotation, cameraYRotation, 1);
     }
 
     void SendRotationValue(float value)
@@ -104,7 +98,7 @@ public class PlayerCamera : MonoBehaviour
     {
         if(myCamera == null)
         {
-            myCamera = transform.Find("Main Camera").gameObject.GetComponent<Camera>();
+            myCamera = transform.Find("Camera").gameObject.GetComponent<Camera>();
         }
         myCamera.fieldOfView = view;
     }

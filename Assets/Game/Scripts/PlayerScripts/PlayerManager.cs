@@ -90,7 +90,7 @@ public class PlayerManager : NetworkBehaviour
     private void LateUpdate()
     {
         if (isDead) return;
-        playerCamera.Look(controls.Look.Y, controls.Look.X);
+        playerCamera.Look(controls.Look.Y);
     }
 
     public void SetRotationValue(float value)

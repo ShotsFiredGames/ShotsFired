@@ -68,7 +68,7 @@ public class PlayerMovement : NetworkBehaviour
         }
         else
         {
-            xRotationValue -= -horizontal2 * (rotationSpeed * .5f) * Time.deltaTime;
+            xRotationValue -= -horizontal2 * (rotationSpeed * .25f) * Time.deltaTime;
             rotation = Quaternion.Euler(0, xRotationValue, 0);
             transform.rotation = rotation;
         }
