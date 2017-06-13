@@ -16,7 +16,6 @@ public class PlayerMovement : NetworkBehaviour
     PlayerCamera playerCamera;
 
     float speed;
-    float sprintSpeed;
     float xRotationValue;
     float _jump;
     Quaternion rotation;
@@ -24,16 +23,18 @@ public class PlayerMovement : NetworkBehaviour
     Vector3 velocity;
     bool isJumping;
     bool isUsingBoots;
+    float airSpeed;
 
 
     void Start ()
     {
         speed = GameCustomization.playerSpeed;
-        sprintSpeed = GameCustomization.sprintSpeed;
         rb = GetComponent<Rigidbody>();
         playerManager = GetComponent<PlayerManager>();
         _jump = jumpForce;
         playerCamera = GetComponent<PlayerCamera>();
+
+        airSpeed = speed * .5f;
 	}
 
     private void Update()
@@ -41,19 +42,22 @@ public class PlayerMovement : NetworkBehaviour
         if(Grounded())
         {
             playerManager.Landed();
+
+            if (speed != GameCustomization.playerSpeed && !isUsingBoots)
+            {
+                speed = GameCustomization.playerSpeed;
+            }
+        }
+        else
+        {
+            if (speed != airSpeed)
+                speed = airSpeed;
         }
     }
 
     public void Move(float horizontal, float vertical)
     {
         direction = new Vector3(horizontal * speed * Time.deltaTime, 0, vertical * speed * Time.deltaTime);
-        direction = transform.TransformDirection(direction);
-        rb.MovePosition(transform.position + direction);
-    }
-
-    public void Sprinting(float horizontal, float vertical)
-    {
-        direction = new Vector3(horizontal * sprintSpeed * Time.deltaTime, 0, vertical * sprintSpeed * Time.deltaTime);
         direction = transform.TransformDirection(direction);
         rb.MovePosition(transform.position + direction);
     }

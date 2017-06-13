@@ -49,12 +49,6 @@ public class AnimationManager : MonoBehaviour
         anim.SetBool("IsSprinting", false);
     }
 
-    public void IsSprinting()
-    {
-        anim.SetBool("IsIdle", false);
-        anim.SetBool("IsSprinting", true);
-    }
-
     public void IsJumping()
     {
         anim.SetBool("IsJumping", true);

@@ -16,7 +16,6 @@ public class PlayerManager : NetworkBehaviour
 
     Controls controls;
     string saveData;
-    bool isSprinting;
 
     public bool isArmed;
     public Gun[] guns;
@@ -60,9 +59,6 @@ public class PlayerManager : NetworkBehaviour
             Idling();
         else
             Moving();
-
-        if (controls.Sprint.IsPressed)
-            Sprinting();
 
         if (controls.Jump.WasPressed)
         {
@@ -114,13 +110,6 @@ public class PlayerManager : NetworkBehaviour
     {
         playerMovement.Turn(controls.Look.X);
         animationManager.IsIdle();
-    }
-
-    void Sprinting()
-    {
-        playerMovement.Sprinting(controls.Move.X, controls.Move.Y);
-        playerMovement.Turn(controls.Look.X);
-        animationManager.IsSprinting();
     }
 
     void Jumping()
