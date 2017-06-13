@@ -41,7 +41,6 @@ public class Shooting : NetworkBehaviour
             }
 
             yield return new WaitForSeconds(currentGun.fireFreq);
-            Debug.LogError(currentGun);
             currentGun.isFiring = false;
             currentGun.UseAmmo();
         }

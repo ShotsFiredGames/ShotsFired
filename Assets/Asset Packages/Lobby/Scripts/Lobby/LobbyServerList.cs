@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Networking;
+using UnityEngine.EventSystems;
 using UnityEngine.Networking.Match;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,6 +15,7 @@ namespace Prototype.NetworkLobby
         public RectTransform serverListRect;
         public GameObject serverEntryPrefab;
         public GameObject noServerFound;
+        public GameObject nextSelectedObject;
 
         protected int currentPage = 0;
         protected int previousPage = 0;
@@ -23,6 +25,7 @@ namespace Prototype.NetworkLobby
 
         void OnEnable()
         {
+            EventSystem.current.SetSelectedGameObject(nextSelectedObject);
             currentPage = 0;
             previousPage = 0;
 

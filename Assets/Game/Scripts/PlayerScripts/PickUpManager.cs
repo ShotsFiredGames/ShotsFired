@@ -31,7 +31,6 @@ public class PickUpManager : NetworkBehaviour
     {
         if (other.tag.Equals("PickUp"))
         {
-            Debug.LogError("DUDE WHERES MY CAR");
             PickUp pickup = other.GetComponent<PickUp>();
             switch (pickup.type)
             {

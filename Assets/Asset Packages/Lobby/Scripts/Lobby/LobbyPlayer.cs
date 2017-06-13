@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Networking;
+using UnityEngine.EventSystems;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -101,7 +102,8 @@ namespace Prototype.NetworkLobby
 
         void SetupLocalPlayer()
         {
-            nameInput.interactable = true;
+            //nameInput.interactable = true;
+            EventSystem.current.SetSelectedGameObject(readyButton.gameObject);
             remoteIcone.gameObject.SetActive(false);
             localIcone.gameObject.SetActive(true);
 
@@ -112,7 +114,7 @@ namespace Prototype.NetworkLobby
 
             ChangeReadyButtonColor(JoinColor);
 
-            readyButton.transform.GetChild(0).GetComponent<Text>().text = "JOIN";
+            readyButton.transform.GetChild(0).GetComponent<Text>().text = "READY UP";
             readyButton.interactable = true;
 
             //have to use child count of player prefab already setup as "this.slot" is not set yet
@@ -121,7 +123,7 @@ namespace Prototype.NetworkLobby
 
             //we switch from simple name display to name input
             colorButton.interactable = true;
-            nameInput.interactable = true;
+            //nameInput.interactable = true;
 
             nameInput.onEndEdit.RemoveAllListeners();
             nameInput.onEndEdit.AddListener(OnNameChanged);
@@ -168,7 +170,7 @@ namespace Prototype.NetworkLobby
                 ChangeReadyButtonColor(isLocalPlayer ? JoinColor : NotReadyColor);
 
                 Text textComponent = readyButton.transform.GetChild(0).GetComponent<Text>();
-                textComponent.text = isLocalPlayer ? "JOIN" : "...";
+                textComponent.text = isLocalPlayer ? "READY UP" : "...";
                 textComponent.color = Color.white;
                 readyButton.interactable = isLocalPlayer;
                 colorButton.interactable = isLocalPlayer;
