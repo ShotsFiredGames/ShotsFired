@@ -56,14 +56,14 @@ public class PlayerManager : NetworkBehaviour
         if (!isLocalPlayer) return;
         if (isDead) return;
 
-        RaycastHit hit;
-        if (isArmed && Physics.Raycast(myCamera.transform.position, myCamera.transform.forward, out hit,1000, layermask))
-        {
-            if(hit.transform.tag.Equals("Collision"))
-                playerMovement.AimAssist();
-            else
-                playerMovement.StopAimAssist();
-        }
+        //RaycastHit hit;
+        //if (isArmed && Physics.Raycast(myCamera.transform.position, myCamera.transform.forward, out hit,1000, layermask))
+        //{
+        //    if(hit.transform.tag.Equals("Collision"))
+        //        playerMovement.AimAssist();
+        //    else
+        //        playerMovement.StopAimAssist();
+        //}
 
         ApplyMovementInput();
 
