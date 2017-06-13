@@ -11,6 +11,7 @@ public class Shooting : NetworkBehaviour
     public GameObject muzzleFlash;
     public LayerMask layermask;
     public Image hitMarker;
+    public AudioSource shootingSource;
 
     GameObject cam;
 
@@ -49,6 +50,7 @@ public class Shooting : NetworkBehaviour
     public void SetWeapon(Gun weapon)
     {
         currentGun = weapon;
+        shootingSource.clip = currentGun.shootingSound;
     }
 
     public void RemoveWeapon()
@@ -71,6 +73,8 @@ public class Shooting : NetworkBehaviour
 
     IEnumerator MuzzleFlash()                                                                                   //Activate and DeActivate the muzzle flash
     {
+        if (shootingSource.clip != null)
+            shootingSource.Play();
         muzzleFlash.SetActive(true);
         yield return new WaitForSeconds(.05f);
         muzzleFlash.SetActive(false);

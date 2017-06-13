@@ -14,7 +14,7 @@ public class PlayerHealth : NetworkBehaviour
     public Image dmgIndicatorBottom;
 
     public AudioSource source;
-    public AudioClip hitSound;
+    public AudioClip[] hitEffects;
     float respawnTime;
     float maxHealth;
     [SyncVar]
@@ -58,7 +58,8 @@ public class PlayerHealth : NetworkBehaviour
         Hit(collisionLocation);
         if (!source.isPlaying)
         {
-            source.PlayOneShot(hitSound);
+            source.clip = hitEffects[Random.Range(0, hitEffects.Length)];
+            source.Play();
         }
 
         if (currentHealth <= 0)
@@ -78,7 +79,8 @@ public class PlayerHealth : NetworkBehaviour
     {
         if (!source.isPlaying)
         {
-            source.PlayOneShot(hitSound);
+            source.clip = hitEffects[Random.Range(0, hitEffects.Length)];
+            source.Play();
         }
         Hit(collisionLocation);
         currentHealth -= headshotDamage;

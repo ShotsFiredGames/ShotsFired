@@ -21,6 +21,7 @@ public abstract class Gun : MonoBehaviour
     public Transform spawnPoint;
     public Vector3 basePosition;
     public Vector3 aimPosition;
+    public AudioClip shootingSound;
 
     public PlayerManager playerManager;
 

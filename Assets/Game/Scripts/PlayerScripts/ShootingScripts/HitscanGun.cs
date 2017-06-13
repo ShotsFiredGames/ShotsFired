@@ -7,6 +7,7 @@ using UnityEngine.Networking;
 public class HitscanGun : Gun
 {
     public LayerMask layermask;
+
     RaycastHit hit;
     Shooting shooting;
 
