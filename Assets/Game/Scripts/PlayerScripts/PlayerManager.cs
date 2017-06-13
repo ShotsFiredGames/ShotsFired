@@ -22,11 +22,13 @@ public class PlayerManager : NetworkBehaviour
     int shotsFired = 5;
 
     float yRotationValue;
+    GameObject myCamera;
 
     void Awake()
     {
         playerHealth = GetComponent<PlayerHealth>();
         playerCamera = GetComponent<PlayerCamera>();
+        myCamera = playerCamera.myCamera.gameObject;
     }
 
     private void Start()
@@ -53,10 +55,14 @@ public class PlayerManager : NetworkBehaviour
         if (!isLocalPlayer) return;
         if (isDead) return;
 
-        if (isArmed && !shooting.CastMyRay().Equals(null) && shooting.CastMyRay().transform.tag.Equals("Collision"))
-            playerMovement.AimAssist();
-        else
-            playerMovement.StopAimAssist();
+        RaycastHit hit;
+        if (isArmed && Physics.Raycast(myCamera.transform.position, myCamera.transform.forward, out hit, 1000))
+        {
+            if(hit.transform.tag.Equals("Collision"))
+                playerMovement.AimAssist();
+            else
+                playerMovement.StopAimAssist();
+        }
 
         ApplyMovementInput();
 
