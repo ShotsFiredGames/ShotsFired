@@ -12,7 +12,7 @@ public class MenuManager : MonoBehaviour {
 #if UNITY_WSA_10_0
         Application.targetFrameRate = 30;
 #elif UNITY_EDITOR
-        Application.targetFramerate = 60;
+        Application.targetFrameRate = 60;
 #endif
     }
 }
