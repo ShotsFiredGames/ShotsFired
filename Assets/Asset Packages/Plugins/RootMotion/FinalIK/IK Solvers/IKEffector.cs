@@ -233,7 +233,8 @@ namespace RootMotion.FinalIK {
 			if (float.IsInfinity(positionOffset.x) ||
 				float.IsInfinity(positionOffset.y) ||
 				float.IsInfinity(positionOffset.z)
-			    ) Debug.LogError("Invalid IKEffector.positionOffset (contains Infinity)! Please make sure not to set IKEffector.positionOffset to infinite values.", bone);
+			    )
+                Debug.LogError("Invalid IKEffector.positionOffset (contains Infinity)! Please make sure not to set IKEffector.positionOffset to infinite values.", bone);
 
 			if (float.IsNaN(positionOffset.x) ||
 			    float.IsNaN(positionOffset.y) ||

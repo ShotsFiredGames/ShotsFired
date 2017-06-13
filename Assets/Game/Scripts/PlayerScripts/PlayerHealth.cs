@@ -54,7 +54,6 @@ public class PlayerHealth : NetworkBehaviour
     [ClientRpc]
     public void RpcTookDamage(int damage, CollisionDetection.CollisionFlag collisionLocation)                //This is called from CollisionDetection to determine the damage and the location of the incoming collision.
     {
-        Debug.LogError("apply damage");
         currentHealth -= damage;
         Hit(collisionLocation);
         if (!source.isPlaying)
@@ -77,7 +76,6 @@ public class PlayerHealth : NetworkBehaviour
     [ClientRpc]
     public void RpcHeadshotDamage(int headshotDamage, CollisionDetection.CollisionFlag collisionLocation)    //This is called from CollisionDetection to determine the damage and the location of the incoming collision.
     {
-        Debug.LogError("apply headshot damage");
         if (!source.isPlaying)
         {
             source.PlayOneShot(hitSound);
@@ -142,7 +140,6 @@ public class PlayerHealth : NetworkBehaviour
     IEnumerator IndicateDamage(Image indicator)
     {
         indicator.enabled = true;
-        Debug.LogError("Indicate");
         yield return new WaitForSeconds(0.05f);
         indicator.enabled = false;
     }
