@@ -10,8 +10,9 @@ public class MenuManager : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 #if UNITY_WSA_10_0
+        Application.targetFrameRate = 30;
 #elif UNITY_EDITOR
-        Debug.LogError("editor");
+        Application.targetFramerate = 60;
 #endif
     }
 }

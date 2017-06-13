@@ -6,6 +6,7 @@ using UnityEngine.Networking;
 public class PickUpManager : NetworkBehaviour
 {
     PlayerManager playerManager;
+    public AudioSource pickupSource;
 
     private void Awake()
     {
@@ -32,6 +33,7 @@ public class PickUpManager : NetworkBehaviour
         if (other.tag.Equals("PickUp"))
         {
             PickUp pickup = other.GetComponent<PickUp>();
+            pickupSource.PlayOneShot(pickup.pickupSound);
             switch (pickup.type)
             {
                 case PickUp.PickUpType.Gun:

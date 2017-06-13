@@ -27,6 +27,7 @@ public class PickUp : NetworkBehaviour
     };
 
     PickUpManager pickUpManager;
+    public AudioClip pickupSound;
 
     [HideInInspector]
     public PickUpType type = PickUpType.None;

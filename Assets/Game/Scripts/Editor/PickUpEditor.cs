@@ -6,13 +6,15 @@ public class PickUpEditor : Editor
 {
     public SerializedProperty 
         pickUpType_Prop, 
-        gun_Prop, 
+        gun_Prop,
+        pickupSound_prop,
         ability_Prop;
 
     private void OnEnable()
     {
         pickUpType_Prop = serializedObject.FindProperty("type");
         gun_Prop = serializedObject.FindProperty("gun");
+        pickupSound_prop = serializedObject.FindProperty("pickupSound");
         ability_Prop = serializedObject.FindProperty("ability");
     }
 
@@ -36,6 +38,8 @@ public class PickUpEditor : Editor
                 EditorGUILayout.PropertyField(ability_Prop, new GUIContent("Ability Type"));
                 break;
         }
+
+        EditorGUILayout.PropertyField(pickupSound_prop, new GUIContent("Pickup Sound"));
 
         serializedObject.ApplyModifiedProperties();
     }
