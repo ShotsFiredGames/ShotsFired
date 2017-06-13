@@ -19,6 +19,7 @@ public class PlayerManager : NetworkBehaviour
 
     public bool isArmed;
     public Gun[] guns;
+    public LayerMask layermask;
     int shotsFired = 5;
 
     float yRotationValue;
@@ -56,7 +57,7 @@ public class PlayerManager : NetworkBehaviour
         if (isDead) return;
 
         RaycastHit hit;
-        if (isArmed && Physics.Raycast(myCamera.transform.position, myCamera.transform.forward, out hit, 1000))
+        if (isArmed && Physics.Raycast(myCamera.transform.position, myCamera.transform.forward, out hit,1000, layermask))
         {
             if(hit.transform.tag.Equals("Collision"))
                 playerMovement.AimAssist();
