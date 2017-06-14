@@ -5,6 +5,9 @@ using UnityEngine.Networking;
 
 public class PlayerManager : NetworkBehaviour
 {
+    public bool lockCursor;
+    private bool m_cursorIsLocked = true;
+
     AnimationManager animationManager;
     PlayerMovement playerMovement;
     PlayerCamera playerCamera;
@@ -55,6 +58,8 @@ public class PlayerManager : NetworkBehaviour
     {
         if (!isLocalPlayer) return;
         if (isDead) return;
+
+        UpdateCursorLock();
 
         //RaycastHit hit;
         //if (isArmed && Physics.Raycast(myCamera.transform.position, myCamera.transform.forward, out hit,1000, layermask))
@@ -248,6 +253,36 @@ public class PlayerManager : NetworkBehaviour
         {
             saveData = PlayerPrefs.GetString("Bindings");
             controls.Load(saveData);
+        }
+    }
+
+    public void UpdateCursorLock()
+    {
+        //if the user set "lockCursor" we check & properly lock the cursos
+        if (lockCursor)
+            InternalLockUpdate();
+    }
+
+    private void InternalLockUpdate()
+    {
+        if (Input.GetKeyUp(KeyCode.Escape))
+        {
+            m_cursorIsLocked = false;
+        }
+        else if (Input.GetMouseButtonUp(0))
+        {
+            m_cursorIsLocked = true;
+        }
+
+        if (m_cursorIsLocked)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+        else if (!m_cursorIsLocked)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
         }
     }
 }
