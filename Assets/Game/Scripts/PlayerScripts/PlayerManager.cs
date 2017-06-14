@@ -225,6 +225,7 @@ public class PlayerManager : NetworkBehaviour
     public void Dead(CollisionDetection.CollisionFlag collisionLocation)
     {
         isDead = true;
+        CmdDisarm();
         animationManager.IsDead(collisionLocation);
     }
 
