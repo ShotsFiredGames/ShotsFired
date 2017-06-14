@@ -2,22 +2,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class Juggernaut : MonoBehaviour
 {
     float duration;
     bool isJuggernaut;
+    public GameObject juggernautEffect;
 
     // Use this for initialization
     void Start()
     {
         duration = GameCustomization.abilityDuration;
     }
-
+    
     public void ActivateJuggernaut()
     {
         if (!isJuggernaut)
         {
-            //Debug.LogError("Activate Ability");
+            Debug.LogError("Activate Ability");
             StartCoroutine(JuggernautAbility());
         }
     }
@@ -25,7 +27,9 @@ public class Juggernaut : MonoBehaviour
     IEnumerator JuggernautAbility()
     {
         isJuggernaut = true;
+        juggernautEffect.SetActive(true);
         yield return new WaitForSeconds(GameCustomization.abilityDuration);
+        juggernautEffect.SetActive(false);
         isJuggernaut = false;
         //Debug.LogError("Ability Done");
     }
