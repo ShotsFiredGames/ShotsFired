@@ -1,34 +1,45 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.Networking;
 
-public class Projectile : PooledObject
+public class Projectile : NetworkBehaviour
 {
-    float speed;
+    public GameObject explosion;
 
-    public void SetSpeed(double speed)
+    float speed;
+    Vector3 direction;
+    string playername;
+    Rigidbody rb;
+
+    Vector3 impactNormal; //Used to rotate impactparticle.
+
+    private void Start()
     {
-        this.speed = (float)speed;
+        rb = GetComponent<Rigidbody>();
     }
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update ()
+    void Update()
     {
-        transform.Translate(transform.forward * Time.deltaTime * speed);
-	}
+        transform.LookAt(direction);
+        rb.AddForce(transform.forward * speed);
+    }
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.tag.Equals("Collision"))
+        if (other.transform.root.name != playername)
         {
-            //other.GetComponent<CollisionDetection>().OnHit();
+            // other.GetComponent<CollisionDetection>().OnHit();
+            explosion = Instantiate(explosion, transform.position, Quaternion.FromToRotation(Vector3.up, impactNormal)) as GameObject;
+            NetworkServer.Spawn(explosion);
+            NetworkServer.Destroy(gameObject);
+            Destroy(gameObject);
         }
+    }
 
-        ReturnToPool();
+    public void SetVariables(float _speed, Vector3 _direction, string _playername, Vector3 hitNormal)
+    {
+        speed = _speed;
+        direction = _direction;
+        playername = _playername;
+        impactNormal = hitNormal;
     }
 }

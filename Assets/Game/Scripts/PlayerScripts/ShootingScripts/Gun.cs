@@ -33,8 +33,14 @@ public abstract class Gun : MonoBehaviour
     [HideInInspector]
     public int currentAmmo;
 
+    public GameObject projectile;
+    public float speed;
+    public GameObject gunbarrel;
+    public GameObject thirdPersonGunBarrel;
+    public GameObject thirdPersonMuzzle;
 
-	//public abstract IEnumerator Fire();
+
+    //public abstract IEnumerator Fire();
 
     public abstract void Discard();
   

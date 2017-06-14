@@ -131,7 +131,21 @@ public class Shooting : NetworkBehaviour
     {
         CmdStartMuzzleFlash();
         RaycastHit hit = CastMyRay();
-        if (hit.point == Vector3.zero) return;
+        CmdProjectileShot(hit.point, hit.normal);
+    }
+
+    [Command]
+    void CmdProjectileShot(Vector3 direction,Vector3 hitNormal)
+    {
+        RpcProjectileShot(direction, hitNormal);
+    }
+
+    [ClientRpc]
+    void RpcProjectileShot(Vector3 direction, Vector3 hitNormal)
+    {
+        GameObject bullet = Instantiate(currentGun.projectile, currentGun.gunbarrel.transform.position, currentGun.gunbarrel.transform.rotation) as GameObject;
+        bullet.GetComponent<Projectile>().SetVariables(currentGun.speed, direction, transform.name, hitNormal);
+        NetworkServer.Spawn(bullet);
     }
 
     [Client]

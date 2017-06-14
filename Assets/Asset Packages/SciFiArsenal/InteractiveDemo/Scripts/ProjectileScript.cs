@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
-using System.Collections;
+using UnityEngine.Networking;
 
-public class ProjectileScript : MonoBehaviour 
+public class ProjectileScript : NetworkBehaviour 
 {
     public GameObject impactParticle;
     public GameObject projectileParticle;
@@ -11,33 +11,31 @@ public class ProjectileScript : MonoBehaviour
 	
 	void Start () 
 	{
-        projectileParticle = Instantiate(projectileParticle, transform.position, transform.rotation) as GameObject;
-        projectileParticle.transform.parent = transform;
+        //projectileParticle = Instantiate(projectileParticle, transform.position, transform.rotation) as GameObject;
+        //projectileParticle.transform.parent = transform;
 	}
 
 	void OnCollisionEnter (Collision hit) {
 
-        //transform.DetachChildren();
-        impactParticle = Instantiate(impactParticle, transform.position, Quaternion.FromToRotation(Vector3.up, impactNormal)) as GameObject;
-        //Debug.DrawRay(hit.contacts[0].point, hit.contacts[0].normal * 1, Color.yellow);
-
-        if (hit.gameObject.tag == "Destructible") // Projectile will destroy objects tagged as Destructible
+        if(!hit.transform.gameObject.layer.Equals("Default") && !hit.transform.tag.Equals("Player"))
         {
-            Destroy(hit.gameObject);
+            print(hit.transform.name);
+            impactParticle = Instantiate(impactParticle, transform.position, Quaternion.FromToRotation(Vector3.up, impactNormal)) as GameObject;
+
+            if (hit.gameObject.tag == "Destructible") // Projectile will destroy objects tagged as Destructible
+            {
+                Destroy(hit.gameObject);
+            }
+            
+            foreach (GameObject trail in trailParticles)
+            {
+                GameObject curTrail = transform.Find(projectileParticle.name + "/" + trail.name).gameObject;
+                curTrail.transform.parent = null;
+                Destroy(curTrail, 3f);
+            }
+            Destroy(projectileParticle, 3f);
+            Destroy(impactParticle, 5f);
+            Destroy(gameObject);
         }
-
-
-        //yield WaitForSeconds (0.05);
-        foreach (GameObject trail in trailParticles)
-	    {
-            GameObject curTrail = transform.Find(projectileParticle.name + "/" + trail.name).gameObject;
-            curTrail.transform.parent = null;
-            Destroy(curTrail, 3f); 
-	    }
-        Destroy(projectileParticle, 3f);
-        Destroy(impactParticle, 5f);
-        Destroy(gameObject);
-        //projectileParticle.Stop();
-
-	}
+    }
 }
