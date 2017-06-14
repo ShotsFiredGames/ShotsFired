@@ -8,6 +8,7 @@ public class PlayerManager : NetworkBehaviour
     AnimationManager animationManager;
     PlayerMovement playerMovement;
     PlayerCamera playerCamera;
+    Juggernaut juggernaut;
 
     PlayerHealth playerHealth;
     public bool isDead;
@@ -38,6 +39,7 @@ public class PlayerManager : NetworkBehaviour
         animationManager = GetComponent<AnimationManager>();
 
         shooting = GetComponent<Shooting>();
+        juggernaut = GetComponent<Juggernaut>();
         playerHealth.Init();
     }
 
@@ -173,7 +175,7 @@ public class PlayerManager : NetworkBehaviour
                 playerMovement.SuperBoots();
                 break;
             case "Juggernaut":
-                //playerMovement.SuperBoots();
+                juggernaut.ActivateJuggernaut();
                 break;
         }
     }

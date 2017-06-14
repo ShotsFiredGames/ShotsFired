@@ -91,6 +91,19 @@ public class PlayerHealth : NetworkBehaviour
         }
     }
 
+    [Command]
+    public void CmdInstantDeath(CollisionDetection.CollisionFlag collisionLocation)
+    {
+        RpcInstantDeath(collisionLocation);
+    }
+
+    [ClientRpc]
+    public void RpcInstantDeath(CollisionDetection.CollisionFlag collisionLocation)
+    {
+        currentHealth = 0;
+        Died(collisionLocation);
+    }
+
     void Died(CollisionDetection.CollisionFlag collisionLocation)                                           //Died gets called when health is or goes below 0.
     {
         isDead = true;
