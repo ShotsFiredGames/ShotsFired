@@ -63,7 +63,7 @@ public class PlayerMovement : NetworkBehaviour
         }
         else
         {
-            if (speed != airSpeed)
+            if (speed != airSpeed && !isUsingBoots)
                 speed = airSpeed;
 
             rb.velocity += Physics.gravity * gravity * Time.fixedDeltaTime;
