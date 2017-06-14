@@ -177,9 +177,23 @@ public class PlayerManager : NetworkBehaviour
                 break;
             case "Juggernaut":
                 juggernaut.ActivateJuggernaut();
-                playerHealth.IncreaseMaxHealth();
+                playerHealth.ActivateJuggernaut();
                 break;
         }
+    }
+
+    [Command]
+    public void CmdCancelAbility()
+    {
+        RpcCancelAbility();
+    }
+
+    [ClientRpc]
+    void RpcCancelAbility()
+    {
+        playerMovement.CancelSuperBoots();
+        juggernaut.CancelJuggernaut();
+        playerHealth.CancelJuggernaut();
     }
 
     [Command]
@@ -226,6 +240,7 @@ public class PlayerManager : NetworkBehaviour
     {
         isDead = true;
         CmdDisarm();
+        CmdCancelAbility();
         animationManager.IsDead(collisionLocation);
     }
 

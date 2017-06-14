@@ -55,6 +55,7 @@ public class Shooting : NetworkBehaviour
 
     public void RemoveWeapon()
     {
+        if(currentGun != null)
         currentGun.SetActiveGun(false);
     }
 

@@ -14,6 +14,7 @@ public class PlayerMovement : NetworkBehaviour
     Rigidbody rb;
     PlayerManager playerManager;
     PlayerCamera playerCamera;
+    Coroutine superboots;
 
     float speed;
     float xRotationValue;
@@ -121,7 +122,19 @@ public class PlayerMovement : NetworkBehaviour
 
     public void SuperBoots()
     {
-        StartCoroutine(BootsAbilty());
+        superboots = StartCoroutine(BootsAbilty());
+    }
+
+    public void CancelSuperBoots()
+    {
+        if (superboots != null)
+        {
+            StopCoroutine(superboots);
+
+            isUsingBoots = false;
+            speed = GameCustomization.playerSpeed;
+            jumpForce = _jump;
+        }
     }
 
     IEnumerator BootsAbilty()
