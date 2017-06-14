@@ -17,7 +17,7 @@ public class Shooting : NetworkBehaviour
 
     void Start()
     {
-        cam = transform.Find("Main Camera").gameObject;
+        cam = transform.Find("Main Camera").transform.Find("Camera").gameObject;
     }
 
     [Client]
