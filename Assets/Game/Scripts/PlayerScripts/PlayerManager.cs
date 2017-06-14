@@ -39,7 +39,9 @@ public class PlayerManager : NetworkBehaviour
         animationManager = GetComponent<AnimationManager>();
 
         shooting = GetComponent<Shooting>();
-        juggernaut = GetComponent<Juggernaut>();
+        juggernaut = GetComponentInChildren<Juggernaut>();
+
+        Debug.LogError(juggernaut + " is this");
         playerHealth.Init();
     }
 

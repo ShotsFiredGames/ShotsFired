@@ -17,7 +17,7 @@ public class Juggernaut : MonoBehaviour
     {
         if (!isJuggernaut)
         {
-            Debug.LogError("Activate Ability");
+            //Debug.LogError("Activate Ability");
             StartCoroutine(JuggernautAbility());
         }
     }
@@ -27,7 +27,7 @@ public class Juggernaut : MonoBehaviour
         isJuggernaut = true;
         yield return new WaitForSeconds(GameCustomization.abilityDuration);
         isJuggernaut = false;
-        Debug.LogError("Ability Done");
+        //Debug.LogError("Ability Done");
     }
 
     void OnTriggerEnter(Collider other)
@@ -38,9 +38,12 @@ public class Juggernaut : MonoBehaviour
             {
                 if (other.tag.Equals("Collision"))
                 {
-                    Debug.LogError("You've been juggered!");
                     CollisionDetection.CollisionFlag location = other.GetComponent<CollisionDetection>().collisionLocation;
-                    other.transform.root.GetComponent<PlayerHealth>().CmdInstantDeath(location);
+
+                    PlayerHealth health = other.transform.root.GetComponent<PlayerHealth>();
+
+                    if (!health.isPlayerDead())
+                        health.CmdInstantDeath(location);
                 }
             }            
         }

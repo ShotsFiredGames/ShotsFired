@@ -100,6 +100,7 @@ public class PlayerHealth : NetworkBehaviour
     [ClientRpc]
     public void RpcInstantDeath(CollisionDetection.CollisionFlag collisionLocation)
     {
+        Debug.LogError("Dead");
         currentHealth = 0;
         Died(collisionLocation);
     }
@@ -157,5 +158,10 @@ public class PlayerHealth : NetworkBehaviour
         indicator.enabled = true;
         yield return new WaitForSeconds(0.05f);
         indicator.enabled = false;
+    }
+
+    public bool isPlayerDead()
+    {
+        return (currentHealth <= 0);
     }
 }
