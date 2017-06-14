@@ -35,4 +35,10 @@ public class PickUp : NetworkBehaviour
     public GunType gun = GunType.None;
     [HideInInspector]
     public AbilityType ability = AbilityType.None;
+
+    [ClientCallback]
+    public void PlaySound(AudioSource source)
+    {
+        source.PlayOneShot(pickupSound);
+    }
 }
