@@ -19,7 +19,6 @@ public class Juggernaut : MonoBehaviour
     {
         if (!isJuggernaut)
         {
-            Debug.LogError("Activate Ability");
             StartCoroutine(JuggernautAbility());
         }
     }

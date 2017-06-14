@@ -25,6 +25,7 @@ public class PlayerManager : NetworkBehaviour
 
     float yRotationValue;
     GameObject myCamera;
+    Gun oldGun;
 
     void Awake()
     {
@@ -190,16 +191,20 @@ public class PlayerManager : NetworkBehaviour
     [ClientRpc]
     public void RpcWeaponPickedUp(string gunName)
     {
+        if(oldGun != null)
+        oldGun.SetActiveGun(false);
+
         isArmed = true;
         animationManager.Armed();
         Gun newGun = FindGun(gunName);
+        oldGun = newGun;
 
         if (newGun == null) Debug.LogError("Incorrect Name of Gun");
 
         shooting.SetWeapon(newGun);
-        newGun.GetComponent<Gun>().SetAmmo();
+        newGun.SetAmmo();
 
-        newGun.GetComponent<Gun>().SetActiveGun(true);
+        newGun.SetActiveGun(true);
     }
 
     [Command]
@@ -212,8 +217,8 @@ public class PlayerManager : NetworkBehaviour
     public void RpcDisarm()
     {
         isArmed = false;
-        animationManager.Disarmed();
         shooting.RemoveWeapon();
+        animationManager.Disarmed();
         playerCamera.SetFieldOfView(60);
     }
 
