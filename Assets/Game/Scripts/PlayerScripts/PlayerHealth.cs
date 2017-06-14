@@ -91,6 +91,20 @@ public class PlayerHealth : NetworkBehaviour
         }
     }
 
+    [Command]
+    public void CmdInstantDeath(CollisionDetection.CollisionFlag collisionLocation)
+    {
+        RpcInstantDeath(collisionLocation);
+    }
+
+    [ClientRpc]
+    public void RpcInstantDeath(CollisionDetection.CollisionFlag collisionLocation)
+    {
+        Debug.LogError("Dead");
+        currentHealth = 0;
+        Died(collisionLocation);
+    }
+
     void Died(CollisionDetection.CollisionFlag collisionLocation)                                           //Died gets called when health is or goes below 0.
     {
         isDead = true;
@@ -144,5 +158,10 @@ public class PlayerHealth : NetworkBehaviour
         indicator.enabled = true;
         yield return new WaitForSeconds(0.05f);
         indicator.enabled = false;
+    }
+
+    public bool isPlayerDead()
+    {
+        return (currentHealth <= 0);
     }
 }

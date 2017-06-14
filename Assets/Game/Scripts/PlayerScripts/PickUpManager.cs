@@ -33,7 +33,7 @@ public class PickUpManager : NetworkBehaviour
         if (other.tag.Equals("PickUp"))
         {
             PickUp pickup = other.GetComponent<PickUp>();
-            pickup.PlaySound(pickupSource);
+            pickupSource.PlayOneShot(pickup.pickupSound);
             switch (pickup.type)
             {
                 case PickUp.PickUpType.Gun:

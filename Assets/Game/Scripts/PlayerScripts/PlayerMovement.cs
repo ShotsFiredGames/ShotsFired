@@ -49,7 +49,7 @@ public class PlayerMovement : NetworkBehaviour
     //    aimAssist = false;
     //}
 
-    private void FixedUpdate()
+    private void Update()
     {
         if(Grounded())
         {
@@ -62,7 +62,7 @@ public class PlayerMovement : NetworkBehaviour
         }
         else
         {
-            if (!isUsingBoots && speed != airSpeed)
+            if (speed != airSpeed)
                 speed = airSpeed;
 
             rb.velocity += Physics.gravity * gravity * Time.fixedDeltaTime;
@@ -129,8 +129,8 @@ public class PlayerMovement : NetworkBehaviour
         if (!isUsingBoots)
         {
             isUsingBoots = true;
-            speed = speed * 1.75f;
-            jumpForce = jumpForce * 2f;
+            speed = speed * 2.5f;
+            jumpForce = jumpForce * 2.5f;
             yield return new WaitForSeconds(GameCustomization.abilityDuration);
             isUsingBoots = false;
             speed = GameCustomization.playerSpeed;
