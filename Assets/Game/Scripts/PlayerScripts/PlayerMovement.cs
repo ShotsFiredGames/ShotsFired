@@ -49,7 +49,7 @@ public class PlayerMovement : NetworkBehaviour
     //    aimAssist = false;
     //}
 
-    private void Update()
+    private void FixedUpdate()
     {
         if(Grounded())
         {
