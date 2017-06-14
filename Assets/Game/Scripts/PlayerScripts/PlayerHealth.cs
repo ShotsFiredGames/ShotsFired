@@ -16,12 +16,15 @@ public class PlayerHealth : NetworkBehaviour
     public AudioSource source;
     public AudioClip[] hitEffects;
     float respawnTime;
+    float currMaxHealth;
     float maxHealth;
     [SyncVar]
     float currentHealth;
 
     [SyncVar]
     bool isDead;
+
+    bool isHealthIncreased;
 
     GameObject collisionDetection;
 
@@ -37,6 +40,7 @@ public class PlayerHealth : NetworkBehaviour
     {
         isDead = false;
         currentHealth = maxHealth;
+        currMaxHealth = maxHealth;
         if (!isLocalPlayer)
         {
             collisionDetection = transform.Find("CollisionDetection").gameObject;
@@ -163,5 +167,22 @@ public class PlayerHealth : NetworkBehaviour
     public bool isPlayerDead()
     {
         return (currentHealth <= 0);
+    }
+
+    public IEnumerator IncreaseMaxHealth()
+    {
+        if (!isHealthIncreased)
+        {
+            isHealthIncreased = true;
+            currMaxHealth = maxHealth * 4;
+            currentHealth = currMaxHealth;
+            yield return new WaitForSeconds(GameCustomization.abilityDuration);
+            currMaxHealth = maxHealth;
+            if (currentHealth > maxHealth)
+                currentHealth = maxHealth;
+
+            isHealthIncreased = false;
+        }
+        
     }
 }

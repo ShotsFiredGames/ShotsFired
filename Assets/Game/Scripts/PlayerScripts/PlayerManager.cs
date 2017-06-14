@@ -40,8 +40,6 @@ public class PlayerManager : NetworkBehaviour
 
         shooting = GetComponent<Shooting>();
         juggernaut = GetComponentInChildren<Juggernaut>();
-
-        Debug.LogError(juggernaut + " is this");
         playerHealth.Init();
     }
 
@@ -178,6 +176,7 @@ public class PlayerManager : NetworkBehaviour
                 break;
             case "Juggernaut":
                 juggernaut.ActivateJuggernaut();
+                playerHealth.IncreaseMaxHealth();
                 break;
         }
     }
