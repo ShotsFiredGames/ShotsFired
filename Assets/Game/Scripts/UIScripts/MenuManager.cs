@@ -13,6 +13,8 @@ public class MenuManager : MonoBehaviour {
         Application.targetFrameRate = 30;
 #elif UNITY_EDITOR
         Application.targetFrameRate = 60;
+#elif UNITY_STANDALONE
+        Application.targetFrameRate = 60;
 #endif
     }
 }
