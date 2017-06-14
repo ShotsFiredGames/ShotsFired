@@ -29,10 +29,16 @@ public class Projectile : NetworkBehaviour
         {
             // other.GetComponent<CollisionDetection>().OnHit();
             explosion = Instantiate(explosion, transform.position, Quaternion.FromToRotation(Vector3.up, impactNormal)) as GameObject;
-            NetworkServer.Spawn(explosion);
+            SpawnObject(explosion);
             NetworkServer.Destroy(gameObject);
             Destroy(gameObject);
         }
+    }
+
+    [ServerCallback]
+    void SpawnObject(GameObject spawningObject)
+    {
+        NetworkServer.Spawn(spawningObject);
     }
 
     public void SetVariables(float _speed, Vector3 _direction, string _playername, Vector3 hitNormal)

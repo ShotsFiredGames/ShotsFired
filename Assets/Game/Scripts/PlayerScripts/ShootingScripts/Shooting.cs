@@ -145,7 +145,13 @@ public class Shooting : NetworkBehaviour
     {
         GameObject bullet = Instantiate(currentGun.projectile, currentGun.gunbarrel.transform.position, currentGun.gunbarrel.transform.rotation) as GameObject;
         bullet.GetComponent<Projectile>().SetVariables(currentGun.speed, direction, transform.name, hitNormal);
-        NetworkServer.Spawn(bullet);
+        SpawnObject(bullet);
+    }
+
+    [ServerCallback]
+    void SpawnObject(GameObject spawningObject)
+    {
+        NetworkServer.Spawn(spawningObject);
     }
 
     [Client]
