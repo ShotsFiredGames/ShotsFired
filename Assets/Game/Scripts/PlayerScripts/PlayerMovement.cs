@@ -34,7 +34,7 @@ public class PlayerMovement : NetworkBehaviour
         _jump = jumpForce;
         playerCamera = GetComponent<PlayerCamera>();
 
-        airSpeed = speed * .5f;
+        airSpeed = speed * .65f;
 	}
 
     //public void AimAssist()
@@ -49,7 +49,7 @@ public class PlayerMovement : NetworkBehaviour
     //    aimAssist = false;
     //}
 
-    private void Update()
+    private void FixedUpdate()
     {
         if(Grounded())
         {
@@ -130,7 +130,7 @@ public class PlayerMovement : NetworkBehaviour
         {
             isUsingBoots = true;
             speed = speed * 2.5f;
-            jumpForce = jumpForce * 2.5f;
+            jumpForce = jumpForce * 3f;
             yield return new WaitForSeconds(GameCustomization.abilityDuration);
             isUsingBoots = false;
             speed = GameCustomization.playerSpeed;
