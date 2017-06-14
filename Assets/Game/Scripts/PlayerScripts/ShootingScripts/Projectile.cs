@@ -9,6 +9,7 @@ public class Projectile : NetworkBehaviour
     Vector3 direction;
     string playername;
     Rigidbody rb;
+    int damage;
 
     Vector3 impactNormal; //Used to rotate impactparticle.
 
@@ -27,7 +28,9 @@ public class Projectile : NetworkBehaviour
     {
         if (other.transform.root.name != playername)
         {
-            // other.GetComponent<CollisionDetection>().OnHit();
+            if(other.tag.Equals("Collision"))
+            other.GetComponent<CollisionDetection>().OnHit(damage);
+
             explosion = Instantiate(explosion, transform.position, Quaternion.FromToRotation(Vector3.up, impactNormal)) as GameObject;
             SpawnObject(explosion);
             NetworkServer.Destroy(gameObject);
@@ -41,11 +44,12 @@ public class Projectile : NetworkBehaviour
         NetworkServer.Spawn(spawningObject);
     }
 
-    public void SetVariables(float _speed, Vector3 _direction, string _playername, Vector3 hitNormal)
+    public void SetVariables(float _speed, Vector3 _direction, string _playername, Vector3 hitNormal, int _damage)
     {
         speed = _speed;
         direction = _direction;
         playername = _playername;
         impactNormal = hitNormal;
+        damage = _damage;
     }
 }

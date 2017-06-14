@@ -144,7 +144,7 @@ public class Shooting : NetworkBehaviour
     void RpcProjectileShot(Vector3 direction, Vector3 hitNormal)
     {
         GameObject bullet = Instantiate(currentGun.projectile, currentGun.gunbarrel.transform.position, currentGun.gunbarrel.transform.rotation) as GameObject;
-        bullet.GetComponent<Projectile>().SetVariables(currentGun.speed, direction, transform.name, hitNormal);
+        bullet.GetComponent<Projectile>().SetVariables(currentGun.speed, direction, transform.name, hitNormal, currentGun.damage);
         SpawnObject(bullet);
     }
 
