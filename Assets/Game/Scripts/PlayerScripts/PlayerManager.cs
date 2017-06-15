@@ -27,6 +27,9 @@ public class PlayerManager : NetworkBehaviour
     GameObject myCamera;
     Gun oldGun;
 
+    public bool lockCursor;
+    private bool m_cursorIsLocked = true;
+
     void Awake()
     {
         playerHealth = GetComponent<PlayerHealth>();
@@ -54,8 +57,9 @@ public class PlayerManager : NetworkBehaviour
         controls.Destroy();
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
+        UpdateCursorLock();
         if (!isLocalPlayer) return;
         if (isDead) return;
 
@@ -256,6 +260,37 @@ public class PlayerManager : NetworkBehaviour
         }
         return null;
     }
+
+    public void UpdateCursorLock()
+    {
+        //if the user set "lockCursor" we check & properly lock the cursos
+        if (lockCursor)
+            InternalLockUpdate();
+    }
+
+    private void InternalLockUpdate()
+    {
+        if (Input.GetKeyUp(KeyCode.Escape))
+        {
+            m_cursorIsLocked = false;
+        }
+        else if (Input.GetMouseButtonUp(0))
+        {
+            m_cursorIsLocked = true;
+        }
+
+        if (m_cursorIsLocked)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+        else if (!m_cursorIsLocked)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+    }
+
 
     void SaveBindings()
     {

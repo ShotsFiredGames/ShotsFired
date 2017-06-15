@@ -37,9 +37,9 @@ public class PlayerCamera : MonoBehaviour
     public void Look(float rightStickY)
     {
         if(!isAiming)
-            yRotationValue += -rightStickY * lookSpeed * Time.deltaTime;
+            yRotationValue += -rightStickY * lookSpeed * Time.fixedDeltaTime;
         else
-            yRotationValue += -rightStickY * (lookSpeed * .25f) * Time.deltaTime;
+            yRotationValue += -rightStickY * (lookSpeed * .25f) * Time.fixedDeltaTime;
 
         yRotationValue = ClampAngle(yRotationValue, -clampValue, clampValue);
         cameraYRotation = Quaternion.Euler(yRotationValue, 0, 0);
@@ -71,10 +71,10 @@ public class PlayerCamera : MonoBehaviour
         if (currentGun != null)
         {
             if (currentGun.transform.localPosition != aimPosition)
-                currentGun.transform.localPosition = Vector3.Lerp(currentGun.transform.localPosition, aimPosition, aimSpeed * Time.deltaTime);
+                currentGun.transform.localPosition = Vector3.Lerp(currentGun.transform.localPosition, aimPosition, aimSpeed * Time.fixedDeltaTime);
 
             if (myCamera.fieldOfView != 20)
-                myCamera.fieldOfView = Mathf.Lerp(myCamera.fieldOfView, aimFieldOfView, aimSpeed * Time.deltaTime);
+                myCamera.fieldOfView = Mathf.Lerp(myCamera.fieldOfView, aimFieldOfView, aimSpeed * Time.fixedDeltaTime);
         }
     }
 
@@ -87,10 +87,10 @@ public class PlayerCamera : MonoBehaviour
         if (currentGun != null)
         {
             if (currentGun.transform.localPosition != basePosition)
-                currentGun.transform.localPosition = Vector3.Lerp(currentGun.transform.localPosition, basePosition, aimSpeed * Time.deltaTime);
+                currentGun.transform.localPosition = Vector3.Lerp(currentGun.transform.localPosition, basePosition, aimSpeed * Time.fixedDeltaTime);
 
             if (myCamera.fieldOfView != 60)
-                myCamera.fieldOfView = Mathf.Lerp(myCamera.fieldOfView, baseFieldOfView, aimSpeed * Time.deltaTime);
+                myCamera.fieldOfView = Mathf.Lerp(myCamera.fieldOfView, baseFieldOfView, aimSpeed * Time.fixedDeltaTime);
         }
     }
 

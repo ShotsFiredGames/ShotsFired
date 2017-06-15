@@ -72,7 +72,8 @@ public class PlayerMovement : NetworkBehaviour
 
     public void Move(float horizontal, float vertical)
     {
-        direction = new Vector3(horizontal * speed * Time.deltaTime, 0, vertical * speed * Time.deltaTime);
+        direction = new Vector3(horizontal * speed, 0, vertical * speed);
+        direction *= Time.fixedDeltaTime;
         direction = transform.TransformDirection(direction);
         rb.MovePosition(transform.position + direction);
     }
@@ -84,7 +85,7 @@ public class PlayerMovement : NetworkBehaviour
 
             if (!aimAssist)
             {
-                xRotationValue -= -horizontal2 * rotationSpeed * Time.deltaTime;
+                xRotationValue -= -horizontal2 * rotationSpeed * Time.fixedDeltaTime;
                 rotation = Quaternion.Euler(0, xRotationValue, 0);
                 transform.rotation = rotation;
             }
@@ -96,7 +97,7 @@ public class PlayerMovement : NetworkBehaviour
         {
             if (!aimAssist)
             {
-                xRotationValue -= -horizontal2 * (rotationSpeed * .25f) * Time.deltaTime;
+                xRotationValue -= -horizontal2 * (rotationSpeed * .25f) * Time.fixedDeltaTime;
                 rotation = Quaternion.Euler(0, xRotationValue, 0);
                 transform.rotation = rotation;
             }
@@ -107,7 +108,7 @@ public class PlayerMovement : NetworkBehaviour
 
     void ApplyAimAssist(float horizontal2)
     {
-        xRotationValue -= -horizontal2 * (rotationSpeed * .1f) * Time.deltaTime;
+        xRotationValue -= -horizontal2 * (rotationSpeed * .1f) * Time.fixedDeltaTime;
         rotation = Quaternion.Euler(0, xRotationValue, 0);
         transform.rotation = rotation;
     }
