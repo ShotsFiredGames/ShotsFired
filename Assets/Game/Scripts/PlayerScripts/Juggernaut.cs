@@ -58,7 +58,7 @@ public class Juggernaut : MonoBehaviour
                     PlayerHealth health = other.transform.root.GetComponent<PlayerHealth>();
 
                     if (!health.isPlayerDead())
-                        health.CmdInstantDeath(location);
+                        health.CmdInstantDeath(transform.root.name, location);
                 }
             }            
         }

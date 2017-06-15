@@ -21,6 +21,8 @@ public class Controls : PlayerActionSet
 
     public PlayerTwoAxisAction Move;
     public PlayerTwoAxisAction Look;
+    
+    public PlayerAction ScoreBoard;
 
 
     public Controls()
@@ -42,6 +44,8 @@ public class Controls : PlayerActionSet
 
         Move = CreateTwoAxisPlayerAction(Left, Right, Down, Up);
         Look = CreateTwoAxisPlayerAction(LookLeft, LookRight, LookDown, LookUp);
+        
+        ScoreBoard = CreatePlayerAction("Score Board");
     }
 
 
@@ -92,8 +96,12 @@ public class Controls : PlayerActionSet
         controls.LookLeft.AddDefaultBinding(Mouse.NegativeX);
         controls.LookRight.AddDefaultBinding(Mouse.PositiveX);
         controls.LookUp.AddDefaultBinding(Mouse.PositiveY);
-        controls.LookDown.AddDefaultBinding(Mouse.NegativeY);        
+        controls.LookDown.AddDefaultBinding(Mouse.NegativeY);
 
+        controls.ScoreBoard.AddDefaultBinding(Key.Tab);
+        controls.ScoreBoard.AddDefaultBinding(InputControlType.TouchPadButton);
+        controls.ScoreBoard.AddDefaultBinding(InputControlType.Command);
+        
         controls.ListenOptions.IncludeUnknownControllers = true;
         controls.ListenOptions.MaxAllowedBindings = 4;
         //			playerActions.ListenOptions.MaxAllowedBindingsPerType = 1;

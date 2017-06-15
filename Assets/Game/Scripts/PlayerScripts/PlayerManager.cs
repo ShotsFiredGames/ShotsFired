@@ -9,6 +9,7 @@ public class PlayerManager : NetworkBehaviour
     PlayerMovement playerMovement;
     PlayerCamera playerCamera;
     Juggernaut juggernaut;
+    GameManager gameManager;
 
     PlayerHealth playerHealth;
     public bool isDead;
@@ -35,16 +36,22 @@ public class PlayerManager : NetworkBehaviour
         playerHealth = GetComponent<PlayerHealth>();
         playerCamera = GetComponent<PlayerCamera>();
         myCamera = playerCamera.myCamera.gameObject;
+
     }
 
-    private void Start()
+    private IEnumerator Start()
     {
         playerMovement = GetComponent<PlayerMovement>();
         animationManager = GetComponent<AnimationManager>();
 
         shooting = GetComponent<Shooting>();
         juggernaut = GetComponentInChildren<Juggernaut>();
+
         playerHealth.Init();
+
+        yield return new WaitForSeconds(2);
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+
     }
 
     void OnEnable()
@@ -96,6 +103,24 @@ public class PlayerManager : NetworkBehaviour
         {
             playerCamera.StopAim();
             StopAiming();
+        }
+        
+        if(gameManager != null)
+        {
+            if (PlatformManager.systemType.Equals(PlatformManager.SystemType.PC))
+            {
+                if (controls.ScoreBoard.IsPressed && !gameManager.isActive)
+                    gameManager.ScoreBoard(true);
+                else if (controls.ScoreBoard.WasReleased && gameManager.isActive)
+                    gameManager.ScoreBoard(false);
+            }
+            else
+            {
+                if (controls.ScoreBoard.WasPressed && !gameManager.isActive)
+                    gameManager.ScoreBoard(true);
+                else if (controls.ScoreBoard.WasPressed && gameManager.isActive)
+                    gameManager.ScoreBoard(false);
+            }
         }
     }
 
@@ -237,12 +262,13 @@ public class PlayerManager : NetworkBehaviour
         playerCamera.SetFieldOfView(60);
     }
 
-    public void Dead(CollisionDetection.CollisionFlag collisionLocation)
+    public void Dead(string damageSource, CollisionDetection.CollisionFlag collisionLocation)
     {
         isDead = true;
         CmdDisarm();
         CmdCancelAbility();
         animationManager.IsDead(collisionLocation);
+        GameManager.instance.RpcAddScore(damageSource, GameCustomization.pointsPerKill);
     }
 
     public void Respawn()

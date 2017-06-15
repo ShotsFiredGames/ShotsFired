@@ -98,7 +98,7 @@ public class Shooting : NetworkBehaviour
     [Command]
     void CmdPlayerShot(string hitPlayer, string hitCollider)
     {
-        PlayerWrangler.GetPlayer(hitPlayer).transform.Find("CollisionDetection").transform.Find(hitCollider).GetComponent<CollisionDetection>().OnHit(currentGun.damage);
+        PlayerWrangler.GetPlayer(hitPlayer).transform.Find("CollisionDetection").transform.Find(hitCollider).GetComponent<CollisionDetection>().OnHit(currentGun.damage, transform.name);
     }
 
     public RaycastHit CastMyRay()

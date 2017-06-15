@@ -51,13 +51,13 @@ public class PlayerHealth : NetworkBehaviour
     }
 
     [Command]
-    public void CmdTookDamage(int damage, CollisionDetection.CollisionFlag collisionLocation)
+    public void CmdTookDamage(int damage, string sourceID, CollisionDetection.CollisionFlag collisionLocation)
     {
-        RpcTookDamage(damage, collisionLocation);
+        RpcTookDamage(damage, sourceID, collisionLocation);
     }
 
     [ClientRpc]
-    public void RpcTookDamage(int damage, CollisionDetection.CollisionFlag collisionLocation)                //This is called from CollisionDetection to determine the damage and the location of the incoming collision.
+    public void RpcTookDamage(int damage, string sourceID, CollisionDetection.CollisionFlag collisionLocation)                //This is called from CollisionDetection to determine the damage and the location of the incoming collision.
     {
         currentHealth -= damage;
         Hit(collisionLocation);
@@ -69,18 +69,18 @@ public class PlayerHealth : NetworkBehaviour
 
         if (currentHealth <= 0)
         {
-            Died(collisionLocation);
+            Died(sourceID, collisionLocation);
         }
     }
 
     [Command]
-    public void CmdHeadshotDamage(int headshotDamage, CollisionDetection.CollisionFlag collisionLocation)
+    public void CmdHeadshotDamage(int headshotDamage, string sourceID, CollisionDetection.CollisionFlag collisionLocation)
     {
-        RpcHeadshotDamage(headshotDamage, collisionLocation);
+        RpcHeadshotDamage(headshotDamage, sourceID, collisionLocation);
     }
 
     [ClientRpc]
-    public void RpcHeadshotDamage(int headshotDamage, CollisionDetection.CollisionFlag collisionLocation)    //This is called from CollisionDetection to determine the damage and the location of the incoming collision.
+    public void RpcHeadshotDamage(int headshotDamage, string sourceID, CollisionDetection.CollisionFlag collisionLocation)    //This is called from CollisionDetection to determine the damage and the location of the incoming collision.
     {
         if (!source.isPlaying)
         {
@@ -92,32 +92,32 @@ public class PlayerHealth : NetworkBehaviour
 
         if (currentHealth <= 0)
         {
-            Died(collisionLocation);
+            Died(sourceID, collisionLocation);
         }
     }
 
     [Command]
-    public void CmdInstantDeath(CollisionDetection.CollisionFlag collisionLocation)
+    public void CmdInstantDeath(string damageSource, CollisionDetection.CollisionFlag collisionLocation)
     {
-        RpcInstantDeath(collisionLocation);
+        RpcInstantDeath(damageSource, collisionLocation);
     }
 
     [ClientRpc]
-    public void RpcInstantDeath(CollisionDetection.CollisionFlag collisionLocation)
+    public void RpcInstantDeath(string damageSource, CollisionDetection.CollisionFlag collisionLocation)
     {
         Debug.LogError("Dead");
         currentHealth = 0;
-        Died(collisionLocation);
+        Died(damageSource, collisionLocation);
     }
 
-    void Died(CollisionDetection.CollisionFlag collisionLocation)                                           //Died gets called when health is or goes below 0.
+    void Died(string damageSource, CollisionDetection.CollisionFlag collisionLocation)                                           //Died gets called when health is or goes below 0.
     {
         isDead = true;
 
         //foreach (Transform go in collisionDetection.GetComponentsInChildren<Transform>())
         //    go.gameObject.layer = LayerMask.NameToLayer("Default");
 
-        playerManager.Dead(collisionLocation);
+        playerManager.Dead(damageSource, collisionLocation);
         StartCoroutine(Respawn());
     }
 

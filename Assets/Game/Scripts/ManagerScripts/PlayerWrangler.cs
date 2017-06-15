@@ -24,6 +24,7 @@ public class PlayerWrangler : MonoBehaviour
         string playerID = PLAYER_ID_PREFIX + netId;
         players.Add(playerID, player);
         player.transform.name = playerID;
+        GameManager.instance.AddPlayer(playerID);
     }
 
     public static void UnRegisterPlayer(string playerID)
