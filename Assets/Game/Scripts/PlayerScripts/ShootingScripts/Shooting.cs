@@ -95,10 +95,16 @@ public class Shooting : NetworkBehaviour
         NetworkServer.Spawn(hole);
     }
 
+    [Command]
+    void CmdPlayerShot(string hitPlayer, string hitCollider)
+    {
+        PlayerWrangler.GetPlayer(hitPlayer).transform.Find("CollisionDetection").transform.Find(hitCollider).GetComponent<CollisionDetection>().OnHit(currentGun.damage, transform.name);
+    }
+
     public RaycastHit CastMyRay()
     {
         RaycastHit hit;
-        Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, 1000, layermask);
+        Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, Mathf.Infinity, layermask);
         return hit;
     }
 
@@ -111,7 +117,7 @@ public class Shooting : NetworkBehaviour
         if (hit.transform.tag.Equals("Collision"))
         {
             StartCoroutine(HitMarker());
-            hit.transform.GetComponent<CollisionDetection>().OnHit(currentGun.damage, transform.name);
+            CmdPlayerShot(hit.transform.root.name, hit.transform.name);
         }
         else
         {

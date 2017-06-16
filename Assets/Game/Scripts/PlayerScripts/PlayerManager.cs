@@ -66,7 +66,7 @@ public class PlayerManager : NetworkBehaviour
         if (isDead) return;
 
         RaycastHit hit;
-        if (isArmed && Physics.Raycast(myCamera.transform.position, myCamera.transform.forward, out hit, 1000, layermask))
+        if (isArmed && Physics.Raycast(myCamera.transform.position, myCamera.transform.forward, out hit, Mathf.Infinity, layermask))
             playerMovement.AimAssist();
         else
             playerMovement.StopAimAssist();

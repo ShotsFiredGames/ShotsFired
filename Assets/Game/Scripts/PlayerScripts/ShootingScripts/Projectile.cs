@@ -24,6 +24,7 @@ public class Projectile : NetworkBehaviour
         rb.AddForce(transform.forward * speed);
     }
 
+    [ServerCallback]
     void OnTriggerEnter(Collider other)
     {
         if (other.transform.root.name != playername)
@@ -36,16 +37,10 @@ public class Projectile : NetworkBehaviour
         {
             explosion = Instantiate(explosion, transform.position, Quaternion.FromToRotation(Vector3.up, impactNormal)) as GameObject;
             explosion.GetComponent<RocketExplosion>().SetVariables(playername);
-            SpawnObject(explosion);
-            NetworkServer.Destroy(gameObject);
+            NetworkServer.Spawn(explosion);
+            NetworkServer.UnSpawn(gameObject);
             Destroy(gameObject);
         }
-    }
-
-    [ServerCallback]
-    void SpawnObject(GameObject spawningObject)
-    {
-        NetworkServer.Spawn(spawningObject);
     }
 
     public void SetVariables(float _speed, Vector3 _direction, string _playername, Vector3 hitNormal, int _damage)
