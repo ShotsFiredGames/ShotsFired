@@ -36,10 +36,9 @@ public class PlayerManager : NetworkBehaviour
         playerHealth = GetComponent<PlayerHealth>();
         playerCamera = GetComponent<PlayerCamera>();
         myCamera = playerCamera.myCamera.gameObject;
-
     }
 
-    private IEnumerator Start()
+    private void Start()
     {
         playerMovement = GetComponent<PlayerMovement>();
         animationManager = GetComponent<AnimationManager>();
@@ -47,11 +46,7 @@ public class PlayerManager : NetworkBehaviour
         shooting = GetComponent<Shooting>();
         juggernaut = GetComponentInChildren<Juggernaut>();
 
-        playerHealth.Init();
-
-        yield return new WaitForSeconds(2);
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-
+        playerHealth.Init();        
     }
 
     void OnEnable()
@@ -121,6 +116,11 @@ public class PlayerManager : NetworkBehaviour
                 else if (controls.ScoreBoard.WasPressed && gameManager.isActive)
                     gameManager.ScoreBoard(false);
             }
+        }
+        else
+        {
+            if(GameObject.Find("GameManager") != null)
+                gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         }
     }
 
@@ -262,13 +262,14 @@ public class PlayerManager : NetworkBehaviour
         playerCamera.SetFieldOfView(60);
     }
 
+    
     public void Dead(string damageSource, CollisionDetection.CollisionFlag collisionLocation)
     {
         isDead = true;
         CmdDisarm();
         CmdCancelAbility();
         animationManager.IsDead(collisionLocation);
-        GameManager.instance.RpcAddScore(damageSource, GameCustomization.pointsPerKill);
+        GameManager.instance.CmdAddScore(damageSource, GameCustomization.pointsPerKill);
     }
 
     public void Respawn()
