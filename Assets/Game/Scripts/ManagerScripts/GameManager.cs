@@ -60,8 +60,8 @@ public class GameManager : NetworkBehaviour
         StartTimer();
 
         yield return new WaitForSeconds(5);
-        originalSpawnPoints.SetActive(false);
-        newSpawnPoints.SetActive(true);
+        Destroy(originalSpawnPoints);
+        Instantiate(newSpawnPoints);
     }
 
     [ServerCallback]

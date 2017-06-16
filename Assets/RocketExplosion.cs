@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class RocketExplosion : MonoBehaviour
+public class RocketExplosion : NetworkBehaviour
 {
     public int damage;
     string playername;
 
+    [ServerCallback]
     void OnTriggerEnter(Collider other)
     {
         if (other.transform.root.name != playername)

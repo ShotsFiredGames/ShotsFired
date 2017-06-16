@@ -102,6 +102,12 @@ public class Shooting : NetworkBehaviour
         return hit;
     }
 
+    [Command]
+    void CmdPlayerShot(string hitPlayer, string hitCollider)
+    {
+        PlayerWrangler.GetPlayer(hitPlayer).transform.Find("CollisionDetection").transform.Find(hitCollider).GetComponent<CollisionDetection>().OnHit(currentGun.damage, transform.name);
+    }
+
     [Client]
     void HitscanShot()
     {
@@ -111,7 +117,7 @@ public class Shooting : NetworkBehaviour
         if (hit.transform.tag.Equals("Collision"))
         {
             StartCoroutine(HitMarker());
-            hit.transform.GetComponent<CollisionDetection>().OnHit(currentGun.damage, transform.name);
+            CmdPlayerShot(hit.transform.root.name, hit.transform.name);
         }
         else
         {

@@ -95,7 +95,6 @@ public class PlayerHealth : NetworkBehaviour
     void Died(string damageSource, CollisionDetection.CollisionFlag collisionLocation)                                           //Died gets called when health is or goes below 0.
     {
         isDead = true;
-
         //foreach (Transform go in collisionDetection.GetComponentsInChildren<Transform>())
         //    go.gameObject.layer = LayerMask.NameToLayer("Default");
 
@@ -104,7 +103,7 @@ public class PlayerHealth : NetworkBehaviour
     }
 
     IEnumerator Respawn()
-    {
+    {        
         yield return new WaitForSeconds(respawnTime);
         Transform respawnpoint = NetworkManager.singleton.GetStartPosition();
         transform.position = respawnpoint.position;
