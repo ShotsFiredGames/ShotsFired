@@ -140,11 +140,23 @@ public class GameManager : NetworkBehaviour
 
             if (gameOver)
             {
-                endGameText.text = winningPlayer + " won!" + '\n' + "Press the Jump button to continue";
-                endGameText.gameObject.SetActive(true);
-                StartCoroutine(EndGame());
+                CmdGameOver(winningPlayer);
             }
         }
+    }
+
+    [Command]
+    void CmdGameOver(string winningPlayer)
+    {
+        RpcGameOver(winningPlayer);
+    }
+
+    [ClientRpc]
+    void RpcGameOver(string winningPlayer)
+    {
+        endGameText.text = winningPlayer + " won!" + '\n' + "Press the Jump button to continue";
+        endGameText.gameObject.SetActive(true);
+        StartCoroutine(EndGame());
     }
 
     void Update()
