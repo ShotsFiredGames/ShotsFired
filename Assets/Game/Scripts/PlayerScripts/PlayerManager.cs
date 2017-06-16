@@ -198,12 +198,15 @@ public class PlayerManager : NetworkBehaviour
     {
         switch(abilityName)
         {
+            /*
             case "SuperBoots":
                 playerMovement.SuperBoots();
                 break;
+            */
             case "Juggernaut":
                 juggernaut.ActivateJuggernaut();
-                playerHealth.ActivateJuggernaut();
+                playerMovement.SuperBoots();
+                //playerHealth.ActivateJuggernaut();
                 break;
         }
     }
@@ -219,7 +222,7 @@ public class PlayerManager : NetworkBehaviour
     {
         playerMovement.CancelSuperBoots();
         juggernaut.CancelJuggernaut();
-        playerHealth.CancelJuggernaut();
+        //playerHealth.CancelJuggernaut();
     }
 
     [Command]

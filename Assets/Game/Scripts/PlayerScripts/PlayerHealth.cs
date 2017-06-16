@@ -174,7 +174,7 @@ public class PlayerHealth : NetworkBehaviour
     {
         juggernaut = StartCoroutine(IncreaseMaxHealth());
     }
-
+    /*
     public void CancelJuggernaut()
     {
         if (juggernaut != null)
@@ -188,7 +188,7 @@ public class PlayerHealth : NetworkBehaviour
             isHealthIncreased = false;
         }
     }
-
+    */
     public IEnumerator IncreaseMaxHealth()
     {
         if (!isHealthIncreased)

@@ -72,9 +72,10 @@ public class PickUpManager : NetworkBehaviour
         {
             case PickUp.AbilityType.None:
                 break;
-            case PickUp.AbilityType.SuperBoots:
+            /*case PickUp.AbilityType.SuperBoots:
                 RpcApplyPickUp("Ability", "SuperBoots");
                 break;
+                */
             case PickUp.AbilityType.Juggernaut:
                 RpcApplyPickUp("Ability", "Juggernaut");
                 break;
