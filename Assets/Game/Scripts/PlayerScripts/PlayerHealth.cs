@@ -53,12 +53,14 @@ public class PlayerHealth : NetworkBehaviour
     [Command]
     public void CmdTookDamage(int damage, string sourceID, CollisionDetection.CollisionFlag collisionLocation)
     {
+        if (isDead) return;
         RpcTookDamage(damage, sourceID, collisionLocation);
     }
 
     [ClientRpc]
     public void RpcTookDamage(int damage, string sourceID, CollisionDetection.CollisionFlag collisionLocation)                //This is called from CollisionDetection to determine the damage and the location of the incoming collision.
     {
+        if (isDead) return;
         currentHealth -= damage;
         Hit(collisionLocation);
         if (!source.isPlaying)
@@ -77,12 +79,14 @@ public class PlayerHealth : NetworkBehaviour
     [Command]
     public void CmdInstantDeath(string damageSource, CollisionDetection.CollisionFlag collisionLocation)
     {
+        if (isDead) return;
         RpcInstantDeath(damageSource, collisionLocation);
     }
 
     [ClientRpc]
     public void RpcInstantDeath(string damageSource, CollisionDetection.CollisionFlag collisionLocation)
     {
+        if (isDead) return;
         currentHealth = 0;
         Died(damageSource, collisionLocation);
     }
