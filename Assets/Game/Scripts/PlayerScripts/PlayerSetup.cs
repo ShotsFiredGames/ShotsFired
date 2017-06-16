@@ -42,9 +42,19 @@ public class PlayerSetup : NetworkBehaviour
     public override void OnStartClient()
     {
         base.OnStartClient();
+        StartCoroutine(WaitToRegister());        
+    }
 
+    IEnumerator WaitToRegister()
+    {
+        yield return new WaitUntil(CheckSpawns);
         string _netID = GetComponent<NetworkIdentity>().netId.ToString();
         PlayerManager _player = GetComponent<PlayerManager>();
         PlayerWrangler.RegisterPlayer(_netID, _player);
+    }
+
+    bool CheckSpawns()
+    {
+        return NetworkServer.SpawnObjects();
     }
 }

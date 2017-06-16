@@ -7,6 +7,7 @@ public class PlayerWrangler : MonoBehaviour
 {
 
     public static PlayerWrangler instance;
+    public GameManager gameManager;
 
     private static Dictionary<string, PlayerManager> players = new Dictionary<string, PlayerManager>();
     private const string PLAYER_ID_PREFIX = "Player ";
