@@ -123,7 +123,7 @@ public class PlayerMovement : NetworkBehaviour
 
     public void SuperBoots()
     {
-        superboots = StartCoroutine(BootsAbilty());
+        superboots = StartCoroutine(MovementIncrease());
     }
 
     public void CancelSuperBoots()
@@ -138,7 +138,7 @@ public class PlayerMovement : NetworkBehaviour
         }
     }
 
-    IEnumerator BootsAbilty()
+    IEnumerator MovementIncrease()
     {
         if (!isUsingBoots)
         {

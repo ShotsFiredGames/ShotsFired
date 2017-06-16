@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class Juggernaut : MonoBehaviour
 {
-    float duration;
     bool isJuggernaut;
     public GameObject juggernautEffect;
     Coroutine juggernaut;
@@ -13,7 +12,7 @@ public class Juggernaut : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        duration = GameCustomization.abilityDuration;
+        
     }
     
     public void ActivateJuggernaut()
@@ -37,6 +36,8 @@ public class Juggernaut : MonoBehaviour
 
     IEnumerator JuggernautAbility()
     {
+        //Debug.LogError("Ability Started");
+
         isJuggernaut = true;
         juggernautEffect.SetActive(true);
         yield return new WaitForSeconds(GameCustomization.abilityDuration);

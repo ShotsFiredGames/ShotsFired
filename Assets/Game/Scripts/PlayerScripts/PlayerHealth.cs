@@ -27,7 +27,6 @@ public class PlayerHealth : NetworkBehaviour
     bool isHealthIncreased;
 
     GameObject collisionDetection;
-    Coroutine juggernaut;
 
     // Use this for initialization
     void Awake()
@@ -151,17 +150,10 @@ public class PlayerHealth : NetworkBehaviour
         return (currentHealth <= 0);
     }
 
-    public void ActivateJuggernaut()
+    public void CancelIncreasedHealth()
     {
-        juggernaut = StartCoroutine(IncreaseMaxHealth());
-    }
-
-    public void CancelJuggernaut()
-    {
-        if (juggernaut != null)
+        if (isHealthIncreased)
         {
-            StopCoroutine(juggernaut);
-
             currMaxHealth = maxHealth;
             if (currentHealth > maxHealth)
                 currentHealth = maxHealth;

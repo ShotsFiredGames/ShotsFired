@@ -22,7 +22,6 @@ public class PickUp : NetworkBehaviour
     public enum AbilityType
     {
         None,
-        SuperBoots,
         Juggernaut
     };
 
