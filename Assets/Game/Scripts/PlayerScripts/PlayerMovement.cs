@@ -35,7 +35,7 @@ public class PlayerMovement : NetworkBehaviour
         _jump = jumpForce;
         playerCamera = GetComponent<PlayerCamera>();
 
-        airSpeed = speed * .65f;
+        airSpeed = speed * .6f;
 	}
 
     public void AimAssist()
@@ -143,7 +143,7 @@ public class PlayerMovement : NetworkBehaviour
         if (!isUsingBoots)
         {
             isUsingBoots = true;
-            speed = speed * 2.5f;
+            speed = speed * 1.5f;
             jumpForce = jumpForce * 3f;
             yield return new WaitForSeconds(GameCustomization.abilityDuration);
             isUsingBoots = false;
