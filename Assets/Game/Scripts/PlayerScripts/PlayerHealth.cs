@@ -73,28 +73,6 @@ public class PlayerHealth : NetworkBehaviour
         }
     }
 
-    [Command]
-    public void CmdHeadshotDamage(int headshotDamage, string sourceID, CollisionDetection.CollisionFlag collisionLocation)
-    {
-        RpcHeadshotDamage(headshotDamage, sourceID, collisionLocation);
-    }
-
-    [ClientRpc]
-    public void RpcHeadshotDamage(int headshotDamage, string sourceID, CollisionDetection.CollisionFlag collisionLocation)    //This is called from CollisionDetection to determine the damage and the location of the incoming collision.
-    {
-        if (!source.isPlaying)
-        {
-            source.clip = hitEffects[Random.Range(0, hitEffects.Length)];
-            source.Play();
-        }
-        Hit(collisionLocation);
-        currentHealth -= headshotDamage;
-
-        if (currentHealth <= 0)
-        {
-            Died(sourceID, collisionLocation);
-        }
-    }
 
     [Command]
     public void CmdInstantDeath(string damageSource, CollisionDetection.CollisionFlag collisionLocation)
