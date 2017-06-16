@@ -8,11 +8,13 @@ using UnityEngine.Networking.Match;
 public class GameManager : NetworkBehaviour
 {
     public static GameManager instance;
+    public GameObject originalSpawnPoints;
+    public GameObject newSpawnPoints;
     public Text timerText;
     public Text endGameText;
     public GameObject scorePanel;
     public GameObject scoreboardTextObj;
-    //[HideInInspector]
+    [HideInInspector]
     public List<Text> scoreboardTextObjList;
 
     public Dictionary<string, int> playerScores;
@@ -50,12 +52,16 @@ public class GameManager : NetworkBehaviour
         controls.Destroy();
     }
 
-    void Start()
+    IEnumerator Start()
     {
         networkManager = NetworkManager.singleton;
         minutes = GameCustomization.gameLength;
         seconds = 1;
         StartTimer();
+
+        yield return new WaitForSeconds(5);
+        originalSpawnPoints.SetActive(false);
+        newSpawnPoints.SetActive(true);
     }
 
     [ServerCallback]
