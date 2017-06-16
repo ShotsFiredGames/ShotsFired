@@ -15,6 +15,7 @@ public class RocketExplosion : NetworkBehaviour
         {
             if (other.tag.Equals("Collision"))
             {
+                Debug.LogError("Delt explsion damage");
                 other.GetComponent<CollisionDetection>().OnHit(damage, playername);
             }
         }

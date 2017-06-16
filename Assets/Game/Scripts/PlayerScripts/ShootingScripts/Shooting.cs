@@ -95,17 +95,17 @@ public class Shooting : NetworkBehaviour
         NetworkServer.Spawn(hole);
     }
 
-    public RaycastHit CastMyRay()
-    {
-        RaycastHit hit;
-        Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, 1000, layermask);
-        return hit;
-    }
-
     [Command]
     void CmdPlayerShot(string hitPlayer, string hitCollider)
     {
         PlayerWrangler.GetPlayer(hitPlayer).transform.Find("CollisionDetection").transform.Find(hitCollider).GetComponent<CollisionDetection>().OnHit(currentGun.damage, transform.name);
+    }
+
+    public RaycastHit CastMyRay()
+    {
+        RaycastHit hit;
+        Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, Mathf.Infinity, layermask);
+        return hit;
     }
 
     [Client]

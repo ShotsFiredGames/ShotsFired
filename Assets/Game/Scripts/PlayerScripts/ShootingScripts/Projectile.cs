@@ -37,17 +37,11 @@ public class Projectile : NetworkBehaviour
         {
             explosion = Instantiate(explosion, transform.position, Quaternion.FromToRotation(Vector3.up, impactNormal)) as GameObject;
             explosion.GetComponent<RocketExplosion>().SetVariables(playername);
-            //SpawnObject(explosion);
+
             NetworkServer.Spawn(explosion);
-            NetworkServer.Destroy(gameObject);
+            NetworkServer.UnSpawn(gameObject);
             Destroy(gameObject);
         }
-    }
-
-    [ServerCallback]
-    void SpawnObject(GameObject spawningObject)
-    {
-        NetworkServer.Spawn(spawningObject);
     }
 
     public void SetVariables(float _speed, Vector3 _direction, string _playername, Vector3 hitNormal, int _damage)
