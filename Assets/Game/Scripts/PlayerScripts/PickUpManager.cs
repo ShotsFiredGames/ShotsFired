@@ -8,6 +8,10 @@ public class PickUpManager : NetworkBehaviour
     PlayerManager playerManager;
     public AudioSource pickupSource;
 
+    public AudioClip juggernautSound;
+
+    public AudioClip gunPickUpSound;
+
     private void Awake()
     {
         playerManager = GetComponent<PlayerManager>();
@@ -16,12 +20,22 @@ public class PickUpManager : NetworkBehaviour
     [ClientRpc]
     public void RpcApplyPickUp(string pickUpType, string pickUp)
     {
-        switch(pickUpType)
+        switch (pickUpType)
         {
             case "Gun":
+                pickupSource.PlayOneShot(gunPickUpSound);
                 playerManager.CmdWeaponPickedUp(pickUp);
                 break;
             case "Ability":
+                switch (pickUp)
+                {
+                    case "Juggernaut":
+                        pickupSource.PlayOneShot(juggernautSound);
+                        break;
+                    default:
+                        pickupSource.PlayOneShot(juggernautSound);
+                        break;
+                }
                 playerManager.CmdAbilityPickedUp(pickUp);
                 break;
         }
@@ -33,7 +47,6 @@ public class PickUpManager : NetworkBehaviour
         if (other.tag.Equals("PickUp"))
         {
             PickUp pickup = other.GetComponent<PickUp>();
-            pickupSource.PlayOneShot(pickup.pickupSound);
             switch (pickup.type)
             {
                 case PickUp.PickUpType.Gun:
@@ -49,6 +62,7 @@ public class PickUpManager : NetworkBehaviour
             Destroy(other.gameObject);
         }
     }
+
 
 
     public void Gun(PickUp pickup)
