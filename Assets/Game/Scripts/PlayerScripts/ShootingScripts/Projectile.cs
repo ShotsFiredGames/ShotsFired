@@ -29,7 +29,7 @@ public class Projectile : NetworkBehaviour
         if (other.transform.root.name != playername)
         {
             if(other.tag.Equals("Collision"))
-            other.GetComponent<CollisionDetection>().OnHit(damage, other.transform.root.name);
+            other.GetComponent<CollisionDetection>().OnHit(damage, playername);
 
             explosion = Instantiate(explosion, transform.position, Quaternion.FromToRotation(Vector3.up, impactNormal)) as GameObject;
             SpawnObject(explosion);

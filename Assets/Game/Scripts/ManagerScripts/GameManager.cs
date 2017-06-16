@@ -124,24 +124,26 @@ public class GameManager : NetworkBehaviour
         int killAmount = -1;
         foreach(string name in playerScores.Keys)
         {
-            if(playerScores[name] >= GameCustomization.pointsToWin)
+            lastAmt = playerScores[name];
+            if (playerScores[name] >= GameCustomization.pointsToWin)
             {
                 winningPlayer = name;
                 gameOver = true;
+                break;
             }
             else
-            {
-                lastAmt = playerScores[name];
+            {                
                 if(lastAmt > killAmount)
                 {
                     winningPlayer = name;
+                    killAmount = lastAmt;
                 }
-            }
+            }            
+        }
 
-            if (gameOver)
-            {
-                CmdGameOver(winningPlayer);
-            }
+        if (gameOver)
+        {
+            CmdGameOver(winningPlayer);
         }
     }
 
