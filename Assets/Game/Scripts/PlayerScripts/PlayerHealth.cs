@@ -105,11 +105,11 @@ public class PlayerHealth : NetworkBehaviour
     [ClientRpc]
     public void RpcInstantDeath(string damageSource, CollisionDetection.CollisionFlag collisionLocation)
     {
-        Debug.LogError("Dead");
         currentHealth = 0;
         Died(damageSource, collisionLocation);
     }
 
+    [Client]
     void Died(string damageSource, CollisionDetection.CollisionFlag collisionLocation)                                           //Died gets called when health is or goes below 0.
     {
         isDead = true;

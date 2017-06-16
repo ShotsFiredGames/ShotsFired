@@ -262,13 +262,14 @@ public class PlayerManager : NetworkBehaviour
         playerCamera.SetFieldOfView(60);
     }
 
+    
     public void Dead(string damageSource, CollisionDetection.CollisionFlag collisionLocation)
     {
         isDead = true;
         CmdDisarm();
         CmdCancelAbility();
         animationManager.IsDead(collisionLocation);
-        GameManager.instance.RpcAddScore(damageSource, GameCustomization.pointsPerKill);
+        GameManager.instance.CmdAddScore(damageSource, GameCustomization.pointsPerKill);
     }
 
     public void Respawn()

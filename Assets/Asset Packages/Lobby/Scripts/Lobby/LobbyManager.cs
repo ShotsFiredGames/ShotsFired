@@ -24,7 +24,7 @@ namespace Prototype.NetworkLobby
         [Header("UI Reference")]
         public LobbyTopPanel topPanel;
 
-        public RectTransform mainMenuPanel;
+        public RectTransform mainPanel;
         public RectTransform lobbyPanel;
 
         public LobbyInfoPanel infoPanel;
@@ -37,6 +37,9 @@ namespace Prototype.NetworkLobby
 
         public Text statusInfo;
         public Text hostInfo;
+
+        [Tooltip("The main menu panel before the lobby stuff")]
+        public GameObject mainMenuPanel;
 
         //Client numPlayers from NetworkManager is always 0, so we count (throught connect/destroy in LobbyPlayer) the number
         //of players, so that even client know how many player there is.
@@ -57,7 +60,7 @@ namespace Prototype.NetworkLobby
         {
             s_Singleton = this;
             _lobbyHooks = GetComponent<Prototype.NetworkLobby.LobbyHook>();
-            currentPanel = mainMenuPanel;
+            currentPanel = mainPanel;
 
             backButton.gameObject.SetActive(false);
             GetComponent<Canvas>().enabled = true;
@@ -65,6 +68,22 @@ namespace Prototype.NetworkLobby
             DontDestroyOnLoad(gameObject);
 
             SetServerInfo("Offline", "None");
+        }
+
+        void OnEnable()
+        {
+            SceneManager.sceneLoaded += OnSceneLoaded;
+        }
+
+        void OnDisable()
+        {
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+        }
+
+        void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            if (scene.buildIndex == 0)
+                mainMenuPanel.SetActive(true);
         }
 
         public override void OnLobbyClientSceneChanged(NetworkConnection conn)
@@ -99,7 +118,7 @@ namespace Prototype.NetworkLobby
                 }
                 else
                 {
-                    ChangeTo(mainMenuPanel);
+                    ChangeTo(mainPanel);
                 }
 
                 topPanel.ToggleVisibility(true);
@@ -131,7 +150,7 @@ namespace Prototype.NetworkLobby
 
             currentPanel = newPanel;
 
-            if (currentPanel != mainMenuPanel)
+            if (currentPanel != mainPanel)
             {
                 backButton.gameObject.SetActive(true);
             }
@@ -178,7 +197,7 @@ namespace Prototype.NetworkLobby
 
         public void SimpleBackClbk()
         {
-            ChangeTo(mainMenuPanel);
+            ChangeTo(mainPanel);
         }
                  
         public void StopHostClbk()
@@ -194,7 +213,7 @@ namespace Prototype.NetworkLobby
             }
 
             
-            ChangeTo(mainMenuPanel);
+            ChangeTo(mainPanel);
         }
 
         public void StopClientClbk()
@@ -206,13 +225,13 @@ namespace Prototype.NetworkLobby
                 StopMatchMaker();
             }
 
-            ChangeTo(mainMenuPanel);
+            ChangeTo(mainPanel);
         }
 
         public void StopServerClbk()
         {
             StopServer();
-            ChangeTo(mainMenuPanel);
+            ChangeTo(mainPanel);
         }
 
         class KickMsg : MessageBase { }
@@ -409,12 +428,12 @@ namespace Prototype.NetworkLobby
         public override void OnClientDisconnect(NetworkConnection conn)
         {
             base.OnClientDisconnect(conn);
-            ChangeTo(mainMenuPanel);
+            ChangeTo(mainPanel);
         }
 
         public override void OnClientError(NetworkConnection conn, int errorCode)
         {
-            ChangeTo(mainMenuPanel);
+            ChangeTo(mainPanel);
             infoPanel.Display("Cient error : " + (errorCode == 6 ? "timeout" : errorCode.ToString()), "Close", null);
         }
     }
