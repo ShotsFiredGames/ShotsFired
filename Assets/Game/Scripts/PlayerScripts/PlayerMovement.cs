@@ -74,8 +74,12 @@ public class PlayerMovement : NetworkBehaviour
     {
         direction = new Vector3(horizontal * speed, 0, vertical * speed);
         direction *= Time.fixedDeltaTime;
-        direction = transform.TransformDirection(direction);
-        rb.MovePosition(transform.position + direction);
+        //direction = transform.TransformDirection(direction);
+        //rb.MovePosition(transform.position + direction);
+
+        
+        rb.AddRelativeForce(direction, ForceMode.Acceleration);
+        rb.velocity = Vector3.ClampMagnitude(rb.velocity, 15);
     }
 
     public void Turn(float horizontal2)
