@@ -14,6 +14,9 @@ public class Shooting : NetworkBehaviour
     public AudioSource shootingSource;
 
     GameObject cam;
+    Coroutine overcharged;
+    bool isOvercharged;
+    int _damage;
 
     void Start()
     {
@@ -26,6 +29,12 @@ public class Shooting : NetworkBehaviour
         if (currentGun.isActiveAndEnabled && !currentGun.isFiring)
         {
             currentGun.isFiring = true;
+
+            if (isOvercharged)
+                _damage = currentGun.damage * 2;
+            else
+                _damage = currentGun.damage;
+
             switch (currentGun.weaponType)
             {
                 case Gun.WeaponType.Hitscan:
@@ -42,8 +51,11 @@ public class Shooting : NetworkBehaviour
             }
 
             yield return new WaitForSeconds(currentGun.fireFreq);
+
+            if (!isOvercharged)
+                currentGun.UseAmmo();
+
             currentGun.isFiring = false;
-            currentGun.UseAmmo();
         }
     }
 
@@ -76,6 +88,7 @@ public class Shooting : NetworkBehaviour
     {
         if (shootingSource.clip != null)
             shootingSource.Play();
+
         muzzleFlash.SetActive(true);
         yield return new WaitForSeconds(.05f);
         muzzleFlash.SetActive(false);
@@ -98,7 +111,7 @@ public class Shooting : NetworkBehaviour
     [Command]
     void CmdPlayerShot(string hitPlayer, string hitCollider)
     {
-        PlayerWrangler.GetPlayer(hitPlayer).transform.Find("CollisionDetection").transform.Find(hitCollider).GetComponent<CollisionDetection>().OnHit(currentGun.damage, transform.name);
+        PlayerWrangler.GetPlayer(hitPlayer).transform.Find("CollisionDetection").transform.Find(hitCollider).GetComponent<CollisionDetection>().OnHit(_damage, transform.name);
     }
 
     public RaycastHit CastMyRay()
@@ -145,7 +158,7 @@ public class Shooting : NetworkBehaviour
     void RpcProjectileShot(Vector3 direction, Vector3 hitNormal)
     {
         GameObject bullet = Instantiate(currentGun.projectile, currentGun.gunbarrel.transform.position, currentGun.gunbarrel.transform.rotation) as GameObject;
-        bullet.GetComponent<Projectile>().SetVariables(currentGun.speed, direction, transform.name, hitNormal, currentGun.damage);
+        bullet.GetComponent<Projectile>().SetVariables(currentGun.speed, direction, transform.name, hitNormal, _damage);
         SpawnObject(bullet);
     }
 
@@ -159,5 +172,26 @@ public class Shooting : NetworkBehaviour
     void SustainedShot()
     {
 
+    }
+
+    public void ActivateOvercharged()
+    {
+        overcharged = StartCoroutine(OverchargedAbility());
+    }
+
+    IEnumerator OverchargedAbility()
+    {
+        isOvercharged = true;
+        yield return new WaitForSeconds(GameCustomization.abilityDuration);
+        isOvercharged = false;
+    }
+
+    public void CancelOvercharged()
+    {
+        if (overcharged != null)
+        {
+            StopCoroutine(overcharged);
+            isOvercharged = false;
+        }
     }
 }
