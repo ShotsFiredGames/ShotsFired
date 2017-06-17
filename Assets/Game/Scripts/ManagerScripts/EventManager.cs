@@ -5,18 +5,36 @@ using UnityEngine.Networking;
 
 public class EventManager : NetworkBehaviour
 {
-    GameEvent[] events;
+    public GameEvent[] allEvents;
+
+    List<GameEvent> gameEvents;
+
+    List<string> eventNames;
 
     // Use this for initialization
     void Start ()
     {
-        events = GameCustomization.currentEvents.ToArray();
+        //Grabs a List of Usable Event Names From GameCustomization
+        eventNames = GameCustomization.currentEvents;
+
+        //Loops throught AllEvents and the List of Names
+        foreach (GameEvent events in allEvents)
+        {
+            string currentName = events.nameEvent;
+
+            foreach (string name in eventNames)
+            {
+                if (currentName.Equals(name))   //if the names are equal
+                    gameEvents.Add(events);     //add the event to the playable list of events
+            }
+        }
+
         InvokeRepeating("ActivateNextEvent", 0, GameCustomization.eventOccurenceRate);
 	}
 
     [ServerCallback]
     void ActivateNextEvent()
     {
-        events[Random.Range(0, events.Length)].StartEvent();
+        gameEvents[Random.Range(0, gameEvents.Count)].StartEvent();
     }
 }

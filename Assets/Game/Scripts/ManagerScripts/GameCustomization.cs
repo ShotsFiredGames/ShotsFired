@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class GameCustomization : MonoBehaviour
 {
-    public List<GameEvent> _currentEvents;
+    public List<string> _currentEvents;
     public float _respawnTime;
     public float _playerSpeed;
     public int _playerHealth;
@@ -15,7 +15,7 @@ public class GameCustomization : MonoBehaviour
     public int _pointsPerKill;
 
 
-    public static List<GameEvent> currentEvents;
+    public static List<string> currentEvents;
     public static float respawnTime;
     public static float playerSpeed;
     public static int playerHealth;
