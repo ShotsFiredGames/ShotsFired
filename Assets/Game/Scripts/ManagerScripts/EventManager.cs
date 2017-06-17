@@ -6,6 +6,7 @@ using UnityEngine.Networking;
 public class EventManager : NetworkBehaviour
 {
     public GameEvent[] allEvents;
+    public static GameEvent currentEvent;
 
     List<GameEvent> gameEvents;
 
@@ -35,6 +36,7 @@ public class EventManager : NetworkBehaviour
     [ServerCallback]
     void ActivateNextEvent()
     {
-        gameEvents[Random.Range(0, gameEvents.Count)].StartEvent();
+        currentEvent = gameEvents[Random.Range(0, gameEvents.Count)];
+        currentEvent.StartEvent();
     }
 }
