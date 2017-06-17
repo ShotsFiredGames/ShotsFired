@@ -202,6 +202,9 @@ public class PlayerManager : NetworkBehaviour
                 juggernaut.ActivateJuggernaut();
                 playerMovement.SuperBoots();
                 break;
+            case "Overcharged":
+                shooting.ActivateOvercharged();
+                break;
         }
     }
 
@@ -216,6 +219,7 @@ public class PlayerManager : NetworkBehaviour
     {
         playerMovement.CancelSuperBoots();
         juggernaut.CancelJuggernaut();
+        shooting.CancelOvercharged();
     }
 
     [Command]

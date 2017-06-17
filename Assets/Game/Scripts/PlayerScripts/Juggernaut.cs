@@ -36,14 +36,11 @@ public class Juggernaut : MonoBehaviour
 
     IEnumerator JuggernautAbility()
     {
-        //Debug.LogError("Ability Started");
-
         isJuggernaut = true;
         juggernautEffect.SetActive(true);
         yield return new WaitForSeconds(GameCustomization.abilityDuration);
         juggernautEffect.SetActive(false);
         isJuggernaut = false;
-        //Debug.LogError("Ability Done");
     }
 
     void OnTriggerEnter(Collider other)

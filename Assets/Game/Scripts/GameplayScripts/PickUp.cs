@@ -22,11 +22,11 @@ public class PickUp : NetworkBehaviour
     public enum AbilityType
     {
         None,
-        Juggernaut
+        Juggernaut,
+        Overcharged
     };
 
     PickUpManager pickUpManager;
-    public AudioClip pickupSound;
 
     [HideInInspector]
     public PickUpType type = PickUpType.None;

@@ -9,6 +9,7 @@ public class PickUpManager : NetworkBehaviour
     public AudioSource pickupSource;
 
     public AudioClip juggernautSound;
+    public AudioClip overchargedSound;
 
     public AudioClip gunPickUpSound;
 
@@ -31,6 +32,9 @@ public class PickUpManager : NetworkBehaviour
                 {
                     case "Juggernaut":
                         pickupSource.PlayOneShot(juggernautSound);
+                        break;
+                    case "Overcharged":
+                        pickupSource.PlayOneShot(overchargedSound);
                         break;
                     default:
                         pickupSource.PlayOneShot(juggernautSound);
@@ -63,8 +67,6 @@ public class PickUpManager : NetworkBehaviour
         }
     }
 
-
-
     public void Gun(PickUp pickup)
     {
         switch (pickup.gun)
@@ -88,6 +90,9 @@ public class PickUpManager : NetworkBehaviour
                 break;
             case PickUp.AbilityType.Juggernaut:
                 RpcApplyPickUp("Ability", "Juggernaut");
+                break;
+            case PickUp.AbilityType.Overcharged:
+                RpcApplyPickUp("Ability", "Overcharged");
                 break;
         }
     }
