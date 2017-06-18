@@ -16,7 +16,7 @@ public class Shooting : NetworkBehaviour
     GameObject cam;
     Coroutine overcharged;
     bool isOvercharged;
-    int _damage;
+    int _damage;                // this is the variable that gets affected by overcharged
 
     void Start()
     {

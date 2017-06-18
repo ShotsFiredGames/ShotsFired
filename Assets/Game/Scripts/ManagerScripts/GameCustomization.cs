@@ -4,11 +4,14 @@ using System.Collections.Generic;
 public class GameCustomization : MonoBehaviour
 {
     public List<string> _currentEvents;
+    public List<string> _currentAddOns;
     public float _respawnTime;
     public float _playerSpeed;
     public int _playerHealth;
     public bool _isAmmoUnlimited;
+    [Range(2, 20)]
     public float _abilityDuration;
+    [Range(2, 20)]
     public float _eventOccurenceRate;
     public int _gameLength;
     public int _pointsToWin;
@@ -16,6 +19,7 @@ public class GameCustomization : MonoBehaviour
 
 
     public static List<string> currentEvents;
+    public static List<string> currentAddOns;
     public static float respawnTime;
     public static float playerSpeed;
     public static int playerHealth;
@@ -29,6 +33,7 @@ public class GameCustomization : MonoBehaviour
     private void Awake()
     {
         currentEvents = _currentEvents;
+        currentAddOns = _currentAddOns;
         respawnTime = _respawnTime;
         playerSpeed = _playerSpeed;
         playerHealth = _playerHealth;

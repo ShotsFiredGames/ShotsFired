@@ -8,15 +8,21 @@ public class EventManager : NetworkBehaviour
     public GameEvent[] allEvents;
     public static GameEvent currentEvent;
 
-    List<GameEvent> gameEvents;
+    public AddOn[] allAddOns;
+    public static AddOn currentAddOn;
+
+    List<GameEvent> gameEvents = new List<GameEvent>();
+    List<AddOn> addOns = new List<AddOn>();
 
     List<string> eventNames;
+    List<string> addOnNames;
 
     // Use this for initialization
     void Start ()
     {
         //Grabs a List of Usable Event Names From GameCustomization
         eventNames = GameCustomization.currentEvents;
+        addOnNames = GameCustomization.currentAddOns;
 
         //Loops throught AllEvents and the List of Names
         foreach (GameEvent events in allEvents)
@@ -30,7 +36,19 @@ public class EventManager : NetworkBehaviour
             }
         }
 
-        InvokeRepeating("ActivateNextEvent", 0, GameCustomization.eventOccurenceRate);
+        //Loops throught AllAddOns and the List of Names
+        foreach (AddOn addOn in allAddOns)
+        {
+            string currentName = addOn.addOnName;
+
+            foreach (string name in addOnNames)
+            {
+                if (currentName.Equals(name))   //if the names are equal
+                    addOns.Add(addOn);     //add the event to the playable list of events
+            }
+        }
+
+        InvokeRepeating("ActivateNextEvent", 10, GameCustomization.eventOccurenceRate);
 	}
 
     [ServerCallback]
@@ -38,5 +56,8 @@ public class EventManager : NetworkBehaviour
     {
         currentEvent = gameEvents[Random.Range(0, gameEvents.Count)];
         currentEvent.StartEvent();
+
+        currentAddOn = addOns[Random.Range(0, addOns.Count)];
+        currentAddOn.StartAddOn();
     }
 }
