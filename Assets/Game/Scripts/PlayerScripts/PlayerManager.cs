@@ -31,6 +31,8 @@ public class PlayerManager : NetworkBehaviour
     public bool lockCursor;
     private bool m_cursorIsLocked = true;
 
+    UnityStandardAssets.Characters.FirstPerson.RigidbodyFirstPersonController rbController;
+
     void Awake()
     {
         playerHealth = GetComponent<PlayerHealth>();
@@ -41,6 +43,7 @@ public class PlayerManager : NetworkBehaviour
     private void Start()
     {
         playerMovement = GetComponent<PlayerMovement>();
+        rbController = GetComponent<UnityStandardAssets.Characters.FirstPerson.RigidbodyFirstPersonController>();
         animationManager = GetComponent<AnimationManager>();
 
         shooting = GetComponent<Shooting>();
@@ -65,6 +68,7 @@ public class PlayerManager : NetworkBehaviour
         if (!isLocalPlayer) return;
         if (isDead) return;
 
+        rbController.GetInput(controls.Move.X, controls.Move.Y);
         RaycastHit hit;
         if (isArmed && Physics.Raycast(myCamera.transform.position, myCamera.transform.forward, out hit, Mathf.Infinity, layermask))
             playerMovement.AimAssist();

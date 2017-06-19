@@ -66,59 +66,59 @@ public class PlayerMovement : NetworkBehaviour
             if (speed != airSpeed && !isUsingBoots)
                 speed = airSpeed;
 
-            rb.velocity += Physics.gravity * gravity * Time.fixedDeltaTime;
+            //rb.velocity += Physics.gravity * gravity * Time.fixedDeltaTime;
         }
     }
 
     public void Move(float horizontal, float vertical)
     {
-        direction = new Vector3(horizontal * speed, 0, vertical * speed);
-        direction *= Time.fixedDeltaTime;
-        direction = transform.TransformDirection(direction);
-        rb.MovePosition(transform.position + direction);
+        //direction = new Vector3(horizontal * speed, 0, vertical * speed);
+        //direction *= Time.fixedDeltaTime;
+        //direction = transform.TransformDirection(direction);
+        //rb.MovePosition(transform.position + direction);
     }
 
     public void Turn(float horizontal2)
     {
-        if (!playerCamera.isAiming)
-        {
+        //if (!playerCamera.isAiming)
+        //{
 
-            if (!aimAssist)
-            {
-                xRotationValue -= -horizontal2 * rotationSpeed * Time.fixedDeltaTime;
-                rotation = Quaternion.Euler(0, xRotationValue, 0);
-                transform.rotation = rotation;
-            }
-            else
-                ApplyAimAssist(horizontal2);
+        //    if (!aimAssist)
+        //    {
+        //        xRotationValue -= -horizontal2 * rotationSpeed * Time.fixedDeltaTime;
+        //        rotation = Quaternion.Euler(0, xRotationValue, 0);
+        //        transform.rotation = rotation;
+        //    }
+        //    else
+        //        ApplyAimAssist(horizontal2);
 
-        }
-        else
-        {
-            if (!aimAssist)
-            {
-                xRotationValue -= -horizontal2 * (rotationSpeed * .25f) * Time.fixedDeltaTime;
-                rotation = Quaternion.Euler(0, xRotationValue, 0);
-                transform.rotation = rotation;
-            }
-            else
-                ApplyAimAssist(horizontal2);
-        }
+        //}
+        //else
+        //{
+        //    if (!aimAssist)
+        //    {
+        //        xRotationValue -= -horizontal2 * (rotationSpeed * .25f) * Time.fixedDeltaTime;
+        //        rotation = Quaternion.Euler(0, xRotationValue, 0);
+        //        transform.rotation = rotation;
+        //    }
+        //    else
+        //        ApplyAimAssist(horizontal2);
+        //}
     }
 
     void ApplyAimAssist(float horizontal2)
     {
-        xRotationValue -= -horizontal2 * (rotationSpeed * .1f) * Time.fixedDeltaTime;
-        rotation = Quaternion.Euler(0, xRotationValue, 0);
-        transform.rotation = rotation;
+    //    xRotationValue -= -horizontal2 * (rotationSpeed * .1f) * Time.fixedDeltaTime;
+    //    rotation = Quaternion.Euler(0, xRotationValue, 0);
+    //    transform.rotation = rotation;
     }
 
     public void Jump()
     {
-        if (Grounded())
-        {
-            rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
-        }
+        //if (Grounded())
+        //{
+        //    rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
+        //}
     }
 
     public void SuperBoots()
