@@ -9,7 +9,6 @@ public class PlayerWrangler : MonoBehaviour
     public GameManager gameManager;
 
     private static Dictionary<string, PlayerManager> players = new Dictionary<string, PlayerManager>();
-    private static List<PlayerManager> unorderedPlayers = new List<PlayerManager>();
     private const string PLAYER_ID_PREFIX = "Player ";
 
     void Awake()
@@ -22,7 +21,6 @@ public class PlayerWrangler : MonoBehaviour
 
     public static void RegisterPlayer(string netId, PlayerManager player)
     {
-        unorderedPlayers.Add(player);
         string playerID = PLAYER_ID_PREFIX + netId;
         players.Add(playerID, player);
         player.transform.name = playerID;
@@ -31,7 +29,6 @@ public class PlayerWrangler : MonoBehaviour
 
     public static void UnRegisterPlayer(string playerID)
     {
-        unorderedPlayers.Remove(players[playerID]);
         players.Remove(playerID);
     }
 
@@ -45,8 +42,8 @@ public class PlayerWrangler : MonoBehaviour
         return players.Count;
     }
 
-    public static PlayerManager[] GetUnorderedPlayers()
+    public static PlayerManager[] GetAllPlayers()
     {
-        return unorderedPlayers.ToArray();
+        return players.Values.ToArray();
     }
 }

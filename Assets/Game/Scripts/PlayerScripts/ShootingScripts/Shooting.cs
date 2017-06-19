@@ -157,9 +157,13 @@ public class Shooting : NetworkBehaviour
     [ClientRpc]
     void RpcProjectileShot(Vector3 direction, Vector3 hitNormal)
     {
-        GameObject bullet = Instantiate(currentGun.projectile, currentGun.gunbarrel.transform.position, currentGun.gunbarrel.transform.rotation) as GameObject;
-        bullet.GetComponent<Projectile>().SetVariables(currentGun.speed, direction, transform.name, hitNormal, _damage);
-        SpawnObject(bullet);
+        Debug.LogError(currentGun + " CurrentGun");
+        if(currentGun != null)
+        {
+            GameObject bullet = Instantiate(currentGun.projectile, currentGun.gunbarrel.transform.position, currentGun.gunbarrel.transform.rotation) as GameObject;
+            bullet.GetComponent<Projectile>().SetVariables(currentGun.speed, direction, transform.name, hitNormal, _damage);
+            SpawnObject(bullet);
+        }
     }
 
     [ServerCallback]

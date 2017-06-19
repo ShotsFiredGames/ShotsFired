@@ -10,12 +10,15 @@ public class GiftedGun : AddOn
 
     public override void StartAddOn()
     {
-        allPlayers = PlayerWrangler.GetUnorderedPlayers();
+        allPlayers = PlayerWrangler.GetAllPlayers();
 
         foreach (PlayerManager player in allPlayers)
         {
-            player.CmdDisarm();
-            player.CmdWeaponPickedUp(possibleGunNames[Random.Range(0, possibleGunNames.Count)]);
+            if(player != null)
+            {
+                player.CmdDisarm();
+                player.CmdWeaponPickedUp(possibleGunNames[Random.Range(0, possibleGunNames.Count)]);
+            }
         }
     }
 }

@@ -9,10 +9,11 @@ public class StripTease : AddOn
 
     public override void StartAddOn()
     {
-        allPlayers = PlayerWrangler.GetUnorderedPlayers();
+        allPlayers = PlayerWrangler.GetAllPlayers();
 
         foreach (PlayerManager player in allPlayers)
         {
+            if(player != null)
             player.CmdDisarm();
         }
     }
