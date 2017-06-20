@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class FlagEndPoint : MonoBehaviour
 {
@@ -8,7 +9,7 @@ public class FlagEndPoint : MonoBehaviour
     {
         if(other.tag.Equals("Flag"))
         {
-            other.GetComponent<Flag>().FlagReturned();
+            other.GetComponent<Flag>().CmdFlagReturned();
         }
     }
 }

@@ -12,7 +12,7 @@ public class PickUpLoacation : NetworkBehaviour
     GameObject activePickUp;
     bool isSpawning;
 
-    [Server]
+    [ServerCallback]
     private void Start()
     {
         activePickUp = Instantiate(pickUpTypes[Random.Range(0, pickUpTypes.Length)], transform.position + spawnOffset, Quaternion.identity) as GameObject;

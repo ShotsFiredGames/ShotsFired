@@ -54,6 +54,12 @@ public class EventManager : NetworkBehaviour
     [ServerCallback]
     void ActivateNextEvent()
     {
+        RpcActivateNextEvent();
+    }
+
+    [ClientRpc]
+    void RpcActivateNextEvent()
+    {
         currentEvent = gameEvents[Random.Range(0, gameEvents.Count)];
         currentEvent.StartEvent();
 

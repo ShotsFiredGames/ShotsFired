@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class CaptureTheFlag : GameEvent
 {
     public GameObject[] objectsToSetActive;
-    public GameObject flag;
+    public Flag flag;
     public GameObject flagSpawnpoint;
     public GameObject[] endPoints;
     public float eventLength;
@@ -18,6 +19,7 @@ public class CaptureTheFlag : GameEvent
     private void OnEnable()
     {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        flag.SetSpawnPosition(flagSpawnpoint);
     }
 
     public override void StartEvent()
@@ -29,8 +31,8 @@ public class CaptureTheFlag : GameEvent
         foreach (GameObject go in endPoints)
             go.SetActive(true);
 
-        flag.GetComponent<Flag>().enabled = true;
-        flag.SetActive(true);
+        flag.enabled = true;
+        flag.gameObject.SetActive(true);
 
         captureTheFlag = StartCoroutine(EventLength());
     }
@@ -49,29 +51,25 @@ public class CaptureTheFlag : GameEvent
         foreach (GameObject go in endPoints)
             go.SetActive(false);
 
-        flag.GetComponent<Flag>().enabled = false;
-        flag.SetActive(false);
+        flag.transform.SetParent(flagSpawnpoint.transform);
+
+        flag.gameObject.SetActive(false);
+        flag.enabled = false;
     }
 
     public void FlagDropped()
     {
-        flag.GetComponent<Flag>().FlagDropped();
+        flag.GetComponent<Flag>().CmdFlagDropped();
     }
 
     public void FlagReturned(string player)
     {
         gameManager.FlagCaptured(player, pointsForCapture);
-        ReturnFlag();
-    }
-
-    void ReturnFlag()
-    {
-        flag.transform.position = flagSpawnpoint.transform.position + new Vector3(0, 2, 0);
     }
 
     public IEnumerator ResetTimer()
     {
         yield return new WaitForSeconds(flagResetTime);
-        ReturnFlag();
+        flag.CmdReturnFlag();
     }
 }
