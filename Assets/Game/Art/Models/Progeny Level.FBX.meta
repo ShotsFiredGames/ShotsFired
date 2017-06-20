@@ -1,0 +1,808 @@
+fileFormatVersion: 2
+guid: ac6b190ad1506ca4291f1b08e922c473
+timeCreated: 1497917364
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: 3rd and 4th Level
+    100002: Box003
+    100004: Box009
+    100006: Box010
+    100008: Box011
+    100010: Cylinder004
+    100012: Cylinder005
+    100014: Cylinder009
+    100016: Cylinder010
+    100018: Cylinder011
+    100020: Cylinder012
+    100022: Cylinder013
+    100024: Cylinder014
+    100026: Cylinder015
+    100028: Cylinder016
+    100030: Cylinder017
+    100032: Cylinder018
+    100034: Cylinder019
+    100036: Cylinder020
+    100038: Cylinder021
+    100040: Cylinder022
+    100042: Cylinder023
+    100044: Cylinder024
+    100046: Cylinder025
+    100048: Cylinder026
+    100050: Cylinder027
+    100052: Cylinder028
+    100054: Cylinder029
+    100056: Cylinder030
+    100058: Cylinder031
+    100060: Cylinder032
+    100062: Floor
+    100064: Floor 1
+    100066: Floor1
+    100068: Floor1 1
+    100070: Floor1 10
+    100072: Floor1 11
+    100074: Floor1 12
+    100076: Floor1 13
+    100078: Floor1 14
+    100080: Floor1 15
+    100082: Floor1 16
+    100084: Floor1 17
+    100086: Floor1 18
+    100088: Floor1 19
+    100090: Floor1 2
+    100092: Floor1 20
+    100094: Floor1 21
+    100096: Floor1 22
+    100098: Floor1 23
+    100100: Floor1 24
+    100102: Floor1 3
+    100104: Floor1 4
+    100106: Floor1 5
+    100108: Floor1 6
+    100110: Floor1 7
+    100112: Floor1 8
+    100114: Floor1 9
+    100116: Gengon001
+    100118: Gengon002
+    100120: Gengon003
+    100122: Gengon004
+    100124: Gengon005
+    100126: Gengon007
+    100128: Main Floor  Walls
+    100130: Main Level Progeny
+    100132: Object001
+    100134: Object003
+    100136: Object005
+    100138: Object006
+    100140: Object007
+    100142: Object008
+    100144: Object009
+    100146: Object010
+    100148: Object011
+    100150: Object012
+    100152: Object013
+    100154: Object014
+    100156: Object015
+    100158: Object016
+    100160: Object017
+    100162: Object018
+    100164: Object019
+    100166: Object020
+    100168: Object021
+    100170: Object022
+    100172: Object023
+    100174: Object024
+    100176: Object025
+    100178: Object026
+    100180: Object027
+    100182: Object028
+    100184: Object029
+    100186: Object030
+    100188: Object031
+    100190: Object032
+    100192: Object033
+    100194: Object034
+    100196: Object035
+    100198: Object036
+    100200: Object037
+    100202: Object038
+    100204: Object039
+    100206: Object040
+    100208: Object041
+    100210: Object042
+    100212: Object043
+    100214: Object044
+    100216: Object045
+    100218: Object046
+    100220: Object047
+    100222: Object048
+    100224: Object049
+    100226: Object050
+    100228: Object051
+    100230: Object052
+    100232: Object053
+    100234: Object054
+    100236: Object055
+    100238: Object056
+    100240: Object057
+    100242: Object058
+    100244: Object059
+    100246: Object060
+    100248: Object061
+    100250: Object062
+    100252: Object063
+    100254: Object064
+    100256: Object065
+    100258: Object066
+    100260: Object067
+    100262: Object068
+    100264: Object069
+    100266: Object070
+    100268: Object071
+    100270: Object072
+    100272: Object073
+    100274: Object074
+    100276: Object075
+    100278: Object076
+    100280: Object077
+    100282: Object078
+    100284: Object079
+    100286: Object080
+    100288: Plane001
+    100290: Plane006
+    100292: Plane007
+    100294: Plane008
+    100296: //RootNode
+    100298: Small Door
+    100300: Small Door001
+    100302: Small Door002
+    100304: Small Door003
+    100306: Small Door004
+    100308: Small Door005
+    100310: Wall 1
+    100312: Wall 2
+    400000: 3rd and 4th Level
+    400002: Box003
+    400004: Box009
+    400006: Box010
+    400008: Box011
+    400010: Cylinder004
+    400012: Cylinder005
+    400014: Cylinder009
+    400016: Cylinder010
+    400018: Cylinder011
+    400020: Cylinder012
+    400022: Cylinder013
+    400024: Cylinder014
+    400026: Cylinder015
+    400028: Cylinder016
+    400030: Cylinder017
+    400032: Cylinder018
+    400034: Cylinder019
+    400036: Cylinder020
+    400038: Cylinder021
+    400040: Cylinder022
+    400042: Cylinder023
+    400044: Cylinder024
+    400046: Cylinder025
+    400048: Cylinder026
+    400050: Cylinder027
+    400052: Cylinder028
+    400054: Cylinder029
+    400056: Cylinder030
+    400058: Cylinder031
+    400060: Cylinder032
+    400062: Floor
+    400064: Floor 1
+    400066: Floor1
+    400068: Floor1 1
+    400070: Floor1 10
+    400072: Floor1 11
+    400074: Floor1 12
+    400076: Floor1 13
+    400078: Floor1 14
+    400080: Floor1 15
+    400082: Floor1 16
+    400084: Floor1 17
+    400086: Floor1 18
+    400088: Floor1 19
+    400090: Floor1 2
+    400092: Floor1 20
+    400094: Floor1 21
+    400096: Floor1 22
+    400098: Floor1 23
+    400100: Floor1 24
+    400102: Floor1 3
+    400104: Floor1 4
+    400106: Floor1 5
+    400108: Floor1 6
+    400110: Floor1 7
+    400112: Floor1 8
+    400114: Floor1 9
+    400116: Gengon001
+    400118: Gengon002
+    400120: Gengon003
+    400122: Gengon004
+    400124: Gengon005
+    400126: Gengon007
+    400128: Main Floor  Walls
+    400130: Main Level Progeny
+    400132: Object001
+    400134: Object003
+    400136: Object005
+    400138: Object006
+    400140: Object007
+    400142: Object008
+    400144: Object009
+    400146: Object010
+    400148: Object011
+    400150: Object012
+    400152: Object013
+    400154: Object014
+    400156: Object015
+    400158: Object016
+    400160: Object017
+    400162: Object018
+    400164: Object019
+    400166: Object020
+    400168: Object021
+    400170: Object022
+    400172: Object023
+    400174: Object024
+    400176: Object025
+    400178: Object026
+    400180: Object027
+    400182: Object028
+    400184: Object029
+    400186: Object030
+    400188: Object031
+    400190: Object032
+    400192: Object033
+    400194: Object034
+    400196: Object035
+    400198: Object036
+    400200: Object037
+    400202: Object038
+    400204: Object039
+    400206: Object040
+    400208: Object041
+    400210: Object042
+    400212: Object043
+    400214: Object044
+    400216: Object045
+    400218: Object046
+    400220: Object047
+    400222: Object048
+    400224: Object049
+    400226: Object050
+    400228: Object051
+    400230: Object052
+    400232: Object053
+    400234: Object054
+    400236: Object055
+    400238: Object056
+    400240: Object057
+    400242: Object058
+    400244: Object059
+    400246: Object060
+    400248: Object061
+    400250: Object062
+    400252: Object063
+    400254: Object064
+    400256: Object065
+    400258: Object066
+    400260: Object067
+    400262: Object068
+    400264: Object069
+    400266: Object070
+    400268: Object071
+    400270: Object072
+    400272: Object073
+    400274: Object074
+    400276: Object075
+    400278: Object076
+    400280: Object077
+    400282: Object078
+    400284: Object079
+    400286: Object080
+    400288: Plane001
+    400290: Plane006
+    400292: Plane007
+    400294: Plane008
+    400296: //RootNode
+    400298: Small Door
+    400300: Small Door001
+    400302: Small Door002
+    400304: Small Door003
+    400306: Small Door004
+    400308: Small Door005
+    400310: Wall 1
+    400312: Wall 2
+    2300000: 3rd and 4th Level
+    2300002: Box009
+    2300004: Box010
+    2300006: Box011
+    2300008: Cylinder004
+    2300010: Cylinder005
+    2300012: Cylinder009
+    2300014: Cylinder010
+    2300016: Cylinder011
+    2300018: Cylinder012
+    2300020: Cylinder013
+    2300022: Cylinder014
+    2300024: Cylinder015
+    2300026: Cylinder016
+    2300028: Cylinder017
+    2300030: Cylinder018
+    2300032: Cylinder019
+    2300034: Cylinder020
+    2300036: Cylinder021
+    2300038: Cylinder022
+    2300040: Cylinder023
+    2300042: Cylinder024
+    2300044: Cylinder025
+    2300046: Cylinder026
+    2300048: Cylinder027
+    2300050: Cylinder028
+    2300052: Cylinder029
+    2300054: Cylinder030
+    2300056: Cylinder031
+    2300058: Cylinder032
+    2300060: Floor 1
+    2300062: Floor1
+    2300064: Floor1 1
+    2300066: Floor1 10
+    2300068: Floor1 11
+    2300070: Floor1 12
+    2300072: Floor1 13
+    2300074: Floor1 14
+    2300076: Floor1 15
+    2300078: Floor1 16
+    2300080: Floor1 17
+    2300082: Floor1 18
+    2300084: Floor1 19
+    2300086: Floor1 2
+    2300088: Floor1 20
+    2300090: Floor1 21
+    2300092: Floor1 22
+    2300094: Floor1 23
+    2300096: Floor1 24
+    2300098: Floor1 3
+    2300100: Floor1 4
+    2300102: Floor1 5
+    2300104: Floor1 6
+    2300106: Floor1 7
+    2300108: Floor1 8
+    2300110: Floor1 9
+    2300112: Gengon001
+    2300114: Gengon003
+    2300116: Gengon004
+    2300118: Gengon005
+    2300120: Main Floor  Walls
+    2300122: Object005
+    2300124: Object006
+    2300126: Object007
+    2300128: Object008
+    2300130: Object009
+    2300132: Object010
+    2300134: Object011
+    2300136: Object012
+    2300138: Object013
+    2300140: Object014
+    2300142: Object015
+    2300144: Object016
+    2300146: Object018
+    2300148: Object019
+    2300150: Object020
+    2300152: Object021
+    2300154: Object022
+    2300156: Object023
+    2300158: Object024
+    2300160: Object025
+    2300162: Object026
+    2300164: Object027
+    2300166: Object028
+    2300168: Object030
+    2300170: Object031
+    2300172: Object032
+    2300174: Object033
+    2300176: Object034
+    2300178: Object035
+    2300180: Object036
+    2300182: Object037
+    2300184: Object038
+    2300186: Object039
+    2300188: Object040
+    2300190: Object041
+    2300192: Object042
+    2300194: Object043
+    2300196: Object044
+    2300198: Object045
+    2300200: Object046
+    2300202: Object047
+    2300204: Object048
+    2300206: Object049
+    2300208: Object050
+    2300210: Object051
+    2300212: Object052
+    2300214: Object054
+    2300216: Object055
+    2300218: Object056
+    2300220: Object057
+    2300222: Object058
+    2300224: Object059
+    2300226: Object060
+    2300228: Object061
+    2300230: Object062
+    2300232: Object063
+    2300234: Object064
+    2300236: Object065
+    2300238: Object066
+    2300240: Object067
+    2300242: Object068
+    2300244: Object069
+    2300246: Object070
+    2300248: Object071
+    2300250: Object072
+    2300252: Object073
+    2300254: Object074
+    2300256: Object075
+    2300258: Object076
+    2300260: Object077
+    2300262: Object078
+    2300264: Object079
+    2300266: Object080
+    2300268: Plane006
+    2300270: Plane007
+    2300272: Plane008
+    2300274: Wall 1
+    2300276: Wall 2
+    3300000: 3rd and 4th Level
+    3300002: Box009
+    3300004: Box010
+    3300006: Box011
+    3300008: Cylinder004
+    3300010: Cylinder005
+    3300012: Cylinder009
+    3300014: Cylinder010
+    3300016: Cylinder011
+    3300018: Cylinder012
+    3300020: Cylinder013
+    3300022: Cylinder014
+    3300024: Cylinder015
+    3300026: Cylinder016
+    3300028: Cylinder017
+    3300030: Cylinder018
+    3300032: Cylinder019
+    3300034: Cylinder020
+    3300036: Cylinder021
+    3300038: Cylinder022
+    3300040: Cylinder023
+    3300042: Cylinder024
+    3300044: Cylinder025
+    3300046: Cylinder026
+    3300048: Cylinder027
+    3300050: Cylinder028
+    3300052: Cylinder029
+    3300054: Cylinder030
+    3300056: Cylinder031
+    3300058: Cylinder032
+    3300060: Floor 1
+    3300062: Floor1
+    3300064: Floor1 1
+    3300066: Floor1 10
+    3300068: Floor1 11
+    3300070: Floor1 12
+    3300072: Floor1 13
+    3300074: Floor1 14
+    3300076: Floor1 15
+    3300078: Floor1 16
+    3300080: Floor1 17
+    3300082: Floor1 18
+    3300084: Floor1 19
+    3300086: Floor1 2
+    3300088: Floor1 20
+    3300090: Floor1 21
+    3300092: Floor1 22
+    3300094: Floor1 23
+    3300096: Floor1 24
+    3300098: Floor1 3
+    3300100: Floor1 4
+    3300102: Floor1 5
+    3300104: Floor1 6
+    3300106: Floor1 7
+    3300108: Floor1 8
+    3300110: Floor1 9
+    3300112: Gengon001
+    3300114: Gengon003
+    3300116: Gengon004
+    3300118: Gengon005
+    3300120: Main Floor  Walls
+    3300122: Object005
+    3300124: Object006
+    3300126: Object007
+    3300128: Object008
+    3300130: Object009
+    3300132: Object010
+    3300134: Object011
+    3300136: Object012
+    3300138: Object013
+    3300140: Object014
+    3300142: Object015
+    3300144: Object016
+    3300146: Object018
+    3300148: Object019
+    3300150: Object020
+    3300152: Object021
+    3300154: Object022
+    3300156: Object023
+    3300158: Object024
+    3300160: Object025
+    3300162: Object026
+    3300164: Object027
+    3300166: Object028
+    3300168: Object030
+    3300170: Object031
+    3300172: Object032
+    3300174: Object033
+    3300176: Object034
+    3300178: Object035
+    3300180: Object036
+    3300182: Object037
+    3300184: Object038
+    3300186: Object039
+    3300188: Object040
+    3300190: Object041
+    3300192: Object042
+    3300194: Object043
+    3300196: Object044
+    3300198: Object045
+    3300200: Object046
+    3300202: Object047
+    3300204: Object048
+    3300206: Object049
+    3300208: Object050
+    3300210: Object051
+    3300212: Object052
+    3300214: Object054
+    3300216: Object055
+    3300218: Object056
+    3300220: Object057
+    3300222: Object058
+    3300224: Object059
+    3300226: Object060
+    3300228: Object061
+    3300230: Object062
+    3300232: Object063
+    3300234: Object064
+    3300236: Object065
+    3300238: Object066
+    3300240: Object067
+    3300242: Object068
+    3300244: Object069
+    3300246: Object070
+    3300248: Object071
+    3300250: Object072
+    3300252: Object073
+    3300254: Object074
+    3300256: Object075
+    3300258: Object076
+    3300260: Object077
+    3300262: Object078
+    3300264: Object079
+    3300266: Object080
+    3300268: Plane006
+    3300270: Plane007
+    3300272: Plane008
+    3300274: Wall 1
+    3300276: Wall 2
+    4300000: Wall 1
+    4300002: Wall 2
+    4300004: Cylinder010
+    4300006: Cylinder011
+    4300008: Cylinder012
+    4300010: Cylinder009
+    4300012: Cylinder013
+    4300014: Cylinder014
+    4300016: Cylinder015
+    4300018: Cylinder016
+    4300020: Cylinder017
+    4300022: Cylinder018
+    4300024: Cylinder019
+    4300026: Cylinder020
+    4300028: Cylinder021
+    4300030: Cylinder022
+    4300032: Cylinder023
+    4300034: Cylinder024
+    4300036: Cylinder025
+    4300038: Cylinder026
+    4300040: Cylinder027
+    4300042: Cylinder028
+    4300044: Cylinder029
+    4300046: Cylinder030
+    4300048: Cylinder031
+    4300050: Cylinder032
+    4300052: Gengon005
+    4300054: Cylinder005
+    4300056: Gengon004
+    4300058: Gengon003
+    4300060: Cylinder004
+    4300062: Gengon001
+    4300064: 3rd and 4th Level
+    4300066: Box011
+    4300068: Box010
+    4300070: Box009
+    4300072: Plane006
+    4300074: Floor 1
+    4300076: Floor1
+    4300078: Floor1
+    4300080: Floor1
+    4300082: Floor1
+    4300084: Floor1
+    4300086: Floor1
+    4300088: Floor1
+    4300090: Floor1
+    4300092: Floor1
+    4300094: Floor1
+    4300096: Floor1
+    4300098: Floor1
+    4300100: Floor1
+    4300102: Floor1
+    4300104: Floor1
+    4300106: Floor1
+    4300108: Floor1
+    4300110: Floor1
+    4300112: Floor1
+    4300114: Floor1
+    4300116: Floor1
+    4300118: Floor1
+    4300120: Floor1
+    4300122: Floor1
+    4300124: Floor1
+    4300126: Main Floor  Walls
+    4300128: Object005
+    4300130: Object006
+    4300132: Object007
+    4300134: Object008
+    4300136: Object009
+    4300138: Object010
+    4300140: Object011
+    4300142: Object012
+    4300144: Object013
+    4300146: Object014
+    4300148: Object015
+    4300150: Object016
+    4300152: Object018
+    4300154: Object019
+    4300156: Object020
+    4300158: Object021
+    4300160: Object022
+    4300162: Object023
+    4300164: Object024
+    4300166: Object025
+    4300168: Object026
+    4300170: Object027
+    4300172: Object028
+    4300174: Object030
+    4300176: Object031
+    4300178: Object032
+    4300180: Object033
+    4300182: Object034
+    4300184: Object035
+    4300186: Object036
+    4300188: Object037
+    4300190: Object038
+    4300192: Object039
+    4300194: Object040
+    4300196: Object041
+    4300198: Object042
+    4300200: Object043
+    4300202: Object044
+    4300204: Object045
+    4300206: Object046
+    4300208: Object047
+    4300210: Object048
+    4300212: Object049
+    4300214: Object050
+    4300216: Object051
+    4300218: Object052
+    4300220: Object054
+    4300222: Object055
+    4300224: Object056
+    4300226: Object057
+    4300228: Object058
+    4300230: Object059
+    4300232: Object060
+    4300234: Object061
+    4300236: Object062
+    4300238: Object063
+    4300240: Object064
+    4300242: Object065
+    4300244: Object066
+    4300246: Object067
+    4300248: Object068
+    4300250: Object069
+    4300252: Object070
+    4300254: Object071
+    4300256: Object072
+    4300258: Object073
+    4300260: Object074
+    4300262: Object075
+    4300264: Object076
+    4300266: Object077
+    4300268: Object078
+    4300270: Object079
+    4300272: Object080
+    4300274: Plane007
+    4300276: Plane008
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
