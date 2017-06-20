@@ -7,9 +7,11 @@ public class EventManager : NetworkBehaviour
 {
     public GameEvent[] allEvents;
     public static GameEvent currentEvent;
+    GameEvent nextEvent;
 
     public AddOn[] allAddOns;
     public static AddOn currentAddOn;
+    //AddOn nextAddOn;
 
     List<GameEvent> gameEvents = new List<GameEvent>();
     List<AddOn> addOns = new List<AddOn>();
@@ -54,8 +56,15 @@ public class EventManager : NetworkBehaviour
     [ServerCallback]
     void ActivateNextEvent()
     {
-        currentEvent = gameEvents[Random.Range(0, gameEvents.Count)];
-        currentEvent.StartEvent();
+        nextEvent = gameEvents[Random.Range(0, gameEvents.Count)];
+
+        if (nextEvent.nameEvent.Equals(currentEvent.nameEvent))
+            currentEvent.ResetEvent();
+        else
+        {
+            currentEvent = nextEvent;
+            currentEvent.StartEvent();
+        }  
 
         currentAddOn = addOns[Random.Range(0, addOns.Count)];
         currentAddOn.StartAddOn();
