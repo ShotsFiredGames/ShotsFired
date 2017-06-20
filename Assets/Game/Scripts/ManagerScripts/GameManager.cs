@@ -209,4 +209,9 @@ public class GameManager : NetworkBehaviour
         networkManager.matchMaker.DropConnection(matchInfo.networkId, matchInfo.nodeId, 0, networkManager.OnDropConnection);
         networkManager.StopHost();
     }
+
+    public void FlagCaptured(string player, int score)
+    {
+        CmdAddScore(player, score);
+    }
 }

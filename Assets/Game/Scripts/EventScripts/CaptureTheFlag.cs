@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CaptureTheFlag : GameEvent
@@ -10,11 +9,20 @@ public class CaptureTheFlag : GameEvent
     public GameObject flagSpawnpoint;
     public GameObject[] endPoints;
     public float eventLength;
+    public int pointsForCapture;
+    public float flagResetTime;
 
+    GameManager gameManager;
     Coroutine captureTheFlag;
+
+    private void OnEnable()
+    {
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+    }
 
     public override void StartEvent()
     {
+        Debug.LogError("EventStarted");
         foreach(GameObject go in objectsToSetActive)
             go.SetActive(false);
 
@@ -29,7 +37,7 @@ public class CaptureTheFlag : GameEvent
 
     IEnumerator EventLength()
     {
-        yield return new WaitForSeconds(eventLength);
+        yield return new WaitForSeconds(duration);
         EndEvent();
     }
 
@@ -43,5 +51,27 @@ public class CaptureTheFlag : GameEvent
 
         flag.GetComponent<Flag>().enabled = false;
         flag.SetActive(false);
+    }
+
+    public void FlagDropped()
+    {
+        flag.GetComponent<Flag>().FlagDropped();
+    }
+
+    public void FlagReturned(string player)
+    {
+        gameManager.FlagCaptured(player, pointsForCapture);
+        ReturnFlag();
+    }
+
+    void ReturnFlag()
+    {
+        flag.transform.position = flagSpawnpoint.transform.position + new Vector3(0, 2, 0);
+    }
+
+    public IEnumerator ResetTimer()
+    {
+        yield return new WaitForSeconds(flagResetTime);
+        ReturnFlag();
     }
 }

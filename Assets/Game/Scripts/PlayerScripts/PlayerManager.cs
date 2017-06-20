@@ -31,6 +31,10 @@ public class PlayerManager : NetworkBehaviour
     public bool lockCursor;
     private bool m_cursorIsLocked = true;
 
+    [HideInInspector]
+    public bool hasFlag;
+    CaptureTheFlag captureTheFlag;
+
     void Awake()
     {
         playerHealth = GetComponent<PlayerHealth>();
@@ -42,6 +46,7 @@ public class PlayerManager : NetworkBehaviour
     {
         playerMovement = GetComponent<PlayerMovement>();
         animationManager = GetComponent<AnimationManager>();
+        captureTheFlag = GameObject.Find("CaptureTheFlag").GetComponent<CaptureTheFlag>();
 
         shooting = GetComponent<Shooting>();
         juggernaut = GetComponentInChildren<Juggernaut>();
@@ -187,6 +192,7 @@ public class PlayerManager : NetworkBehaviour
         animationManager.StoppedFiring();
     }
 
+
     [Command]
     public void CmdAbilityPickedUp(string abilityName)
     {
@@ -265,6 +271,9 @@ public class PlayerManager : NetworkBehaviour
     
     public void Dead(string damageSource, CollisionDetection.CollisionFlag collisionLocation)
     {
+        if (hasFlag)
+            captureTheFlag.FlagDropped();
+
         isDead = true;
         CmdDisarm();
         CmdCancelAbility();
