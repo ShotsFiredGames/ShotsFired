@@ -40,6 +40,10 @@ public class GameManager : NetworkBehaviour
             instance = this;
 
         playerScores = new Dictionary<string, int>();
+        foreach (Transform child in newSpawnPoints.transform)
+        {
+            NetworkManager.UnRegisterStartPosition(child);
+        }
     }
 
     void OnEnable()
@@ -60,8 +64,15 @@ public class GameManager : NetworkBehaviour
         StartTimer();
 
         yield return new WaitForSeconds(5);
-        Destroy(originalSpawnPoints);
-        Instantiate(newSpawnPoints);
+        foreach (Transform child in originalSpawnPoints.transform)
+        {
+            NetworkManager.UnRegisterStartPosition(child);
+        }
+
+        foreach (Transform child in newSpawnPoints.transform)
+        {
+            NetworkManager.RegisterStartPosition(child);
+        }
     }
 
     [ServerCallback]

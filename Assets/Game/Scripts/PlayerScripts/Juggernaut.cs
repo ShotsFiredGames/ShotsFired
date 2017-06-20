@@ -8,19 +8,11 @@ public class Juggernaut : MonoBehaviour
     bool isJuggernaut;
     public GameObject juggernautEffect;
     Coroutine juggernaut;
-
-    // Use this for initialization
-    void Start()
-    {
-        
-    }
     
     public void ActivateJuggernaut()
     {
         if (!isJuggernaut)
-        {
             juggernaut = StartCoroutine(JuggernautAbility());
-        }
     }
 
     public void CancelJuggernaut()
