@@ -143,7 +143,7 @@ public class PlayerMovement : NetworkBehaviour
         if (!isUsingBoots)
         {
             isUsingBoots = true;
-            speed = speed * 1.5f;
+            speed = speed * 2f;
             jumpForce = jumpForce * 3f;
             yield return new WaitForSeconds(GameCustomization.abilityDuration);
             isUsingBoots = false;
