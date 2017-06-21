@@ -111,7 +111,8 @@ public class CaptureTheFlag : GameEvent
     [ClientRpc]
     public void RpcFlagDropped()
     {
-        transform.SetParent(null);
+        Debug.LogError("Flag Detached");
+        flag.transform.SetParent(flag.transform);
         resetTimer = StartCoroutine(ResetTimer());
     }
 
