@@ -1,0 +1,277 @@
+fileFormatVersion: 2
+guid: 083866a47739a9c44abbcfb176c3fa54
+timeCreated: 1498052964
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: 3rd Level Landing
+    100002: 3rd Level Landing 1
+    100004: 3rd Level Landing001
+    100006: 3rd Level Landing002
+    100008: Box011
+    100010: Box012
+    100012: Box013
+    100014: Box014
+    100016: Box015
+    100018: Box016
+    100020: Box017
+    100022: Box018
+    100024: Box019
+    100026: Box020
+    100028: Box022
+    100030: Box023
+    100032: Box024
+    100034: Box025
+    100036: Box026
+    100038: Box027
+    100040: Box028
+    100042: Box029
+    100044: Box030
+    100046: Box031
+    100048: Box032
+    100050: Gengon008
+    100052: Platform to second Level001
+    100054: Platform to second Level004
+    100056: Platform to second Level005
+    100058: Platform to second Level006
+    100060: Platform to second Level007
+    100062: Platform to second Level008
+    100064: Platform to second Level009
+    100066: Platform to second Level010
+    100068: Platform to second Level011
+    100070: Platform to second Level012
+    100072: Platform to second Level013
+    100074: Platform to second Level014
+    100076: Platform to second Level015
+    100078: Platform to second Level016
+    100080: Platform to second Level017
+    100082: Platform to second Level018
+    100084: //RootNode
+    400000: 3rd Level Landing
+    400002: 3rd Level Landing 1
+    400004: 3rd Level Landing001
+    400006: 3rd Level Landing002
+    400008: Box011
+    400010: Box012
+    400012: Box013
+    400014: Box014
+    400016: Box015
+    400018: Box016
+    400020: Box017
+    400022: Box018
+    400024: Box019
+    400026: Box020
+    400028: Box022
+    400030: Box023
+    400032: Box024
+    400034: Box025
+    400036: Box026
+    400038: Box027
+    400040: Box028
+    400042: Box029
+    400044: Box030
+    400046: Box031
+    400048: Box032
+    400050: Gengon008
+    400052: Platform to second Level001
+    400054: Platform to second Level004
+    400056: Platform to second Level005
+    400058: Platform to second Level006
+    400060: Platform to second Level007
+    400062: Platform to second Level008
+    400064: Platform to second Level009
+    400066: Platform to second Level010
+    400068: Platform to second Level011
+    400070: Platform to second Level012
+    400072: Platform to second Level013
+    400074: Platform to second Level014
+    400076: Platform to second Level015
+    400078: Platform to second Level016
+    400080: Platform to second Level017
+    400082: Platform to second Level018
+    400084: //RootNode
+    2300000: 3rd Level Landing
+    2300002: 3rd Level Landing 1
+    2300004: 3rd Level Landing001
+    2300006: 3rd Level Landing002
+    2300008: Box011
+    2300010: Box012
+    2300012: Box013
+    2300014: Box014
+    2300016: Box015
+    2300018: Box016
+    2300020: Box017
+    2300022: Box018
+    2300024: Box019
+    2300026: Box020
+    2300028: Box022
+    2300030: Box023
+    2300032: Box024
+    2300034: Box025
+    2300036: Box026
+    2300038: Box027
+    2300040: Box029
+    2300042: Box030
+    2300044: Box031
+    2300046: Box032
+    2300048: Platform to second Level001
+    2300050: Platform to second Level006
+    2300052: Platform to second Level007
+    2300054: Platform to second Level008
+    2300056: Platform to second Level009
+    2300058: Platform to second Level010
+    2300060: Platform to second Level011
+    2300062: Platform to second Level012
+    2300064: Platform to second Level013
+    2300066: Platform to second Level014
+    2300068: Platform to second Level015
+    2300070: Platform to second Level016
+    2300072: Platform to second Level017
+    2300074: Platform to second Level018
+    3300000: 3rd Level Landing
+    3300002: 3rd Level Landing 1
+    3300004: 3rd Level Landing001
+    3300006: 3rd Level Landing002
+    3300008: Box011
+    3300010: Box012
+    3300012: Box013
+    3300014: Box014
+    3300016: Box015
+    3300018: Box016
+    3300020: Box017
+    3300022: Box018
+    3300024: Box019
+    3300026: Box020
+    3300028: Box022
+    3300030: Box023
+    3300032: Box024
+    3300034: Box025
+    3300036: Box026
+    3300038: Box027
+    3300040: Box029
+    3300042: Box030
+    3300044: Box031
+    3300046: Box032
+    3300048: Platform to second Level001
+    3300050: Platform to second Level006
+    3300052: Platform to second Level007
+    3300054: Platform to second Level008
+    3300056: Platform to second Level009
+    3300058: Platform to second Level010
+    3300060: Platform to second Level011
+    3300062: Platform to second Level012
+    3300064: Platform to second Level013
+    3300066: Platform to second Level014
+    3300068: Platform to second Level015
+    3300070: Platform to second Level016
+    3300072: Platform to second Level017
+    3300074: Platform to second Level018
+    4300000: Platform to second Level001
+    4300002: Box011
+    4300004: Box012
+    4300006: Box013
+    4300008: Box014
+    4300010: Box015
+    4300012: Platform to second Level006
+    4300014: Platform to second Level007
+    4300016: Box016
+    4300018: Box017
+    4300020: Box018
+    4300022: Box019
+    4300024: Box020
+    4300026: Platform to second Level008
+    4300028: Platform to second Level009
+    4300030: Platform to second Level010
+    4300032: Platform to second Level011
+    4300034: Platform to second Level012
+    4300036: 3rd Level Landing
+    4300038: 3rd Level Landing
+    4300040: Platform to second Level013
+    4300042: 3rd Level Landing001
+    4300044: 3rd Level Landing002
+    4300046: Platform to second Level014
+    4300048: Box022
+    4300050: Box023
+    4300052: Box024
+    4300054: Box025
+    4300056: Platform to second Level015
+    4300058: Platform to second Level016
+    4300060: Platform to second Level017
+    4300062: Platform to second Level018
+    4300064: Box026
+    4300066: Box027
+    4300068: Box029
+    4300070: Box030
+    4300072: Box031
+    4300074: Box032
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
