@@ -13,8 +13,10 @@ public class CaptureTheFlag : GameEvent
     public int pointsForCapture;
     public float flagResetTime;
 
+    GameObject carrier;
     GameManager gameManager;
     Coroutine captureTheFlag;
+    Coroutine resetTimer;
 
     private void OnEnable()
     {
@@ -57,11 +59,6 @@ public class CaptureTheFlag : GameEvent
         flag.enabled = false;
     }
 
-    public void FlagDropped()
-    {
-        flag.GetComponent<Flag>().CmdFlagDropped();
-    }
-
     public void FlagReturned(string player)
     {
         gameManager.FlagCaptured(player, pointsForCapture);
@@ -70,6 +67,64 @@ public class CaptureTheFlag : GameEvent
     public IEnumerator ResetTimer()
     {
         yield return new WaitForSeconds(flagResetTime);
-        flag.CmdReturnFlag();
+        CmdReturnFlag();
+    }
+
+    [Command]
+    public void CmdFlagPickedUp(NetworkIdentity player)
+    {
+        RpcFlagPickedUp(player);
+    }
+
+    [ClientRpc]
+    void RpcFlagPickedUp(NetworkIdentity player)
+    {
+        Debug.LogError("Picked Up teh flag");
+        if (resetTimer != null)
+            StopCoroutine(resetTimer);
+
+        carrier = player.gameObject;
+        carrier.GetComponent<PlayerManager>().hasFlag = true;
+        flag.transform.SetParent(carrier.transform);
+        flag.transform.position = carrier.transform.position + new Vector3(0, carrier.transform.localScale.y, 0);
+    }
+
+    [Command]
+    public void CmdReturnFlag()
+    {
+        RpcReturnFlag();
+    }
+
+    [ClientRpc]
+    void RpcReturnFlag()
+    {
+        flag.transform.parent = flagSpawnpoint.transform;
+        flag.transform.position = flagSpawnpoint.transform.position + new Vector3(0, 2, 0);
+    }
+
+    [Command]
+    public void CmdFlagDropped()
+    {
+        RpcFlagDropped();
+    }
+
+    [ClientRpc]
+    public void RpcFlagDropped()
+    {
+        transform.SetParent(null);
+        resetTimer = StartCoroutine(ResetTimer());
+    }
+
+    [Command]
+    public void CmdFlagReturned()
+    {
+        RpcFlagReturned();
+    }
+
+    [ClientRpc]
+    public void RpcFlagReturned()
+    {
+        FlagReturned(carrier.name);
+        CmdReturnFlag();
     }
 }

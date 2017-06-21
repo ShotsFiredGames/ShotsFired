@@ -272,7 +272,7 @@ public class PlayerManager : NetworkBehaviour
     public void Dead(string damageSource, CollisionDetection.CollisionFlag collisionLocation)
     {
         if (hasFlag)
-            captureTheFlag.FlagDropped();
+            captureTheFlag.CmdFlagDropped();
 
         isDead = true;
         CmdDisarm();
