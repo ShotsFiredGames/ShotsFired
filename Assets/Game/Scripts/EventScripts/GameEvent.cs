@@ -9,4 +9,24 @@ public abstract class GameEvent : MonoBehaviour {
 
     public abstract void StartEvent();
     public abstract void EndEvent();
+
+    Coroutine gameEventDur;
+
+    /*void StartEvent()
+     * // turn on all of what you need for the event
+     * gameEventDur = StartCorountine(EventDuration());
+     * */
+
+    public void ResetEvent()
+    {
+        StopCoroutine(gameEventDur);
+        gameEventDur = StartCoroutine(EventDuration());
+    }
+
+    public IEnumerator EventDuration()
+    {
+        yield return new WaitForSeconds(duration);
+        EndEvent();
+    }
+
 }
