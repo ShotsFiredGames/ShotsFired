@@ -58,7 +58,7 @@ public class EventManager : NetworkBehaviour
     {
         nextEvent = gameEvents[Random.Range(0, gameEvents.Count)];
 
-        if (nextEvent.nameEvent.Equals(currentEvent.nameEvent))
+        if (nextEvent.nameEvent != null && nextEvent.nameEvent.Equals(currentEvent.nameEvent))
             currentEvent.ResetEvent();
         else
         {
