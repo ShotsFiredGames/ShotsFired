@@ -10,6 +10,7 @@ public class PlayerMovement : NetworkBehaviour
     [Tooltip("This will change depending on the hieght of the character.")]
     public float distToGrounded = 1.1f;
     public LayerMask ground;
+    public float juggernautSpeed;
 
     Rigidbody rb;
     PlayerManager playerManager;
@@ -35,7 +36,7 @@ public class PlayerMovement : NetworkBehaviour
         _jump = jumpForce;
         playerCamera = GetComponent<PlayerCamera>();
 
-        airSpeed = speed * .35f;
+        airSpeed = speed * .85f;
 	}
 
     public void AimAssist()
@@ -143,7 +144,7 @@ public class PlayerMovement : NetworkBehaviour
         if (!isUsingBoots)
         {
             isUsingBoots = true;
-            speed = speed * 1.5f;
+            speed = juggernautSpeed;
             jumpForce = jumpForce * 3f;
             yield return new WaitForSeconds(GameCustomization.abilityDuration);
             isUsingBoots = false;

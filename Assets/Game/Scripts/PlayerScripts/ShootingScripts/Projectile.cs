@@ -27,7 +27,7 @@ public class Projectile : NetworkBehaviour
     [ServerCallback]
     void OnTriggerEnter(Collider other)
     {
-        if (other.transform.root.name != playername)
+        if (other.transform.root.name != playername || !other.tag.Equals("Player"))
         {
             if(other.tag.Equals("Collision"))
                 other.GetComponent<CollisionDetection>().OnHit(damage, playername);
