@@ -35,7 +35,7 @@ public class PlayerMovement : NetworkBehaviour
         _jump = jumpForce;
         playerCamera = GetComponent<PlayerCamera>();
 
-        airSpeed = speed * .55f;
+        airSpeed = speed * .35f;
 	}
 
     public void AimAssist()
