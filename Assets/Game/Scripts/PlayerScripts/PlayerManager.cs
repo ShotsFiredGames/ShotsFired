@@ -88,7 +88,7 @@ public class PlayerManager : NetworkBehaviour
         else
             StopFiring();
 
-        if (controls.Aim)
+        if (controls.Aim && shooting.currentGun.canAim)
         {
             if (!isArmed) return;
             playerCamera.Aim();

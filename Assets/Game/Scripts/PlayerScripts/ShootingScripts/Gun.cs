@@ -11,6 +11,7 @@ public abstract class Gun : MonoBehaviour
         Sustained
     };
 
+    public bool canAim;
     public WeaponType weaponType;
 
     public GameObject thirdPersonGun;

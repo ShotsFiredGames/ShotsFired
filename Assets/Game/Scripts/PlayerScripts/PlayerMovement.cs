@@ -145,7 +145,7 @@ public class PlayerMovement : NetworkBehaviour
         {
             isUsingBoots = true;
             speed = juggernautSpeed;
-            jumpForce = jumpForce * 3f;
+            jumpForce = jumpForce * 2f;
             yield return new WaitForSeconds(GameCustomization.abilityDuration);
             isUsingBoots = false;
             speed = GameCustomization.playerSpeed;
