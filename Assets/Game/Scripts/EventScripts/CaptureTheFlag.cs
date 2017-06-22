@@ -21,7 +21,12 @@ public class CaptureTheFlag : GameEvent
     private void OnEnable()
     {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        flag.SetSpawnPosition(flagSpawnpoint);
+    }
+
+    [ServerCallback]
+    private void Start()
+    {
+        NetworkServer.Spawn(flag.gameObject);
     }
 
     public override void StartEvent()
@@ -98,6 +103,7 @@ public class CaptureTheFlag : GameEvent
     [ClientRpc]
     void RpcReturnFlag()
     {
+        StartCoroutine(CanBePickedUp());
         flag.transform.parent = flagSpawnpoint.transform;
         flag.transform.position = flagSpawnpoint.transform.position + new Vector3(0, 2, 0);
     }
@@ -112,7 +118,8 @@ public class CaptureTheFlag : GameEvent
     public void RpcFlagDropped()
     {
         Debug.LogError("Flag Detached");
-        flag.transform.SetParent(flag.transform);
+        flag.transform.parent = null;
+        StartCoroutine(CanBePickedUp());
         resetTimer = StartCoroutine(ResetTimer());
     }
 
@@ -127,5 +134,11 @@ public class CaptureTheFlag : GameEvent
     {
         FlagReturned(carrier.name);
         CmdReturnFlag();
+    }
+
+    IEnumerator CanBePickedUp()
+    {
+        yield return new WaitForSeconds(2);
+        flag.isPickedUp = false;
     }
 }
