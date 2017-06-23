@@ -224,6 +224,5 @@ public class GameManager : NetworkBehaviour
     public void FlagCaptured(string player, int score)
     {
         CmdAddScore(player, score);
-        Debug.LogError("FlagCaptured");
     }
 }

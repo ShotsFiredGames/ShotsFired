@@ -5,7 +5,7 @@ using UnityEngine.Networking;
 
 public class FlagEndPoint : MonoBehaviour
 {
-    CaptureTheFlag captureTheFlag;
+    public CaptureTheFlag captureTheFlag;
 
     private void Start()
     {

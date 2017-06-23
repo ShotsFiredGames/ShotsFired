@@ -9,7 +9,6 @@ public class CaptureTheFlag : GameEvent
     public Flag flag;
     public GameObject flagSpawnpoint;
     public GameObject[] endPoints;
-    public float eventLength;
     public int pointsForCapture;
     public float flagResetTime;
 
@@ -31,7 +30,6 @@ public class CaptureTheFlag : GameEvent
 
     public override void StartEvent()
     {
-        Debug.LogError("EventStarted");
         foreach(GameObject go in objectsToSetActive)
             go.SetActive(false);
 
@@ -69,8 +67,6 @@ public class CaptureTheFlag : GameEvent
 
         if (carrier != null)
             carrier.GetComponent<PlayerManager>().hasFlag = false;
-
-        Debug.LogError("Carrier: " + carrier + " abiltiy to pick up flag: " + carrier.GetComponent<PlayerManager>().hasFlag);
     }
 
     public void FlagReturned(string player)
@@ -93,7 +89,6 @@ public class CaptureTheFlag : GameEvent
     [ClientRpc]
     void RpcFlagPickedUp(NetworkIdentity player)
     {
-        Debug.LogError("Picked Up teh flag");
         if (resetTimer != null)
             StopCoroutine(resetTimer);
 
@@ -129,7 +124,6 @@ public class CaptureTheFlag : GameEvent
     [ClientRpc]
     public void RpcFlagDropped()
     {
-        Debug.LogError("Flag Detached");
         if (carrier != null)
             carrier.GetComponent<PlayerManager>().hasFlag = false;
 

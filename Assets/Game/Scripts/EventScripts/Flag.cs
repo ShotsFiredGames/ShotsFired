@@ -22,7 +22,6 @@ public class Flag : MonoBehaviour
         if(other.tag.Equals("Player") && !isPickedUp)
         {
             isPickedUp = true;
-            Debug.LogError("Triggered");
             captureTheFlag.CmdFlagPickedUp(other.GetComponent<NetworkIdentity>());
         }
     }
