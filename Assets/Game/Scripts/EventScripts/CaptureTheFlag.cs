@@ -61,7 +61,13 @@ public class CaptureTheFlag : GameEvent
         flag.transform.SetParent(flagSpawnpoint.transform);
 
         flag.gameObject.SetActive(false);
+        flag.isPickedUp = false;
         flag.enabled = false;
+
+        if (carrier != null)
+            carrier.GetComponent<PlayerManager>().hasFlag = false;
+
+        Debug.LogError("Carrier: " + carrier + " abiltiy to pick up flag: " + carrier.GetComponent<PlayerManager>().hasFlag);
     }
 
     public void FlagReturned(string player)
@@ -106,6 +112,9 @@ public class CaptureTheFlag : GameEvent
         StartCoroutine(CanBePickedUp());
         flag.transform.parent = flagSpawnpoint.transform;
         flag.transform.position = flagSpawnpoint.transform.position + new Vector3(0, 2, 0);
+
+        if (carrier != null)
+            carrier.GetComponent<PlayerManager>().hasFlag = false;
     }
 
     [Command]
@@ -118,6 +127,9 @@ public class CaptureTheFlag : GameEvent
     public void RpcFlagDropped()
     {
         Debug.LogError("Flag Detached");
+        if (carrier != null)
+            carrier.GetComponent<PlayerManager>().hasFlag = false;
+
         flag.transform.parent = null;
         StartCoroutine(CanBePickedUp());
         resetTimer = StartCoroutine(ResetTimer());
