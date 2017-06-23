@@ -37,7 +37,9 @@ public class CaptureTheFlag : GameEvent
 
         foreach (GameObject go in endPoints)
             go.SetActive(true);
-
+        
+        flag.transform.parent = flagSpawnpoint.transform;
+        flag.transform.position = flagSpawnpoint.transform.position + new Vector3(0, 2, 0);
         flag.enabled = true;
         flag.gameObject.SetActive(true);
 
@@ -58,7 +60,8 @@ public class CaptureTheFlag : GameEvent
         foreach (GameObject go in endPoints)
             go.SetActive(false);
 
-        flag.transform.SetParent(flagSpawnpoint.transform);
+        flag.transform.parent = flagSpawnpoint.transform;
+        flag.transform.position = flagSpawnpoint.transform.position + new Vector3(0, 2, 0);
 
         flag.gameObject.SetActive(false);
         flag.isPickedUp = false;
