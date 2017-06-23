@@ -33,9 +33,8 @@ public class Projectile : NetworkBehaviour
                 other.GetComponent<CollisionDetection>().OnHit(damage, playername);
         }
 
-        if(!other.tag.Equals("Juggernaut") && !other.tag.Equals("Player") && !other.tag.Equals("IgnoreCollision"))
+        if(!other.tag.Equals("Juggernaut") && !other.tag.Equals("Player") && !other.tag.Equals("IgnoreCollision") && !other.tag.Equals("Flag"))
         {
-            print(other.tag);
             explosion = Instantiate(explosion, transform.position, Quaternion.FromToRotation(Vector3.up, impactNormal)) as GameObject;
             explosion.GetComponent<RocketExplosion>().SetVariables(playername);
 

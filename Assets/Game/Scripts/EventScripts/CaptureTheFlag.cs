@@ -67,6 +67,8 @@ public class CaptureTheFlag : GameEvent
 
         if (carrier != null)
             carrier.GetComponent<PlayerManager>().hasFlag = false;
+
+        EventManager.currentEvent = null;
     }
 
     public void FlagReturned(string player)

@@ -20,7 +20,9 @@ public abstract class GameEvent : NetworkBehaviour {
 
     public void ResetEvent()
     {
+        if(gameEventDur != null)
         StopCoroutine(gameEventDur);
+
         gameEventDur = StartCoroutine(EventDuration());
     }
 

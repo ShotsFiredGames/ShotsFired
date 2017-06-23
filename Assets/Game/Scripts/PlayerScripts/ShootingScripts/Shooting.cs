@@ -63,12 +63,16 @@ public class Shooting : NetworkBehaviour
     {
         currentGun = weapon;
         shootingSource.clip = currentGun.shootingSound;
+        currentGun.isFiring = false;
     }
 
     public void RemoveWeapon()
     {
         if(currentGun != null)
-        currentGun.SetActiveGun(false);
+        {
+            currentGun.isFiring = false;
+            currentGun.SetActiveGun(false);
+        }
     }
 
     [Command]

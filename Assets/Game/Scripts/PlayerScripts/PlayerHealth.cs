@@ -60,7 +60,6 @@ public class PlayerHealth : NetworkBehaviour
     public void RpcTookDamage(int damage, string sourceID, CollisionDetection.CollisionFlag collisionLocation)                //This is called from CollisionDetection to determine the damage and the location of the incoming collision.
     {
         if (isDead) return;
-        Debug.LogError("Damage: " + damage);
         currentHealth -= damage;
         Hit(collisionLocation);
         if (!source.isPlaying)
