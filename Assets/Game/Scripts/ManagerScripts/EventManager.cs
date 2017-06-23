@@ -56,6 +56,12 @@ public class EventManager : NetworkBehaviour
     [ServerCallback]
     void ActivateNextEvent()
     {
+        RpcActivateNextEvent();
+    }
+
+    [ClientRpc]
+    void RpcActivateNextEvent()
+    {
         nextEvent = gameEvents[Random.Range(0, gameEvents.Count)];
 
         if (currentEvent != null && nextEvent.nameEvent.Equals(currentEvent.nameEvent))
@@ -64,7 +70,7 @@ public class EventManager : NetworkBehaviour
         {
             currentEvent = nextEvent;
             currentEvent.StartEvent();
-        }  
+        }
 
         currentAddOn = addOns[Random.Range(0, addOns.Count)];
         currentAddOn.StartAddOn();
