@@ -32,6 +32,11 @@ public class Projectile : NetworkBehaviour
             if(other.tag.Equals("Collision"))
                 other.GetComponent<CollisionDetection>().OnHit(damage, playername);
 
+            if (other.tag.Equals("Reaper"))
+            {
+                other.GetComponent<Reaper>().HitBy(damage, playername);
+            }
+
             if (!other.tag.Equals("Juggernaut") && !other.tag.Equals("Player") && !other.tag.Equals("IgnoreCollision") && !other.tag.Equals("Flag"))
             {
                 explosion = Instantiate(explosion, transform.position, Quaternion.FromToRotation(Vector3.up, impactNormal)) as GameObject;

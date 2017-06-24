@@ -41,13 +41,7 @@ public class CaptureTheFlag : GameEvent
         flag.enabled = true;
         flag.gameObject.SetActive(true);
 
-        captureTheFlag = StartCoroutine(EventLength());
-    }
-
-    IEnumerator EventLength()
-    {
-        yield return new WaitForSeconds(duration);
-        EndEvent();
+        gameEventDur = StartCoroutine(EventDuration());
     }
 
     public override void EndEvent()
