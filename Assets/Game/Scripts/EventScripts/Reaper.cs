@@ -12,11 +12,11 @@ public class Reaper : NetworkBehaviour
     [Header("Player Interaction")]
     public float distanceToAttack;
     public double shotSpeedIncrease;
-    [Tooltip("This number is subtracted. Make it positive if you want the player to lose points")]
-    public int pointsPlayerLosesOnDeath;
+    
 
     [SyncVar]
     int currentHealth;
+    int points;
 
     private Transform spawnPoint;
     private float currentDistance;
@@ -60,7 +60,7 @@ public class Reaper : NetworkBehaviour
             if (!targetPlayer.isDead)
             {
                 targetPlayer.GetComponent<PlayerHealth>().CmdInstantDeath("Reaper", CollisionDetection.CollisionFlag.Back);
-                gameManager.CmdAddScore(GetTargetPlayer(), -pointsPlayerLosesOnDeath);
+                gameManager.CmdAddScore(GetTargetPlayer(), -points);
             }
         }
     }
@@ -102,6 +102,11 @@ public class Reaper : NetworkBehaviour
     public void SetSpawnPoint(Transform spawn)
     {
         spawnPoint = spawn;
+    }
+
+    public void SetPoints(int points)
+    {
+        this.points = points;
     }
 
     IEnumerator Respawn()

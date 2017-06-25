@@ -9,6 +9,8 @@ public class TheReaperComes : GameEvent
     public GameObject[] objectsToSetActive;
     public Reaper reaper;
     public Transform reaperSpawn;
+    [Tooltip("This number is subtracted. Make it positive if you want the player to lose points")]
+    public int pointsPlayerLosesOnDeath;
 
     [ServerCallback]
     private void Start()
@@ -23,6 +25,7 @@ public class TheReaperComes : GameEvent
 
         reaper.enabled = true;
         reaper.SetSpawnPoint(reaperSpawn);
+        reaper.SetPoints(pointsPlayerLosesOnDeath);
         reaper.Setup();
 
         gameEventDur = StartCoroutine(EventDuration());
