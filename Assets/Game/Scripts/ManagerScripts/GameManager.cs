@@ -221,8 +221,25 @@ public class GameManager : NetworkBehaviour
         networkManager.StopHost();
     }
 
+    //==========Event Methods==========
     public void FlagCaptured(string player, int score)
     {
         CmdAddScore(player, score);
+    }
+
+    public string GetWinningPlayer()
+    {
+        int highScore = int.MinValue;
+        string playerName = "";
+        foreach (string name in playerScores.Keys)
+        {
+            if (playerScores[name] > highScore)
+            {
+                highScore = playerScores[name];
+                playerName = name;
+            }
+        }
+
+        return playerName;
     }
 }

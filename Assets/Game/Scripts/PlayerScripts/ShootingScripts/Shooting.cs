@@ -131,10 +131,17 @@ public class Shooting : NetworkBehaviour
         CmdStartMuzzleFlash();
         RaycastHit hit = CastMyRay();
         if (hit.point == Vector3.zero) return;
+
+        print("Hit: " + hit.transform.tag + " " + hit.transform.name);
+
         if (hit.transform.tag.Equals("Collision"))
         {
             StartCoroutine(HitMarker());
             CmdPlayerShot(hit.transform.root.name, hit.transform.name, _damage);
+        }
+        else if (hit.transform.tag.Equals("Reaper"))
+        {
+            hit.transform.GetComponent<Reaper>().HitBy(_damage, transform.root.name);
         }
         else
         {

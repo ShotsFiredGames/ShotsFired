@@ -11,7 +11,8 @@ public abstract class GameEvent : NetworkBehaviour {
     public abstract void StartEvent();
     public abstract void EndEvent();
 
-    Coroutine gameEventDur;
+    [HideInInspector]
+    public Coroutine gameEventDur;
 
     /*void StartEvent()
      * // turn on all of what you need for the event
