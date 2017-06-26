@@ -26,6 +26,9 @@ public class PickUp : NetworkBehaviour
         Overcharged
     };
 
+    [HideInInspector]
+    public Animator pickUpLocation;
+
     PickUpManager pickUpManager;
 
     [HideInInspector]
@@ -34,4 +37,10 @@ public class PickUp : NetworkBehaviour
     public GunType gun = GunType.None;
     [HideInInspector]
     public AbilityType ability = AbilityType.None;
+
+    public void SetAnimator(Animator anim)
+    {
+        print("happens");
+        pickUpLocation = anim;
+    }
 }

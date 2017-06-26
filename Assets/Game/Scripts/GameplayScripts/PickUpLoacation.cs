@@ -8,6 +8,7 @@ public class PickUpLoacation : NetworkBehaviour
     public GameObject[] pickUpTypes;
     public Vector3 spawnOffset;
     public float spawnDelay;
+    public Animator anim;
 
     GameObject activePickUp;
     bool isSpawning;
@@ -22,7 +23,7 @@ public class PickUpLoacation : NetworkBehaviour
     [ServerCallback]
     void Update()
     {
-        if(!isSpawning && activePickUp == null)
+        if (!isSpawning && activePickUp == null)
         {
             isSpawning = true;
             StartCoroutine(WaitToSpawn());
@@ -33,7 +34,10 @@ public class PickUpLoacation : NetworkBehaviour
     IEnumerator WaitToSpawn()
     {
         yield return new WaitForSeconds(spawnDelay);
+        anim.SetBool("HasAbility", true);
+        yield return new WaitForSeconds(1);
         activePickUp = Instantiate(pickUpTypes[Random.Range(0, pickUpTypes.Length)], transform.position + spawnOffset, Quaternion.identity) as GameObject;
+        activePickUp.GetComponent<PickUp>().SetAnimator(anim);
         NetworkServer.Spawn(activePickUp);
 
         isSpawning = false;

@@ -51,6 +51,8 @@ public class PickUpManager : NetworkBehaviour
         if (other.tag.Equals("PickUp"))
         {
             PickUp pickup = other.GetComponent<PickUp>();
+            if(pickup.pickUpLocation != null)
+            pickup.pickUpLocation.SetBool("HasAbility", false);
             switch (pickup.type)
             {
                 case PickUp.PickUpType.Gun:

@@ -8,7 +8,7 @@ public class Shooting : NetworkBehaviour
 {
     public Gun currentGun;
     public GameObject bulletHole;
-    public GameObject muzzleFlash;
+    GameObject muzzleFlash;
     public LayerMask layermask;
     public Image hitMarker;
     public AudioSource shootingSource;
@@ -64,6 +64,7 @@ public class Shooting : NetworkBehaviour
         currentGun = weapon;
         shootingSource.clip = currentGun.shootingSound;
         currentGun.isFiring = false;
+        muzzleFlash = currentGun.muzzleFlash;
     }
 
     public void RemoveWeapon()
