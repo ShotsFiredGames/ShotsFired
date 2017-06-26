@@ -132,8 +132,6 @@ public class Shooting : NetworkBehaviour
         RaycastHit hit = CastMyRay();
         if (hit.point == Vector3.zero) return;
 
-        print("Hit: " + hit.transform.tag + " " + hit.transform.name);
-
         if (hit.transform.tag.Equals("Collision"))
         {
             StartCoroutine(HitMarker());
