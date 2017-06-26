@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Networking;
 
 public class PickUpManager : NetworkBehaviour
@@ -52,7 +50,8 @@ public class PickUpManager : NetworkBehaviour
         {
             PickUp pickup = other.GetComponent<PickUp>();
             if(pickup.pickUpLocation != null)
-            pickup.pickUpLocation.SetBool("HasAbility", false);
+                pickup.pickUpLocation.SetBool("HasAbility", false);
+
             switch (pickup.type)
             {
                 case PickUp.PickUpType.Gun:

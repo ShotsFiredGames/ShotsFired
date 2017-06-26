@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Networking;
@@ -16,7 +15,7 @@ public class Shooting : NetworkBehaviour
     GameObject cam;
     Coroutine overcharged;
     bool isOvercharged;
-    int _damage;                // this is the variable that gets affected by overcharged
+    byte _damage;                // this is the variable that gets affected by overcharged
 
     void Start()
     {
@@ -31,7 +30,7 @@ public class Shooting : NetworkBehaviour
             currentGun.isFiring = true;
 
             if (isOvercharged)
-                _damage = currentGun.damage * 2;
+                _damage = (byte)(currentGun.damage * 2);
             else
                 _damage = currentGun.damage;
 
@@ -114,7 +113,7 @@ public class Shooting : NetworkBehaviour
     }
 
     [Command]
-    void CmdPlayerShot(string hitPlayer, string hitCollider, int _damage)
+    void CmdPlayerShot(string hitPlayer, string hitCollider, byte _damage)
     {
         PlayerWrangler.GetPlayer(hitPlayer).transform.Find("CollisionDetection").transform.Find(hitCollider).GetComponent<CollisionDetection>().OnHit(_damage, transform.name);
     }
@@ -122,7 +121,7 @@ public class Shooting : NetworkBehaviour
     public RaycastHit CastMyRay()
     {
         RaycastHit hit;
-        Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, Mathf.Infinity, layermask);
+        Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, 5000, layermask);
         return hit;
     }
 
@@ -140,6 +139,7 @@ public class Shooting : NetworkBehaviour
         }
         else if (hit.transform.tag.Equals("Reaper"))
         {
+            StartCoroutine(HitMarker());
             hit.transform.GetComponent<Reaper>().HitBy(_damage, transform.root.name);
         }
         else

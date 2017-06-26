@@ -17,7 +17,7 @@ public class GameManager : NetworkBehaviour
     [HideInInspector]
     public List<Text> scoreboardTextObjList;
 
-    public Dictionary<string, int> playerScores;
+    public Dictionary<string, short> playerScores;
 
     NetworkManager networkManager;
     Controls controls;
@@ -28,9 +28,9 @@ public class GameManager : NetworkBehaviour
     bool gameOver;
 
     [SyncVar]
-    int minutes;
+    byte minutes;
     [SyncVar]
-    int seconds;
+    byte seconds;
 
     void Awake()
     {
@@ -39,7 +39,7 @@ public class GameManager : NetworkBehaviour
         else
             instance = this;
 
-        playerScores = new Dictionary<string, int>();
+        playerScores = new Dictionary<string, short>();
         foreach (Transform child in newSpawnPoints.transform)
         {
             NetworkManager.UnRegisterStartPosition(child);
@@ -83,7 +83,7 @@ public class GameManager : NetworkBehaviour
 
     IEnumerator Timer()
     {
-        for(int i = seconds; i >= 0; i--)
+        for(byte i = seconds; i >= 0; i--)
         {
             if (seconds == 0)
             {
@@ -120,14 +120,14 @@ public class GameManager : NetworkBehaviour
     }
 
     [Command]
-    public void CmdAddScore(string player, int amount)
+    public void CmdAddScore(string player, short amount)
     {
         if (!playerScores.ContainsKey(player)) return;
         RpcAddScore(player, amount);
     }
 
     [ClientRpc]
-    public void RpcAddScore(string player, int amount)
+    public void RpcAddScore(string player, short amount)
     {
         if (!playerScores.ContainsKey(player)) return;
         playerScores[player] += amount;
@@ -137,8 +137,8 @@ public class GameManager : NetworkBehaviour
     void CheckScores()
     {
         string winningPlayer = "";
-        int lastAmt = 0;
-        int killAmount = -1;
+        short lastAmt = 0;
+        short killAmount = -1;
         foreach(string name in playerScores.Keys)
         {
             lastAmt = playerScores[name];
@@ -192,7 +192,7 @@ public class GameManager : NetworkBehaviour
     [Client]
     void UpdateScoreText()
     {
-        int count = 0;
+        byte count = 0;
         foreach(string name in playerScores.Keys)
         {
             scoreboardTextObjList[count].text = name + ": " + playerScores[name];
@@ -222,14 +222,14 @@ public class GameManager : NetworkBehaviour
     }
 
     //==========Event Methods==========
-    public void FlagCaptured(string player, int score)
+    public void FlagCaptured(string player, byte score)
     {
         CmdAddScore(player, score);
     }
 
     public string GetWinningPlayer()
     {
-        int highScore = int.MinValue;
+        short highScore = short.MinValue;
         string playerName = "";
         foreach (string name in playerScores.Keys)
         {

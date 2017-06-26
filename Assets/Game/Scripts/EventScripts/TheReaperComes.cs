@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Networking;
 
 public class TheReaperComes : GameEvent
@@ -10,7 +7,7 @@ public class TheReaperComes : GameEvent
     public Reaper reaper;
     public Transform reaperSpawn;
     [Tooltip("This number is subtracted. Make it positive if you want the player to lose points")]
-    public int pointsPlayerLosesOnDeath;
+    public byte pointsPlayerLosesOnDeath;
 
     [ServerCallback]
     private void Start()

@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public abstract class Gun : MonoBehaviour
 {
@@ -16,8 +14,8 @@ public abstract class Gun : MonoBehaviour
 
     public GameObject thirdPersonGun;
     public string gunName;
-    public int damage;
-    public int ammo;
+    public byte damage;
+    public byte ammo;
     public float fireFreq;
     public Transform spawnPoint;
     public Vector3 basePosition;
@@ -33,7 +31,7 @@ public abstract class Gun : MonoBehaviour
     [HideInInspector]
     public bool isAmmoUnlimited;
     [HideInInspector]
-    public int currentAmmo;
+    public byte currentAmmo;
 
     public GameObject projectile;
     public float speed;
@@ -60,21 +58,14 @@ public abstract class Gun : MonoBehaviour
 
         currentAmmo--;
         if (currentAmmo <= 0)
-        {
             Discard();
-        }
     }
 
     public void SetActiveGun(bool isActive)
     {
         if (playerManager.isActiveAndEnabled)
-        {
             gameObject.SetActive(isActive);
-        }
         else
-        {
-            thirdPersonGun.SetActive(isActive);
-        }
-           
+            thirdPersonGun.SetActive(isActive); 
     }
 }

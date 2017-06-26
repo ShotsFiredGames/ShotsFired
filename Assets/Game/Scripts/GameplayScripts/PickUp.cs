@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Networking;
 
 public class PickUp : NetworkBehaviour
@@ -40,7 +38,6 @@ public class PickUp : NetworkBehaviour
 
     public void SetAnimator(Animator anim)
     {
-        print("happens");
         pickUpLocation = anim;
     }
 }

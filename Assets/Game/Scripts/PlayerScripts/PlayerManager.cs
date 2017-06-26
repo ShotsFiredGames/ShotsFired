@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Networking;
 
 public class PlayerManager : NetworkBehaviour
@@ -22,7 +20,7 @@ public class PlayerManager : NetworkBehaviour
     public bool isArmed;
     public Gun[] guns;
     public LayerMask layermask;
-    int shotsFired = 5;
+    byte shotsFired = 5;
 
     float yRotationValue;
     GameObject myCamera;
@@ -64,17 +62,20 @@ public class PlayerManager : NetworkBehaviour
         controls.Destroy();
     }
 
-    private void Update()
+    void FixedUpdate()
     {
-        UpdateCursorLock();
-        if (!isLocalPlayer) return;
-        if (isDead) return;
-
         RaycastHit hit;
         if (isArmed && Physics.Raycast(myCamera.transform.position, myCamera.transform.forward, out hit, Mathf.Infinity, layermask))
             playerMovement.AimAssist();
         else
             playerMovement.StopAimAssist();
+    }
+
+    private void Update()
+    {
+        UpdateCursorLock();
+        if (!isLocalPlayer) return;
+        if (isDead) return;        
 
         ApplyMovementInput();
 

@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Networking;
@@ -16,10 +15,10 @@ public class PlayerHealth : NetworkBehaviour
     public AudioSource source;
     public AudioClip[] hitEffects;
     float respawnTime;
-    float currMaxHealth;
-    float maxHealth;
+    short currMaxHealth;
+    short maxHealth;
     [SyncVar]
-    float currentHealth;
+    short currentHealth;
 
     [SyncVar]
     bool isDead;
@@ -50,14 +49,14 @@ public class PlayerHealth : NetworkBehaviour
     }
 
     [Command]
-    public void CmdTookDamage(int damage, string sourceID, CollisionDetection.CollisionFlag collisionLocation)
+    public void CmdTookDamage(byte damage, string sourceID, CollisionDetection.CollisionFlag collisionLocation)
     {
         if (isDead) return;
         RpcTookDamage(damage, sourceID, collisionLocation);
     }
 
     [ClientRpc]
-    public void RpcTookDamage(int damage, string sourceID, CollisionDetection.CollisionFlag collisionLocation)                //This is called from CollisionDetection to determine the damage and the location of the incoming collision.
+    public void RpcTookDamage(byte damage, string sourceID, CollisionDetection.CollisionFlag collisionLocation)                //This is called from CollisionDetection to determine the damage and the location of the incoming collision.
     {
         if (isDead) return;
         currentHealth -= damage;
@@ -167,7 +166,7 @@ public class PlayerHealth : NetworkBehaviour
         if (!isHealthIncreased)
         {
             isHealthIncreased = true;
-            currMaxHealth = maxHealth * 4;
+            currMaxHealth = (short)(maxHealth * 4);
             currentHealth = currMaxHealth;
             yield return new WaitForSeconds(GameCustomization.abilityDuration);
             currMaxHealth = maxHealth;

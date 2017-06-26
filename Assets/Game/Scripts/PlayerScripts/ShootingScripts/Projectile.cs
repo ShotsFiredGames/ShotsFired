@@ -9,7 +9,7 @@ public class Projectile : NetworkBehaviour
     Vector3 direction;
     string playername;
     Rigidbody rb;
-    int damage;
+    byte damage;
 
     Vector3 impactNormal; //Used to rotate impactparticle.
 
@@ -49,7 +49,7 @@ public class Projectile : NetworkBehaviour
         }
     }
 
-    public void SetVariables(float _speed, Vector3 _direction, string _playername, Vector3 hitNormal, int _damage)
+    public void SetVariables(float _speed, Vector3 _direction, string _playername, Vector3 hitNormal, byte _damage)
     {
         speed = _speed;
         direction = _direction;

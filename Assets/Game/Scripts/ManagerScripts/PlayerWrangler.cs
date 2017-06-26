@@ -37,9 +37,9 @@ public class PlayerWrangler : MonoBehaviour
         return players[playerID];
     }
 
-    public static int GetNumOfPlayers()
+    public static byte GetNumOfPlayers()
     {
-        return players.Count;
+        return (byte)players.Count;
     }
 
     public static PlayerManager[] GetAllPlayers()

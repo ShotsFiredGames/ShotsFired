@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -55,13 +54,14 @@ public class EventManager : NetworkBehaviour
     void ActivateNextEvent()
     {
         byte newEvent = (byte)Random.Range(0, gameEvents.Count);
-        RpcActivateNextEvent(newEvent);
+        byte newAddOn = (byte)Random.Range(0, addOns.Count);
+        RpcActivateNextEvent(newEvent, newAddOn);
     }
 
     [ClientRpc]
-    void RpcActivateNextEvent(byte newEvent)
+    void RpcActivateNextEvent(byte _newEvent, byte _newAddOn)
     {
-        nextEvent = gameEvents[newEvent];
+        nextEvent = gameEvents[_newEvent];
 
         if (currentEvent != null && nextEvent.nameEvent.Equals(currentEvent.nameEvent))
             currentEvent.ResetEvent();
@@ -71,7 +71,7 @@ public class EventManager : NetworkBehaviour
             currentEvent.StartEvent();
         }
 
-        currentAddOn = addOns[Random.Range(0, addOns.Count)];
+        currentAddOn = addOns[_newAddOn];
         currentAddOn.StartAddOn();
     }
 }

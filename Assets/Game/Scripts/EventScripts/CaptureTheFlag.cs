@@ -9,7 +9,7 @@ public class CaptureTheFlag : GameEvent
     public Flag flag;
     public GameObject flagSpawnpoint;
     public GameObject[] endPoints;
-    public int pointsForCapture;
+    public byte pointsForCapture;
     public float flagResetTime;
 
     GameObject carrier;

@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -8,15 +7,15 @@ public class Reaper : NetworkBehaviour
     [Header("Stats")]
     public float speed;
     public float respawnTime;
-    public int health;
+    public short health;
     [Header("Player Interaction")]
     public float distanceToAttack;
-    public double shotSpeedIncrease;
+    public float shotSpeedIncrease;
     
 
     [SyncVar]
-    int currentHealth;
-    int points;
+    short currentHealth;
+    short points;
 
     private Transform spawnPoint;
     private float currentDistance;
@@ -61,13 +60,13 @@ public class Reaper : NetworkBehaviour
                 if (!targetPlayer.isDead)
                 {
                     targetPlayer.GetComponent<PlayerHealth>().CmdInstantDeath("Reaper", CollisionDetection.CollisionFlag.Back);
-                    gameManager.CmdAddScore(GetTargetPlayer(), -points);
+                    gameManager.CmdAddScore(GetTargetPlayer(), (short)-points);
                 }
             }
         }
     }
 
-    public void HitBy(int damage, string player)
+    public void HitBy(short damage, string player)
     {
         if (!player.Equals(GetTargetPlayer()))
             IncreaseSpeed();
@@ -77,7 +76,7 @@ public class Reaper : NetworkBehaviour
 
     public void IncreaseSpeed()
     {
-        currentSpeed += (float)shotSpeedIncrease;
+        currentSpeed += shotSpeedIncrease;
     }
 
     public string GetTargetPlayer()
@@ -86,17 +85,17 @@ public class Reaper : NetworkBehaviour
     }
 
     [Command]
-    public void CmdReaperTookDamage(int damage)
+    public void CmdReaperTookDamage(short damage)
     {
         RpcReaperTookDamage(damage);
     }
 
     [ClientRpc]
-    public void RpcReaperTookDamage(int damage)
+    public void RpcReaperTookDamage(short damage)
     {
         currentHealth -= damage;
 
-        if (currentHealth < 0)
+        if (currentHealth <= 0)
             StartCoroutine(Respawn());
 
     }
@@ -106,7 +105,7 @@ public class Reaper : NetworkBehaviour
         spawnPoint = spawn;
     }
 
-    public void SetPoints(int points)
+    public void SetPoints(short points)
     {
         this.points = points;
     }

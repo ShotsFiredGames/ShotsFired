@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -13,7 +12,7 @@ public class PickUpLoacation : NetworkBehaviour
     GameObject activePickUp;
     bool isSpawning;
 
-    [Server]
+    [ServerCallback]
     private void Start()
     {
         activePickUp = Instantiate(pickUpTypes[Random.Range(0, pickUpTypes.Length)], transform.position + spawnOffset, Quaternion.identity) as GameObject;
@@ -30,7 +29,6 @@ public class PickUpLoacation : NetworkBehaviour
         }
     }
 
-    [Server]
     IEnumerator WaitToSpawn()
     {
         yield return new WaitForSeconds(spawnDelay);

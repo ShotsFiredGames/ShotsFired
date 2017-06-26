@@ -7,28 +7,28 @@ public class GameCustomization : MonoBehaviour
     public List<string> _currentAddOns;
     public float _respawnTime;
     public float _playerSpeed;
-    public int _playerHealth;
+    public short _playerHealth;
     public bool _isAmmoUnlimited;
     [Range(2, 20)]
     public float _abilityDuration;
     [Range(2, 120)]
     public float _eventOccurenceRate;
-    public int _gameLength;
-    public int _pointsToWin;
-    public int _pointsPerKill;
+    public byte _gameLength;
+    public byte _pointsToWin;
+    public byte _pointsPerKill;
 
 
     public static List<string> currentEvents;
     public static List<string> currentAddOns;
     public static float respawnTime;
     public static float playerSpeed;
-    public static int playerHealth;
+    public static short playerHealth;
     public static bool isAmmoUnlimited;
     public static float abilityDuration;
     public static float eventOccurenceRate;
-    public static int gameLength;
-    public static int pointsToWin;
-    public static int pointsPerKill;
+    public static byte gameLength;
+    public static byte pointsToWin;
+    public static byte pointsPerKill;
 
     private void Awake()
     {

@@ -1,7 +1,5 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
 
 public class Juggernaut : MonoBehaviour
 {
@@ -20,7 +18,6 @@ public class Juggernaut : MonoBehaviour
         if (juggernaut != null)
         {
             StopCoroutine(juggernaut);
-
             juggernautEffect.SetActive(false);
             isJuggernaut = false;
         }
