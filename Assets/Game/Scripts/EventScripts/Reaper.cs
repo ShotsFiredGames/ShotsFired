@@ -44,23 +44,25 @@ public class Reaper : NetworkBehaviour
         targetPlayerObject = GameObject.Find(gameManager.GetWinningPlayer());
 
         if (targetPlayerObject != null)
+        {
             targetPlayer = targetPlayerObject.GetComponent<PlayerManager>();
 
-        currentDistance = Vector3.Distance(targetPlayer.transform.position, this.transform.position);
+            currentDistance = Vector3.Distance(targetPlayer.transform.position, this.transform.position);
 
-        currentDistance = Mathf.Abs(currentDistance);
+            currentDistance = Mathf.Abs(currentDistance);
 
-        if (currentDistance > distanceToAttack)
-        {
-            float step = currentSpeed * Time.deltaTime / 2;
-            transform.position = Vector3.MoveTowards(transform.position, targetPlayer.transform.position, step);
-        }
-        else
-        {
-            if (!targetPlayer.isDead)
+            if (currentDistance > distanceToAttack)
             {
-                targetPlayer.GetComponent<PlayerHealth>().CmdInstantDeath("Reaper", CollisionDetection.CollisionFlag.Back);
-                gameManager.CmdAddScore(GetTargetPlayer(), -points);
+                float step = currentSpeed * Time.deltaTime / 2;
+                transform.position = Vector3.MoveTowards(transform.position, targetPlayer.transform.position, step);
+            }
+            else
+            {
+                if (!targetPlayer.isDead)
+                {
+                    targetPlayer.GetComponent<PlayerHealth>().CmdInstantDeath("Reaper", CollisionDetection.CollisionFlag.Back);
+                    gameManager.CmdAddScore(GetTargetPlayer(), -points);
+                }
             }
         }
     }
