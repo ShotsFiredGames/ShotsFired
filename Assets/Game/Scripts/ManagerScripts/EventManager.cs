@@ -18,35 +18,33 @@ public class EventManager : NetworkBehaviour
 
     List<string> eventNames;
     List<string> addOnNames;
-
-    // Use this for initialization
+    
     void Start ()
     {
-        //Grabs a List of Usable Event Names From GameCustomization
-        eventNames = GameCustomization.currentEvents;
+        eventNames = GameCustomization.currentEvents;                       //Grabs a List of Usable Event Names From GameCustomization
         addOnNames = GameCustomization.currentAddOns;
 
-        //Loops throught AllEvents and the List of Names
+                                                                            //Loops throught AllEvents and the List of Names
         foreach (GameEvent events in allEvents)
         {
             string currentName = events.nameEvent;
 
             foreach (string name in eventNames)
             {
-                if (currentName.Equals(name))   //if the names are equal
-                    gameEvents.Add(events);     //add the event to the playable list of events
+                if (currentName.Equals(name))                               //if the names are equal
+                    gameEvents.Add(events);                                 //add the event to the playable list of events
             }
         }
 
-        //Loops throught AllAddOns and the List of Names
+                                                                            //Loops throught AllAddOns and the List of Names
         foreach (AddOn addOn in allAddOns)
         {
             string currentName = addOn.addOnName;
 
             foreach (string name in addOnNames)
             {
-                if (currentName.Equals(name))   //if the names are equal
-                    addOns.Add(addOn);     //add the event to the playable list of events
+                if (currentName.Equals(name))                               //if the names are equal
+                    addOns.Add(addOn);                                      //add the event to the playable list of events
             }
         }
 
@@ -56,13 +54,14 @@ public class EventManager : NetworkBehaviour
     [ServerCallback]
     void ActivateNextEvent()
     {
-        RpcActivateNextEvent();
+        byte newEvent = (byte)Random.Range(0, gameEvents.Count);
+        RpcActivateNextEvent(newEvent);
     }
 
     [ClientRpc]
-    void RpcActivateNextEvent()
+    void RpcActivateNextEvent(byte newEvent)
     {
-        nextEvent = gameEvents[Random.Range(0, gameEvents.Count)];
+        nextEvent = gameEvents[newEvent];
 
         if (currentEvent != null && nextEvent.nameEvent.Equals(currentEvent.nameEvent))
             currentEvent.ResetEvent();
