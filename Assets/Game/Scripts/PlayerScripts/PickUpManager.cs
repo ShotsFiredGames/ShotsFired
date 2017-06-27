@@ -66,6 +66,11 @@ public class PickUpManager : NetworkBehaviour
             NetworkServer.UnSpawn(other.gameObject);
             Destroy(other.gameObject);
         }
+
+        if (other.tag.Equals("Mimic"))
+        {
+            GetComponent<PlayerHealth>().CmdInstantDeath("Mimic", CollisionDetection.CollisionFlag.Front);
+        }
     }
 
     public void Gun(PickUp pickup)

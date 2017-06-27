@@ -15,8 +15,7 @@ public class PickUpLoacation : NetworkBehaviour
     [ServerCallback]
     private void Start()
     {
-        activePickUp = Instantiate(pickUpTypes[Random.Range(0, pickUpTypes.Length)], transform.position + spawnOffset, Quaternion.identity) as GameObject;
-        NetworkServer.Spawn(activePickUp);
+        SpawnRandomPickup();
     }
 
     [ServerCallback]
@@ -34,10 +33,26 @@ public class PickUpLoacation : NetworkBehaviour
         yield return new WaitForSeconds(spawnDelay);
         anim.SetBool("HasAbility", true);
         yield return new WaitForSeconds(1);
-        activePickUp = Instantiate(pickUpTypes[Random.Range(0, pickUpTypes.Length)], transform.position + spawnOffset, Quaternion.identity) as GameObject;
-        activePickUp.GetComponent<PickUp>().SetAnimator(anim);
-        NetworkServer.Spawn(activePickUp);
+        SpawnRandomPickup();
 
         isSpawning = false;
+    }
+
+    public void SpawnRandomPickup()
+    {
+        activePickUp = Instantiate(pickUpTypes[Random.Range(0, pickUpTypes.Length)], transform.position + spawnOffset, Quaternion.identity) as GameObject;
+        SetPickup();
+    }
+
+    public void SpawnSetPickup(GameObject pickup)
+    {
+        activePickUp = pickup;
+        SetPickup();
+    }
+
+    void SetPickup()
+    {
+        activePickUp.GetComponent<PickUp>().SetAnimator(anim);
+        NetworkServer.Spawn(activePickUp);
     }
 }
