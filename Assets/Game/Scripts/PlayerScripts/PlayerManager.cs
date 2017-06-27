@@ -140,9 +140,14 @@ public class PlayerManager : NetworkBehaviour
     {
         yRotationValue = value;
     }
-    ////Player States////
 
-    void ApplyMovementInput()
+    public void SpeedBoost()
+    {
+         playerMovement.ActivateSpeedBoost();
+    }
+////Player States////
+
+void ApplyMovementInput()
     {
         animationManager.ApplyMovementInput(controls.Move.X, controls.Move.Y, controls.Look.X, yRotationValue);
     }
@@ -273,6 +278,8 @@ public class PlayerManager : NetworkBehaviour
     {
         if (hasFlag)
             captureTheFlag.CmdFlagDropped();
+
+        playerMovement.CancelSpeedBoost();
 
         isDead = true;
         CmdDisarm();

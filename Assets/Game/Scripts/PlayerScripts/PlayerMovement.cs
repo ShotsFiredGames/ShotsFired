@@ -12,10 +12,14 @@ public class PlayerMovement : NetworkBehaviour
     public LayerMask ground;
     public float juggernautSpeed;
 
+    public float speedBoostSpeed;
+    public float speedBoostDuration;
+
     Rigidbody rb;
     PlayerManager playerManager;
     PlayerCamera playerCamera;
     Coroutine superboots;
+    Coroutine speedboost;
 
     float speed;
     float xRotationValue;
@@ -27,6 +31,7 @@ public class PlayerMovement : NetworkBehaviour
     bool isUsingBoots;
     float airSpeed;
     bool aimAssist;
+    bool speedBoostActive;
 
     void Start ()
     {
@@ -57,7 +62,7 @@ public class PlayerMovement : NetworkBehaviour
         {
             playerManager.Landed();
 
-            if (speed != GameCustomization.playerSpeed && !isUsingBoots)
+            if (speed != GameCustomization.playerSpeed && !isUsingBoots && !speedBoostActive)
             {
                 speed = GameCustomization.playerSpeed;
             }
@@ -124,8 +129,29 @@ public class PlayerMovement : NetworkBehaviour
 
     public void SuperBoots()
     {
-        superboots = StartCoroutine(MovementIncrease());
+        if (!isUsingBoots)
+        {
+            CancelSpeedBoost();
+            superboots = StartCoroutine(MovementIncrease());
+        }
     }
+
+    public void ActivateSpeedBoost()
+     {
+         if (!speedBoostActive)
+         {
+             speedBoostActive = true;
+             speedboost = StartCoroutine(SpeedBoost());
+         }
+      }
+ 
+     public void CancelSpeedBoost()
+     {
+         speedBoostActive = false;
+         if (speedboost != null)
+             StopCoroutine(speedboost);
+      }
+
 
     public void CancelSuperBoots()
     {
@@ -154,7 +180,16 @@ public class PlayerMovement : NetworkBehaviour
 
     }
 
-    bool Grounded()
+    IEnumerator SpeedBoost()
+    {
+        speed = speedBoostSpeed;
+        yield return new WaitForSeconds(speedBoostDuration);
+        if(!isUsingBoots)
+        speed = GameCustomization.playerSpeed;
+        speedBoostActive = false;
+    }
+
+bool Grounded()
     {
         return Physics.Raycast(transform.position, Vector3.down, distToGrounded, ground);
     }

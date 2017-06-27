@@ -66,6 +66,11 @@ public class PickUpManager : NetworkBehaviour
             NetworkServer.UnSpawn(other.gameObject);
             Destroy(other.gameObject);
         }
+
+        if (other.tag.Equals("SpeedBoost"))
+        {
+            playerManager.SpeedBoost();
+        }
     }
 
     public void Gun(PickUp pickup)
