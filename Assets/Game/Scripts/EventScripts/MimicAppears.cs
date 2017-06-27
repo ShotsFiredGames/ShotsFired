@@ -9,7 +9,6 @@ public class MimicAppears : AddOn
 
     public override void StartAddOn()
     {
-        Debug.LogError("Mimic Spawned");
         PickUpLoacation validLocation = validLocations[Random.Range(0, validLocations.Length)];
         validLocation.SpawnSetPickup(mimic);
     }

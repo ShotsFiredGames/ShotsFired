@@ -70,6 +70,8 @@ public class PickUpManager : NetworkBehaviour
         if (other.tag.Equals("Mimic"))
         {
             GetComponent<PlayerHealth>().CmdInstantDeath("Mimic", CollisionDetection.CollisionFlag.Front);
+            NetworkServer.UnSpawn(other.gameObject);
+            Destroy(other.gameObject);
         }
     }
 
