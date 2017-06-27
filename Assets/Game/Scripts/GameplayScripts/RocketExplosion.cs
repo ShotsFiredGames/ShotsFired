@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.Networking;
 
 public class RocketExplosion : NetworkBehaviour
@@ -9,7 +11,7 @@ public class RocketExplosion : NetworkBehaviour
     [ServerCallback]
     void OnTriggerEnter(Collider other)
     {
-        if (other.transform.root.name != playername)
+        if (gameObject.activeInHierarchy && other.transform.root.name != playername)
         {
             if (other.tag.Equals("Collision"))
             {
