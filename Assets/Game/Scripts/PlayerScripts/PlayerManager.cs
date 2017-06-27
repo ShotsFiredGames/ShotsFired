@@ -141,6 +141,12 @@ public class PlayerManager : NetworkBehaviour
         yRotationValue = value;
     }
 
+
+    public void EnteredSpeedBoost()
+    {
+        playerMovement.SpeedBoosted();
+    }
+
     public void SpeedBoost()
     {
          playerMovement.ActivateSpeedBoost();

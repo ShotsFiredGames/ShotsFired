@@ -32,6 +32,7 @@ public class PlayerMovement : NetworkBehaviour
     float airSpeed;
     bool aimAssist;
     bool speedBoostActive;
+    bool speedBoosted;
 
     void Start ()
     {
@@ -40,9 +41,8 @@ public class PlayerMovement : NetworkBehaviour
         playerManager = GetComponent<PlayerManager>();
         _jump = jumpForce;
         playerCamera = GetComponent<PlayerCamera>();
-
         airSpeed = speed * .85f;
-	}
+    }
 
     public void AimAssist()
     {
@@ -62,9 +62,12 @@ public class PlayerMovement : NetworkBehaviour
         {
             playerManager.Landed();
 
-            if (speed != GameCustomization.playerSpeed && !isUsingBoots && !speedBoostActive)
+            if (speed != GameCustomization.playerSpeed && !isUsingBoots)
             {
-                speed = GameCustomization.playerSpeed;
+                if(speedBoostActive || speedBoosted)
+                    speed = speedBoostSpeed;
+                else
+                    speed = GameCustomization.playerSpeed;
             }
         }
         else
@@ -136,12 +139,20 @@ public class PlayerMovement : NetworkBehaviour
         }
     }
 
+    public void SpeedBoosted()
+    {
+        CancelSpeedBoost();
+        speedBoosted = true;
+        speed = speedBoostSpeed;
+    }
+
     public void ActivateSpeedBoost()
      {
          if (!speedBoostActive)
          {
-             speedBoostActive = true;
-             speedboost = StartCoroutine(SpeedBoost());
+            speedBoostActive = true;
+            speedBoosted = false;
+            speedboost = StartCoroutine(SpeedBoost());
          }
       }
  

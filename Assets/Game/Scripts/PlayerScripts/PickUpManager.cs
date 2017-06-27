@@ -69,6 +69,14 @@ public class PickUpManager : NetworkBehaviour
 
         if (other.tag.Equals("SpeedBoost"))
         {
+            playerManager.EnteredSpeedBoost();
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.tag.Equals("SpeedBoost"))
+        {
             playerManager.SpeedBoost();
         }
     }

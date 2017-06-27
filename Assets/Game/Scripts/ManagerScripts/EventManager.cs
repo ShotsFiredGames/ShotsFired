@@ -47,7 +47,7 @@ public class EventManager : NetworkBehaviour
             }
         }
 
-        InvokeRepeating("ActivateNextEvent", 10, GameCustomization.eventOccurenceRate);
+        InvokeRepeating("ActivateNextEvent", GameCustomization.eventOccurenceRate, GameCustomization.eventOccurenceRate);
 	}
 
     [ServerCallback]

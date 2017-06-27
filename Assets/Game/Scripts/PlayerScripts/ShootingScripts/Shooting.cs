@@ -163,6 +163,8 @@ public class Shooting : NetworkBehaviour
     {
         if (currentGun != null)
         {
+            if (currentGun.shootingAnim != null)
+                currentGun.shootingAnim.SetTrigger("Fire");
             GameObject bullet = Instantiate(currentGun.projectile, currentGun.gunbarrel.transform.position, currentGun.gunbarrel.transform.rotation) as GameObject;
             NetworkServer.Spawn(bullet);
             RpcProjectileShot(bullet.GetComponent<NetworkIdentity>(), direction, hitNormal);
