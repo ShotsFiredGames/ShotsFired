@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 
 public class PlayerCamera : MonoBehaviour
 {
@@ -23,6 +24,7 @@ public class PlayerCamera : MonoBehaviour
     Quaternion cameraYRotation;
     [HideInInspector]
     public bool isAiming;
+    Coroutine currentAimCo;
 
     void Awake()
     {
@@ -68,17 +70,9 @@ public class PlayerCamera : MonoBehaviour
             isAiming = true;
 
         GetGun();
-        if (currentGun != null)
-        {
-            if (currentGun.transform.localPosition != aimPosition)
-              currentGun.transform.localPosition = Vector3.Lerp(currentGun.transform.localPosition, aimPosition, aimSpeed * Time.fixedDeltaTime);
-
-			if (currentGun.transform.localRotation != Quaternion.Euler(aimRotation))
-				currentGun.transform.localRotation = Quaternion.Lerp(currentGun.transform.localRotation, Quaternion.Euler(aimRotation), aimSpeed * Time.fixedDeltaTime);
-
-			if (myCamera.fieldOfView != aimFieldOfView)
-                myCamera.fieldOfView = Mathf.Lerp(myCamera.fieldOfView, aimFieldOfView, aimSpeed * Time.fixedDeltaTime);
-        }
+        if(currentAimCo != null)
+            StopMyCoroutine(currentAimCo);
+        SetView(aimPosition, aimRotation, aimFieldOfView);
     }
 
     public void StopAim()
@@ -87,25 +81,15 @@ public class PlayerCamera : MonoBehaviour
             isAiming = false;
 
         GetGun();
-        if (currentGun != null)
-        {
-            if (currentGun.transform.localPosition != basePosition)
-				currentGun.transform.localPosition = Vector3.Lerp(currentGun.transform.localPosition, basePosition, aimSpeed * Time.fixedDeltaTime);
-
-			if (currentGun.transform.localRotation != Quaternion.Euler(baseRotation))
-				currentGun.transform.localRotation = Quaternion.Lerp(currentGun.transform.localRotation, Quaternion.Euler(baseRotation), aimSpeed * Time.fixedDeltaTime);
-
-			if (myCamera.fieldOfView != baseFieldOfView)
-                myCamera.fieldOfView = Mathf.Lerp(myCamera.fieldOfView, baseFieldOfView, aimSpeed * Time.fixedDeltaTime);
-        }
+        if (currentAimCo != null)
+            StopMyCoroutine(currentAimCo);
+        SetView(basePosition, baseRotation, baseFieldOfView);
     }
 
     public void SetFieldOfView(int view)
     {
         if(myCamera == null)
-        {
             myCamera = transform.Find("Camera").gameObject.GetComponent<Camera>();
-        }
         myCamera.fieldOfView = view;
     }
 
@@ -121,5 +105,80 @@ public class PlayerCamera : MonoBehaviour
             aimPosition = currentGun.GetComponent<Gun>().aimPosition;
 			aimRotation = currentGun.GetComponent<Gun> ().aimRotation;
         }
+    }
+
+    void SetView(Vector3 newPos, Vector3 newRot, float newFOV)
+    {
+        currentAimCo = StartCoroutine(MoveToPos(newPos, newRot, newFOV));
+    }
+
+    bool moving; //Variable that should only be used in the MoveToPos coroutine
+
+    IEnumerator MoveToPos(Vector3 newPos, Vector3 newRot, float newFOV)
+    {
+        if(!moving)
+        {
+            moving = true;
+            yield return new WaitUntil(() => InPosition(newPos, newRot, newFOV) == true);
+            moveSpeed = 0;
+            atPos = false;
+            atRot = false;
+            atFOV = false;
+            moving = false;
+        }
+    }
+
+    void StopMyCoroutine(Coroutine aCoroutine)
+    {
+        if(aCoroutine != null)
+        {
+            StopCoroutine(aCoroutine);
+            moveSpeed = 0;
+            atPos = false;
+            atRot = false;
+            atFOV = false;
+            moving = false;
+        }
+    }
+
+    bool atPos, atRot, atFOV; //Variables that should really only be used in the InPosition function
+    float moveSpeed;
+
+    bool InPosition(Vector3 newPos, Vector3 newRot, float newFOV)
+    {
+        if (currentGun != null)
+        {
+            moveSpeed += aimSpeed * Time.fixedDeltaTime;
+            if (Vector3.Distance(currentGun.transform.localPosition, newPos) > 0.01f)
+                currentGun.transform.localPosition = Vector3.Lerp(currentGun.transform.localPosition, newPos, moveSpeed);
+            else
+            {
+                currentGun.transform.localPosition = newPos;
+                atPos = true;
+            }
+
+            if (Quaternion.Angle(currentGun.transform.localRotation, Quaternion.Euler(newRot)) > 1)
+                currentGun.transform.localRotation = Quaternion.Lerp(currentGun.transform.localRotation, Quaternion.Euler(newRot), moveSpeed);
+            else
+            {
+                currentGun.transform.localRotation = Quaternion.Euler(newRot);
+                atRot = true;
+            }
+
+            if (myCamera.fieldOfView != newFOV)
+                myCamera.fieldOfView = Mathf.Lerp(myCamera.fieldOfView, newFOV, moveSpeed);
+            else
+            {
+                myCamera.fieldOfView = newFOV;
+                atFOV = true;
+            }
+
+            if (atPos && atRot && atFOV)
+                return true;
+            else
+                return false;
+        }
+
+        return false;
     }
 }
