@@ -18,6 +18,7 @@ public class PlayerManager : NetworkBehaviour
     string saveData;
 
     public bool isArmed;
+    bool isAiming;
     public Gun[] guns;
     public LayerMask layermask;
     byte shotsFired = 5;
@@ -96,13 +97,11 @@ public class PlayerManager : NetworkBehaviour
 
         if (controls.Aim && shooting.currentGun.canAim)
         {
-            if (!isArmed) return;
-            playerCamera.Aim();
+            if (!isArmed) return;            
             Aim();
         }
         else
-        {
-            playerCamera.StopAim();
+        {            
             StopAiming();
         }
         
@@ -184,12 +183,22 @@ void ApplyMovementInput()
     void Aim()
     {
         if (!isArmed) return;
-        animationManager.IsAiming();
+        if(!isAiming)
+        {
+            isAiming = true;
+            playerCamera.Aim();
+            animationManager.IsAiming();
+        }        
     }
 
     void StopAiming()
     {
-        animationManager.StoppedAiming();
+        if(isAiming)
+        {
+            playerCamera.StopAim();
+            animationManager.StoppedAiming();
+            isAiming = false;
+        }        
     }
 
     void Firing()
@@ -262,6 +271,9 @@ void ApplyMovementInput()
         newGun.SetAmmo();
 
         newGun.SetActiveGun(true);
+
+        if (isAiming)
+            Aim();
     }
 
     [Command]
