@@ -41,22 +41,19 @@ public class PickUpLoacation : NetworkBehaviour
     public void SpawnRandomPickup()
     {
         activePickUp = Instantiate(pickUpTypes[Random.Range(0, pickUpTypes.Length)], transform.position + spawnOffset, Quaternion.identity) as GameObject;
-        SetPickup();
-    }
 
-    public void SpawnSetPickup(GameObject pickup)
-    {
-        UnspawnPickup();
-        activePickUp = Instantiate(pickup, transform.position + spawnOffset, Quaternion.identity) as GameObject;
-        SetPickup();
-    }
-
-    void SetPickup()
-    {
         if (activePickUp.GetComponent<PickUp>() != null)
             activePickUp.GetComponent<PickUp>().SetAnimator(anim);
 
         NetworkServer.Spawn(activePickUp);
+    }
+
+    [Command]
+    public void CmdActivateMimic()
+    {
+        Debug.LogError(activePickUp);
+        activePickUp.tag = ("Mimic");
+        print(activePickUp.tag);
     }
 
     void UnspawnPickup()

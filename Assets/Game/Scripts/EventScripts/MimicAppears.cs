@@ -10,6 +10,6 @@ public class MimicAppears : AddOn
     public override void StartAddOn()
     {
         PickUpLoacation validLocation = validLocations[Random.Range(0, validLocations.Length)];
-        validLocation.SpawnSetPickup(mimic);
+        validLocation.CmdActivateMimic();
     }
 }
