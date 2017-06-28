@@ -19,7 +19,9 @@ public abstract class Gun : MonoBehaviour
     public float fireFreq;
     public Transform spawnPoint;
     public Vector3 basePosition;
+	public Vector3 baseRotation;
     public Vector3 aimPosition;
+	public Vector3 aimRotation;
     public AudioClip shootingSound;
     public GameObject muzzleFlash;
 

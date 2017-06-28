@@ -12,7 +12,9 @@ public class PlayerCamera : MonoBehaviour
     public Camera myCamera;
     GameObject currentGun;
     Vector3 basePosition;
+	Vector3 baseRotation;
     Vector3 aimPosition;
+	Vector3 aimRotation;
     PlayerManager playerManager;
 
     float xRotationValue;
@@ -69,9 +71,12 @@ public class PlayerCamera : MonoBehaviour
         if (currentGun != null)
         {
             if (currentGun.transform.localPosition != aimPosition)
-                currentGun.transform.localPosition = Vector3.Lerp(currentGun.transform.localPosition, aimPosition, aimSpeed * Time.fixedDeltaTime);
+              currentGun.transform.localPosition = Vector3.Lerp(currentGun.transform.localPosition, aimPosition, aimSpeed * Time.fixedDeltaTime);
 
-            if (myCamera.fieldOfView != 20)
+			if (currentGun.transform.localRotation != Quaternion.Euler(aimRotation))
+				currentGun.transform.localRotation = Quaternion.Lerp(currentGun.transform.localRotation, Quaternion.Euler(aimRotation), aimSpeed * Time.fixedDeltaTime);
+
+			if (myCamera.fieldOfView != aimFieldOfView)
                 myCamera.fieldOfView = Mathf.Lerp(myCamera.fieldOfView, aimFieldOfView, aimSpeed * Time.fixedDeltaTime);
         }
     }
@@ -85,9 +90,12 @@ public class PlayerCamera : MonoBehaviour
         if (currentGun != null)
         {
             if (currentGun.transform.localPosition != basePosition)
-                currentGun.transform.localPosition = Vector3.Lerp(currentGun.transform.localPosition, basePosition, aimSpeed * Time.fixedDeltaTime);
+				currentGun.transform.localPosition = Vector3.Lerp(currentGun.transform.localPosition, basePosition, aimSpeed * Time.fixedDeltaTime);
 
-            if (myCamera.fieldOfView != 60)
+			if (currentGun.transform.localRotation != Quaternion.Euler(baseRotation))
+				currentGun.transform.localRotation = Quaternion.Lerp(currentGun.transform.localRotation, Quaternion.Euler(baseRotation), aimSpeed * Time.fixedDeltaTime);
+
+			if (myCamera.fieldOfView != baseFieldOfView)
                 myCamera.fieldOfView = Mathf.Lerp(myCamera.fieldOfView, baseFieldOfView, aimSpeed * Time.fixedDeltaTime);
         }
     }
@@ -109,7 +117,9 @@ public class PlayerCamera : MonoBehaviour
             if (currentGun == null) return;
 
             basePosition = currentGun.GetComponent<Gun>().basePosition;
+			baseRotation = currentGun.GetComponent<Gun> ().baseRotation;
             aimPosition = currentGun.GetComponent<Gun>().aimPosition;
+			aimRotation = currentGun.GetComponent<Gun> ().aimRotation;
         }
     }
 }
