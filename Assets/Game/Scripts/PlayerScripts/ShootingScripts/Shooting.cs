@@ -6,6 +6,7 @@ using UnityEngine.Networking;
 public class Shooting : NetworkBehaviour
 {
     public Gun currentGun;
+    public GameObject gunHolder;
     public GameObject bulletHole;
     GameObject muzzleFlash;
     public LayerMask layermask;

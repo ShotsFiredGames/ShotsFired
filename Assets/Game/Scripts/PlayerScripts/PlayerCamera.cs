@@ -11,6 +11,7 @@ public class PlayerCamera : MonoBehaviour
 
     public GameObject cameraObject;
     public Camera myCamera;
+    GameObject gunHolder;
     GameObject currentGun;
     Vector3 basePosition;
 	Vector3 baseRotation;
@@ -97,6 +98,7 @@ public class PlayerCamera : MonoBehaviour
     {
         if (currentGun != GetComponent<Shooting>().currentGun)
         {
+            gunHolder = GetComponent<Shooting>().gunHolder;
             currentGun = GetComponent<Shooting>().currentGun.gameObject;
             if (currentGun == null) return;
 
@@ -146,22 +148,22 @@ public class PlayerCamera : MonoBehaviour
 
     bool InPosition(Vector3 newPos, Vector3 newRot, float newFOV)
     {
-        if (currentGun != null)
+        if (gunHolder != null)
         {
             moveSpeed += aimSpeed * Time.fixedDeltaTime;
-            if (Vector3.Distance(currentGun.transform.localPosition, newPos) > 0.01f)
-                currentGun.transform.localPosition = Vector3.Lerp(currentGun.transform.localPosition, newPos, moveSpeed);
+            if (Vector3.Distance(gunHolder.transform.localPosition, newPos) > 0.01f)
+                gunHolder.transform.localPosition = Vector3.Lerp(gunHolder.transform.localPosition, newPos, moveSpeed);
             else
             {
-                currentGun.transform.localPosition = newPos;
+                gunHolder.transform.localPosition = newPos;
                 atPos = true;
             }
 
-            if (Quaternion.Angle(currentGun.transform.localRotation, Quaternion.Euler(newRot)) > 1)
-                currentGun.transform.localRotation = Quaternion.Lerp(currentGun.transform.localRotation, Quaternion.Euler(newRot), moveSpeed);
+            if (Quaternion.Angle(gunHolder.transform.localRotation, Quaternion.Euler(newRot)) > 1)
+                gunHolder.transform.localRotation = Quaternion.Lerp(gunHolder.transform.localRotation, Quaternion.Euler(newRot), moveSpeed);
             else
             {
-                currentGun.transform.localRotation = Quaternion.Euler(newRot);
+                gunHolder.transform.localRotation = Quaternion.Euler(newRot);
                 atRot = true;
             }
 
