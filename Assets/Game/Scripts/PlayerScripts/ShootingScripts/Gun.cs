@@ -23,6 +23,7 @@ public abstract class Gun : MonoBehaviour
     public Vector3 aimPosition;
 	public Vector3 aimRotation;
     public AudioClip shootingSound;
+    public AudioClip trailClip;
     public GameObject muzzleFlash;
 
     public PlayerManager playerManager;

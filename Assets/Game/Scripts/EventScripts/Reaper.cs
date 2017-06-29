@@ -44,7 +44,11 @@ public class Reaper : NetworkBehaviour
 
         if (targetPlayerObject != null)
         {
-            targetPlayer = targetPlayerObject.GetComponent<PlayerManager>();
+            if (targetPlayerObject.GetComponent<PlayerManager>() != targetPlayer)
+            {
+                targetPlayer = targetPlayerObject.GetComponent<PlayerManager>();
+                targetPlayer.ActivateReaperEffects();
+            }
 
             currentDistance = Vector3.Distance(targetPlayer.transform.position, this.transform.position);
 

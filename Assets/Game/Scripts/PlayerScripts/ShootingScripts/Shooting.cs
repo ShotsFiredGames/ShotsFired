@@ -77,6 +77,18 @@ public class Shooting : NetworkBehaviour
     }
 
     [Command]
+    public void CmdStopFiring()
+    {
+        RpcStopFiring();
+    }
+
+    [ClientRpc]
+    void RpcStopFiring()
+    {
+        shootingSource.PlayOneShot(currentGun.trailClip);
+    }
+
+    [Command]
     public void CmdStartMuzzleFlash()
     {
         if (muzzleFlash == null) return;
@@ -86,13 +98,13 @@ public class Shooting : NetworkBehaviour
     [ClientRpc]
     void RpcStartMuzzleFlash()
     {
-        StartCoroutine(MuzzleFlash());                                                                  //Activate the MuzzleFlash
+        StartCoroutine(MuzzleFlash());                                                                          //Activate the MuzzleFlash
     }
 
     IEnumerator MuzzleFlash()                                                                                   //Activate and DeActivate the muzzle flash
     {
         if (shootingSource.clip != null)
-            shootingSource.Play();
+            shootingSource.PlayOneShot(currentGun.shootingSound);
 
         muzzleFlash.SetActive(true);
         yield return new WaitForSeconds(.05f);

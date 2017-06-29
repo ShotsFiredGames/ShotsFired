@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.Networking;
 
 public class PlayerManager : NetworkBehaviour
@@ -19,6 +20,7 @@ public class PlayerManager : NetworkBehaviour
 
     public bool isArmed;
     bool isAiming;
+    bool isFiring;
     public Gun[] guns;
     public LayerMask layermask;
     byte shotsFired = 5;
@@ -33,6 +35,8 @@ public class PlayerManager : NetworkBehaviour
     [HideInInspector]
     public bool hasFlag;    
     CaptureTheFlag captureTheFlag;
+    bool currentlyBeingReaped;
+    public AudioMixer gameMixer;
 
     void Awake()
     {
@@ -198,12 +202,18 @@ public class PlayerManager : NetworkBehaviour
     void Firing()
     {
         if (!isArmed) return;
+        if (!isFiring)
+            isFiring = true;
         StartCoroutine(shooting.Firing());
         animationManager.IsFiring();
     }
 
+    [ClientCallback]
     void StopFiring()
     {
+        if (!isFiring) return;
+        isFiring = false;
+        shooting.CmdStopFiring();
         animationManager.StoppedFiring();
     }
 
@@ -302,6 +312,12 @@ public class PlayerManager : NetworkBehaviour
 
     public void Respawn()
     {
+        if(currentlyBeingReaped)
+        {
+            gameMixer.SetFloat("ReaperVolume", -80);
+            currentlyBeingReaped = false;
+        }
+
         animationManager.IsRespawning();
         isDead = false;
     }
@@ -318,7 +334,9 @@ public class PlayerManager : NetworkBehaviour
 
     public void ActivateReaperEffects()
     {
-
+        currentlyBeingReaped = true;
+        gameMixer.SetFloat("ReaperVolume", 20);
+        //Handle any camera effects
     }
 
     public void UpdateCursorLock()
