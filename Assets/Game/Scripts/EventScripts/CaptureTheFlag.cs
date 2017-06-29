@@ -12,6 +12,12 @@ public class CaptureTheFlag : GameEvent
     public byte pointsForCapture;
     public float flagResetTime;
 
+    [Space, Header("Audio Variables")]
+    public AudioSource flagSource;
+    public AudioClip pickupClip;
+    public AudioClip dropClip;
+    public AudioClip returnedClip;
+
     GameObject carrier;
     GameManager gameManager;
     Coroutine captureTheFlag;
@@ -40,6 +46,7 @@ public class CaptureTheFlag : GameEvent
         flag.transform.position = flagSpawnpoint.transform.position + new Vector3(0, 2, 0);
         flag.enabled = true;
         flag.gameObject.SetActive(true);
+        flagSource = flag.GetComponent<AudioSource>();
 
         gameEventDur = StartCoroutine(EventDuration());
     }
@@ -57,7 +64,7 @@ public class CaptureTheFlag : GameEvent
 
         flag.gameObject.SetActive(false);
         flag.isPickedUp = false;
-        flag.enabled = false;
+        flag.enabled = false;        
 
         if (carrier != null)
             carrier.GetComponent<PlayerManager>().hasFlag = false;
@@ -92,6 +99,8 @@ public class CaptureTheFlag : GameEvent
         carrier.GetComponent<PlayerManager>().hasFlag = true;
         flag.transform.SetParent(carrier.transform);
         flag.transform.position = carrier.transform.position + new Vector3(0, carrier.transform.localScale.y, 0);
+        if (flagSource != null)
+            flagSource.PlayOneShot(pickupClip);
     }
 
     [Command]
@@ -103,6 +112,9 @@ public class CaptureTheFlag : GameEvent
     [ClientRpc]
     void RpcReturnFlag()
     {
+        if (flagSource != null)
+            flagSource.PlayOneShot(returnedClip);
+        FlagReturned(carrier.name);
         StartCoroutine(CanBePickedUp());
         flag.transform.parent = flagSpawnpoint.transform;
         flag.transform.position = flagSpawnpoint.transform.position + new Vector3(0, 2, 0);
@@ -126,19 +138,8 @@ public class CaptureTheFlag : GameEvent
         flag.transform.parent = null;
         StartCoroutine(CanBePickedUp());
         resetTimer = StartCoroutine(ResetTimer());
-    }
-
-    [Command]
-    public void CmdFlagReturned()
-    {
-        RpcFlagReturned();
-    }
-
-    [ClientRpc]
-    public void RpcFlagReturned()
-    {
-        FlagReturned(carrier.name);
-        CmdReturnFlag();
+        if(flagSource != null)
+            flagSource.PlayOneShot(dropClip);
     }
 
     IEnumerator CanBePickedUp()

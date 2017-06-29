@@ -31,7 +31,7 @@ public class PlayerManager : NetworkBehaviour
     private bool m_cursorIsLocked = true;
 
     [HideInInspector]
-    public bool hasFlag;
+    public bool hasFlag;    
     CaptureTheFlag captureTheFlag;
 
     void Awake()
@@ -86,24 +86,17 @@ public class PlayerManager : NetworkBehaviour
             Moving();
 
         if (controls.Jump.WasPressed)
-        {
             Jumping();
-        }
 
         if (controls.Fire)
             Firing();
         else
             StopFiring();
 
-        if (controls.Aim && shooting.currentGun.canAim)
-        {
-            if (!isArmed) return;            
+        if (isArmed && controls.Aim && shooting.currentGun.canAim)           
             Aim();
-        }
         else
-        {            
             StopAiming();
-        }
         
         if(gameManager != null)
         {
@@ -152,10 +145,11 @@ public class PlayerManager : NetworkBehaviour
     }
 ////Player States////
 
-void ApplyMovementInput()
+    void ApplyMovementInput()
     {
         animationManager.ApplyMovementInput(controls.Move.X, controls.Move.Y, controls.Look.X, yRotationValue);
     }
+
     void Moving()
     {
         playerMovement.Move(controls.Move.X, controls.Move.Y);
@@ -322,6 +316,11 @@ void ApplyMovementInput()
         return null;
     }
 
+    public void ActivateReaperEffects()
+    {
+
+    }
+
     public void UpdateCursorLock()
     {
         //if the user set "lockCursor" we check & properly lock the cursos
@@ -332,13 +331,9 @@ void ApplyMovementInput()
     private void InternalLockUpdate()
     {
         if (Input.GetKeyUp(KeyCode.Escape))
-        {
             m_cursorIsLocked = false;
-        }
         else if (Input.GetMouseButtonUp(0))
-        {
             m_cursorIsLocked = true;
-        }
 
         if (m_cursorIsLocked)
         {

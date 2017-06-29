@@ -40,7 +40,7 @@ public class Reaper : NetworkBehaviour
 
     void FixedUpdate()
     {
-        targetPlayerObject = GameObject.Find(gameManager.GetWinningPlayer());
+        targetPlayerObject = PlayerWrangler.GetPlayer(gameManager.GetWinningPlayer()).gameObject;
 
         if (targetPlayerObject != null)
         {

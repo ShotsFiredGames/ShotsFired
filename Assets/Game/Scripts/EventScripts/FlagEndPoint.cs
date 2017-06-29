@@ -13,7 +13,7 @@ public class FlagEndPoint : MonoBehaviour
     {
         if(other.tag.Equals("Flag"))
         {
-           captureTheFlag.CmdFlagReturned();
+           captureTheFlag.CmdReturnFlag();
         }
     }
 }
