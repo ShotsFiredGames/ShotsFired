@@ -11,12 +11,11 @@ public class GameCustomization : MonoBehaviour
     public bool _isAmmoUnlimited;
     [Range(2, 20)]
     public float _abilityDuration;
-    [Range(2, 120)]
+    [Range(2, 1000)]
     public float _eventOccurenceRate;
     public byte _gameLength;
     public short _pointsToWin;
     public byte _pointsPerKill;
-
 
     public static List<string> currentEvents;
     public static List<string> currentAddOns;

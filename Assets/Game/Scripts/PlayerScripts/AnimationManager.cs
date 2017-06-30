@@ -64,11 +64,25 @@ public class AnimationManager : MonoBehaviour
     public void IsJumping()
     {
         anim.SetBool("IsJumping", true);
+
+        if (gunAnim == null) return;
+        gunAnim.SetBool("IsJumping", true);
     }
 
     public void IsLanding()
     {
+        print("Calleed");
         anim.SetBool("IsJumping", false);
+
+        if (gunAnim == null) return;
+        gunAnim.SetBool("IsJumping", false);
+        gunAnim.SetBool("IsFalling", false);
+    }
+
+    public void IsFalling()
+    {
+        if (gunAnim == null) return;
+        gunAnim.SetBool("IsFalling", true);
     }
 
     public void IsAiming()

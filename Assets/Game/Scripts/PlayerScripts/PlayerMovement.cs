@@ -33,6 +33,9 @@ public class PlayerMovement : NetworkBehaviour
     bool aimAssist;
     bool speedBoostActive;
     bool speedBoosted;
+    bool landed;
+    bool jumping;
+
 
     void Start ()
     {
@@ -60,7 +63,12 @@ public class PlayerMovement : NetworkBehaviour
     {
         if(Grounded())
         {
-            playerManager.Landed();
+            if(!landed)
+            { 
+                landed = true;
+                jumping = false;
+                playerManager.Landed();
+            }
 
             if (speed != GameCustomization.playerSpeed && !isUsingBoots)
             {
@@ -72,6 +80,10 @@ public class PlayerMovement : NetworkBehaviour
         }
         else
         {
+            if (!jumping)
+                playerManager.Falling();
+
+            landed = false;
             if (speed != airSpeed && !isUsingBoots)
                 speed = airSpeed;
 
@@ -124,6 +136,7 @@ public class PlayerMovement : NetworkBehaviour
 
     public void Jump()
     {
+        jumping = true;
         if (Grounded())
         {
             rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
@@ -200,7 +213,7 @@ public class PlayerMovement : NetworkBehaviour
         speedBoostActive = false;
     }
 
-bool Grounded()
+    bool Grounded()
     {
         return Physics.Raycast(transform.position, Vector3.down, distToGrounded, ground);
     }

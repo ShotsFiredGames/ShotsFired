@@ -178,6 +178,11 @@ public class PlayerManager : NetworkBehaviour
         animationManager.IsLanding();
     }
 
+    public void Falling()
+    {
+        animationManager.IsFalling();
+    }
+
     void Aim()
     {
         if (!isArmed) return;
