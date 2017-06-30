@@ -72,7 +72,6 @@ public class AnimationManager : MonoBehaviour
 
     public void IsLanding()
     {
-        print("Calleed");
         anim.SetBool("IsJumping", false);
 
         if (gunAnim == null) return;

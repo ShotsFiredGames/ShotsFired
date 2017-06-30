@@ -275,8 +275,7 @@ public class PlayerManager : NetworkBehaviour
         oldGun = newGun;
 
         if (newGun == null) Debug.LogError("Incorrect Name of Gun");
-
-        print("Weapon Picked up" + newGun.anim.name);
+        
         animationManager.SetGunAnimator(newGun.anim);
         shooting.SetWeapon(newGun);
         newGun.SetAmmo();
