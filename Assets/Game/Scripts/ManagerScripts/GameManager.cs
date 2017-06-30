@@ -202,6 +202,7 @@ public class GameManager : NetworkBehaviour
 
     IEnumerator EndGame()
     {
+        AnnouncerManager.instance.PlayEndGameClip();
         yield return new WaitUntil(ButtonPressed);
         LoadMainMenu();
     }

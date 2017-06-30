@@ -17,6 +17,9 @@ public class Reaper : NetworkBehaviour
     short currentHealth;
     short points;
 
+    short kills;
+    short deaths;
+
     private Transform spawnPoint;
     private float currentDistance;
     private float currentSpeed;
@@ -65,6 +68,7 @@ public class Reaper : NetworkBehaviour
                 {
                     targetPlayer.GetComponent<PlayerHealth>().CmdInstantDeath("Reaper", CollisionDetection.CollisionFlag.Back);
                     gameManager.CmdAddScore(GetTargetPlayer(), (short)-points);
+                    kills++;
                 }
             }
         }
@@ -100,7 +104,7 @@ public class Reaper : NetworkBehaviour
         currentHealth -= damage;
 
         if (currentHealth <= 0)
-            StartCoroutine(Respawn());
+            respawn = StartCoroutine(Respawn());
 
     }
 
@@ -117,7 +121,9 @@ public class Reaper : NetworkBehaviour
     IEnumerator Respawn()
     {
         transform.position = new Vector3(-1000, -1000, -1000);
-        yield return new WaitForSeconds(1f);
+        deaths++;
+        AnnouncerManager.instance.PlayKillingClip("Reaper");
+        yield return new WaitForSeconds(respawnTime);
         transform.position = spawnPoint.position;
         transform.rotation = spawnPoint.rotation;
         currentSpeed = speed;
@@ -130,5 +136,10 @@ public class Reaper : NetworkBehaviour
     {
         if (respawn != null)
             StopCoroutine(respawn);
+    }
+
+    public double GetKillDeathRatio()
+    {
+        return (kills / (double)deaths);
     }
 }

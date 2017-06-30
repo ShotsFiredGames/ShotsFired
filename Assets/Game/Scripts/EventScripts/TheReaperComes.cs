@@ -36,6 +36,7 @@ public class TheReaperComes : GameEvent
         reaper.StopRespawn();
         reaper.enabled = false;
         reaper.gameObject.SetActive(false);
+        AnnouncerManager.instance.PlayReaperEndClip(reaper.GetKillDeathRatio());
         EventManager.currentEvent = null;
     }
 }

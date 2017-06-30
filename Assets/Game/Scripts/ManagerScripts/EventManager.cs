@@ -47,7 +47,7 @@ public class EventManager : NetworkBehaviour
             }
         }
 
-        InvokeRepeating("ActivateNextEvent", GameCustomization.eventOccurenceRate, GameCustomization.eventOccurenceRate);
+        InvokeRepeating("ActivateNextEvent", 10, GameCustomization.eventOccurenceRate);
 	}
 
     [ServerCallback]
@@ -69,6 +69,7 @@ public class EventManager : NetworkBehaviour
         {
             currentEvent = nextEvent;
             currentEvent.StartEvent();
+            AnnouncerManager.instance.PlayStartEventClip(currentEvent.nameEvent);
         }
 
         currentAddOn = addOns[_newAddOn];

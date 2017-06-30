@@ -69,6 +69,7 @@ public class CaptureTheFlag : GameEvent
         if (carrier != null)
             carrier.GetComponent<PlayerManager>().hasFlag = false;
 
+        AnnouncerManager.instance.PlayCTFEndClip();
         EventManager.currentEvent = null;
     }
 
