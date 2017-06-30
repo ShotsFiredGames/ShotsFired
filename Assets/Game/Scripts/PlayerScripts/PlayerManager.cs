@@ -282,9 +282,9 @@ public class PlayerManager : NetworkBehaviour
         newGun.SetAmmo();
 
         newGun.SetActiveGun(true);
-
-        if (isAiming)
-            Aim();
+        isAiming = false;
+        playerCamera.StopAim();
+        animationManager.StoppedAiming();
     }
 
     [Command]
