@@ -51,9 +51,20 @@ public class PickUpLoacation : NetworkBehaviour
     [Command]
     public void CmdActivateMimic()
     {
-        Debug.LogError(activePickUp);
+        if (activePickUp.GetComponent<PickUp>() == null)
+        {
+            activePickUp = Instantiate(pickUpTypes[Random.Range(0, pickUpTypes.Length)], transform.position + spawnOffset, Quaternion.identity) as GameObject;
+            NetworkServer.Spawn(activePickUp);
+        }
+
         activePickUp.tag = ("Mimic");
-        print(activePickUp.tag);
+
+        Rotate rotate = activePickUp.GetComponent<Rotate>();
+
+        if (rotate == null)
+            rotate = GetComponentInChildren<Rotate>();
+
+        rotate.isMimic = true;
     }
 
     void UnspawnPickup()
