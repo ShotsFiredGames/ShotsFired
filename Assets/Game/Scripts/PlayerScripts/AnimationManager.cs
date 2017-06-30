@@ -3,11 +3,17 @@
 public class AnimationManager : MonoBehaviour
 {
     Animator anim;
+    Animator gunAnim;
 
 	void Start ()
     {
         anim = GetComponent<Animator>();	
 	}
+
+    public void SetGunAnimator(Animator _gunAnim)
+    {
+        gunAnim = _gunAnim;
+    }
     
     public void Armed()
     {
@@ -33,6 +39,10 @@ public class AnimationManager : MonoBehaviour
     {
         anim.SetBool("IsSprinting", false);
         anim.SetBool("IsIdle", true);
+
+        if (gunAnim == null) return;
+        gunAnim.SetBool("IsSprinting", false);
+        gunAnim.SetBool("IsIdle", true);
     }
 
     public void IsCrouchIdle()
@@ -45,6 +55,10 @@ public class AnimationManager : MonoBehaviour
     {
         anim.SetBool("IsIdle", false);
         anim.SetBool("IsSprinting", false);
+
+        if (gunAnim == null) return;
+        gunAnim.SetBool("IsIdle", false);
+        gunAnim.SetBool("IsSprinting", false);
     }
 
     public void IsJumping()
@@ -60,21 +74,33 @@ public class AnimationManager : MonoBehaviour
     public void IsAiming()
     {
         anim.SetBool("IsAiming", true);
+
+        if (gunAnim == null) return;
+        gunAnim.SetBool("IsAiming", true);
     }
 
     public void StoppedAiming()
     {
         anim.SetBool("IsAiming", false);
+
+        if (gunAnim == null) return;
+        gunAnim.SetBool("IsAiming", false);
     }
 
     public void IsFiring()
     {
         anim.SetBool("IsFiring", true);
+
+        if (gunAnim == null) return;
+        gunAnim.SetBool("IsFiring", true);
     }
 
     public void StoppedFiring()
     {
         anim.SetBool("IsFiring", false);
+
+        if (gunAnim == null) return;
+        gunAnim.SetBool("IsFiring", false);
     }
 
     public void IsDead(CollisionDetection.CollisionFlag collisionLocation)

@@ -25,6 +25,7 @@ public abstract class Gun : MonoBehaviour
     public AudioClip shootingSound;
     public AudioClip trailClip;
     public GameObject muzzleFlash;
+    public Animator anim;
 
     public PlayerManager playerManager;
 
