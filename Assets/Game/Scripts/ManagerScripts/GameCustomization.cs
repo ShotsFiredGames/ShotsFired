@@ -14,7 +14,7 @@ public class GameCustomization : MonoBehaviour
     [Range(2, 120)]
     public float _eventOccurenceRate;
     public byte _gameLength;
-    public byte _pointsToWin;
+    public short _pointsToWin;
     public byte _pointsPerKill;
 
 
@@ -27,7 +27,7 @@ public class GameCustomization : MonoBehaviour
     public static float abilityDuration;
     public static float eventOccurenceRate;
     public static byte gameLength;
-    public static byte pointsToWin;
+    public static short pointsToWin;
     public static byte pointsPerKill;
 
     private void Awake()
