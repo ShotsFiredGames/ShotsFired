@@ -7,7 +7,7 @@ public class Shooting : NetworkBehaviour
 {
     public Gun currentGun;
     public GameObject gunHolder;
-    public GameObject bulletHole;
+    GameObject bulletHole;
     GameObject muzzleFlash;
     public LayerMask layermask;
     public Image hitMarker;
@@ -119,10 +119,19 @@ public class Shooting : NetworkBehaviour
     }
 
     [Command]
-    public void CmdBulletHole(Vector3 position, Quaternion rotation)
+    public void CmdBulletHole(Vector3 position, Quaternion rotation, string hitType)
     {
-        GameObject hole = Instantiate(bulletHole, position, rotation) as GameObject;
-        NetworkServer.Spawn(hole);
+        switch (hitType)
+        {
+            case "Wall":
+                GameObject wallHit = Instantiate(currentGun.wallHit, position, rotation) as GameObject;
+                NetworkServer.Spawn(wallHit);
+                break;
+            case "Player":
+                GameObject playerHit = Instantiate(currentGun.playerHit, position, rotation) as GameObject;
+                NetworkServer.Spawn(playerHit);
+                break;
+        }
     }
 
     [Command]
@@ -149,6 +158,9 @@ public class Shooting : NetworkBehaviour
         {
             StartCoroutine(HitMarker());
             CmdPlayerShot(hit.transform.root.name, hit.transform.name, _damage);
+            Vector3 position = hit.point + (hit.normal * .1f);
+            Quaternion rotation = Quaternion.LookRotation(hit.normal);
+            CmdBulletHole(position, rotation, "Player");
         }
         else if (hit.transform.tag.Equals("Reaper"))
         {
@@ -159,7 +171,7 @@ public class Shooting : NetworkBehaviour
         {
             Vector3 position = hit.point + (hit.normal * .1f);
             Quaternion rotation = Quaternion.LookRotation(hit.normal);
-            CmdBulletHole(position, rotation);
+            CmdBulletHole(position, rotation, "Wall");
         }
     }
 
