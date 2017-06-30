@@ -45,6 +45,7 @@ public class AnnouncerManager : MonoBehaviour
     public AudioClip[] flagCaptured;
     public AudioClip[] flagDropped;
     public AudioClip[] flagPickedUp;
+    public AudioClip[] flagReturned;
 
     [Header("Reaper Sound Clips")]
     public AudioClip[] reaperStart;
@@ -79,8 +80,11 @@ public class AnnouncerManager : MonoBehaviour
             PlayRandomClipFromArray(reaperKill);
         else if (killer.Equals("Environment"))
             PlayRandomClipFromArray(killedByEnvironment);
+
+        /* This got annoying to hear
         else
             PlayRandomClipFromArray(killedByPlayer);
+            */
     }
 
     public void PlayKillingClip(string victim)
@@ -125,6 +129,11 @@ public class AnnouncerManager : MonoBehaviour
     public void PlayFlagCapturedClip()
     {
         PlayRandomClipFromArray(flagCaptured);
+    }
+
+    public void PlayFlagRetunedClip()
+    {
+        PlayRandomClipFromArray(flagReturned);
     }
 
     public void PlayFlagSeizedState(bool isHeld)

@@ -100,6 +100,8 @@ public class CaptureTheFlag : GameEvent
         carrier.GetComponent<PlayerManager>().hasFlag = true;
         flag.transform.SetParent(carrier.transform);
         flag.transform.position = carrier.transform.position + new Vector3(0, carrier.transform.localScale.y, 0);
+        AnnouncerManager.instance.PlayFlagSeizedState(true);
+
         if (flagSource != null)
             flagSource.PlayOneShot(pickupClip);
     }
@@ -119,6 +121,7 @@ public class CaptureTheFlag : GameEvent
         StartCoroutine(CanBePickedUp());
         flag.transform.parent = flagSpawnpoint.transform;
         flag.transform.position = flagSpawnpoint.transform.position + new Vector3(0, 2, 0);
+        AnnouncerManager.instance.PlayFlagRetunedClip();
 
         if (carrier != null)
             carrier.GetComponent<PlayerManager>().hasFlag = false;
@@ -139,7 +142,9 @@ public class CaptureTheFlag : GameEvent
         flag.transform.parent = null;
         StartCoroutine(CanBePickedUp());
         resetTimer = StartCoroutine(ResetTimer());
-        if(flagSource != null)
+
+        AnnouncerManager.instance.PlayFlagSeizedState(false);
+        if (flagSource != null)
             flagSource.PlayOneShot(dropClip);
     }
 
