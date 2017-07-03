@@ -35,7 +35,6 @@ public class PlayerManager : NetworkBehaviour
     [HideInInspector]
     public bool hasFlag;    
     CaptureTheFlag captureTheFlag;
-    bool currentlyBeingReaped;
     public AudioMixer gameMixer;
 
     void Awake()
@@ -318,13 +317,8 @@ public class PlayerManager : NetworkBehaviour
 
     public void Respawn()
     {
-        if(currentlyBeingReaped)
-        {
-            gameMixer.SetFloat("ReaperVolume", -80);
-            currentlyBeingReaped = false;
-        }
-
         animationManager.IsRespawning();
+        ReaperEffectsActivate(false);
         isDead = false;
     }
 
@@ -338,11 +332,19 @@ public class PlayerManager : NetworkBehaviour
         return null;
     }
 
-    public void ActivateReaperEffects()
+    public void ReaperEffectsActivate(bool isActive)
     {
-        currentlyBeingReaped = true;
-        gameMixer.SetFloat("ReaperVolume", 20);
-        //Handle any camera effects
+        if (isActive)
+        {
+            gameMixer.SetFloat("ReaperVolume", 20);
+            //Handle any camera effects
+        }
+        else
+        {
+            gameMixer.SetFloat("ReaperVolume", -80);
+            //turn off effects
+        }
+
     }
 
     public void UpdateCursorLock()
