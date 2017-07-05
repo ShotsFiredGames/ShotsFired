@@ -131,31 +131,20 @@ public class GameManager : NetworkBehaviour
     {
         if (!playerScores.ContainsKey(player)) return;
         playerScores[player] += amount;
+
+        if (playerScores[player] < 0) //check to prevent scores from being negative
+            playerScores[player] = 0;
+
         CheckScores();
     }
 
     void CheckScores()
     {
-        string winningPlayer = "";
-        short lastAmt = 0;
-        short killAmount = -1;
-        foreach(string name in playerScores.Keys)
+        string winningPlayer = GetWinningPlayer();
+
+        if (playerScores[winningPlayer] >= GameCustomization.pointsToWin)
         {
-            lastAmt = playerScores[name];
-            if (playerScores[name] >= GameCustomization.pointsToWin)
-            {
-                winningPlayer = name;
-                gameOver = true;
-                break;
-            }
-            else
-            {                
-                if(lastAmt > killAmount)
-                {
-                    winningPlayer = name;
-                    killAmount = lastAmt;
-                }
-            }            
+            gameOver = true;
         }
 
         if (gameOver)
