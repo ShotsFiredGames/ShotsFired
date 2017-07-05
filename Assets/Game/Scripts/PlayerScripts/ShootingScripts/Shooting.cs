@@ -229,4 +229,28 @@ public class Shooting : NetworkBehaviour
             isOvercharged = false;
         }
     }
+
+    public void Aiming()
+    {
+        if (currentGun == null) return;
+        currentGun.unArmedReticle.SetActive(false);
+        currentGun.armedReticle.SetActive(false);
+        currentGun.scopedReticle.SetActive(true);
+    }
+
+    public void NotAiming()
+    {
+        if (currentGun == null) return;
+        currentGun.unArmedReticle.SetActive(false);
+        currentGun.scopedReticle.SetActive(false);
+        currentGun.armedReticle.SetActive(true);
+    }
+
+    public void UnArmed()
+    {
+        if (currentGun == null) return;
+        currentGun.scopedReticle.SetActive(false);
+        currentGun.armedReticle.SetActive(false);
+        currentGun.unArmedReticle.SetActive(true);
+    }
 }

@@ -189,6 +189,7 @@ public class PlayerManager : NetworkBehaviour
         if(!isAiming)
         {
             isAiming = true;
+            shooting.Aiming();
             playerCamera.Aim();
             animationManager.IsAiming();
         }        
@@ -198,6 +199,7 @@ public class PlayerManager : NetworkBehaviour
     {
         if(isAiming)
         {
+            shooting.NotAiming();
             playerCamera.StopAim();
             animationManager.StoppedAiming();
             isAiming = false;
@@ -266,8 +268,12 @@ public class PlayerManager : NetworkBehaviour
     [ClientRpc]
     public void RpcWeaponPickedUp(string gunName)
     {
-        if(oldGun != null)
-        oldGun.SetActiveGun(false);
+        shooting.NotAiming();
+        if (oldGun != null)
+        {
+            oldGun.anim.SetBool("IsFiring", false);
+            oldGun.SetActiveGun(false);
+        }
 
         isArmed = true;
         animationManager.Armed();
@@ -296,6 +302,7 @@ public class PlayerManager : NetworkBehaviour
     public void RpcDisarm()
     {
         isArmed = false;
+        shooting.UnArmed();
         shooting.RemoveWeapon();
         animationManager.Disarmed();
         playerCamera.SetFieldOfView(60);

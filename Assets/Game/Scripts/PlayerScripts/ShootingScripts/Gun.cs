@@ -45,6 +45,10 @@ public abstract class Gun : MonoBehaviour
     public GameObject thirdPersonGunBarrel;
     public GameObject thirdPersonMuzzle;
 
+    public GameObject unArmedReticle;
+    public GameObject armedReticle;
+    public GameObject scopedReticle;
+
     public Animator shootingAnim;
 
     //public abstract IEnumerator Fire();
