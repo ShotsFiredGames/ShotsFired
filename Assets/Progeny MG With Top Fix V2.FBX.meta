@@ -1,0 +1,200 @@
+fileFormatVersion: 2
+guid: f5d5863b0b9276745a61d4d0c50e52f7
+timeCreated: 1499015998
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: '"Floater" Coupling?'
+    100002: Barrel
+    100004: Body v1
+    100006: Box001
+    100008: Cylinder001
+    100010: Cylinder002
+    100012: Cylinder003
+    100014: Cylinder004
+    100016: Cylinder005
+    100018: Energy Epicenter
+    100020: Handle
+    100022: Object001
+    100024: Object002
+    100026: Object004
+    100028: Object005
+    100030: Object006
+    100032: Object007
+    100034: Object008
+    100036: Object009
+    100038: Object010
+    100040: Object011
+    100042: Object012
+    100044: //RootNode
+    100046: Side Panels v002
+    100048: Side Panels v1
+    100050: Top Panels
+    100052: Top Rail
+    400000: '"Floater" Coupling?'
+    400002: Barrel
+    400004: Body v1
+    400006: Box001
+    400008: Cylinder001
+    400010: Cylinder002
+    400012: Cylinder003
+    400014: Cylinder004
+    400016: Cylinder005
+    400018: Energy Epicenter
+    400020: Handle
+    400022: Object001
+    400024: Object002
+    400026: Object004
+    400028: Object005
+    400030: Object006
+    400032: Object007
+    400034: Object008
+    400036: Object009
+    400038: Object010
+    400040: Object011
+    400042: Object012
+    400044: //RootNode
+    400046: Side Panels v002
+    400048: Side Panels v1
+    400050: Top Panels
+    400052: Top Rail
+    2300000: '"Floater" Coupling?'
+    2300002: Body v1
+    2300004: Box001
+    2300006: Cylinder001
+    2300008: Cylinder002
+    2300010: Cylinder004
+    2300012: Cylinder005
+    2300014: Energy Epicenter
+    2300016: Handle
+    2300018: Object001
+    2300020: Object002
+    2300022: Object004
+    2300024: Object005
+    2300026: Object007
+    2300028: Object008
+    2300030: Object009
+    2300032: Object010
+    2300034: Object011
+    2300036: Object012
+    2300038: Side Panels v002
+    2300040: Side Panels v1
+    2300042: Top Panels
+    2300044: Top Rail
+    3300000: '"Floater" Coupling?'
+    3300002: Body v1
+    3300004: Box001
+    3300006: Cylinder001
+    3300008: Cylinder002
+    3300010: Cylinder004
+    3300012: Cylinder005
+    3300014: Energy Epicenter
+    3300016: Handle
+    3300018: Object001
+    3300020: Object002
+    3300022: Object004
+    3300024: Object005
+    3300026: Object007
+    3300028: Object008
+    3300030: Object009
+    3300032: Object010
+    3300034: Object011
+    3300036: Object012
+    3300038: Side Panels v002
+    3300040: Side Panels v1
+    3300042: Top Panels
+    3300044: Top Rail
+    4300000: Body v1
+    4300002: '"Floater" Coupling?'
+    4300004: Energy Epicenter
+    4300006: Handle
+    4300008: Side Panels v1
+    4300010: Top Rail
+    4300012: Top Panels
+    4300014: Object001
+    4300016: Object002
+    4300018: Object004
+    4300020: Object005
+    4300022: Object007
+    4300024: Object008
+    4300026: Object009
+    4300028: Cylinder001
+    4300030: Cylinder002
+    4300032: Object010
+    4300034: Object011
+    4300036: Object012
+    4300038: Side Panels v002
+    4300040: Cylinder004
+    4300042: Cylinder005
+    4300044: Box001
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
