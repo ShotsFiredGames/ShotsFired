@@ -28,6 +28,7 @@ public class EventManager : NetworkBehaviour
     void OnValidate()
     {
         AllAddOns = allAddOns;
+        GameEvent.AllAddOns = allAddOns;
     }
     
     void Start ()
