@@ -1,4 +1,6 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -6,6 +8,20 @@ public abstract class GameEvent : NetworkBehaviour {
 
     public float duration;
     public string nameEvent;
+    public List<AddOn> allAddOns;
+    private AddOn _addOn;
+
+    internal List<AddOn> Values
+    {
+        get { return this.allAddOns; }
+    }
+
+    [TypeConverter(typeof(ValueTypeConverter))]
+    public AddOn Value
+    {
+        get { return this._addOn; }
+        set { this._addOn = value; }
+    }
 
     public abstract void StartEvent();
     public abstract void EndEvent();
@@ -32,4 +48,23 @@ public abstract class GameEvent : NetworkBehaviour {
         EndEvent();
     }
 
+}
+
+class ValueTypeConverter : TypeConverter
+{
+    public override StandardValuesCollection GetStandardValues(ITypeDescriptorContext context)
+    {
+        List<AddOn> myValues = (context.Instance as GameEvent).Values;
+        return new StandardValuesCollection(myValues);
+    }
+
+    public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+    {
+        return true;
+    }
+
+    public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+    {
+        return true;
+    }
 }

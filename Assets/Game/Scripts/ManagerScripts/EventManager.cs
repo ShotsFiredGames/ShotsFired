@@ -7,8 +7,15 @@ public class EventManager : NetworkBehaviour
     public GameEvent[] allEvents;
     public static GameEvent currentEvent;
     GameEvent nextEvent;
+    
+    public List<AddOn> allAddOns;
 
-    public AddOn[] allAddOns;
+    public static List<AddOn> AllAddOns
+    {
+        get;
+        protected set;
+    }
+
     public static AddOn currentAddOn;
     //AddOn nextAddOn;
 
@@ -17,6 +24,11 @@ public class EventManager : NetworkBehaviour
 
     List<string> eventNames;
     List<string> addOnNames;
+
+    void OnValidate()
+    {
+        AllAddOns = allAddOns;
+    }
     
     void Start ()
     {
