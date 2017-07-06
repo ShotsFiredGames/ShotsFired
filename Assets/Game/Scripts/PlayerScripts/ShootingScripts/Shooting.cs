@@ -12,6 +12,7 @@ public class Shooting : NetworkBehaviour
     public LayerMask layermask;
     public Image hitMarker;
     public AudioSource shootingSource;
+    public GameObject baseReticle;
 
     GameObject cam;
     Coroutine overcharged;
@@ -72,6 +73,8 @@ public class Shooting : NetworkBehaviour
         if(currentGun != null)
         {
             currentGun.isFiring = false;
+            currentGun.aimReticle.SetActive(false);
+            currentGun.gunReticle.SetActive(false);
             currentGun.SetActiveGun(false);
         }
     }

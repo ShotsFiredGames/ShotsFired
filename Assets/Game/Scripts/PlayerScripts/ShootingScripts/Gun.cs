@@ -28,6 +28,8 @@ public abstract class Gun : MonoBehaviour
     public Animator anim;
     public GameObject playerHit;
     public GameObject wallHit;
+    public GameObject gunReticle;
+    public GameObject aimReticle;
 
     public PlayerManager playerManager;
 

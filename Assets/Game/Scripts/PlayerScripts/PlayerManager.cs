@@ -189,8 +189,15 @@ public class PlayerManager : NetworkBehaviour
         if(!isAiming)
         {
             isAiming = true;
+
             playerCamera.Aim();
             animationManager.IsAiming();
+            if (isArmed)
+            {
+                shooting.currentGun.gunReticle.SetActive(false);
+                shooting.currentGun.aimReticle.SetActive(true);
+            }
+            else EnableBaseReticle();
         }        
     }
 
@@ -201,6 +208,13 @@ public class PlayerManager : NetworkBehaviour
             playerCamera.StopAim();
             animationManager.StoppedAiming();
             isAiming = false;
+            if (isArmed)
+            {
+                shooting.currentGun.aimReticle.SetActive(false);
+                shooting.currentGun.gunReticle.SetActive(true);
+            }
+            else
+                EnableBaseReticle();
         }        
     }
 
@@ -278,6 +292,9 @@ public class PlayerManager : NetworkBehaviour
         
         animationManager.SetGunAnimator(newGun.anim);
         shooting.SetWeapon(newGun);
+
+        shooting.baseReticle.SetActive(false);
+        shooting.currentGun.gunReticle.SetActive(true);
         newGun.SetAmmo();
 
         newGun.SetActiveGun(true);
@@ -299,8 +316,17 @@ public class PlayerManager : NetworkBehaviour
         shooting.RemoveWeapon();
         animationManager.Disarmed();
         playerCamera.SetFieldOfView(60);
+        EnableBaseReticle();
     }
 
+    void EnableBaseReticle()
+    {
+        oldGun.aimReticle.SetActive(false);
+        oldGun.gunReticle.SetActive(false);
+        shooting.currentGun.aimReticle.SetActive(false);
+        shooting.currentGun.gunReticle.SetActive(false);
+        shooting.baseReticle.SetActive(true);
+    }
     
     public void Dead(string damageSource, CollisionDetection.CollisionFlag collisionLocation)
     {
