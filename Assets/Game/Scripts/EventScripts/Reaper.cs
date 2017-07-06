@@ -12,6 +12,8 @@ public class Reaper : NetworkBehaviour
     [Header("Player Interaction")]
     public float distanceToAttack;
     public float shotSpeedIncrease;
+    [Tooltip("The vertical offset for the players. 0 means feet.")]
+    public float attackingOffset;
     
 
     [SyncVar]
@@ -45,7 +47,8 @@ public class Reaper : NetworkBehaviour
             if (currentDistance > distanceToAttack)
             {
                 float step = currentSpeed * Time.deltaTime / 2;
-                transform.position = Vector3.MoveTowards(transform.position, targetPlayer.transform.position, step);
+                Vector3 playerPosition = new Vector3(targetPlayer.transform.position.x, targetPlayer.transform.position.y + attackingOffset, targetPlayer.transform.position.z);
+                transform.position = Vector3.MoveTowards(transform.position, playerPosition, step);
             }
             else
             {
