@@ -8,7 +8,7 @@ public class Reaper : NetworkBehaviour
     public float speed;
     public float respawnTime;
     public short health;
-    public bool canDie;
+    public bool canDie = true;
     [Header("Player Interaction")]
     public float distanceToAttack;
     public float shotSpeedIncrease;

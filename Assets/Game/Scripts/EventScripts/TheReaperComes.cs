@@ -59,7 +59,10 @@ public class TheReaperComes : GameEvent
         foreach (GameObject go in objectsToSetActive)
             go.SetActive(true);
 
-        reaper.StopReaper();
+        foreach (Reaper reaps in reapers)
+        {
+            reaps.StopReaper();
+        }
         EventManager.currentEvent = null;
     }
 }
