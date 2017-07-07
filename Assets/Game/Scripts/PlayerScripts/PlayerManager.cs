@@ -196,6 +196,7 @@ public class PlayerManager : NetworkBehaviour
             {
                 shooting.currentGun.gunReticle.SetActive(false);
                 shooting.currentGun.aimReticle.SetActive(true);
+				shooting.currentGun.reticleAnimator.SetBool ("Scoped", true);
             }
             else EnableBaseReticle();
         }        
@@ -212,6 +213,7 @@ public class PlayerManager : NetworkBehaviour
             {
                 shooting.currentGun.aimReticle.SetActive(false);
                 shooting.currentGun.gunReticle.SetActive(true);
+				shooting.currentGun.reticleAnimator.SetBool ("Scoped", false);
             }
             else
                 EnableBaseReticle();
@@ -288,13 +290,20 @@ public class PlayerManager : NetworkBehaviour
         Gun newGun = FindGun(gunName);
         oldGun = newGun;
 
+		oldGun.reticleAnimator.SetLayerWeight (oldGun.reticleLayerNum, 1);
+
+		for (int i = 0; i < oldGun.reticleAnimator.layerCount; i++) 
+		{
+			oldGun.reticleAnimator.SetLayerWeight (i, 0);
+		}
+
         if (newGun == null) Debug.LogError("Incorrect Name of Gun");
         
         animationManager.SetGunAnimator(newGun.anim);
         shooting.SetWeapon(newGun);
 
-        shooting.baseReticle.SetActive(false);
         shooting.currentGun.gunReticle.SetActive(true);
+		shooting.currentGun.reticleAnimator.SetBool ("WeaponEquipped", true);
         newGun.SetAmmo();
 
         newGun.SetActiveGun(true);
@@ -314,18 +323,22 @@ public class PlayerManager : NetworkBehaviour
     {
         isArmed = false;
         shooting.RemoveWeapon();
+		EnableBaseReticle ();
         animationManager.Disarmed();
         playerCamera.SetFieldOfView(60);
-        EnableBaseReticle();
     }
 
     void EnableBaseReticle()
-    {
+	{
+
+		oldGun.reticleAnimator.SetBool ("Scoped", false);
+		oldGun.reticleAnimator.SetBool ("WeaponEquipped", false);
+		shooting.currentGun.reticleAnimator.SetBool ("Scoped", false);
+		shooting.currentGun.reticleAnimator.SetBool ("WeaponEquipped", false);
         oldGun.aimReticle.SetActive(false);
         oldGun.gunReticle.SetActive(false);
         shooting.currentGun.aimReticle.SetActive(false);
         shooting.currentGun.gunReticle.SetActive(false);
-        shooting.baseReticle.SetActive(true);
     }
     
     public void Dead(string damageSource, CollisionDetection.CollisionFlag collisionLocation)
