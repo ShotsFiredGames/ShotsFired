@@ -3,31 +3,33 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-[ExecuteInEditMode]
-[CustomEditor(typeof(EventManager))]
+[ExecuteInEditMode, CustomEditor(typeof(CaptureTheFlag))]
 public class GameEventEditor : Editor {
 
     int flags = 0;
     List<string> options;
-    SerializedProperty allAddOns;
+    //SerializedProperty allAddOns;
+    CaptureTheFlag ctf;
 
     void OnEnable()
     {
-        allAddOns = serializedObject.FindProperty("AllAddOns");
-    }
-
-    void Update()
-    {
-        for(int i = 0; i < allAddOns.arraySize; i++)
-        {
-            if (options.Capacity != allAddOns.arraySize)
-                options.Capacity = allAddOns.arraySize;
-            options[i] = allAddOns.GetArrayElementAtIndex(i).ToString();
-        }        
+        options = new List<string>();
+        //allAddOns = serializedObject.FindProperty("allAddOns");
+        ctf = (CaptureTheFlag)target;
     }
 
     public override void OnInspectorGUI()
     {
-        flags = EditorGUI.MaskField(new Rect(0, 0, 300, 20), new GUIContent("Player Flags"), flags, options.ToArray(), EditorStyles.popup);
+        Debug.Log("options: " + options.Capacity);
+        Debug.Log(ctf.allAddOns.Capacity);
+        for (int i = 0; i < ctf.allAddOns.Count; i++)
+        {
+            if (options.Capacity != ctf.allAddOns.Count)
+                options.Capacity = ctf.allAddOns.Count;
+            options[i] = ctf.allAddOns[i].ToString();
+        }
+        Debug.Log("options: " + options.Capacity);
+        Debug.Log(ctf.allAddOns.Capacity);
+        flags = EditorGUI.MaskField(new Rect(0, 250, 300, 20), new GUIContent("Player Flags"), flags, options.ToArray(), EditorStyles.popup);
     }
 }

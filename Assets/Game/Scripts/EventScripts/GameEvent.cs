@@ -9,12 +9,6 @@ public abstract class GameEvent : NetworkBehaviour {
     public string nameEvent;
     public List<AddOn> allAddOns;
 
-    public static List<AddOn> AllAddOns
-    {
-        get;
-        set;
-    }
-
     public abstract void StartEvent();
     public abstract void EndEvent();
 

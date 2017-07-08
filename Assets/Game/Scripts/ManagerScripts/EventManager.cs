@@ -4,6 +4,9 @@ using UnityEngine.Networking;
 
 public class EventManager : NetworkBehaviour
 {
+    public delegate void OnAddOnsAdded(List<AddOn> addOns);
+    public static event OnAddOnsAdded OnAddOnAdded;
+
     public GameEvent[] allEvents;
     public static GameEvent currentEvent;
     GameEvent nextEvent;
@@ -27,8 +30,13 @@ public class EventManager : NetworkBehaviour
 
     void OnValidate()
     {
+        Debug.Log("EM AddOn Added");
         AllAddOns = allAddOns;
-        GameEvent.AllAddOns = allAddOns;
+        for (int i = 0; i < allEvents.Length; i++)
+        {
+            allEvents[i].allAddOns = allAddOns;
+        }
+        //OnAddOnAdded(allAddOns);
     }
     
     void Start ()

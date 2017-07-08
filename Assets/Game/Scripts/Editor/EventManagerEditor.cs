@@ -11,7 +11,7 @@ public class EventManagerEditor : Editor {
 
     void OnEnable()
     {
-        allAddOns = serializedObject.FindProperty("AllAddOns");
+        allAddOns = serializedObject.FindProperty("allAddOns");
     }
 
     public override void OnInspectorGUI()
