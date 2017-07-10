@@ -321,6 +321,7 @@ public class PlayerManager : NetworkBehaviour
 
     void EnableBaseReticle()
     {
+        if (oldGun == null) return;
         oldGun.aimReticle.SetActive(false);
         oldGun.gunReticle.SetActive(false);
         shooting.currentGun.aimReticle.SetActive(false);
