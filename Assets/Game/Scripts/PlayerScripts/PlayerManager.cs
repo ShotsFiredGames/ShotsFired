@@ -70,7 +70,7 @@ public class PlayerManager : NetworkBehaviour
     void FixedUpdate()
     {
         RaycastHit hit;
-        if (isArmed && Physics.CapsuleCast(myCamera.transform.position, myCamera.transform.forward * 1000,1,myCamera.transform.forward, out hit, Mathf.Infinity, layermask))
+        if (isArmed && Physics.CapsuleCast(myCamera.transform.position, myCamera.transform.forward * 1000,3,myCamera.transform.forward, out hit, Mathf.Infinity, layermask))
             playerMovement.AimAssist();
         else
             playerMovement.StopAimAssist();
