@@ -30,6 +30,7 @@ public abstract class Gun : MonoBehaviour
     public GameObject wallHit;
     public GameObject gunReticle;
     public GameObject aimReticle;
+	public float muzzleFlashTimer;
 
     public PlayerManager playerManager;
 
