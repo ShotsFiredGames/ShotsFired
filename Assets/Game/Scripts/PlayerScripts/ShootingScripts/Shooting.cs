@@ -10,7 +10,7 @@ public class Shooting : NetworkBehaviour
     GameObject bulletHole;
     GameObject muzzleFlash;
     public LayerMask layermask;
-    public Image hitMarker;
+    public GameObject hitMarker;
     public AudioSource shootingSource;
     public GameObject baseReticle;
 
@@ -122,9 +122,9 @@ public class Shooting : NetworkBehaviour
 
     IEnumerator HitMarker()
     {
-        hitMarker.enabled = true;
+        hitMarker.SetActive(true);
         yield return new WaitForSeconds(0.05f);
-        hitMarker.enabled = false;
+        hitMarker.SetActive(false);
     }
 
     [Command]
