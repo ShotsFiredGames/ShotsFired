@@ -32,6 +32,7 @@ public abstract class Gun : MonoBehaviour
     public GameObject aimReticle;
 	public Animator reticleAnimator;
 	public int reticleLayerNum;
+	public float muzzleFlashTimer;
 
     public PlayerManager playerManager;
 

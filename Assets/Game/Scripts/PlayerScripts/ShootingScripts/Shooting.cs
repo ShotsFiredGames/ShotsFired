@@ -116,7 +116,7 @@ public class Shooting : NetworkBehaviour
             shootingSource.PlayOneShot(currentGun.shootingSound);
 
         muzzleFlash.SetActive(true);
-        yield return new WaitForSeconds(.05f);
+		yield return new WaitForSeconds(currentGun.muzzleFlashTimer);
         muzzleFlash.SetActive(false);
     }
 
