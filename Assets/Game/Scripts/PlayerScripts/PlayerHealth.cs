@@ -11,6 +11,7 @@ public class PlayerHealth : NetworkBehaviour
     public Image dmgIndicatorRight;
     public Image dmgIndicatorTop;
     public Image dmgIndicatorBottom;
+    public Material dmgEffect;
 
     public AudioSource source;
     public AudioClip[] hitEffects;
@@ -140,7 +141,9 @@ public class PlayerHealth : NetworkBehaviour
     IEnumerator IndicateDamage(Image indicator)
     {
         indicator.enabled = true;
+        dmgEffect.color = Color.white;
         yield return new WaitForSeconds(0.05f);
+        dmgEffect.color = Color.clear;
         indicator.enabled = false;
     }
 
