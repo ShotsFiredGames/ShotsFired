@@ -141,7 +141,7 @@ public class PlayerHealth : NetworkBehaviour
     IEnumerator IndicateDamage(Image indicator)
     {
         indicator.enabled = true;
-        dmgEffect.color = Color.white;
+        dmgEffect.color = Color.Red;
         yield return new WaitForSeconds(0.05f);
         dmgEffect.color = Color.clear;
         indicator.enabled = false;
