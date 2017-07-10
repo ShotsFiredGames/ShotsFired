@@ -130,7 +130,7 @@ public class PlayerMovement : NetworkBehaviour
 
     void ApplyAimAssist(float horizontal2)
     {
-        xRotationValue -= -horizontal2 * (rotationSpeed * .2f) * Time.fixedDeltaTime;
+        xRotationValue -= -horizontal2 * (rotationSpeed * .25f) * Time.fixedDeltaTime;
         rotation = Quaternion.Euler(0, xRotationValue, 0);
         transform.rotation = rotation;
     }
