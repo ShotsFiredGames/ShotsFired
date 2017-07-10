@@ -13,6 +13,7 @@ public class Shooting : NetworkBehaviour
     public GameObject hitMarker;
     public AudioSource shootingSource;
     public GameObject baseReticle;
+    AudioSource hitMarkerSource;
 
     GameObject cam;
     Coroutine overcharged;
@@ -22,6 +23,7 @@ public class Shooting : NetworkBehaviour
     void Start()
     {
         cam = transform.Find("Main Camera").transform.Find("Camera").gameObject;
+        hitMarkerSource = hitMarker.GetComponent<AudioSource>();
     }
 
     [Client]
@@ -123,6 +125,7 @@ public class Shooting : NetworkBehaviour
     IEnumerator HitMarker()
     {
         hitMarker.SetActive(true);
+        hitMarkerSource.PlayOneShot(hitMarkerSource.clip);
         yield return new WaitForSeconds(0.05f);
         hitMarker.SetActive(false);
     }
