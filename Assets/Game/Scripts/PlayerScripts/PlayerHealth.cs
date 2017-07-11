@@ -60,7 +60,7 @@ public class PlayerHealth : NetworkBehaviour
     }
 
     [ClientRpc]
-    public void RpcTookDamage(byte damage, string sourceID, CollisionDetection.CollisionFlag collisionLocation)                //This is called from CollisionDetection to determine the damage and the location of the incoming collision.
+    public void RpcTookDamage(short damage, string sourceID, CollisionDetection.CollisionFlag collisionLocation)                //This is called from CollisionDetection to determine the damage and the location of the incoming collision.
     {
         if (isDead) return;
         currentHealth -= damage;
