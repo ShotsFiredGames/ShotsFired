@@ -3,8 +3,12 @@ using UnityEngine.EventSystems;
 
 public class SetSelected : MonoBehaviour {
 
-	void OnEnable()
+
+    EventSystem eventSystem;
+
+    void OnEnable()
     {
-        EventSystem.current.SetSelectedGameObject(gameObject);
+        eventSystem = GameObject.Find("EventSystem").GetComponent<EventSystem>();
+        eventSystem.SetSelectedGameObject(gameObject);
     }
 }
