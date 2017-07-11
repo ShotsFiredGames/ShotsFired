@@ -33,7 +33,7 @@ public class PlayerManager : NetworkBehaviour
     private bool m_cursorIsLocked = true;
 
     [HideInInspector]
-    public bool hasFlag;    
+    public bool hasFlag;
     CaptureTheFlag captureTheFlag;
     bool currentlyBeingReaped;
     public AudioMixer gameMixer;
@@ -54,7 +54,7 @@ public class PlayerManager : NetworkBehaviour
         shooting = GetComponent<Shooting>();
         juggernaut = GetComponentInChildren<Juggernaut>();
 
-        playerHealth.Init();        
+        playerHealth.Init();
     }
 
     void OnEnable()
@@ -70,7 +70,7 @@ public class PlayerManager : NetworkBehaviour
     void FixedUpdate()
     {
         RaycastHit hit;
-        if (isArmed && Physics.BoxCast(myCamera.transform.position, (Vector3.one * .5f),myCamera.transform.forward * 1000, out hit, Quaternion.identity, Mathf.Infinity, layermask))
+        if (isArmed && Physics.BoxCast(myCamera.transform.position, (Vector3.one * .5f), myCamera.transform.forward * 1000, out hit, Quaternion.identity, Mathf.Infinity, layermask))
             playerMovement.AimAssist();
         else
             playerMovement.StopAimAssist();
@@ -80,7 +80,7 @@ public class PlayerManager : NetworkBehaviour
     {
         UpdateCursorLock();
         if (!isLocalPlayer) return;
-        if (isDead) return;        
+        if (isDead) return;
 
         ApplyMovementInput();
 
@@ -97,12 +97,12 @@ public class PlayerManager : NetworkBehaviour
         else
             StopFiring();
 
-        if (isArmed && controls.Aim && shooting.currentGun.canAim)           
+        if (isArmed && controls.Aim && shooting.currentGun.canAim)
             Aim();
         else
             StopAiming();
-        
-        if(gameManager != null)
+
+        if (gameManager != null)
         {
             if (PlatformManager.systemType.Equals(PlatformManager.SystemType.PC))
             {
@@ -121,7 +121,7 @@ public class PlayerManager : NetworkBehaviour
         }
         else
         {
-            if(GameObject.Find("GameManager") != null)
+            if (GameObject.Find("GameManager") != null)
                 gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         }
     }
@@ -145,9 +145,9 @@ public class PlayerManager : NetworkBehaviour
 
     public void SpeedBoost()
     {
-         playerMovement.ActivateSpeedBoost();
+        playerMovement.ActivateSpeedBoost();
     }
-////Player States////
+    ////Player States////
 
     void ApplyMovementInput()
     {
@@ -186,7 +186,7 @@ public class PlayerManager : NetworkBehaviour
     void Aim()
     {
         if (!isArmed) return;
-        if(!isAiming)
+        if (!isAiming)
         {
             isAiming = true;
 
@@ -198,12 +198,12 @@ public class PlayerManager : NetworkBehaviour
                 shooting.currentGun.aimReticle.SetActive(true);
             }
             else EnableBaseReticle();
-        }        
+        }
     }
 
     void StopAiming()
     {
-        if(isAiming)
+        if (isAiming)
         {
             playerCamera.StopAim();
             animationManager.StoppedAiming();
@@ -215,7 +215,7 @@ public class PlayerManager : NetworkBehaviour
             }
             else
                 EnableBaseReticle();
-        }        
+        }
     }
 
     void Firing()
@@ -224,6 +224,11 @@ public class PlayerManager : NetworkBehaviour
         if (!isFiring)
             isFiring = true;
         StartCoroutine(shooting.Firing());
+
+    }
+
+    public void FireAnimation()
+    {
         animationManager.IsFiring();
     }
 

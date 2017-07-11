@@ -14,6 +14,7 @@ public class Shooting : NetworkBehaviour
     public AudioSource shootingSource;
     public GameObject baseReticle;
     AudioSource hitMarkerSource;
+    PlayerManager playerManager;
 
     GameObject cam;
     Coroutine overcharged;
@@ -23,6 +24,7 @@ public class Shooting : NetworkBehaviour
     void Start()
     {
         cam = transform.Find("Main Camera").transform.Find("Camera").gameObject;
+        playerManager = GetComponent<PlayerManager>();
         hitMarkerSource = hitMarker.GetComponent<AudioSource>();
     }
 
@@ -31,6 +33,7 @@ public class Shooting : NetworkBehaviour
     {
         if (currentGun.isActiveAndEnabled && !currentGun.isFiring)
         {
+            playerManager.FireAnimation();
             currentGun.isFiring = true;
 
             if (isOvercharged)
