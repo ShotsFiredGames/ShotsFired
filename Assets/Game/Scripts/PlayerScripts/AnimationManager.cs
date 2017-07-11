@@ -66,11 +66,11 @@ public class AnimationManager : MonoBehaviour
     {
         anim.SetBool("IsJumping", true);
 
-        if (gunAnim == null || shooting)
-        {
-            gunAnim.SetBool("IsJumping", false);
+        if (gunAnim == null)
             return;
-        }
+        if(shooting)
+            gunAnim.SetBool("IsJumping", false);
+
         gunAnim.SetBool("IsJumping", true);
     }
 

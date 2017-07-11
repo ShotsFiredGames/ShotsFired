@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Networking;
 
+
 public class PlayerHealth : NetworkBehaviour
 {
     PlayerManager playerManager;
@@ -13,6 +14,7 @@ public class PlayerHealth : NetworkBehaviour
     public Image dmgIndicatorBottom;
     public Material dmgEffect;
 
+    public AudioSource heartbeatSource;
     public AudioSource source;
     public AudioClip[] hitEffects;
     float respawnTime;
@@ -68,10 +70,38 @@ public class PlayerHealth : NetworkBehaviour
             source.Play();
         }
 
-        if (currentHealth <= 0)
+        if(currentHealth > (short)(maxHealth * 0.75f))
+        {
+            StopHeartbeat();
+        }
+        else if(currentHealth <= (short)(maxHealth  * 0.75f) && currentHealth > (short)(maxHealth * 0.5f))
+        {
+            if (!heartbeatSource.isPlaying)
+                heartbeatSource.Play();
+            heartbeatSource.spatialBlend = .75f;
+        }
+        else if(currentHealth <= (short)(maxHealth * 0.5f) && currentHealth > (short)(maxHealth * 0.25f))
+        {
+            if(!heartbeatSource.isPlaying)
+                heartbeatSource.Play();
+            heartbeatSource.spatialBlend = .5f;
+        }
+        else if(currentHealth <= (short)(maxHealth * 0.25f) && currentHealth != 0)
+        {
+            if (!heartbeatSource.isPlaying)
+                heartbeatSource.Play();
+            heartbeatSource.spatialBlend = 0;
+        }
+        else if(currentHealth <= 0)
         {
             Died(sourceID, collisionLocation);
         }
+    }
+
+    void StopHeartbeat()
+    {
+        heartbeatSource.spatialBlend = 1;
+        heartbeatSource.Stop();
     }
 
 
@@ -93,6 +123,7 @@ public class PlayerHealth : NetworkBehaviour
     [Client]
     void Died(string damageSource, CollisionDetection.CollisionFlag collisionLocation)                                           //Died gets called when health is or goes below 0.
     {
+        StopHeartbeat();
         isDead = true;
         //foreach (Transform go in collisionDetection.GetComponentsInChildren<Transform>())
         //    go.gameObject.layer = LayerMask.NameToLayer("Default");
