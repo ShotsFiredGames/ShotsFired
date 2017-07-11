@@ -57,7 +57,7 @@ public class AnimationManager : MonoBehaviour
         anim.SetBool("IsIdle", false);
       //  anim.SetBool("IsSprinting", false);
 
-        if (gunAnim == null) return;
+        if (gunAnim == null || gunAnim.GetBool("IsAiming")) return;
         gunAnim.SetBool("IsIdle", false);
        // gunAnim.SetBool("IsSprinting", false);
     }
@@ -66,7 +66,11 @@ public class AnimationManager : MonoBehaviour
     {
         anim.SetBool("IsJumping", true);
 
-        if (gunAnim == null || shooting) return;
+        if (gunAnim == null || shooting)
+        {
+            gunAnim.SetBool("IsJumping", false);
+            return;
+        }
         gunAnim.SetBool("IsJumping", true);
     }
 

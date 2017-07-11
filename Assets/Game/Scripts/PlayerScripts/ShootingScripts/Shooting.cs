@@ -213,7 +213,7 @@ public class Shooting : NetworkBehaviour
     [ClientRpc]
     void RpcProjectileShot(NetworkIdentity bullet, Vector3 direction, Vector3 hitNormal)
     {
-        if (bullet.gameObject != null)
+        if (bullet != null)
             bullet.GetComponent<Projectile>().SetVariables(currentGun.speed, direction, transform.name, hitNormal, _damage);
     }
 
