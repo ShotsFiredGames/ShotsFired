@@ -49,7 +49,6 @@ public class PlayerMovement : NetworkBehaviour
 
     public void AimAssist()
     {
-        print("aimassist active");
         if (!aimAssist)
             aimAssist = true;
     }

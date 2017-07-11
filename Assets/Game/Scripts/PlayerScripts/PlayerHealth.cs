@@ -13,8 +13,9 @@ public class PlayerHealth : NetworkBehaviour
     public Image dmgIndicatorTop;
     public Image dmgIndicatorBottom;
     public Material dmgEffect;
+    public GameObject despawnEffect;
 
-    public AudioSource heartbeatSource;
+    public Animator damageEffectAnim;
     public AudioSource source;
     public AudioClip[] hitEffects;
     float respawnTime;
@@ -76,21 +77,15 @@ public class PlayerHealth : NetworkBehaviour
         }
         else if(currentHealth <= (short)(maxHealth  * 0.75f) && currentHealth > (short)(maxHealth * 0.5f))
         {
-            if (!heartbeatSource.isPlaying)
-                heartbeatSource.Play();
-            heartbeatSource.spatialBlend = .75f;
+            damageEffectAnim.SetInteger("DamageEffect", 1);
         }
         else if(currentHealth <= (short)(maxHealth * 0.5f) && currentHealth > (short)(maxHealth * 0.25f))
         {
-            if(!heartbeatSource.isPlaying)
-                heartbeatSource.Play();
-            heartbeatSource.spatialBlend = .5f;
+            damageEffectAnim.SetInteger("DamageEffect", 2);
         }
         else if(currentHealth <= (short)(maxHealth * 0.25f) && currentHealth != 0)
         {
-            if (!heartbeatSource.isPlaying)
-                heartbeatSource.Play();
-            heartbeatSource.spatialBlend = 0;
+            damageEffectAnim.SetInteger("DamageEffect", 3);
         }
         else if(currentHealth <= 0)
         {
@@ -100,8 +95,7 @@ public class PlayerHealth : NetworkBehaviour
 
     void StopHeartbeat()
     {
-        heartbeatSource.spatialBlend = 1;
-        heartbeatSource.Stop();
+        damageEffectAnim.SetInteger("DamageEffect", 0);
     }
 
 
@@ -128,13 +122,21 @@ public class PlayerHealth : NetworkBehaviour
         //foreach (Transform go in collisionDetection.GetComponentsInChildren<Transform>())
         //    go.gameObject.layer = LayerMask.NameToLayer("Default");
 
+        StartCoroutine(DespawnEffect());
         playerManager.Dead(damageSource, collisionLocation);
         StartCoroutine(Respawn());
+    }
+
+    IEnumerator DespawnEffect()
+    {
+        yield return new WaitForSeconds(1.5f);
+        despawnEffect.SetActive(true);
     }
 
     IEnumerator Respawn()
     {        
         yield return new WaitForSeconds(respawnTime);
+        despawnEffect.SetActive(false);
         Transform respawnpoint = NetworkManager.singleton.GetStartPosition();
         transform.position = respawnpoint.position;
         transform.rotation = respawnpoint.rotation;
