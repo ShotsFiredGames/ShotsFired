@@ -43,7 +43,7 @@ public class CaptureTheFlag : GameEvent
             go.SetActive(true);
         
         flag.transform.parent = flagSpawnpoint.transform;
-        flag.transform.position = flagSpawnpoint.transform.position + new Vector3(0, 2, 0);
+        flag.transform.position = flagSpawnpoint.transform.position + new Vector3(0, 4, 0);
         flag.enabled = true;
         flag.gameObject.SetActive(true);
         flagSource = flag.GetComponent<AudioSource>();

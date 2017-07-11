@@ -25,6 +25,7 @@ public class Bomb : MonoBehaviour
             yield return new WaitForSeconds(.05f);
         }
         fill.SetActive(false);
+        yield return new WaitForSeconds(.5f);
         full.SetActive(false);
         explode.SetActive(true);
     }
