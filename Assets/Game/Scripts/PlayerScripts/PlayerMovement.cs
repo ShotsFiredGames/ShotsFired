@@ -36,7 +36,6 @@ public class PlayerMovement : NetworkBehaviour
     bool landed;
     bool jumping;
 
-
     void Start ()
     {
         speed = GameCustomization.playerSpeed;
@@ -89,7 +88,7 @@ public class PlayerMovement : NetworkBehaviour
                 speed = airSpeed;
 
             rb.velocity += Physics.gravity * gravity * Time.fixedDeltaTime;
-        }
+        }        
     }
 
     public void Move(float horizontal, float vertical)
