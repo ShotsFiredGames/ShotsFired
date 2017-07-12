@@ -47,13 +47,13 @@ public class PlayerHealth : NetworkBehaviour
 
     void Awake()
     {
-        respawnTime = GameCustomization.respawnTime;        
         playerManager = GetComponent<PlayerManager>();
     }
 
     public void Init()
     {
         isDead = false;
+        respawnTime = GameCustomization.respawnTime;
         maxHealth = GameCustomization.playerHealth;
         currentHealth = maxHealth;
         currMaxHealth = maxHealth;

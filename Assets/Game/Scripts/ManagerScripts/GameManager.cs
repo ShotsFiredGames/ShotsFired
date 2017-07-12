@@ -119,6 +119,12 @@ public class GameManager : NetworkBehaviour
         isActive = _isActive;
     }
 
+    [ClientCallback]
+    public void CallAddScore(string player, short amount)
+    {
+        CmdAddScore(player, amount);
+    }
+
     [Command]
     public void CmdAddScore(string player, short amount)
     {

@@ -152,6 +152,14 @@ public class Shooting : NetworkBehaviour
         PlayerWrangler.GetPlayer(hitPlayer).transform.Find("CollisionDetection").transform.Find(hitCollider).GetComponent<CollisionDetection>().OnHit(_damage, transform.name);
     }
 
+    [Command]
+    void CmdReaperShot(NetworkInstanceId reaperId)
+    {        
+        Debug.LogError(reaperId);
+        Debug.LogError(NetworkServer.FindLocalObject(reaperId));
+        //reaper.GetComponent<Reaper>().HitBy(_damage, transform.root.name);
+    }
+
     public RaycastHit CastMyRay()
     {
         RaycastHit hit;
@@ -177,7 +185,9 @@ public class Shooting : NetworkBehaviour
         else if (hit.transform.tag.Equals("Reaper"))
         {
             StartCoroutine(HitMarker());
-            hit.transform.GetComponent<Reaper>().HitBy(_damage, transform.root.name);
+            //hit.transform.GetComponent<Reaper>().HitBy(_damage, transform.root.name);
+            Debug.LogError(hit.transform.GetComponent<NetworkIdentity>().netId);
+            CmdReaperShot(hit.transform.GetComponent<NetworkIdentity>().netId);
         }
         else
         {
