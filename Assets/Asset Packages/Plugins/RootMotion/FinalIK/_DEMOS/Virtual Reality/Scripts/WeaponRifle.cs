@@ -45,7 +45,7 @@ namespace RootMotion.Demos {
 			#else
 			var emission = muzzleSmoke.emission;
 			emission.enabled = smokeEmission > 0f;
-			emission.rate = new ParticleSystem.MinMaxCurve(smokeEmission);
+			emission.rateOverTime = new ParticleSystem.MinMaxCurve(smokeEmission);
 			#endif
 		}
 	}

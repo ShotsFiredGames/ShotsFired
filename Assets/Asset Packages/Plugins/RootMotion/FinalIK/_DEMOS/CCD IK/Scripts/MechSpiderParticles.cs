@@ -26,10 +26,11 @@ namespace RootMotion.Demos {
 			particles.emissionRate = emissionRate;
 			#else
 			var emission = particles.emission;
-			emission.rate = new ParticleSystem.MinMaxCurve(emissionRate);
-			#endif
-			
-			particles.startColor = new Color (particles.startColor.r, particles.startColor.g, particles.startColor.b, Mathf.Clamp(inputMag, 0.4f, 1f));
+			emission.rateOverTime = new ParticleSystem.MinMaxCurve(emissionRate);
+#endif
+
+            var main = particles.main;
+			main.startColor = new Color (main.startColor.color.r, main.startColor.color.g, main.startColor.color.b, Mathf.Clamp(inputMag, 0.4f, 1f));
 		}
 	}
 }

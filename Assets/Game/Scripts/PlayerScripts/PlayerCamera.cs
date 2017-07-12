@@ -21,7 +21,6 @@ public class PlayerCamera : MonoBehaviour
 
     float xRotationValue;
     float yRotationValue;
-    float rotationSpeed;
     Quaternion cameraYRotation;
     [HideInInspector]
     public bool isAiming;
@@ -30,11 +29,6 @@ public class PlayerCamera : MonoBehaviour
     void Awake()
     {
         playerManager = GetComponent<PlayerManager>();
-    }
-
-    public void Start()
-    {
-        rotationSpeed = GetComponent<PlayerMovement>().rotationSpeed;        
     }
 
     public void Look(float rightStickY)

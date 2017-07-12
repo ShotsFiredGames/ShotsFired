@@ -23,7 +23,6 @@ public class PlayerManager : NetworkBehaviour
     bool isFiring;
     public Gun[] guns;
     public LayerMask layermask;
-    byte shotsFired = 5;
 
     float yRotationValue;
     GameObject myCamera;

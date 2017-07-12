@@ -100,7 +100,7 @@ public class Reaper : NetworkBehaviour
         currentHealth -= damage;
 
         if (currentHealth <= 0)
-            StartCoroutine(Respawn());
+           respawn = StartCoroutine(Respawn());
 
     }
 

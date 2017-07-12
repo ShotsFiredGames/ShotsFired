@@ -64,15 +64,19 @@ public class Shooting : NetworkBehaviour
             currentGun.isFiring = false;
 
             yield return new WaitForSeconds(.5f);
-            currentGun.shootingAnim.ResetTrigger("Fire");
+            if (currentGun.shootingAnim != null)
+                if(currentGun.gameObject.activeSelf)
+                    currentGun.shootingAnim.ResetTrigger("Fire");
         }
     }
 
     public void SetWeapon(Gun weapon)
     {
         currentGun = weapon;
+
         if (currentGun.shootingAnim != null)
-            currentGun.shootingAnim.ResetTrigger("Fire");
+            if (currentGun.gameObject.activeSelf)
+                currentGun.shootingAnim.ResetTrigger("Fire");
 
         shootingSource.clip = currentGun.shootingSound;
         currentGun.isFiring = false;
@@ -84,7 +88,9 @@ public class Shooting : NetworkBehaviour
         if (currentGun != null)
         {
             currentGun.isFiring = false;
-            currentGun.shootingAnim.ResetTrigger("Fire");
+            if (currentGun.shootingAnim != null)
+                if (currentGun.gameObject.activeSelf)
+                    currentGun.shootingAnim.ResetTrigger("Fire");
             currentGun.aimReticle.SetActive(false);
             currentGun.gunReticle.SetActive(false);
             currentGun.SetActiveGun(false);
@@ -204,10 +210,11 @@ public class Shooting : NetworkBehaviour
     {
         if (currentGun != null)
         {
+
             if (currentGun.shootingAnim != null)
-            {
-                currentGun.shootingAnim.SetTrigger("Fire");
-            }
+                if (currentGun.gameObject.activeSelf)
+                    currentGun.shootingAnim.SetTrigger("Fire");
+            
             GameObject bullet = Instantiate(currentGun.projectile, currentGun.gunbarrel.transform.position, currentGun.gunbarrel.transform.rotation) as GameObject;
             NetworkServer.Spawn(bullet);
             RpcProjectileShot(bullet.GetComponent<NetworkIdentity>(), direction, hitNormal);
