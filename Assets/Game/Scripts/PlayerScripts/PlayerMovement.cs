@@ -253,7 +253,9 @@ public class PlayerMovement : NetworkBehaviour
 
     bool Grounded()
     {
-        return Physics.Raycast(transform.position, Vector3.down, distToGrounded, ground);
+        RaycastHit hit;
+        return Physics.SphereCast(transform.position, 1, Vector3.down, out hit, distToGrounded, ground);
+        //Physics.Raycast(transform.position, Vector3.down, distToGrounded, ground);
     }
 
     public void Sprint()
