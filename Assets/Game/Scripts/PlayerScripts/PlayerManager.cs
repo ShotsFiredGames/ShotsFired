@@ -295,7 +295,8 @@ public class PlayerManager : NetworkBehaviour
         shooting.UnArmed();
         if (oldGun != null)
         {
-            oldGun.anim.SetBool("IsFiring", false);
+            if(oldGun.anim.gameObject.activeSelf)
+                oldGun.anim.SetBool("IsFiring", false);
             oldGun.SetActiveGun(false);
         }
 
