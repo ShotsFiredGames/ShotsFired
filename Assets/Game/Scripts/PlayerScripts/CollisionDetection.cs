@@ -21,7 +21,7 @@ public class CollisionDetection : MonoBehaviour
         health = GetComponentInParent<PlayerHealth>();                                                                    //References to the health and shooting scripts
     }
     
-    public void OnHit(byte damage, string sourceID)                                                                                         //Gets called from the shooting scripts raycast, we use other to determine how much damage we will take.
+    public void OnHit(short damage, string sourceID)                                                                                         //Gets called from the shooting scripts raycast, we use other to determine how much damage we will take.
     {
         switch(collisionLocation)                                                                                         //Find the collisionLocation this collider is marked with.
         {

@@ -19,7 +19,7 @@ public class Shooting : NetworkBehaviour
     GameObject cam;
     Coroutine overcharged;
     bool isOvercharged;
-    byte _damage;                // this is the variable that gets affected by overcharged
+    short _damage;                // this is the variable that gets affected by overcharged
 
     void Start()
     {
@@ -150,7 +150,7 @@ public class Shooting : NetworkBehaviour
     }
 
     [Command]
-    void CmdPlayerShot(string hitPlayer, string hitCollider, byte _damage)
+    void CmdPlayerShot(string hitPlayer, string hitCollider, short _damage)
     {
         PlayerWrangler.GetPlayer(hitPlayer).transform.Find("CollisionDetection").transform.Find(hitCollider).GetComponent<CollisionDetection>().OnHit(_damage, transform.name);
     }

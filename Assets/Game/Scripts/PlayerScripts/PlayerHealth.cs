@@ -53,7 +53,7 @@ public class PlayerHealth : NetworkBehaviour
     }
 
     [Command]
-    public void CmdTookDamage(byte damage, string sourceID, CollisionDetection.CollisionFlag collisionLocation)
+    public void CmdTookDamage(short damage, string sourceID, CollisionDetection.CollisionFlag collisionLocation)
     {
         if (isDead) return;
         RpcTookDamage(damage, sourceID, collisionLocation);

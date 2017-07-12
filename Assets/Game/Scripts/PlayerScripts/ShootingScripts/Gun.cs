@@ -14,7 +14,7 @@ public abstract class Gun : MonoBehaviour
 
     public GameObject thirdPersonGun;
     public string gunName;
-    public byte damage;
+    public short damage;
     public byte ammo;
     public float fireFreq;
     public Transform spawnPoint;

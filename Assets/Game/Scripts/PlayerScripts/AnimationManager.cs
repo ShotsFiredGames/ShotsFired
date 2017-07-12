@@ -57,8 +57,11 @@ public class AnimationManager : MonoBehaviour
         anim.SetBool("IsIdle", false);
       //  anim.SetBool("IsSprinting", false);
 
-        if (gunAnim == null || gunAnim.GetBool("IsAiming")) return;
-        gunAnim.SetBool("IsIdle", false);
+        if (gunAnim == null) return;
+        if(gunAnim.GetBool("IsAiming"))
+            gunAnim.SetBool("IsIdle", true);
+        else
+            gunAnim.SetBool("IsIdle", false);
        // gunAnim.SetBool("IsSprinting", false);
     }
 
@@ -68,10 +71,11 @@ public class AnimationManager : MonoBehaviour
 
         if (gunAnim == null)
             return;
-        if(shooting)
-            gunAnim.SetBool("IsJumping", false);
 
-        gunAnim.SetBool("IsJumping", true);
+        if(shooting || gunAnim.GetBool("IsAiming"))
+            gunAnim.SetBool("IsJumping", false);
+        else
+            gunAnim.SetBool("IsJumping", true);
     }
 
     public void IsLanding()
@@ -86,7 +90,11 @@ public class AnimationManager : MonoBehaviour
     public void IsFalling()
     {
         if (gunAnim == null) return;
-        gunAnim.SetBool("IsFalling", true);
+
+        if(gunAnim.GetBool("IsAiming"))
+            gunAnim.SetBool("IsFalling", false);
+        else
+            gunAnim.SetBool("IsFalling", true);
     }
 
     public void IsAiming()
@@ -96,9 +104,7 @@ public class AnimationManager : MonoBehaviour
         if (gunAnim == null) return;
         gunAnim.SetBool("IsAiming", true);
 
-        gunAnim.SetLayerWeight(1, 0);
-        gunAnim.SetLayerWeight(3, 0);
-        gunAnim.SetLayerWeight(4, 0);
+        gunAnim.SetBool("Stop", true);
     }
 
     public void StoppedAiming()
@@ -107,10 +113,7 @@ public class AnimationManager : MonoBehaviour
 
         if (gunAnim == null) return;
         gunAnim.SetBool("IsAiming", false);
-
-        gunAnim.SetLayerWeight(1, 1);
-        gunAnim.SetLayerWeight(3, 1);
-        gunAnim.SetLayerWeight(4, 1);
+        gunAnim.SetBool("Stop", false);
     }
 
     public void IsFiring()
@@ -122,8 +125,6 @@ public class AnimationManager : MonoBehaviour
 
         if (gunAnim == null) return;
         gunAnim.SetBool("IsFiring", true);
-        
-        gunAnim.SetLayerWeight(4, 0);
     }
 
     public void StoppedFiring()
