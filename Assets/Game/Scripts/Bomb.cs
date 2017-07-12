@@ -8,14 +8,26 @@ public class Bomb : MonoBehaviour
     public GameObject full;
     public GameObject explode;
 
+    Coroutine bombExploding;
+
     private void OnEnable()
     {
         explode.SetActive(false);
         full.SetActive(true);
         fill.SetActive(true);
         fill.transform.localScale = Vector3.zero;
-        StartCoroutine(Scale());
+        bombExploding = StartCoroutine(Scale());
     }
+
+    void OnDisable()
+    {
+        fill.SetActive(false);
+        full.SetActive(false);
+
+        if (bombExploding != null)
+            StopCoroutine(bombExploding);
+    }
+
     IEnumerator Scale()
     {
         Vector3 growthAmount = new Vector3(.0025f, .0025f, .0025f);
@@ -29,4 +41,6 @@ public class Bomb : MonoBehaviour
         full.SetActive(false);
         explode.SetActive(true);
     }
+
+
 }

@@ -3,9 +3,13 @@
 public class Rotate : MonoBehaviour
 {
     public Vector3 rotation;
-	
-	void Update ()
+    public bool isMimic { get; set; }
+
+    void Update()
     {
-        transform.Rotate(rotation * Time.deltaTime);
-	}
+        if (!isMimic)
+            transform.Rotate(rotation * Time.deltaTime);
+        else
+            transform.Rotate(-rotation * Time.deltaTime);
+    }
 }
