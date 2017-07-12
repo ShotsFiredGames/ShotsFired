@@ -4,6 +4,10 @@ using System.Collections;
 
 public class PlayerMovement : NetworkBehaviour
 {
+
+    public float movementSpeed = 10.0f;
+    public float maxVelocityChange = 10.0f;
+
     public float rotationSpeed;
     public float jumpForce;
     public float gravity;
@@ -93,10 +97,20 @@ public class PlayerMovement : NetworkBehaviour
 
     public void Move(float horizontal, float vertical)
     {
-        direction = new Vector3(horizontal * speed, 0, vertical * speed);
-        direction *= Time.fixedDeltaTime;
-        direction = transform.TransformDirection(direction);
-        rb.MovePosition(transform.position + direction);
+        Vector3 targetVelocity = new Vector3(horizontal, 0, vertical);
+        targetVelocity = transform.TransformDirection(targetVelocity);
+        targetVelocity *= speed;
+
+        Vector3 velocity = rb.velocity;
+        Vector3 velocityChange = (targetVelocity - velocity);
+        velocityChange.x = Mathf.Clamp(velocityChange.x, -maxVelocityChange, maxVelocityChange);
+        velocityChange.z = Mathf.Clamp(velocityChange.z, -maxVelocityChange, maxVelocityChange);
+        velocityChange.y = 0;
+        rb.AddForce(velocityChange, ForceMode.VelocityChange);
+        //direction = new Vector3(horizontal * speed, 0, vertical * speed);
+        //direction *= Time.fixedDeltaTime;
+        //direction = transform.TransformDirection(direction);
+        //rb.MovePosition(transform.position + direction);
     }
 
     public void Turn(float horizontal2)
