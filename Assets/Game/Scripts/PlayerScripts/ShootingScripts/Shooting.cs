@@ -12,7 +12,6 @@ public class Shooting : NetworkBehaviour
     public LayerMask layermask;
     public Image hitMarker;
     public AudioSource shootingSource;
-    public GameObject baseReticle;
     AudioSource hitMarkerSource;
     PlayerManager playerManager;
 
@@ -91,8 +90,6 @@ public class Shooting : NetworkBehaviour
             if (currentGun.shootingAnim != null)
                 if (currentGun.gameObject.activeSelf)
                     currentGun.shootingAnim.ResetTrigger("Fire");
-            currentGun.aimReticle.SetActive(false);
-            currentGun.gunReticle.SetActive(false);
             currentGun.SetActiveGun(false);
         }
     }
@@ -253,5 +250,29 @@ public class Shooting : NetworkBehaviour
             StopCoroutine(overcharged);
             isOvercharged = false;
         }
+    }
+
+    public void Aiming()
+    {
+        if (currentGun == null) return;
+        currentGun.unArmedReticle.SetActive(false);
+        currentGun.armedReticle.SetActive(false);
+        currentGun.scopedReticle.SetActive(true);
+    }
+
+    public void NotAiming()
+    {
+        if (currentGun == null) return;
+        currentGun.unArmedReticle.SetActive(false);
+        currentGun.scopedReticle.SetActive(false);
+        currentGun.armedReticle.SetActive(true);
+    }
+
+    public void UnArmed()
+    {
+        if (currentGun == null) return;
+        currentGun.scopedReticle.SetActive(false);
+        currentGun.armedReticle.SetActive(false);
+        currentGun.unArmedReticle.SetActive(true);
     }
 }

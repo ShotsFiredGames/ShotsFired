@@ -205,15 +205,9 @@ public class PlayerManager : NetworkBehaviour
         if (!isAiming)
         {
             isAiming = true;
-
+            shooting.Aiming();
             playerCamera.Aim();
             animationManager.IsAiming();
-            if (isArmed)
-            {
-                shooting.currentGun.gunReticle.SetActive(false);
-                shooting.currentGun.aimReticle.SetActive(true);
-            }
-            else EnableBaseReticle();
         }
     }
 
@@ -221,16 +215,10 @@ public class PlayerManager : NetworkBehaviour
     {
         if (isAiming)
         {
+            shooting.NotAiming();
             playerCamera.StopAim();
             animationManager.StoppedAiming();
             isAiming = false;
-            if (isArmed)
-            {
-                shooting.currentGun.aimReticle.SetActive(false);
-                shooting.currentGun.gunReticle.SetActive(true);
-            }
-            else
-                EnableBaseReticle();
         }
     }
 
@@ -304,6 +292,13 @@ public class PlayerManager : NetworkBehaviour
         if(oldGun != null)
         oldGun.SetActiveGun(false);
 
+        shooting.UnArmed();
+        if (oldGun != null)
+        {
+            oldGun.anim.SetBool("IsFiring", false);
+            oldGun.SetActiveGun(false);
+        }
+
         isArmed = true;
         animationManager.Armed();
         Gun newGun = FindGun(gunName);
@@ -314,8 +309,7 @@ public class PlayerManager : NetworkBehaviour
         animationManager.SetGunAnimator(newGun.anim);
         shooting.SetWeapon(newGun);
 
-        shooting.baseReticle.SetActive(false);
-        shooting.currentGun.gunReticle.SetActive(true);
+        shooting.NotAiming();
         newGun.SetAmmo();
 
         newGun.SetActiveGun(true);
@@ -334,20 +328,10 @@ public class PlayerManager : NetworkBehaviour
     public void RpcDisarm()
     {
         isArmed = false;
+        shooting.UnArmed();
         shooting.RemoveWeapon();
         animationManager.Disarmed();
         playerCamera.SetFieldOfView(60);
-        EnableBaseReticle();
-    }
-
-    void EnableBaseReticle()
-    {
-        if (oldGun == null) return;
-        oldGun.aimReticle.SetActive(false);
-        oldGun.gunReticle.SetActive(false);
-        shooting.currentGun.aimReticle.SetActive(false);
-        shooting.currentGun.gunReticle.SetActive(false);
-        shooting.baseReticle.SetActive(true);
     }
     
     public void Dead(string damageSource, CollisionDetection.CollisionFlag collisionLocation)

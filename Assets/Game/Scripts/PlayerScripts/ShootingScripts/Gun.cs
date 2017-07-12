@@ -28,8 +28,6 @@ public abstract class Gun : MonoBehaviour
     public Animator anim;
     public GameObject playerHit;
     public GameObject wallHit;
-    public GameObject gunReticle;
-    public GameObject aimReticle;
 	public float muzzleFlashTimer;
 
     public PlayerManager playerManager;
@@ -49,6 +47,10 @@ public abstract class Gun : MonoBehaviour
     public GameObject thirdPersonMuzzle;
 
     public Animator shootingAnim;
+
+    public GameObject unArmedReticle;
+    public GameObject armedReticle;
+    public GameObject scopedReticle;
 
     //public abstract IEnumerator Fire();
 
