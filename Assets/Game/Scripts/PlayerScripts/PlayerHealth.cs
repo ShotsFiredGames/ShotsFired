@@ -14,6 +14,7 @@ public class PlayerHealth : NetworkBehaviour
     public Image dmgIndicatorBottom;
     public Material dmgEffect;
     public GameObject despawnEffect;
+    public GameObject[] collisionLocations;
 
     public Animator damageEffectAnim;
     public AudioSource source;
@@ -30,6 +31,7 @@ public class PlayerHealth : NetworkBehaviour
     bool isHealthIncreased;
 
     GameObject collisionDetection;
+    Coroutine respawn;
 
     // Use this for initialization
     void Awake()
@@ -87,7 +89,8 @@ public class PlayerHealth : NetworkBehaviour
         {
             damageEffectAnim.SetInteger("DamageEffect", 3);
         }
-        else if(currentHealth <= 0)
+
+        if (currentHealth <= 0)
         {
             Died(sourceID, collisionLocation);
         }
@@ -117,14 +120,18 @@ public class PlayerHealth : NetworkBehaviour
     [Client]
     void Died(string damageSource, CollisionDetection.CollisionFlag collisionLocation)                                           //Died gets called when health is or goes below 0.
     {
-        StopHeartbeat();
+        if (isDead == true) return;
         isDead = true;
-        //foreach (Transform go in collisionDetection.GetComponentsInChildren<Transform>())
-        //    go.gameObject.layer = LayerMask.NameToLayer("Default");
+        StopHeartbeat();
+
+        foreach (GameObject go in collisionLocations)
+            go.layer = LayerMask.NameToLayer("Default");
 
         StartCoroutine(DespawnEffect());
         playerManager.Dead(damageSource, collisionLocation);
-        StartCoroutine(Respawn());
+
+        if(respawn == null)
+            respawn = StartCoroutine(Respawn());
     }
 
     IEnumerator DespawnEffect()
@@ -141,8 +148,12 @@ public class PlayerHealth : NetworkBehaviour
         transform.position = respawnpoint.position;
         transform.rotation = respawnpoint.rotation;
 
+        foreach (GameObject go in collisionLocations)
+            go.layer = LayerMask.NameToLayer("Collision");
+
         Init();
         playerManager.Respawn();
+        respawn = null;
     }
 
     [Client]

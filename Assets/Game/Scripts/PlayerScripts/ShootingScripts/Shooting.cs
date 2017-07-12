@@ -73,6 +73,7 @@ public class Shooting : NetworkBehaviour
         currentGun = weapon;
         if (currentGun.shootingAnim != null)
             currentGun.shootingAnim.ResetTrigger("Fire");
+
         shootingSource.clip = currentGun.shootingSound;
         currentGun.isFiring = false;
         muzzleFlash = currentGun.muzzleFlash;
