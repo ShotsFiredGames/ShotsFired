@@ -89,6 +89,11 @@ public class PlayerManager : NetworkBehaviour
         else
             Moving();
 
+        if (controls.Sprint && !isAiming)
+            Sprinting();
+        else
+            StoppedSprinting();
+
         if (controls.Jump.WasPressed)
             Jumping();
 
@@ -165,6 +170,18 @@ public class PlayerManager : NetworkBehaviour
     {
         playerMovement.Turn(controls.Look.X);
         animationManager.IsIdle();
+    }
+
+    void Sprinting()
+    {
+        playerMovement.Sprint();
+        animationManager.IsSprinting();
+    }
+
+    void StoppedSprinting()
+    {
+        playerMovement.StopSprint();
+        animationManager.StoppedSprinting();
     }
 
     void Jumping()

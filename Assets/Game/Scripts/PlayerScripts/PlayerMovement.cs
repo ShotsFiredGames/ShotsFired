@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections;
+using UnityEngine.UI;
 
 public class PlayerMovement : NetworkBehaviour
 {
@@ -16,6 +17,12 @@ public class PlayerMovement : NetworkBehaviour
 
     public float speedBoostSpeed;
     public float speedBoostDuration;
+    public float staminaDrainRate;
+    public float staminaGainRate;
+    public Image staminaBar;
+
+    float maxStamina = 100;
+    float stamina;
 
     Rigidbody rb;
     PlayerManager playerManager;
@@ -38,7 +45,16 @@ public class PlayerMovement : NetworkBehaviour
     bool landed;
     bool jumping;
     [HideInInspector]
+    public bool isSprinting;
+
+    [HideInInspector]
     public bool lockMovement;
+
+    Coroutine sprinting;
+    Coroutine stopSprinting;
+    bool isDraining;
+    bool isGaining;
+    bool canSprint;
 
     void Start ()
     {
@@ -48,6 +64,9 @@ public class PlayerMovement : NetworkBehaviour
         _jump = jumpForce;
         playerCamera = GetComponent<PlayerCamera>();
         airSpeed = speed * .85f;
+        canSprint = true;
+        stamina = maxStamina;
+        staminaBar.fillAmount = stamina / maxStamina;
     }
 
     public void AimAssist()
@@ -100,7 +119,11 @@ public class PlayerMovement : NetworkBehaviour
         if (lockMovement) return;
         Vector3 targetVelocity = new Vector3(horizontal, 0, vertical);
         targetVelocity = transform.TransformDirection(targetVelocity);
-        targetVelocity *= speed;
+
+        if(!isSprinting)
+            targetVelocity *= speed;
+        else if(canSprint && isSprinting)
+            targetVelocity *= (speed + (speed *.5f));
 
         Vector3 velocity = rb.velocity;
         Vector3 velocityChange = (targetVelocity - velocity);
@@ -231,5 +254,77 @@ public class PlayerMovement : NetworkBehaviour
     bool Grounded()
     {
         return Physics.Raycast(transform.position, Vector3.down, distToGrounded, ground);
+    }
+
+    public void Sprint()
+    {
+        isGaining = false;
+        if (stamina > 0)
+        {
+            isSprinting = true;
+            if (stopSprinting != null)
+                StopCoroutine(stopSprinting);
+
+            canSprint = true;
+        }
+        else
+        {
+            isSprinting = false;
+        }
+
+        if (!staminaBar.IsActive())
+            staminaBar.gameObject.SetActive(true);
+
+        if (!isDraining && stamina > 0)
+        {
+            isDraining = true;
+            sprinting = StartCoroutine(DrainStamina());
+        }
+    }
+
+    IEnumerator DrainStamina()
+    {
+        stamina -= 5;
+        staminaBar.fillAmount = stamina / maxStamina;
+
+        if (stamina <= 0)
+        {
+            canSprint = false;
+            isSprinting = false;
+            isDraining = false;
+            yield break;
+        }
+        yield return new WaitForSeconds(staminaDrainRate);
+        isDraining = false;
+    }
+
+    public void StopSprint()
+    {
+        if (isSprinting != false)
+        isSprinting = false;
+
+        if (staminaBar.IsActive())
+            staminaBar.gameObject.SetActive(false);
+
+        if (!isGaining && stamina < maxStamina)
+        {
+            isGaining = true;
+            stopSprinting = StartCoroutine(GainStamina());
+        }
+    }
+
+    IEnumerator GainStamina()
+    {
+        stamina += 5;
+        staminaBar.fillAmount = stamina / maxStamina;
+
+        if (stamina >= maxStamina)
+        {
+            canSprint = true;
+            isGaining = false;
+            yield break;
+        }
+        yield return new WaitForSeconds(staminaGainRate);
+        isGaining = false;
     }
 }

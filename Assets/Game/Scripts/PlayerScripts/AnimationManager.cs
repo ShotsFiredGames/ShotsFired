@@ -38,31 +38,47 @@ public class AnimationManager : MonoBehaviour
 
     public void IsIdle()
     {
-      //  anim.SetBool("IsSprinting", false);
         anim.SetBool("IsIdle", true);
 
         if (gunAnim == null) return;
-    //    gunAnim.SetBool("IsSprinting", false);
         gunAnim.SetBool("IsIdle", true);
     }
 
     public void IsCrouchIdle()
     {
-      //  anim.SetBool("IsSprinting", false);
         anim.SetBool("IsIdle", true);
     }
 
     public void IsMoving()
     {
         anim.SetBool("IsIdle", false);
-      //  anim.SetBool("IsSprinting", false);
 
         if (gunAnim == null) return;
         if(gunAnim.GetBool("IsAiming"))
             gunAnim.SetBool("IsIdle", true);
         else
             gunAnim.SetBool("IsIdle", false);
-       // gunAnim.SetBool("IsSprinting", false);
+    }
+
+    public void IsSprinting()
+    {
+        if (gunAnim == null) return;
+
+        if (gunAnim.GetBool("IsAiming"))
+            gunAnim.SetBool("IsIdle", true);
+        else
+            gunAnim.SetBool("IsSprinting", true);
+    }
+
+    public void StoppedSprinting()
+    {
+        if (gunAnim == null) return;
+
+        if (gunAnim.GetBool("IsAiming"))
+        {
+            gunAnim.SetBool("IsIdle", true);
+            gunAnim.SetBool("IsSprinting", false);
+        }
     }
 
     public void IsJumping()
