@@ -4,8 +4,6 @@ using System.Collections;
 
 public class PlayerMovement : NetworkBehaviour
 {
-
-    public float movementSpeed = 10.0f;
     public float maxVelocityChange = 10.0f;
 
     public float rotationSpeed;
@@ -39,7 +37,8 @@ public class PlayerMovement : NetworkBehaviour
     bool speedBoosted;
     bool landed;
     bool jumping;
-
+    [HideInInspector]
+    public bool lockMovement;
 
     void Start ()
     {
@@ -71,6 +70,7 @@ public class PlayerMovement : NetworkBehaviour
             { 
                 landed = true;
                 jumping = false;
+                lockMovement = false;
                 playerManager.Landed();
             }
 
@@ -97,6 +97,7 @@ public class PlayerMovement : NetworkBehaviour
 
     public void Move(float horizontal, float vertical)
     {
+        if (lockMovement) return;
         Vector3 targetVelocity = new Vector3(horizontal, 0, vertical);
         targetVelocity = transform.TransformDirection(targetVelocity);
         targetVelocity *= speed;
