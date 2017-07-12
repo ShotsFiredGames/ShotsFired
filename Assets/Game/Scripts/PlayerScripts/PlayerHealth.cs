@@ -148,8 +148,9 @@ public class PlayerHealth : NetworkBehaviour
         transform.position = respawnpoint.position;
         transform.rotation = respawnpoint.rotation;
 
-        foreach (GameObject go in collisionLocations)
-            go.layer = LayerMask.NameToLayer("Collision");
+        if (!isLocalPlayer)
+            foreach (GameObject go in collisionLocations)
+                go.layer = LayerMask.NameToLayer("Collision");
 
         Init();
         playerManager.Respawn();
