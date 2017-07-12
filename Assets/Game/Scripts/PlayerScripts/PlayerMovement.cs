@@ -130,7 +130,7 @@ public class PlayerMovement : NetworkBehaviour
         velocityChange.x = Mathf.Clamp(velocityChange.x, -maxVelocityChange, maxVelocityChange);
         velocityChange.z = Mathf.Clamp(velocityChange.z, -maxVelocityChange, maxVelocityChange);
         velocityChange.y = 0;
-        rb.AddForce(velocityChange, ForceMode.VelocityChange);
+        rb.AddForce(velocityChange, ForceMode.Impulse);
         //direction = new Vector3(horizontal * speed, 0, vertical * speed);
         //direction *= Time.fixedDeltaTime;
         //direction = transform.TransformDirection(direction);
