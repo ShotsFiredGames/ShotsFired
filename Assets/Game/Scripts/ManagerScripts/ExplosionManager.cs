@@ -42,7 +42,6 @@ public class ExplosionManager : NetworkBehaviour
     [ClientRpc]
     public void RpcActivateExplosion(Vector3 location)
     {
-        Debug.LogError("Here to explode");
         GameObject explosionToUse = null;
         foreach (GameObject explode in g_explosions)
         {
