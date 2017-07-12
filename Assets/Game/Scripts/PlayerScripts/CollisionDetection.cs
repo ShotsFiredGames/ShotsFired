@@ -26,22 +26,22 @@ public class CollisionDetection : MonoBehaviour
         switch(collisionLocation)                                                                                         //Find the collisionLocation this collider is marked with.
         {
             case CollisionFlag.FrontHeadShot:
-                health.RpcTookDamage((byte)(damage * 2), sourceID, CollisionFlag.FrontHeadShot);                                        //Tell our health script how much damage we took from the enemies shooting script and the location we were hit from.
+                health.TookDamage((byte)(damage * 2), sourceID, CollisionFlag.FrontHeadShot);                                        //Tell our health script how much damage we took from the enemies shooting script and the location we were hit from.
                 break;
             case CollisionFlag.BackHeadShot:
-                health.RpcTookDamage((byte)(damage * 2), sourceID, CollisionFlag.BackHeadShot);
+                health.TookDamage((byte)(damage * 2), sourceID, CollisionFlag.BackHeadShot);
                 break;
             case CollisionFlag.Front:
-                health.RpcTookDamage(damage, sourceID, CollisionFlag.Front);
+                health.TookDamage(damage, sourceID, CollisionFlag.Front);
                 break;
             case CollisionFlag.Back:
-                health.RpcTookDamage(damage, sourceID, CollisionFlag.Back);
+                health.TookDamage(damage, sourceID, CollisionFlag.Back);
                 break;
             case CollisionFlag.Left:
-                health.RpcTookDamage(damage, sourceID, CollisionFlag.Left);
+                health.TookDamage(damage, sourceID, CollisionFlag.Left);
                 break;
             case CollisionFlag.Right:
-                health.RpcTookDamage(damage, sourceID, CollisionFlag.Right);
+                health.TookDamage(damage, sourceID, CollisionFlag.Right);
                 break;
         }
     }

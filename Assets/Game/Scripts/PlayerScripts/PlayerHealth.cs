@@ -6,6 +6,12 @@ using UnityEngine.Networking;
 
 public class PlayerHealth : NetworkBehaviour
 {
+    public delegate void DeathDelegate();
+    public event DeathDelegate EventDeath;
+
+    public delegate void RespawnDelegate();
+    public event RespawnDelegate EventRespawn;
+
     PlayerManager playerManager;
 
     public Image dmgIndicatorLeft;
@@ -20,27 +26,35 @@ public class PlayerHealth : NetworkBehaviour
     float respawnTime;
     short currMaxHealth;
     short maxHealth;
-    [SyncVar]
+    [SyncVar (hook = "OnHealthChanged")]
     short currentHealth;
 
-    [SyncVar]
+    string damageSource;
+    CollisionDetection.CollisionFlag collisionLocation;
+
+    [SyncVar(hook = "OnDeath")]
     bool isDead;
 
     bool isHealthIncreased;
 
     GameObject collisionDetection;
 
-    // Use this for initialization
+    void OnEnable()
+    {
+        this.EventDeath += Died;
+        this.EventRespawn += CallRespawn;
+    }
+
     void Awake()
     {
-        respawnTime = GameCustomization.respawnTime;
-        maxHealth = GameCustomization.playerHealth;
+        respawnTime = GameCustomization.respawnTime;        
         playerManager = GetComponent<PlayerManager>();
     }
 
     public void Init()
     {
         isDead = false;
+        maxHealth = GameCustomization.playerHealth;
         currentHealth = maxHealth;
         currMaxHealth = maxHealth;
         if (!isLocalPlayer)
@@ -92,9 +106,62 @@ public class PlayerHealth : NetworkBehaviour
                 heartbeatSource.Play();
             heartbeatSource.spatialBlend = 0;
         }
-        else if(currentHealth <= 0)
+        //else if(currentHealth <= 0)
+        //{
+        //    Died(sourceID, collisionLocation);
+        //}
+    }
+
+    public void TookDamage(byte damage, string sourceID, CollisionDetection.CollisionFlag _collisionLocation)                //This is called from CollisionDetection to determine the damage and the location of the incoming collision.
+    {
+        if (isDead) return;
+        damageSource = sourceID;
+        collisionLocation = _collisionLocation;
+        currentHealth -= damage;
+
+        Hit(collisionLocation);
+        if (!source.isPlaying)
         {
-            Died(sourceID, collisionLocation);
+            source.clip = hitEffects[Random.Range(0, hitEffects.Length)];
+            source.Play();
+        }
+
+        if (currentHealth > (short)(maxHealth * 0.75f))
+        {
+            StopHeartbeat();
+        }
+        else if (currentHealth <= (short)(maxHealth * 0.75f) && currentHealth > (short)(maxHealth * 0.5f))
+        {
+            if (!heartbeatSource.isPlaying)
+                heartbeatSource.Play();
+            heartbeatSource.spatialBlend = .75f;
+        }
+        else if (currentHealth <= (short)(maxHealth * 0.5f) && currentHealth > (short)(maxHealth * 0.25f))
+        {
+            if (!heartbeatSource.isPlaying)
+                heartbeatSource.Play();
+            heartbeatSource.spatialBlend = .5f;
+        }
+        else if (currentHealth <= (short)(maxHealth * 0.25f) && currentHealth != 0)
+        {
+            if (!heartbeatSource.isPlaying)
+                heartbeatSource.Play();
+            heartbeatSource.spatialBlend = 0;
+        }
+    }
+
+    void OnDeath(bool _isDead)
+    {
+        isDead = _isDead;
+    }
+
+    void OnHealthChanged(short health)
+    {
+        currentHealth = health;
+        if (currentHealth <= 0)
+        {
+            isDead = true;
+            EventDeath();
         }
     }
 
@@ -113,22 +180,37 @@ public class PlayerHealth : NetworkBehaviour
     }
 
     [ClientRpc]
-    public void RpcInstantDeath(string damageSource, CollisionDetection.CollisionFlag collisionLocation)
+    public void RpcInstantDeath(string _damageSource, CollisionDetection.CollisionFlag _collisionLocation)
     {
         if (isDead) return;
         currentHealth = 0;
-        Died(damageSource, collisionLocation);
+        damageSource = _damageSource;
+        collisionLocation = _collisionLocation;
+        EventDeath();
     }
 
-    [Client]
-    void Died(string damageSource, CollisionDetection.CollisionFlag collisionLocation)                                           //Died gets called when health is or goes below 0.
+    public void InstantDeath(string _damageSource, CollisionDetection.CollisionFlag _collisionLocation)
+    {
+        if (isDead) return;
+        currentHealth = 0;
+        damageSource = _damageSource;
+        collisionLocation = _collisionLocation;
+        EventDeath();
+    }
+
+    void Died()                                           //Died gets called when health is or goes below 0.
     {
         StopHeartbeat();
-        isDead = true;
-        //foreach (Transform go in collisionDetection.GetComponentsInChildren<Transform>())
-        //    go.gameObject.layer = LayerMask.NameToLayer("Default");
+        Renderer[] renderers = GetComponentsInChildren<Renderer>();
+        foreach (Renderer ren in renderers)
+            ren.enabled = false;
 
         playerManager.Dead(damageSource, collisionLocation);
+        EventRespawn();
+    }
+
+    void CallRespawn()
+    {
         StartCoroutine(Respawn());
     }
 
@@ -140,6 +222,10 @@ public class PlayerHealth : NetworkBehaviour
         transform.rotation = respawnpoint.rotation;
 
         Init();
+        Renderer[] renderers = GetComponentsInChildren<Renderer>();
+        foreach (Renderer ren in renderers)
+            ren.enabled = true;
+
         playerManager.Respawn();
     }
 

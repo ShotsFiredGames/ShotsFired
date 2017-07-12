@@ -48,7 +48,6 @@ public class PlayerMovement : NetworkBehaviour
 
     public void AimAssist()
     {
-        print("aimassist active");
         if (!aimAssist)
             aimAssist = true;
     }
@@ -59,6 +58,7 @@ public class PlayerMovement : NetworkBehaviour
             aimAssist = false;
     }
 
+    [ClientCallback]
     private void FixedUpdate()
     {
         if(Grounded())

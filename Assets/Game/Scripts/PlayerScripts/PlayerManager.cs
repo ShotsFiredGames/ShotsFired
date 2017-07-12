@@ -45,6 +45,7 @@ public class PlayerManager : NetworkBehaviour
         myCamera = playerCamera.myCamera.gameObject;
     }
 
+    [ClientCallback]
     private void Start()
     {
         playerMovement = GetComponent<PlayerMovement>();
@@ -67,6 +68,7 @@ public class PlayerManager : NetworkBehaviour
         controls.Destroy();
     }
 
+    [ClientCallback]
     void FixedUpdate()
     {
         RaycastHit hit;
@@ -76,6 +78,7 @@ public class PlayerManager : NetworkBehaviour
             playerMovement.StopAimAssist();
     }
 
+    [ClientCallback]
     private void Update()
     {
         UpdateCursorLock();
@@ -126,6 +129,7 @@ public class PlayerManager : NetworkBehaviour
         }
     }
 
+    [ClientCallback]
     private void LateUpdate()
     {
         if (isDead) return;

@@ -63,7 +63,7 @@ public class Reaper : NetworkBehaviour
             {
                 if (!targetPlayer.isDead)
                 {
-                    targetPlayer.GetComponent<PlayerHealth>().CmdInstantDeath("Reaper", CollisionDetection.CollisionFlag.Back);
+                    targetPlayer.GetComponent<PlayerHealth>().InstantDeath("Reaper", CollisionDetection.CollisionFlag.Back);
                     gameManager.CmdAddScore(GetTargetPlayer(), (short)-points);
                 }
             }
