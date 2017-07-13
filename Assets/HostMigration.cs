@@ -5,7 +5,7 @@ using UnityEngine.Networking;
 
 public class HostMigration : NetworkMigrationManager
 {
-    public static void OnHostDisconnect()
+    public void OnHostDisconnect()
     {
         NetworkMigrationManager hostMigration = new NetworkMigrationManager();
         print(hostMigration.pendingPlayers.Count);

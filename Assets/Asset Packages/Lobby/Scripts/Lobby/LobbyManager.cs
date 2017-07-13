@@ -86,13 +86,10 @@ namespace Prototype.NetworkLobby
             if (scene.buildIndex == 0 && !ServerCreateTimer.countdownActive)
                 mainMenuPanel.SetActive(true);
         }
-        
 
         public override void OnLobbyClientDisconnect(NetworkConnection conn)
         {
-            base.OnLobbyClientDisconnect(conn);
-            print("OnServerDisconnect");
-            HostMigration.OnHostDisconnect();
+            print("OnLobbyClientDisconnectBefore");
         }
 
         public override void OnLobbyClientSceneChanged(NetworkConnection conn)
@@ -143,6 +140,12 @@ namespace Prototype.NetworkLobby
                 topPanel.isInGame = true;
                 topPanel.ToggleVisibility(false);
             }
+        }
+
+        private void OnServerDisconnect(NetworkDisconnection info)
+        {
+            print("OnDisconnectedFromServer");
+            GetComponent<HostMigration>().OnHostDisconnect();
         }
 
         public void ChangeTo(RectTransform newPanel)
@@ -347,6 +350,7 @@ namespace Prototype.NetworkLobby
 
         public override void OnLobbyServerDisconnect(NetworkConnection conn)
         {
+            print("OnLobbyServerDisconnect");
             for (int i = 0; i < lobbySlots.Length; ++i)
             {
                 LobbyPlayer p = lobbySlots[i] as LobbyPlayer;
@@ -443,6 +447,7 @@ namespace Prototype.NetworkLobby
 
         public override void OnClientDisconnect(NetworkConnection conn)
         {
+            print("OnClientDisconnect");
             base.OnClientDisconnect(conn);
             ChangeTo(mainPanel);
         }
