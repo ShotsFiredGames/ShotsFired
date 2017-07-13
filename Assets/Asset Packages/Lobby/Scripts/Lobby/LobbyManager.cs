@@ -82,7 +82,8 @@ namespace Prototype.NetworkLobby
 
         void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
-            if (scene.buildIndex == 0)
+            print("wowowow");
+            if (scene.buildIndex == 0 && !ServerCreateTimer.countdownActive)
                 mainMenuPanel.SetActive(true);
         }
 
@@ -199,7 +200,15 @@ namespace Prototype.NetworkLobby
         {
             ChangeTo(mainPanel);
         }
-                 
+
+        public void Disconnect()
+        {
+            MatchInfo matchInfo = s_Singleton.matchInfo;
+            s_Singleton.matchMaker.DropConnection(matchInfo.networkId, matchInfo.nodeId, 0, s_Singleton.OnDropConnection);
+            s_Singleton.StopHost();
+        }
+
+
         public void StopHostClbk()
         {
             if (_isMatchmaking)
@@ -423,7 +432,6 @@ namespace Prototype.NetworkLobby
                 SetServerInfo("Client", networkAddress);
             }
         }
-
 
         public override void OnClientDisconnect(NetworkConnection conn)
         {

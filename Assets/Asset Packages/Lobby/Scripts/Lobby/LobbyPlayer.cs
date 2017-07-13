@@ -106,7 +106,6 @@ namespace Prototype.NetworkLobby
             EventSystem.current.SetSelectedGameObject(readyButton.gameObject);
             remoteIcone.gameObject.SetActive(false);
             localIcone.gameObject.SetActive(true);
-
             CheckRemoveButton();
 
             if (playerColor == Color.white)
