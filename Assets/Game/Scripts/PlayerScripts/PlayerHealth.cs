@@ -121,17 +121,21 @@ public class PlayerHealth : NetworkBehaviour
     void Died(string damageSource, CollisionDetection.CollisionFlag collisionLocation)                                           //Died gets called when health is or goes below 0.
     {
         if (isDead == true) return;
-        isDead = true;
-        StopHeartbeat();
 
-        foreach (GameObject go in collisionLocations)
-            go.layer = LayerMask.NameToLayer("Default");
+        if(!isDead)
+        {
+            isDead = true;
+            StopHeartbeat();
 
-        StartCoroutine(DespawnEffect());
-        playerManager.Dead(damageSource, collisionLocation);
+            foreach (GameObject go in collisionLocations)
+                go.layer = LayerMask.NameToLayer("Default");
 
-        if(respawn == null)
-            respawn = StartCoroutine(Respawn());
+            StartCoroutine(DespawnEffect());
+            playerManager.Dead(damageSource, collisionLocation);
+
+            if (respawn == null)
+                respawn = StartCoroutine(Respawn());
+        }
     }
 
     IEnumerator DespawnEffect()
@@ -141,7 +145,8 @@ public class PlayerHealth : NetworkBehaviour
     }
 
     IEnumerator Respawn()
-    {        
+    {
+        if (isDead) yield break;
         yield return new WaitForSeconds(respawnTime);
         despawnEffect.SetActive(false);
         Transform respawnpoint = NetworkManager.singleton.GetStartPosition();
