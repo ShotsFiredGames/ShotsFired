@@ -90,6 +90,7 @@ namespace Prototype.NetworkLobby
         public override void OnServerDisconnect(NetworkConnection conn)
         {
             base.OnServerDisconnect(conn);
+            print("OnServerDisconnect");
             HostMigration.OnHostDisconnect();
         }
 
