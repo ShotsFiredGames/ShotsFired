@@ -58,7 +58,6 @@ public class PlayerHealth : NetworkBehaviour
     public void CmdTookDamage(short damage, string sourceID, CollisionDetection.CollisionFlag collisionLocation)
     {
         if (isDead) return;
-        print("CmdTookDamage");
         RpcTookDamage(damage, sourceID, collisionLocation);
     }
 
@@ -66,7 +65,6 @@ public class PlayerHealth : NetworkBehaviour
     public void RpcTookDamage(short damage, string sourceID, CollisionDetection.CollisionFlag collisionLocation)                //This is called from CollisionDetection to determine the damage and the location of the incoming collision.
     {
         if (isDead) return;
-        print("RpcTookDanage");
         currentHealth -= damage;
         Hit(collisionLocation);
         if (!source.isPlaying)
@@ -107,7 +105,6 @@ public class PlayerHealth : NetworkBehaviour
     [Command]
     public void CmdInstantDeath(string damageSource, CollisionDetection.CollisionFlag collisionLocation)
     {
-        print("CmdInstantDeath");
         if (isDead) return;
         RpcInstantDeath(damageSource, collisionLocation);
     }
@@ -115,7 +112,6 @@ public class PlayerHealth : NetworkBehaviour
     [ClientRpc]
     public void RpcInstantDeath(string damageSource, CollisionDetection.CollisionFlag collisionLocation)
     {
-        print("RpcInstantDeath");
         if (isDead) return;
         currentHealth = 0;
         Died(damageSource, collisionLocation);
@@ -127,7 +123,6 @@ public class PlayerHealth : NetworkBehaviour
         if (isDead == true) return;
         if(!isDead)
         {
-            print("Died");
             isDead = true;
             StopHeartbeat();
 
@@ -150,7 +145,6 @@ public class PlayerHealth : NetworkBehaviour
 
     IEnumerator Respawn()
     {
-        print("Respawning");
         yield return new WaitForSeconds(respawnTime);
         despawnEffect.SetActive(false);
         Transform respawnpoint = NetworkManager.singleton.GetStartPosition();

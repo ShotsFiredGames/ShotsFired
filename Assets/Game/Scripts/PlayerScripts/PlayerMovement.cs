@@ -47,9 +47,6 @@ public class PlayerMovement : NetworkBehaviour
     [HideInInspector]
     public bool isSprinting;
 
-    //[HideInInspector]
-    //public bool lockMovement;
-
     Coroutine sprinting;
     Coroutine stopSprinting;
     bool isDraining;
@@ -116,22 +113,6 @@ public class PlayerMovement : NetworkBehaviour
 
     public void Move(float horizontal, float vertical)
     {
-        //if (lockMovement) return;
-        //Vector3 targetVelocity = new Vector3(horizontal, 0, vertical);
-        //targetVelocity = transform.TransformDirection(targetVelocity);
-
-        //if(!isSprinting)
-        //    targetVelocity *= speed;
-        //else if(canSprint && isSprinting)
-        //    targetVelocity *= (speed + (speed *.5f));
-
-        //Vector3 velocity = rb.velocity;
-        //Vector3 velocityChange = (targetVelocity - velocity);
-        //velocityChange.x = Mathf.Clamp(velocityChange.x, -maxVelocityChange, maxVelocityChange);
-        //velocityChange.z = Mathf.Clamp(velocityChange.z, -maxVelocityChange, maxVelocityChange);
-        //velocityChange.y = 0;
-        //rb.AddForce(velocityChange, ForceMode.Impulse);
-
         if(!isSprinting)
             direction = new Vector3(horizontal * speed, 0, vertical * speed);
         else
