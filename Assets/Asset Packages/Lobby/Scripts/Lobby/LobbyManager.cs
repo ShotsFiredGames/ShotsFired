@@ -86,10 +86,11 @@ namespace Prototype.NetworkLobby
             if (scene.buildIndex == 0 && !ServerCreateTimer.countdownActive)
                 mainMenuPanel.SetActive(true);
         }
+        
 
-        public override void OnServerDisconnect(NetworkConnection conn)
+        public override void OnLobbyClientDisconnect(NetworkConnection conn)
         {
-            base.OnServerDisconnect(conn);
+            base.OnLobbyClientDisconnect(conn);
             print("OnServerDisconnect");
             HostMigration.OnHostDisconnect();
         }
