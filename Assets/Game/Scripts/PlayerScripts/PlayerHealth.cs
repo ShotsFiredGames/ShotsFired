@@ -124,7 +124,6 @@ public class PlayerHealth : NetworkBehaviour
 
         if(!isDead)
         {
-            isDead = true;
             StopHeartbeat();
 
             foreach (GameObject go in collisionLocations)
@@ -146,7 +145,6 @@ public class PlayerHealth : NetworkBehaviour
 
     IEnumerator Respawn()
     {
-        if (isDead) yield break;
         yield return new WaitForSeconds(respawnTime);
         despawnEffect.SetActive(false);
         Transform respawnpoint = NetworkManager.singleton.GetStartPosition();
