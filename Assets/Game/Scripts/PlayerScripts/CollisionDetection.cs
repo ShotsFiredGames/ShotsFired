@@ -23,6 +23,7 @@ public class CollisionDetection : MonoBehaviour
     
     public void OnHit(short damage, string sourceID)                                                                                         //Gets called from the shooting scripts raycast, we use other to determine how much damage we will take.
     {
+        print("Collision Detected");
         if (health.isPlayerDead()) return;
         switch(collisionLocation)                                                                                         //Find the collisionLocation this collider is marked with.
         {
