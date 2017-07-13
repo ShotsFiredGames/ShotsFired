@@ -47,8 +47,8 @@ public class PlayerMovement : NetworkBehaviour
     [HideInInspector]
     public bool isSprinting;
 
-    [HideInInspector]
-    public bool lockMovement;
+    //[HideInInspector]
+    //public bool lockMovement;
 
     Coroutine sprinting;
     Coroutine stopSprinting;
@@ -89,7 +89,7 @@ public class PlayerMovement : NetworkBehaviour
             { 
                 landed = true;
                 jumping = false;
-                lockMovement = false;
+               // lockMovement = false;
                 playerManager.Landed();
             }
 
@@ -116,7 +116,7 @@ public class PlayerMovement : NetworkBehaviour
 
     public void Move(float horizontal, float vertical)
     {
-        if (lockMovement) return;
+        //if (lockMovement) return;
         //Vector3 targetVelocity = new Vector3(horizontal, 0, vertical);
         //targetVelocity = transform.TransformDirection(targetVelocity);
 
