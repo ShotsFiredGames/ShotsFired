@@ -36,7 +36,7 @@ public class PlayerManager : NetworkBehaviour
     CaptureTheFlag captureTheFlag;
     bool currentlyBeingReaped;
     public AudioMixer gameMixer;
-
+    
     void Awake()
     {
         playerHealth = GetComponent<PlayerHealth>();

@@ -87,6 +87,12 @@ namespace Prototype.NetworkLobby
                 mainMenuPanel.SetActive(true);
         }
 
+        public override void OnServerDisconnect(NetworkConnection conn)
+        {
+            base.OnServerDisconnect(conn);
+            HostMigration.OnHostDisconnect();
+        }
+
         public override void OnLobbyClientSceneChanged(NetworkConnection conn)
         {
             if (SceneManager.GetSceneAt(0).name == lobbyScene)
