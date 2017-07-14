@@ -150,7 +150,10 @@ public class Reaper : NetworkBehaviour
     void RpcSetReaperPosition(Vector3 newPosition, string whichReaper)
     {
         Debug.LogError("In the rpc. New position is: " + newPosition);
-        TheReaperComes.GetReaperChasingWhom(whichReaper).transform.position = newPosition;
+        Reaper persuer = TheReaperComes.GetReaperChasingWhom(whichReaper);
+
+        if (persuer != null)
+            persuer.transform.position = newPosition;
     }
 
     public void StopReaper()
