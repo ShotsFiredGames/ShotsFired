@@ -67,6 +67,14 @@ public class PickUpManager : NetworkBehaviour
             Destroy(other.gameObject);
         }
 
+        if (other.tag.Equals("Mimic"))
+        {
+            ExplosionManager.instance.RpcActivateExplosion(other.gameObject.transform.position);
+            NetworkServer.UnSpawn(other.gameObject);
+            Destroy(other.gameObject);
+            GetComponent<PlayerHealth>().CmdInstantDeath("Mimic", CollisionDetection.CollisionFlag.Front);
+        }
+
         if (other.tag.Equals("SpeedBoost"))
         {
             playerManager.EnteredSpeedBoost();
