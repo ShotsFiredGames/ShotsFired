@@ -19,9 +19,12 @@ public class Reaper : NetworkBehaviour
     [SyncVar]
     short currentHealth;
     short points;
+    bool isDead;
 
-    private Transform spawnPoint;
+    [SyncVar]
+    private Vector3 spawnPoint;
     private float currentDistance;
+    [SyncVar]
     private float currentSpeed;
     PlayerManager targetPlayer;
     GameObject targetPlayerObject;
@@ -33,7 +36,7 @@ public class Reaper : NetworkBehaviour
         gameObject.SetActive(true);
         currentSpeed = speed;
         currentHealth = health;
-        transform.position = spawnPoint.position;
+        transform.position = spawnPoint;
     }
 
     void FixedUpdate()
@@ -70,8 +73,7 @@ public class Reaper : NetworkBehaviour
             IncreaseSpeed();
         else
         {
-            if (canDie)
-                CmdReaperTookDamage(damage);
+            RpcReaperTookDamage(damage);
         }
             
     }
@@ -91,8 +93,9 @@ public class Reaper : NetworkBehaviour
     public void RpcReaperTookDamage(short damage)
     {
         currentHealth -= damage;
+        Debug.LogError("Shot Reaper. Health is: " + currentHealth);
 
-        if (currentHealth <= 0)
+        if (currentHealth <= 0 && !isDead)
             StartCoroutine(Respawn());
 
     }
@@ -110,7 +113,8 @@ public class Reaper : NetworkBehaviour
 
     public void SetSpawnPoint(Transform spawn)
     {
-        spawnPoint = spawn;
+        Debug.LogError("Spawn point: " + spawn + " set for the reaper chasing " + GetTargetPlayer());
+        spawnPoint = spawn.position;
     }
 
     public void SetPoints(short points)
@@ -120,14 +124,33 @@ public class Reaper : NetworkBehaviour
 
     IEnumerator Respawn()
     {
-        transform.position = new Vector3(-1000, -1000, -1000);
+        CmdSetReaperPosition(new Vector3(-1000, -1000, -1000));
+        isDead = true;
+        Debug.LogError("Current Position is: " + transform.root.position);
         yield return new WaitForSeconds(1f);
-        transform.position = spawnPoint.position;
-        transform.rotation = spawnPoint.rotation;
+        Debug.LogError("Spawn point: " + spawnPoint);
+        CmdSetReaperPosition(spawnPoint);
+        transform.rotation = Quaternion.identity;
         currentSpeed = speed;
 
         currentHealth = health;
+        isDead = false;
         gameObject.SetActive(true);
+    }
+
+    [Command]
+    void CmdSetReaperPosition(Vector3 newPosition)
+    {
+        Debug.LogError("In the command. New Position is: " + newPosition);
+        transform.position = newPosition;
+        RpcSetReaperPosition(newPosition);
+    }
+
+    [ClientRpc]
+    void RpcSetReaperPosition(Vector3 newPosition)
+    {
+        Debug.LogError("In the rpc. New position is: " + newPosition);
+        transform.position = newPosition;
     }
 
     public void StopReaper()

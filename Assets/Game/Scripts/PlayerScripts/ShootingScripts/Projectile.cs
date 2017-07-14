@@ -9,6 +9,7 @@ public class Projectile : NetworkBehaviour
     Vector3 direction;
     string playername;
     Rigidbody rb;
+    [SyncVar]
     byte damage;
 
     Vector3 impactNormal; //Used to rotate impactparticle.
@@ -29,6 +30,7 @@ public class Projectile : NetworkBehaviour
     {
         if (other.transform.root.name != playername)
         {
+            Debug.LogError("Damage in Projectile: " + damage);
             if(other.tag.Equals("Collision"))
                 other.GetComponent<CollisionDetection>().OnHit(damage, playername);
 
@@ -56,5 +58,6 @@ public class Projectile : NetworkBehaviour
         playername = _playername;
         impactNormal = hitNormal;
         damage = _damage;
+        Debug.LogError("Damage has been set. It is " + damage);
     }
 }
