@@ -11,7 +11,6 @@ public class Shooting : NetworkBehaviour
     GameObject muzzleFlash;
     public LayerMask layermask;
     public Image hitMarker;
-    public AudioSource shootingSource;
     AudioSource hitMarkerSource;
     PlayerManager playerManager;
 
@@ -77,7 +76,7 @@ public class Shooting : NetworkBehaviour
             if (currentGun.gameObject.activeSelf)
                 currentGun.shootingAnim.ResetTrigger("Fire");
 
-        shootingSource.clip = currentGun.shootingSound;
+        currentGun.shootingSource.clip = currentGun.shootingSound;
         currentGun.isFiring = false;
         muzzleFlash = currentGun.muzzleFlash;
     }
@@ -103,7 +102,7 @@ public class Shooting : NetworkBehaviour
     [ClientRpc]
     void RpcStopFiring()
     {
-        shootingSource.PlayOneShot(currentGun.trailClip);
+        currentGun.shootingSource.PlayOneShot(currentGun.trailClip);
     }
 
     [Command]
@@ -121,8 +120,8 @@ public class Shooting : NetworkBehaviour
 
     IEnumerator MuzzleFlash()                                                                                   //Activate and DeActivate the muzzle flash
     {
-        if (shootingSource.clip != null)
-            shootingSource.PlayOneShot(currentGun.shootingSound);
+        if (currentGun.shootingSource.clip != null)
+            currentGun.shootingSource.PlayOneShot(currentGun.shootingSound);
 
         muzzleFlash.SetActive(true);
 		yield return new WaitForSeconds(currentGun.muzzleFlashTimer);

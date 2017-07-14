@@ -33,6 +33,8 @@ public class PlayerHealth : NetworkBehaviour
     GameObject collisionDetection;
     Coroutine respawn;
 
+	public SkinnedMeshRenderer[] playerMeshes;
+
     // Use this for initialization
     void Awake()
     {
@@ -145,8 +147,14 @@ public class PlayerHealth : NetworkBehaviour
 
     IEnumerator Respawn()
     {
+		foreach (SkinnedMeshRenderer rend in playerMeshes)
+			rend.enabled = false;
         yield return new WaitForSeconds(respawnTime);
+
+		foreach (SkinnedMeshRenderer rend in playerMeshes)
+			rend.enabled = true;
         despawnEffect.SetActive(false);
+
         Transform respawnpoint = NetworkManager.singleton.GetStartPosition();
         transform.position = respawnpoint.position;
         transform.rotation = respawnpoint.rotation;

@@ -11,6 +11,7 @@ public abstract class Gun : MonoBehaviour
 
     public bool canAim;
     public WeaponType weaponType;
+	public AudioSource shootingSource;
 
     public GameObject thirdPersonGun;
     public string gunName;
