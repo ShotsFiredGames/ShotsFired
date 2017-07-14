@@ -52,7 +52,7 @@ public class PickUpLoacation : NetworkBehaviour
     [Command]
     public void CmdActivateMimic()
     {
-        if (activePickUp.GetComponent<PickUp>() == null)
+        if (activePickUp == null)
         {
             activePickUp = Instantiate(pickUpTypes[Random.Range(0, pickUpTypes.Length)], transform.position + spawnOffset, Quaternion.identity) as GameObject;
             NetworkServer.Spawn(activePickUp);
