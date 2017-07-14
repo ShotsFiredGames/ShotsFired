@@ -102,6 +102,7 @@ public class Reaper : NetworkBehaviour
 
     public string GetTargetPlayer()
     {
+        if (targetPlayer == null) return "No one";
         return targetPlayer.transform.name;
     }
 
@@ -124,12 +125,12 @@ public class Reaper : NetworkBehaviour
 
     IEnumerator Respawn()
     {
-        CmdSetReaperPosition(new Vector3(-1000, -1000, -1000));
+        CmdSetReaperPosition(new Vector3(-1000, -1000, -1000), GetTargetPlayer());
         isDead = true;
         Debug.LogError("Current Position is: " + transform.root.position);
         yield return new WaitForSeconds(1f);
         Debug.LogError("Spawn point: " + spawnPoint);
-        CmdSetReaperPosition(spawnPoint);
+        CmdSetReaperPosition(spawnPoint, GetTargetPlayer());
         transform.rotation = Quaternion.identity;
         currentSpeed = speed;
 
@@ -139,18 +140,17 @@ public class Reaper : NetworkBehaviour
     }
 
     [Command]
-    void CmdSetReaperPosition(Vector3 newPosition)
+    void CmdSetReaperPosition(Vector3 newPosition, string whichReaper)
     {
         Debug.LogError("In the command. New Position is: " + newPosition);
-        transform.position = newPosition;
-        RpcSetReaperPosition(newPosition);
+        RpcSetReaperPosition(newPosition, whichReaper);
     }
 
     [ClientRpc]
-    void RpcSetReaperPosition(Vector3 newPosition)
+    void RpcSetReaperPosition(Vector3 newPosition, string whichReaper)
     {
         Debug.LogError("In the rpc. New position is: " + newPosition);
-        transform.position = newPosition;
+        TheReaperComes.GetReaperChasingWhom(whichReaper).transform.position = newPosition;
     }
 
     public void StopReaper()
