@@ -11,14 +11,19 @@ public class Reaper : NetworkBehaviour
     [Header("Player Interaction")]
     public float distanceToAttack;
     public float shotSpeedIncrease;
-    
+    [Tooltip("The vertical offset for the players. 0 means feet.")]
+    public float attackingOffset;
+
 
     [SyncVar]
     short currentHealth;
     short points;
+    bool isDead;
 
-    private Transform spawnPoint;
+    [SyncVar]
+    private Vector3 spawnPoint;
     private float currentDistance;
+    [SyncVar]
     private float currentSpeed;
     PlayerManager targetPlayer;
     GameObject targetPlayerObject;
@@ -30,26 +35,13 @@ public class Reaper : NetworkBehaviour
         gameObject.SetActive(true);
         currentSpeed = speed;
         currentHealth = health;
-        transform.position = spawnPoint.position;
-    }
-
-    void Start()
-    {
-        gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+        transform.position = spawnPoint;
     }
 
     void FixedUpdate()
     {
-        targetPlayerObject = PlayerWrangler.GetPlayer(gameManager.GetWinningPlayer()).gameObject;
-
-        if (targetPlayerObject != null)
+        if (targetPlayer != null)
         {
-            if (targetPlayerObject.GetComponent<PlayerManager>() != targetPlayer)
-            {
-                targetPlayer = targetPlayerObject.GetComponent<PlayerManager>();
-                targetPlayer.ActivateReaperEffects();
-            }
-
             currentDistance = Vector3.Distance(targetPlayer.transform.position, this.transform.position);
 
             currentDistance = Mathf.Abs(currentDistance);
@@ -57,14 +49,16 @@ public class Reaper : NetworkBehaviour
             if (currentDistance > distanceToAttack)
             {
                 float step = currentSpeed * Time.deltaTime / 2;
-                transform.position = Vector3.MoveTowards(transform.position, targetPlayer.transform.position, step);
+                Vector3 playerPosition = new Vector3(targetPlayer.transform.position.x, targetPlayer.transform.position.y + attackingOffset, targetPlayer.transform.position.z);
+                transform.position = Vector3.MoveTowards(transform.position, playerPosition, step);
             }
             else
             {
                 if (!targetPlayer.isDead)
                 {
                     targetPlayer.GetComponent<PlayerHealth>().CmdInstantDeath("Reaper", CollisionDetection.CollisionFlag.Back);
-                    gameManager.CmdAddScore(GetTargetPlayer(), (short)-points);
+                    GameManager.instance.CmdAddScore(GetTargetPlayer(), (short)-points);
+                    currentSpeed = speed;
                 }
             }
         }
@@ -75,17 +69,15 @@ public class Reaper : NetworkBehaviour
         if (!player.Equals(GetTargetPlayer()))
             IncreaseSpeed();
         else
-            CmdReaperTookDamage(damage);
+        {
+            RpcReaperTookDamage(damage);
+        }
+
     }
 
     public void IncreaseSpeed()
     {
         currentSpeed += shotSpeedIncrease;
-    }
-
-    public string GetTargetPlayer()
-    {
-        return targetPlayer.transform.name;
     }
 
     [Command]
@@ -99,14 +91,26 @@ public class Reaper : NetworkBehaviour
     {
         currentHealth -= damage;
 
-        if (currentHealth <= 0)
-           respawn = StartCoroutine(Respawn());
+        if (currentHealth <= 0 && !isDead)
+            respawn = StartCoroutine(Respawn());
 
+    }
+
+    public string GetTargetPlayer()
+    {
+        if (targetPlayer == null) return "No one";
+        return targetPlayer.transform.name;
+    }
+
+    public void SetTargetPlayer(PlayerManager target)
+    {
+        targetPlayer = target;
+        targetPlayer.ReaperEffectsActivate(true);
     }
 
     public void SetSpawnPoint(Transform spawn)
     {
-        spawnPoint = spawn;
+        spawnPoint = spawn.position;
     }
 
     public void SetPoints(short points)
@@ -116,19 +120,40 @@ public class Reaper : NetworkBehaviour
 
     IEnumerator Respawn()
     {
-        transform.position = new Vector3(-1000, -1000, -1000);
+        CmdSetReaperPosition(new Vector3(-1000, -1000, -1000), GetTargetPlayer());
+        isDead = true;
         yield return new WaitForSeconds(1f);
-        transform.position = spawnPoint.position;
-        transform.rotation = spawnPoint.rotation;
+        CmdSetReaperPosition(spawnPoint, GetTargetPlayer());
+        transform.rotation = Quaternion.identity;
         currentSpeed = speed;
 
         currentHealth = health;
+        isDead = false;
         gameObject.SetActive(true);
     }
 
-    public void StopRespawn()
+    [Command]
+    void CmdSetReaperPosition(Vector3 newPosition, string whichReaper)
+    {
+        RpcSetReaperPosition(newPosition, whichReaper);
+    }
+
+    [ClientRpc]
+    void RpcSetReaperPosition(Vector3 newPosition, string whichReaper)
+    {
+        Reaper persuer = TheReaperComes.GetReaperChasingWhom(whichReaper);
+
+        if (persuer != null)
+            persuer.transform.position = newPosition;
+    }
+
+    public void StopReaper()
     {
         if (respawn != null)
             StopCoroutine(respawn);
+
+        targetPlayer.ReaperEffectsActivate(false);
+        gameObject.SetActive(false);
+        this.enabled = false;
     }
 }

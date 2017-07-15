@@ -158,6 +158,12 @@ public class Shooting : NetworkBehaviour
         PlayerWrangler.GetPlayer(hitPlayer).transform.Find("CollisionDetection").transform.Find(hitCollider).GetComponent<CollisionDetection>().OnHit(_damage, transform.name);
     }
 
+    [Command]
+    void CmdReaperShot(string thisPlayer, string chasingPlayer, short _damage)
+    {
+        TheReaperComes.GetReaperChasingWhom(chasingPlayer).HitBy(_damage, thisPlayer);
+    }
+
     public RaycastHit CastMyRay()
     {
         RaycastHit hit;
@@ -183,7 +189,7 @@ public class Shooting : NetworkBehaviour
         else if (hit.transform.tag.Equals("Reaper"))
         {
             StartCoroutine(HitMarker());
-            hit.transform.GetComponent<Reaper>().HitBy(_damage, transform.root.name);
+            CmdReaperShot(transform.root.name, hit.transform.GetComponent<Reaper>().GetTargetPlayer(), _damage);
         }
         else
         {
@@ -221,7 +227,7 @@ public class Shooting : NetworkBehaviour
     void RpcProjectileShot(NetworkIdentity bullet, Vector3 direction, Vector3 hitNormal)
     {
         if (bullet != null)
-            bullet.GetComponent<Projectile>().SetVariables(currentGun.speed, direction, transform.name, hitNormal, _damage);
+            bullet.GetComponent<Projectile>().SetVariables(currentGun.speed, direction, transform.name, hitNormal, 65);
     }
 
     [Client]
