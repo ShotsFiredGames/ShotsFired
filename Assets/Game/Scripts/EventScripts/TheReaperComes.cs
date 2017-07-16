@@ -11,10 +11,9 @@ public class TheReaperComes : GameEvent
     [Tooltip("This number is subtracted. Make it positive if you want the player to lose points")]
     public byte pointsPlayerLosesOnDeath;
 
-    [ServerCallback]
-    private void Start()
+    void Start()
     {
-
+        ClientScene.RegisterPrefab(reaper.gameObject);
     }
 
     private void InitReapers()
@@ -23,11 +22,18 @@ public class TheReaperComes : GameEvent
 
         for (byte i = 0; i < num; i++)
         {
-            print("In here for" + i);
-            reapers.Add(Instantiate(reaper));
+            Reaper newReaper = Instantiate(reaper);
+            reapers.Add(newReaper);
 
             if (isServer)
-                NetworkServer.Spawn(reapers[i].gameObject);
+            {
+                NetworkServer.Spawn(newReaper.gameObject);
+            }
+            else
+            {
+                ClientScene.RegisterPrefab(newReaper.gameObject);
+            }
+                
         }
     }
 

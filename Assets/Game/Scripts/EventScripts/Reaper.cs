@@ -14,7 +14,6 @@ public class Reaper : NetworkBehaviour
     [Tooltip("The vertical offset for the players. 0 means feet.")]
     public float attackingOffset;
 
-
     [SyncVar]
     short currentHealth;
     short points;
