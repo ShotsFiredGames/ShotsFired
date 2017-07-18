@@ -72,6 +72,11 @@ public class PlayerManager : NetworkBehaviour
         return faction;
     }
 
+    public Material GetFactionColor()
+    {
+        return factionColor;
+    }
+
     void OnEnable()
     {
         controls = Controls.CreateWithDefaultBindings();

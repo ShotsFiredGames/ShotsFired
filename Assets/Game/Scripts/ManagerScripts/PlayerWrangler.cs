@@ -14,14 +14,14 @@ public class PlayerWrangler : MonoBehaviour
     public Material blue;
     public Material black;
     public Material red;
-    public Material white;
+    public Material purple;
     public Material green;
     public Material yellow;
 
     static Material _blue;
     static Material _black;
     static Material _red;
-    static Material _white;
+    static Material _purple;
     static Material _green;
     static Material _yellow;
 
@@ -48,7 +48,7 @@ public class PlayerWrangler : MonoBehaviour
         _blue = blue;
         _black = black;
         _red = red;
-        _white = white;
+        _purple = purple;
         _green = green;
         _yellow = yellow;
     }
@@ -62,22 +62,22 @@ public class PlayerWrangler : MonoBehaviour
         switch(playerCount)
         {
             case 1:
-                player.GetComponent<PlayerManager>().SetFaction("Water", _blue);
+                player.SetFaction("Water", _blue);
                 break;
             case 2:
-                player.GetComponent<PlayerManager>().SetFaction("Earth", _black);
+                player.SetFaction("Earth", _black);
                 break;
             case 3:
-                player.GetComponent<PlayerManager>().SetFaction("Fire", _red);
+                player.SetFaction("Fire", _red);
                 break;
             case 4:
-                player.GetComponent<PlayerManager>().SetFaction("Air", _white);
+                player.SetFaction("Air", _purple);
                 break;
             case 5:
-                player.GetComponent<PlayerManager>().SetFaction("Death", _green);
+                player.SetFaction("Death", _green);
                 break;
             case 6:
-                player.GetComponent<PlayerManager>().SetFaction("Life", _yellow);
+                player.SetFaction("Life", _yellow);
                 break;
         }
         
