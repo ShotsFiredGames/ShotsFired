@@ -163,7 +163,7 @@ public class PlayerHealth : NetworkBehaviour
 			rend.enabled = true;
         despawnEffect.SetActive(false);
 
-        if (!ballToTheWall.ballToTheWallActive)
+        if (ballToTheWall != null && !ballToTheWall.ballToTheWallActive)
             respawnpoint = NetworkManager.singleton.GetStartPosition();
         else
             respawnpoint = ballToTheWall.spawnpoints[Random.Range(0, ballToTheWall.spawnpoints.Length)].transform;
