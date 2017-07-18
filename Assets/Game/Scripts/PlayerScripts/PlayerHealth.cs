@@ -43,11 +43,6 @@ public class PlayerHealth : NetworkBehaviour
         respawnTime = GameCustomization.respawnTime;
         maxHealth = GameCustomization.playerHealth;
         playerManager = GetComponent<PlayerManager>();
-    }
-
-    private IEnumerator Start()
-    {
-        yield return new WaitForSeconds(1);
         ballToTheWall = GameObject.Find("BallToTheWall").GetComponent<BallToTheWall>();
     }
 
