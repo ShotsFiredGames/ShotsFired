@@ -11,18 +11,76 @@ public class PlayerWrangler : MonoBehaviour
     private static Dictionary<string, PlayerManager> players = new Dictionary<string, PlayerManager>();
     private const string PLAYER_ID_PREFIX = "Player ";
 
+    public Material blue;
+    public Material black;
+    public Material red;
+    public Material white;
+    public Material green;
+    public Material yellow;
+
+    static Material _blue;
+    static Material _black;
+    static Material _red;
+    static Material _white;
+    static Material _green;
+    static Material _yellow;
+
+    static int playerCount;
+
+    enum Faction
+    {
+        Water,
+        Earth,
+        Fire,
+        Air,
+        Death,
+        Life
+    };
+
+
     void Awake()
     {
         if (instance != null)
             Debug.LogError("More than one PlayerWrangler in scene.");
         else
             instance = this;
+
+        _blue = blue;
+        _black = black;
+        _red = red;
+        _white = white;
+        _green = green;
+        _yellow = yellow;
     }
 
     public static void RegisterPlayer(string netId, PlayerManager player)
     {
-        string playerID = PLAYER_ID_PREFIX + netId;
+        playerCount++;
+        string playerID = PLAYER_ID_PREFIX + playerCount;
         players.Add(playerID, player);
+
+        switch(playerCount)
+        {
+            case 1:
+                player.GetComponent<PlayerManager>().SetFaction("Water", _blue);
+                break;
+            case 2:
+                player.GetComponent<PlayerManager>().SetFaction("Earth", _black);
+                break;
+            case 3:
+                player.GetComponent<PlayerManager>().SetFaction("Fire", _red);
+                break;
+            case 4:
+                player.GetComponent<PlayerManager>().SetFaction("Air", _white);
+                break;
+            case 5:
+                player.GetComponent<PlayerManager>().SetFaction("Death", _green);
+                break;
+            case 6:
+                player.GetComponent<PlayerManager>().SetFaction("Life", _yellow);
+                break;
+        }
+        
         player.transform.name = playerID;
         GameManager.instance.AddPlayer(playerID);
     }

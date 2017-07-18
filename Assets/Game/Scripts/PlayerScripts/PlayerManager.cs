@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.Networking;
+using System.Linq;
 
 public class PlayerManager : NetworkBehaviour
 {
@@ -12,12 +13,15 @@ public class PlayerManager : NetworkBehaviour
 
     PlayerHealth playerHealth;
     public bool isDead;
+    string faction;
+    Material factionColor;
 
     Shooting shooting;
 
     Controls controls;
     string saveData;
 
+    public Renderer rend;
     public bool isArmed;
     bool isAiming;
     bool isFiring;
@@ -53,6 +57,19 @@ public class PlayerManager : NetworkBehaviour
         juggernaut = GetComponentInChildren<Juggernaut>();
 
         playerHealth.Init();
+    }
+
+    public void SetFaction(string myFaction, Material myColor)
+    {
+        faction = myFaction;
+        factionColor = myColor;
+        rend.material = myColor;
+        print(faction);
+    }
+
+    public string GetFaction()
+    {
+        return faction;
     }
 
     void OnEnable()
