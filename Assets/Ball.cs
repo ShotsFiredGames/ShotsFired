@@ -5,24 +5,26 @@ using UnityEngine.Networking;
 
 public class Ball : NetworkBehaviour
 {
-    GameObject ballRespawn;
     string faction;
     Material factionColor;
     Renderer rend;
+    BallToTheWall ballToTheWall;
 
 	void Start ()
     {
         rend = GetComponent<Renderer>();
         rend.material.color = Color.white;
-        ballRespawn = GameObject.Find("BallSpawnpoint");
-        NetworkServer.Spawn(gameObject);
 	}
 
     void OnEnable()
     {
         rend = GetComponent<Renderer>();
         rend.material.color = Color.white;
-        ballRespawn = GameObject.Find("BallSpawnpoint");
+    }
+
+    public void SetVariables(BallToTheWall _ballToTheWall)
+    {
+        ballToTheWall = _ballToTheWall;
     }
 
     public void SetFaction(string myFaction, Material myColor)
@@ -41,7 +43,7 @@ public class Ball : NetworkBehaviour
     {
         yield return new WaitForSeconds(1);
         rend.material.color = Color.white;
-        transform.position = ballRespawn.transform.position;
         GetComponent<Rigidbody>().velocity = Vector3.zero;
+        ballToTheWall.RespawnBall();
     }
 }

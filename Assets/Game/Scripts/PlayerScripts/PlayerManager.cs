@@ -64,7 +64,6 @@ public class PlayerManager : NetworkBehaviour
         faction = myFaction;
         factionColor = myColor;
         rend.material = myColor;
-        print(faction);
     }
 
     public string GetFaction()

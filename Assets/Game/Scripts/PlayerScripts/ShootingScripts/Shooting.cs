@@ -122,6 +122,7 @@ public class Shooting : NetworkBehaviour
     {
         if (currentGun.shootingSource.clip != null)
             currentGun.shootingSource.PlayOneShot(currentGun.shootingSound);
+        if (muzzleFlash == null) yield break;
 
         muzzleFlash.SetActive(true);
 		yield return new WaitForSeconds(currentGun.muzzleFlashTimer);

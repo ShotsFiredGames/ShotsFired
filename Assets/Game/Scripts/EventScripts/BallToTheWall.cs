@@ -2,9 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class BallToTheWall : GameEvent
 {
+    public short scoreAmount;
+
     [HideInInspector]
     public bool ballToTheWallActive;
     public GameObject[] objectsToSetActive;
@@ -12,9 +15,24 @@ public class BallToTheWall : GameEvent
     public GameObject[] spawnpoints;
     public Collider[] goals;
 
+    public GameObject ball;
+    public GameObject ballRespawn;
+    GameObject activeBall;
+
+    private void Start()
+    {
+        activeBall = Instantiate(ball, ballRespawn.transform.position, ballRespawn.transform.rotation);
+        activeBall.transform.parent = transform;
+        activeBall.GetComponent<Ball>().SetVariables(this);
+        NetworkServer.Spawn(activeBall);
+        activeBall.SetActive(false);
+    }
+
     public override void StartEvent()
     {
         ballToTheWallActive = true;
+        activeBall.SetActive(true);
+
         for (int i = 0; i < objectsToSetInActive.Length; i++)
             objectsToSetInActive[i].SetActive(false);
 
@@ -45,6 +63,7 @@ public class BallToTheWall : GameEvent
         for (int i = 0; i < objectsToSetInActive.Length; i++)
             objectsToSetInActive[i].SetActive(true);
 
+        activeBall.SetActive(false);
         ballToTheWallActive = false;
     }
 
@@ -52,5 +71,15 @@ public class BallToTheWall : GameEvent
     {
         yield return new WaitForSeconds(duration);
         EndEvent();
+    }
+
+    public void PlayerScored(string player)
+    {
+        GameManager.instance.CmdAddScore(player, scoreAmount);
+    }
+
+    public void RespawnBall()
+    {
+        activeBall.transform.position = ballRespawn.transform.position;
     }
 }
