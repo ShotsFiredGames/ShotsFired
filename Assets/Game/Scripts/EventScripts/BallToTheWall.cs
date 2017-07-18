@@ -19,6 +19,7 @@ public class BallToTheWall : GameEvent
     public GameObject ballRespawn;
     GameObject activeBall;
 
+    [ServerCallback]
     private void Start()
     {
         activeBall = Instantiate(ball, ballRespawn.transform.position, ballRespawn.transform.rotation);
