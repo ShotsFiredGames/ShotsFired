@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class ParticleCollision : MonoBehaviour
 {
@@ -12,9 +13,10 @@ public class ParticleCollision : MonoBehaviour
     {
         damage = shotGun.damage;
     }
-
+    
+    [ServerCallback]
     private void OnParticleCollision(GameObject other)
-    { 
+    {
         if (other.tag.Equals("Player") && other.gameObject != transform.root.gameObject)
         {
             print("Hit");
