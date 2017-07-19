@@ -30,12 +30,16 @@ public class PlayerSetup : NetworkBehaviour
             collisionDetection = transform.Find("CollisionDetection").gameObject;
             foreach (Transform go in collisionDetection.GetComponentsInChildren<Transform>())
                 go.gameObject.layer = LayerMask.NameToLayer("Default");
+
+            gameObject.layer = LayerMask.NameToLayer("Default");
         }
         else
         {
             collisionDetection = transform.Find("CollisionDetection").gameObject;
             foreach (Transform go in collisionDetection.GetComponentsInChildren<Transform>())
                 go.gameObject.layer = LayerMask.NameToLayer("Collision");
+
+            gameObject.layer = LayerMask.NameToLayer("Collision");
         }
     }
 

@@ -32,8 +32,10 @@ public class PlayerHealth : NetworkBehaviour
 
     GameObject collisionDetection;
     Coroutine respawn;
+    BallToTheWall ballToTheWall;
+    Transform respawnpoint;
 
-	public SkinnedMeshRenderer[] playerMeshes;
+    public SkinnedMeshRenderer[] playerMeshes;
 
     // Use this for initialization
     void Awake()
@@ -41,6 +43,13 @@ public class PlayerHealth : NetworkBehaviour
         respawnTime = GameCustomization.respawnTime;
         maxHealth = GameCustomization.playerHealth;
         playerManager = GetComponent<PlayerManager>();
+    }
+
+    private IEnumerator Start()
+    {
+        yield return new WaitForSeconds(1);
+        ballToTheWall = GameObject.Find("BallToTheWall").GetComponent<BallToTheWall>();
+        Debug.LogError(ballToTheWall);
     }
 
     public void Init()
@@ -155,7 +164,14 @@ public class PlayerHealth : NetworkBehaviour
 			rend.enabled = true;
         despawnEffect.SetActive(false);
 
-        Transform respawnpoint = NetworkManager.singleton.GetStartPosition();
+        if (ballToTheWall == null)
+            ballToTheWall = GameObject.Find("BallToTheWall").GetComponent<BallToTheWall>();
+
+        if (!ballToTheWall.ballToTheWallActive)
+            respawnpoint = NetworkManager.singleton.GetStartPosition();
+        else
+            respawnpoint = ballToTheWall.spawnpoints[Random.Range(0, ballToTheWall.spawnpoints.Length)].transform;
+
         transform.position = respawnpoint.position;
         transform.rotation = respawnpoint.rotation;
 

@@ -50,6 +50,9 @@ public class Shooting : NetworkBehaviour
                 case Gun.WeaponType.Sustained:
                     SustainedShot();
                     break;
+                case Gun.WeaponType.Particle:
+                    ParticleShot();
+                    break;
                 default:
                     break;
             }
@@ -122,9 +125,14 @@ public class Shooting : NetworkBehaviour
     {
         if (currentGun.shootingSource.clip != null)
             currentGun.shootingSource.PlayOneShot(currentGun.shootingSound);
+        if (muzzleFlash == null) yield break;
 
         muzzleFlash.SetActive(true);
+        if(currentGun.thirdPersonMuzzle != null)
+        currentGun.thirdPersonMuzzle.SetActive(true);
 		yield return new WaitForSeconds(currentGun.muzzleFlashTimer);
+        if (currentGun.thirdPersonMuzzle != null)
+            currentGun.thirdPersonMuzzle.SetActive(false);
         muzzleFlash.SetActive(false);
     }
 
@@ -197,6 +205,12 @@ public class Shooting : NetworkBehaviour
             Quaternion rotation = Quaternion.LookRotation(hit.normal);
             CmdBulletHole(position, rotation, "Wall");
         }
+    }
+
+    [Client]
+    void ParticleShot()
+    {
+        CmdStartMuzzleFlash();
     }
 
     [Client]

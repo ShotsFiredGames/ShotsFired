@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 
 public class CollisionDetection : MonoBehaviour
 {
@@ -15,10 +16,16 @@ public class CollisionDetection : MonoBehaviour
     public CollisionFlag collisionLocation = CollisionFlag.FrontHeadShot;
 
     PlayerHealth health;
+    string faction;
+    Material factionColor;
 
-    void Start()
+    IEnumerator Start()
     {
         health = GetComponentInParent<PlayerHealth>();                                                                    //References to the health and shooting scripts
+
+        yield return new WaitForSeconds(1);
+        faction = GetComponentInParent<PlayerManager>().GetFaction();
+        factionColor = GetComponentInParent<PlayerManager>().GetFactionColor();
     }
     
     public void OnHit(short damage, string sourceID)                                                                                         //Gets called from the shooting scripts raycast, we use other to determine how much damage we will take.
@@ -44,6 +51,15 @@ public class CollisionDetection : MonoBehaviour
             case CollisionFlag.Right:
                 health.RpcTookDamage(damage, sourceID, CollisionFlag.Right);
                 break;
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.transform.tag.Equals("Ball"))
+        {
+            other.GetComponent<Rigidbody>().AddForce(transform.forward * .75f, ForceMode.VelocityChange);
+            other.GetComponent<Ball>().SetFaction(faction, factionColor);
         }
     }
 }

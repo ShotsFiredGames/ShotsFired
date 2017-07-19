@@ -6,7 +6,8 @@ public abstract class Gun : MonoBehaviour
     {
         Hitscan,
         Projectile,
-        Sustained
+        Sustained,
+        Particle
     };
 
     public bool canAim;

@@ -82,7 +82,6 @@ namespace Prototype.NetworkLobby
 
         void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
-            print("wowowow");
             if (scene.buildIndex == 0 && !ServerCreateTimer.countdownActive)
                 mainMenuPanel.SetActive(true);
         }

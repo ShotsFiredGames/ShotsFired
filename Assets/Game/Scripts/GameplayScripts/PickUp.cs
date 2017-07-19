@@ -14,7 +14,8 @@ public class PickUp : NetworkBehaviour
     {
         None,
         MachineGun, 
-        RocketLauncher
+        RocketLauncher,
+        ShotGun
     };
 
     public enum AbilityType

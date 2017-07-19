@@ -64,12 +64,16 @@ public class PlayerManager : NetworkBehaviour
         faction = myFaction;
         factionColor = myColor;
         rend.material = myColor;
-        print(faction);
     }
 
     public string GetFaction()
     {
         return faction;
+    }
+
+    public Material GetFactionColor()
+    {
+        return factionColor;
     }
 
     void OnEnable()
@@ -311,7 +315,7 @@ public class PlayerManager : NetworkBehaviour
         shooting.UnArmed();
         if (oldGun != null)
         {
-            if(oldGun.anim.gameObject.activeSelf)
+            if(oldGun.anim != null && oldGun.anim.gameObject.activeSelf)
                 oldGun.anim.SetBool("IsFiring", false);
             oldGun.SetActiveGun(false);
         }
