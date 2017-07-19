@@ -14,7 +14,6 @@ public class ParticleCollision : NetworkBehaviour
         damage = shotGun.damage;
     }
     
-    [ServerCallback]
     private void OnParticleCollision(GameObject other)
     {
         if (other.tag.Equals("Player") && other.gameObject != transform.root.gameObject)
