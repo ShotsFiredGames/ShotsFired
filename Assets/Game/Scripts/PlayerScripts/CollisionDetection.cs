@@ -16,16 +16,17 @@ public class CollisionDetection : MonoBehaviour
     public CollisionFlag collisionLocation = CollisionFlag.FrontHeadShot;
 
     PlayerHealth health;
+    PlayerManager playerManager;
     string faction;
     Material factionColor;
 
     IEnumerator Start()
     {
         health = GetComponentInParent<PlayerHealth>();                                                                    //References to the health and shooting scripts
-
+        playerManager = GetComponentInParent<PlayerManager>();
         yield return new WaitForSeconds(1);
-        faction = GetComponentInParent<PlayerManager>().GetFaction();
-        factionColor = GetComponentInParent<PlayerManager>().GetFactionColor();
+        faction = playerManager.GetFaction();
+        factionColor = playerManager.GetFactionColor();
     }
     
     public void OnHit(short damage, string sourceID)                                                                                         //Gets called from the shooting scripts raycast, we use other to determine how much damage we will take.
@@ -34,22 +35,22 @@ public class CollisionDetection : MonoBehaviour
         switch(collisionLocation)                                                                                         //Find the collisionLocation this collider is marked with.
         {
             case CollisionFlag.FrontHeadShot:
-                health.RpcTookDamage((byte)(damage * 2), sourceID, CollisionFlag.FrontHeadShot);                                        //Tell our health script how much damage we took from the enemies shooting script and the location we were hit from.
+                    health.RpcTookDamage((byte)(damage * 2), sourceID, CollisionFlag.FrontHeadShot);
                 break;
             case CollisionFlag.BackHeadShot:
-                health.RpcTookDamage((byte)(damage * 2), sourceID, CollisionFlag.BackHeadShot);
+                    health.RpcTookDamage((byte)(damage * 2), sourceID, CollisionFlag.BackHeadShot);
                 break;
             case CollisionFlag.Front:
-                health.RpcTookDamage(damage, sourceID, CollisionFlag.Front);
+                    health.RpcTookDamage(damage, sourceID, CollisionFlag.Front);
                 break;
             case CollisionFlag.Back:
-                health.RpcTookDamage(damage, sourceID, CollisionFlag.Back);
+                    health.RpcTookDamage(damage, sourceID, CollisionFlag.Back);
                 break;
             case CollisionFlag.Left:
-                health.RpcTookDamage(damage, sourceID, CollisionFlag.Left);
+                    health.RpcTookDamage(damage, sourceID, CollisionFlag.Left);
                 break;
             case CollisionFlag.Right:
-                health.RpcTookDamage(damage, sourceID, CollisionFlag.Right);
+                    health.RpcTookDamage(damage, sourceID, CollisionFlag.Right);
                 break;
         }
     }

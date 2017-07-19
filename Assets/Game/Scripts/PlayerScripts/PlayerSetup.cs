@@ -39,7 +39,7 @@ public class PlayerSetup : NetworkBehaviour
             foreach (Transform go in collisionDetection.GetComponentsInChildren<Transform>())
                 go.gameObject.layer = LayerMask.NameToLayer("Collision");
 
-            gameObject.layer = LayerMask.NameToLayer("Collision");
+            gameObject.layer = LayerMask.NameToLayer("PlayerCollision");
         }
     }
 

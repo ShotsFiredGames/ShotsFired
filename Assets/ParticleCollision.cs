@@ -12,21 +12,14 @@ public class ParticleCollision : NetworkBehaviour
     private void Start()
     {
         damage = shotGun.damage;
-        Spawn();
-    }
-
-    [ServerCallback]
-    void Spawn()
-    {
-        NetworkServer.Spawn(gameObject);
     }
     
     [ServerCallback]
-    private void OnParticleCollision(GameObject other)
+    public void DealDamage(GameObject other)
     {
-        if (other.tag.Equals("Player") && other.gameObject != transform.root.gameObject)
+        if (other.tag.Equals("Player"))
         {
-            print("Hit");
+            Debug.LogError("Hit");
             other.GetComponentInChildren<CollisionDetection>().OnHit(damage, transform.root.name);
         }
 
