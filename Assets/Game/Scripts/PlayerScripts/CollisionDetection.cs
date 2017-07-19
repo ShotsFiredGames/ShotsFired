@@ -44,31 +44,31 @@ public class CollisionDetection : MonoBehaviour
                 if (playerManager.isServer)
                     health.RpcTookDamage((byte)(damage * 2), sourceID, CollisionFlag.BackHeadShot);
                 else
-                    health.RpcTookDamage((byte)(damage * 2), sourceID, CollisionFlag.BackHeadShot);
+                    health.CmdTookDamage((byte)(damage * 2), sourceID, CollisionFlag.BackHeadShot);
                 break;
             case CollisionFlag.Front:
                 if (playerManager.isServer)
                     health.RpcTookDamage(damage, sourceID, CollisionFlag.Front);
                 else
-                    health.RpcTookDamage(damage, sourceID, CollisionFlag.Front);
+                    health.CmdTookDamage(damage, sourceID, CollisionFlag.Front);
                 break;
             case CollisionFlag.Back:
                 if (playerManager.isServer)
                     health.RpcTookDamage(damage, sourceID, CollisionFlag.Back);
                 else
-                    health.RpcTookDamage(damage, sourceID, CollisionFlag.Back);
+                    health.CmdTookDamage(damage, sourceID, CollisionFlag.Back);
                 break;
             case CollisionFlag.Left:
                 if (playerManager.isServer)
                     health.RpcTookDamage(damage, sourceID, CollisionFlag.Left);
                 else
-                    health.RpcTookDamage(damage, sourceID, CollisionFlag.Left);
+                    health.CmdTookDamage(damage, sourceID, CollisionFlag.Left);
                 break;
             case CollisionFlag.Right:
                 if (playerManager.isServer)
                     health.RpcTookDamage(damage, sourceID, CollisionFlag.Right);
                 else
-                    health.RpcTookDamage(damage, sourceID, CollisionFlag.Right);
+                    health.CmdTookDamage(damage, sourceID, CollisionFlag.Right);
                 break;
         }
     }
