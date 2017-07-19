@@ -49,7 +49,6 @@ public class PlayerHealth : NetworkBehaviour
     {
         yield return new WaitForSeconds(1);
         ballToTheWall = GameObject.Find("BallToTheWall").GetComponent<BallToTheWall>();
-        Debug.LogError(ballToTheWall);
     }
 
     public void Init()
