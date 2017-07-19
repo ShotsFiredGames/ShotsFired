@@ -6,6 +6,7 @@ public abstract class Gun : MonoBehaviour
     {
         Hitscan,
         Projectile,
+        Particle,
         Sustained
     };
 

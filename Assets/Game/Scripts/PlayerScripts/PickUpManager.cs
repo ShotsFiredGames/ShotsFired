@@ -101,6 +101,9 @@ public class PickUpManager : NetworkBehaviour
             case PickUp.GunType.RocketLauncher:
                 RpcApplyPickUp("Gun", "RocketLauncher");
                 break;
+            case PickUp.GunType.ShotGun:
+                RpcApplyPickUp("Gun", "ShotGun");
+                break;
         }
     }
 
