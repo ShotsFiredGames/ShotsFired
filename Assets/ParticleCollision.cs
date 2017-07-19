@@ -12,6 +12,12 @@ public class ParticleCollision : NetworkBehaviour
     private void Start()
     {
         damage = shotGun.damage;
+        Spawn();
+    }
+
+    [ServerCallback]
+    void Spawn()
+    {
         NetworkServer.Spawn(gameObject);
     }
     
