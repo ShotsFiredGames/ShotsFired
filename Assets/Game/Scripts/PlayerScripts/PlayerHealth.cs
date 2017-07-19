@@ -49,6 +49,7 @@ public class PlayerHealth : NetworkBehaviour
     {
         yield return new WaitForSeconds(1);
         ballToTheWall = GameObject.Find("BallToTheWall").GetComponent<BallToTheWall>();
+        Debug.LogError(ballToTheWall);
     }
 
     public void Init()
@@ -163,7 +164,10 @@ public class PlayerHealth : NetworkBehaviour
 			rend.enabled = true;
         despawnEffect.SetActive(false);
 
-        if (ballToTheWall != null && !ballToTheWall.ballToTheWallActive)
+        if (ballToTheWall == null)
+            ballToTheWall = GameObject.Find("BallToTheWall").GetComponent<BallToTheWall>();
+
+        if (!ballToTheWall.ballToTheWallActive)
             respawnpoint = NetworkManager.singleton.GetStartPosition();
         else
             respawnpoint = ballToTheWall.spawnpoints[Random.Range(0, ballToTheWall.spawnpoints.Length)].transform;

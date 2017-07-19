@@ -18,15 +18,21 @@ public class BallToTheWall : GameEvent
     public GameObject ball;
     public GameObject ballRespawn;
     GameObject activeBall;
-
-    [ServerCallback]
+    
     private void Start()
     {
         activeBall = Instantiate(ball, ballRespawn.transform.position, ballRespawn.transform.rotation);
         activeBall.transform.parent = transform;
         activeBall.GetComponent<Ball>().SetVariables(this);
-        NetworkServer.Spawn(activeBall);
+        SpawnBall();
         activeBall.SetActive(false);
+    }
+
+    [ServerCallback]
+    void SpawnBall()
+    {
+        for (int i = 0; i < PlayerWrangler.GetAllPlayers().Length; i++)
+            NetworkServer.SpawnWithClientAuthority(activeBall, PlayerWrangler.GetAllPlayers()[i].gameObject);
     }
 
     public override void StartEvent()
