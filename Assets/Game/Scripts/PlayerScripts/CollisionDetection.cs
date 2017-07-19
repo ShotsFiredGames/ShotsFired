@@ -23,9 +23,8 @@ public class CollisionDetection : MonoBehaviour
     IEnumerator Start()
     {
         health = GetComponentInParent<PlayerHealth>();                                                                    //References to the health and shooting scripts
-    
+        playerManager = GetComponentInParent<PlayerManager>();
         yield return new WaitForSeconds(1);
-        playerManager.GetComponentInParent<PlayerManager>();
         faction = playerManager.GetFaction();
         factionColor = playerManager.GetFactionColor();
     }
