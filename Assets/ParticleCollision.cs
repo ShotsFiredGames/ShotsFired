@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class ParticleCollision : MonoBehaviour
+public class ParticleCollision : NetworkBehaviour
 {
     public Gun shotGun;
 
