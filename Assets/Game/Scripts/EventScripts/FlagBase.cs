@@ -4,19 +4,26 @@ using UnityEngine;
 
 public class FlagBase : MonoBehaviour
 {
-    public GameObject flag;
+    public Flag flag;
     public PlayerManager owner;
     public bool hasFlag = true;
+
+    void Start()
+    {
+        hasFlag = true;
+    }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag.Equals("Flag")) // if a flag enters the base
         {
-            Debug.LogError("Flag returned");
+            Flag capturedFlag = other.GetComponent<Flag>();
+            Debug.LogError("Flag returned: " + hasFlag);
             if (hasFlag) //if the base has its flag
             {
-                Debug.LogError("Base has a flag");
-                if (!other.gameObject.name.Equals(flag.name)) //if the flag isn't the flag the base owns
+                Debug.LogError("Base has a flag that belongs to: " + owner.name);
+                Debug.LogError("Flag being captured is: " + capturedFlag.name);
+                if (!capturedFlag.index.Equals(flag.index)) //if the flag isn't the flag the base owns
                 {
                     Debug.LogError("Flag reset");
                     FlagManager.instance.CmdReturnFlag(other.GetComponent<Flag>().index);
