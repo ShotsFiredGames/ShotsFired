@@ -33,7 +33,6 @@ public class PlayerManager : NetworkBehaviour
 
     [HideInInspector]
     public bool hasFlag;
-    CaptureTheFlag captureTheFlag;
     public AudioMixer gameMixer;
 
     void Awake()
@@ -47,7 +46,6 @@ public class PlayerManager : NetworkBehaviour
     {
         playerMovement = GetComponent<PlayerMovement>();
         animationManager = GetComponent<AnimationManager>();
-        captureTheFlag = GameObject.Find("CaptureTheFlag").GetComponent<CaptureTheFlag>();
 
         shooting = GetComponent<Shooting>();
         juggernaut = GetComponentInChildren<Juggernaut>();
@@ -58,11 +56,18 @@ public class PlayerManager : NetworkBehaviour
     void OnEnable()
     {
         controls = Controls.CreateWithDefaultBindings();
+
+        if (playerHealth == null)
+            playerHealth = GetComponent<PlayerHealth>();
+
+        playerHealth.EventOnDeath += Dead;
+
     }
 
     void OnDisable()
     {
         controls.Destroy();
+        playerHealth.EventOnDeath -= Dead;
     }
 
     void FixedUpdate()
@@ -336,9 +341,6 @@ public class PlayerManager : NetworkBehaviour
     
     public void Dead(string damageSource, CollisionDetection.CollisionFlag collisionLocation)
     {
-        if (hasFlag)
-            captureTheFlag.CmdFlagDropped();
-
         playerMovement.CancelSpeedBoost();
 
         isDead = true;
@@ -350,6 +352,7 @@ public class PlayerManager : NetworkBehaviour
 
     public void Respawn()
     {
+        Debug.LogError("In Respawn");
         ReaperEffectsActivate(false);
         animationManager.IsRespawning();
         isDead = false;

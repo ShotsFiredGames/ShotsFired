@@ -1,26 +1,111 @@
 ﻿using UnityEngine;
+using System.Collections;
 using UnityEngine.Networking;
 
 public class Flag : MonoBehaviour
 {
-    CaptureTheFlag captureTheFlag;
-    Coroutine resetTimer;
-    GameObject carrier;
+    public Coroutine resetTimer;
+    public GameObject carrier;
+    public float flagResetTime;
+    public FlagBase flagBase;
 
     [HideInInspector]
     public bool isPickedUp;
+    public Transform spawnPosition { get;set; }
+    public byte index { get; set; }
 
-    private void Start()
+    void OnEnable()
     {
-        captureTheFlag = GameObject.Find("CaptureTheFlag").GetComponent<CaptureTheFlag>();
+        ResetFlagPosition();
+    }
+
+    void OnDisable()
+    {
+        if (carrier != null)
+            carrier.GetComponent<PlayerManager>().hasFlag = false;
     }
     
     private void OnTriggerEnter(Collider other)
     {
-        if(other.tag.Equals("Player") && !isPickedUp)
+        if(other.tag.Equals("Player"))
         {
-            isPickedUp = true;
-            captureTheFlag.CmdFlagPickedUp(other.GetComponent<NetworkIdentity>());
+            if (!isPickedUp)
+            {
+                if (!other.GetComponent<PlayerManager>().hasFlag)
+                {
+                    if (!flagBase.owner.Equals(other.GetComponent<PlayerManager>()))
+                    {
+                        isPickedUp = true;
+                        carrier = other.gameObject;
+                        FlagManager.instance.CmdFlagPickedUp(index);
+                        other.GetComponent<PlayerHealth>().EventOnDeath += CarrierDied;                        
+                    }
+                    else
+                    {
+                        if (!flagBase.hasFlag)
+                        {
+                            ResetFlagPosition();
+                            Debug.LogError("returned your flag");
+                        }
+                        else
+                        {
+                            Debug.LogError("This is your flag at base");
+                        }                        
+                    }         
+                }
+                else
+                {
+                    Debug.LogError("They already have a flag");
+                }                
+            }
+            else
+            {
+                print("someone already has it");
+            }
+            
         }
+    }
+
+    public IEnumerator ResetTimer()
+    {
+        ResetCarrier();
+        yield return new WaitForSeconds(flagResetTime);
+        FlagManager.instance.CmdReturnFlag(index);
+    }
+
+    public IEnumerator CanBePickedUp()
+    {
+        ResetCarrier();
+        yield return new WaitForSeconds(2);
+        isPickedUp = false;
+    }
+
+    public string GetStringOfCarrier()
+    {
+        if (carrier == null) return "No One";
+        return carrier.name;
+    }
+
+    public void CarrierDied(string damageSource, CollisionDetection.CollisionFlag collisionLocation)
+    {
+        FlagManager.instance.CmdFlagDropped(index);
+        carrier.GetComponent<PlayerHealth>().EventOnDeath -= CarrierDied;
+    }
+
+    public void ResetFlagPosition()
+    {
+        transform.parent = flagBase.transform;
+        transform.position = flagBase.transform.position + new Vector3(0, 1, 0);
+        flagBase.hasFlag = true;
+
+        if (carrier != null)
+            carrier.GetComponent<PlayerManager>().hasFlag = false;
+    }
+
+    void ResetCarrier()
+    {
+        carrier.GetComponent<PlayerHealth>().EventOnDeath -= CarrierDied;
+        carrier.GetComponent<PlayerManager>().hasFlag = false;
+        carrier = null;
     }
 }
