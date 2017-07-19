@@ -16,17 +16,16 @@ public class CollisionDetection : MonoBehaviour
     public CollisionFlag collisionLocation = CollisionFlag.FrontHeadShot;
 
     PlayerHealth health;
-    PlayerManager playerManager;
     string faction;
     Material factionColor;
 
     IEnumerator Start()
     {
         health = GetComponentInParent<PlayerHealth>();                                                                    //References to the health and shooting scripts
-        playerManager = GetComponentInParent<PlayerManager>();
+
         yield return new WaitForSeconds(1);
-        faction = playerManager.GetFaction();
-        factionColor = playerManager.GetFactionColor();
+        faction = GetComponentInParent<PlayerManager>().GetFaction();
+        factionColor = GetComponentInParent<PlayerManager>().GetFactionColor();
     }
     
     public void OnHit(short damage, string sourceID)                                                                                         //Gets called from the shooting scripts raycast, we use other to determine how much damage we will take.
@@ -35,40 +34,22 @@ public class CollisionDetection : MonoBehaviour
         switch(collisionLocation)                                                                                         //Find the collisionLocation this collider is marked with.
         {
             case CollisionFlag.FrontHeadShot:
-                if(playerManager.isServer)
-                    health.RpcTookDamage((byte)(damage * 2), sourceID, CollisionFlag.FrontHeadShot);                                       
-                else
-                    health.CmdTookDamage((byte)(damage * 2), sourceID, CollisionFlag.FrontHeadShot);
+                health.RpcTookDamage((byte)(damage * 2), sourceID, CollisionFlag.FrontHeadShot);                                        //Tell our health script how much damage we took from the enemies shooting script and the location we were hit from.
                 break;
             case CollisionFlag.BackHeadShot:
-                if (playerManager.isServer)
-                    health.RpcTookDamage((byte)(damage * 2), sourceID, CollisionFlag.BackHeadShot);
-                else
-                    health.CmdTookDamage((byte)(damage * 2), sourceID, CollisionFlag.BackHeadShot);
+                health.RpcTookDamage((byte)(damage * 2), sourceID, CollisionFlag.BackHeadShot);
                 break;
             case CollisionFlag.Front:
-                if (playerManager.isServer)
-                    health.RpcTookDamage(damage, sourceID, CollisionFlag.Front);
-                else
-                    health.CmdTookDamage(damage, sourceID, CollisionFlag.Front);
+                health.RpcTookDamage(damage, sourceID, CollisionFlag.Front);
                 break;
             case CollisionFlag.Back:
-                if (playerManager.isServer)
-                    health.RpcTookDamage(damage, sourceID, CollisionFlag.Back);
-                else
-                    health.CmdTookDamage(damage, sourceID, CollisionFlag.Back);
+                health.RpcTookDamage(damage, sourceID, CollisionFlag.Back);
                 break;
             case CollisionFlag.Left:
-                if (playerManager.isServer)
-                    health.RpcTookDamage(damage, sourceID, CollisionFlag.Left);
-                else
-                    health.CmdTookDamage(damage, sourceID, CollisionFlag.Left);
+                health.RpcTookDamage(damage, sourceID, CollisionFlag.Left);
                 break;
             case CollisionFlag.Right:
-                if (playerManager.isServer)
-                    health.RpcTookDamage(damage, sourceID, CollisionFlag.Right);
-                else
-                    health.CmdTookDamage(damage, sourceID, CollisionFlag.Right);
+                health.RpcTookDamage(damage, sourceID, CollisionFlag.Right);
                 break;
         }
     }

@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class ParticleCollision : MonoBehaviour
+public class ParticleCollision : NetworkBehaviour
 {
     public Gun shotGun;
 
@@ -11,8 +12,10 @@ public class ParticleCollision : MonoBehaviour
     private void Start()
     {
         damage = shotGun.damage;
+        NetworkServer.Spawn(gameObject);
     }
     
+    [ServerCallback]
     private void OnParticleCollision(GameObject other)
     {
         if (other.tag.Equals("Player") && other.gameObject != transform.root.gameObject)
