@@ -98,7 +98,32 @@ public class PlayerManager : NetworkBehaviour
     private void Update()
     {
         UpdateCursorLock();
+
         if (!isLocalPlayer) return;
+
+        if (gameManager != null)
+        {
+            if (PlatformManager.systemType.Equals(PlatformManager.SystemType.PC))
+            {
+                if (controls.ScoreBoard.IsPressed && !gameManager.isActive)
+                    gameManager.ScoreBoard(true);
+                else if (controls.ScoreBoard.WasReleased && gameManager.isActive)
+                    gameManager.ScoreBoard(false);
+            }
+            else
+            {
+                if (controls.ScoreBoard.WasPressed && !gameManager.isActive)
+                    gameManager.ScoreBoard(true);
+                else if (controls.ScoreBoard.WasPressed && gameManager.isActive)
+                    gameManager.ScoreBoard(false);
+            }
+        }
+        else
+        {
+            if (GameObject.Find("GameManager") != null)
+                gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        }
+
         if (isDead) return;
 
         ApplyMovementInput();
@@ -126,28 +151,7 @@ public class PlayerManager : NetworkBehaviour
         else
             StopAiming();
 
-        if (gameManager != null)
-        {
-            if (PlatformManager.systemType.Equals(PlatformManager.SystemType.PC))
-            {
-                if (controls.ScoreBoard.IsPressed && !gameManager.isActive)
-                    gameManager.ScoreBoard(true);
-                else if (controls.ScoreBoard.WasReleased && gameManager.isActive)
-                    gameManager.ScoreBoard(false);
-            }
-            else
-            {
-                if (controls.ScoreBoard.WasPressed && !gameManager.isActive)
-                    gameManager.ScoreBoard(true);
-                else if (controls.ScoreBoard.WasPressed && gameManager.isActive)
-                    gameManager.ScoreBoard(false);
-            }
-        }
-        else
-        {
-            if (GameObject.Find("GameManager") != null)
-                gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        }
+      
     }
 
     private void LateUpdate()
@@ -277,10 +281,14 @@ public class PlayerManager : NetworkBehaviour
         switch(abilityName)
         {
             case "Juggernaut":
-                juggernaut.ActivateJuggernaut();
-                playerMovement.SuperBoots();
+                if(juggernaut != null)
+                {
+                    juggernaut.ActivateJuggernaut();
+                    playerMovement.SuperBoots();
+                }
                 break;
             case "Overcharged":
+                if(shooting != null)
                 shooting.ActivateOvercharged();
                 break;
         }

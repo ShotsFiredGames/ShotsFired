@@ -67,6 +67,7 @@ public class PlayerHealth : NetworkBehaviour
     [Command]
     public void CmdTookDamage(short damage, string sourceID, CollisionDetection.CollisionFlag collisionLocation)
     {
+        Debug.LogError("Cmd TookDamage");
         if (isDead) return;
         RpcTookDamage(damage, sourceID, collisionLocation);
     }
@@ -74,6 +75,7 @@ public class PlayerHealth : NetworkBehaviour
     [ClientRpc]
     public void RpcTookDamage(short damage, string sourceID, CollisionDetection.CollisionFlag collisionLocation)                //This is called from CollisionDetection to determine the damage and the location of the incoming collision.
     {
+        Debug.LogError("RPC TookDamage");
         if (isDead) return;
         currentHealth -= damage;
         Hit(collisionLocation);
@@ -149,7 +151,7 @@ public class PlayerHealth : NetworkBehaviour
 
     IEnumerator DespawnEffect()
     {
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(.5f);
         despawnEffect.SetActive(true);
     }
 
@@ -159,9 +161,6 @@ public class PlayerHealth : NetworkBehaviour
 			rend.enabled = false;
         yield return new WaitForSeconds(respawnTime);
 
-		foreach (SkinnedMeshRenderer rend in playerMeshes)
-			rend.enabled = true;
-        despawnEffect.SetActive(false);
 
         if (ballToTheWall == null)
             ballToTheWall = GameObject.Find("BallToTheWall").GetComponent<BallToTheWall>();
@@ -177,6 +176,11 @@ public class PlayerHealth : NetworkBehaviour
         if (!isLocalPlayer)
             foreach (GameObject go in collisionLocations)
                 go.layer = LayerMask.NameToLayer("Collision");
+
+
+        foreach (SkinnedMeshRenderer rend in playerMeshes)
+            rend.enabled = true;
+        despawnEffect.SetActive(false);
 
         Init();
         playerManager.Respawn();
@@ -220,7 +224,7 @@ public class PlayerHealth : NetworkBehaviour
 
     public bool isPlayerDead()
     {
-        return (currentHealth <= 0);
+        return isDead;
     }
 
     public void CancelIncreasedHealth()
