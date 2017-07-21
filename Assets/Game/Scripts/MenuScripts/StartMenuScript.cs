@@ -4,8 +4,6 @@ public class StartMenuScript : MonoBehaviour
 {
     [SerializeField]
     GameObject menuPanel;
-    [SerializeField]
-    GameObject creditsScreen;
 
     public void Lobby()
     {

@@ -18,12 +18,13 @@
 		{
 			detectFound = UnknownDeviceControl.None;
 			detectPhase = DetectPhase.WaitForInitialRelease;
-			TakeSnapshotOnUnknownDevices();
+			//TakeSnapshotOnUnknownDevices();
 		}
 
 
 		void TakeSnapshotOnUnknownDevices()
 		{
+            
 			var deviceCount = InputManager.Devices.Count;
 			for (var i = 0; i < deviceCount; i++)
 			{

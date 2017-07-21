@@ -356,20 +356,20 @@ namespace InControl
 		}
 
 
-		internal static void OnLevelWasLoaded()
-		{
-			SetZeroTickOnAllControls();
-			UpdateInternal();
-		}
+        internal static void OnLevelWasLoaded()
+        {
+            SetZeroTickOnAllControls();
+            UpdateInternal();
+        }
 
 
-		/// <summary>
-		/// Adds a device manager.
-		/// Only one instance of a given type can be added. An error will be raised if
-		/// you try to add more than one.
-		/// </summary>
-		/// <param name="deviceManager">The device manager to add.</param>
-		public static void AddDeviceManager( InputDeviceManager deviceManager )
+        /// <summary>
+        /// Adds a device manager.
+        /// Only one instance of a given type can be added. An error will be raised if
+        /// you try to add more than one.
+        /// </summary>
+        /// <param name="deviceManager">The device manager to add.</param>
+        public static void AddDeviceManager( InputDeviceManager deviceManager )
 		{
 			AssertIsSetup();
 

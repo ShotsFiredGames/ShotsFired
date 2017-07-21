@@ -36,9 +36,9 @@ public class PlayerMovement : NetworkBehaviour
     bool landed;
     bool jumping;
 
-
-    void Start ()
+    void OnEnable()
     {
+        GameSettings gs = GetComponent<GameSettings>();
         speed = GameCustomization.playerSpeed;
         rb = GetComponent<Rigidbody>();
         playerManager = GetComponent<PlayerManager>();
@@ -46,7 +46,6 @@ public class PlayerMovement : NetworkBehaviour
         playerCamera = GetComponent<PlayerCamera>();
         airSpeed = speed * .85f;
     }
-
     public void AimAssist()
     {
         if (!aimAssist)
@@ -61,70 +60,72 @@ public class PlayerMovement : NetworkBehaviour
 
     private void FixedUpdate()
     {
-        if(Grounded())
-        {
-            if(!landed)
-            { 
-                landed = true;
-                jumping = false;
-                playerManager.Landed();
-            }
 
-            if (speed != GameCustomization.playerSpeed && !isUsingBoots)
+            if (Grounded())
             {
-                if(speedBoostActive || speedBoosted)
-                    speed = speedBoostSpeed;
-                else
-                    speed = GameCustomization.playerSpeed;
+                if (!landed)
+                {
+                    landed = true;
+                    jumping = false;
+                    playerManager.Landed();
+                }
+
+                if (speed != GameCustomization.playerSpeed && !isUsingBoots)
+                {
+                    if (speedBoostActive || speedBoosted)
+                        speed = speedBoostSpeed;
+                    else
+                        speed = GameCustomization.playerSpeed;
+                }
             }
-        }
-        else
-        {
-            if (!jumping)
-                playerManager.Falling();
+            else
+            {
+                if (!jumping)
+                    playerManager.Falling();
 
-            landed = false;
-            if (speed != airSpeed && !isUsingBoots)
-                speed = airSpeed;
+                landed = false;
+                if (speed != airSpeed && !isUsingBoots)
+                    speed = airSpeed;
 
-            rb.velocity += Physics.gravity * gravity * Time.fixedDeltaTime;
-        }
+                rb.velocity += Physics.gravity * gravity * Time.fixedDeltaTime;
+            }
+
     }
 
     public void Move(float horizontal, float vertical)
     {
-        direction = new Vector3(horizontal * speed, 0, vertical * speed);
-        direction *= Time.fixedDeltaTime;
-        direction = transform.TransformDirection(direction);
-        rb.MovePosition(transform.position + direction);
+            direction = new Vector3(horizontal * speed, 0, vertical * speed);
+            direction *= Time.fixedDeltaTime;
+            direction = transform.TransformDirection(direction);
+            rb.MovePosition(transform.position + direction);
     }
 
     public void Turn(float horizontal2)
     {
-        if (!playerCamera.isAiming)
-        {
-
-            if (!aimAssist)
+            if (!playerCamera.isAiming)
             {
-                xRotationValue -= -horizontal2 * rotationSpeed * Time.fixedDeltaTime;
-                rotation = Quaternion.Euler(0, xRotationValue, 0);
-                transform.rotation = rotation;
+
+                if (!aimAssist)
+                {
+                    xRotationValue -= -horizontal2 * rotationSpeed * Time.fixedDeltaTime;
+                    rotation = Quaternion.Euler(0, xRotationValue, 0);
+                    transform.rotation = rotation;
+                }
+                else
+                    ApplyAimAssist(horizontal2);
+
             }
             else
-                ApplyAimAssist(horizontal2);
-
-        }
-        else
-        {
-            if (!aimAssist)
             {
-                xRotationValue -= -horizontal2 * (rotationSpeed * .25f) * Time.fixedDeltaTime;
-                rotation = Quaternion.Euler(0, xRotationValue, 0);
-                transform.rotation = rotation;
+                if (!aimAssist)
+                {
+                    xRotationValue -= -horizontal2 * (rotationSpeed * .25f) * Time.fixedDeltaTime;
+                    rotation = Quaternion.Euler(0, xRotationValue, 0);
+                    transform.rotation = rotation;
+                }
+                else
+                    ApplyAimAssist(horizontal2);
             }
-            else
-                ApplyAimAssist(horizontal2);
-        }
     }
 
     void ApplyAimAssist(float horizontal2)

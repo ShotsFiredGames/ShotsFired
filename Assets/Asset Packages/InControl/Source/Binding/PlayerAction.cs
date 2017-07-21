@@ -585,7 +585,7 @@
 		}
 
 
-		void UpdateBindings( ulong updateTick, float deltaTime )
+		public void UpdateBindings( ulong updateTick, float deltaTime )
 		{
 			var lastInputType = LastInputType;
 			var lastInputTypeChangedTick = LastInputTypeChangedTick;

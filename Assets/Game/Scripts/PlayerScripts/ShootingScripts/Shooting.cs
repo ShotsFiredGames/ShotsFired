@@ -26,10 +26,10 @@ public class Shooting : NetworkBehaviour
     [Client]
     public IEnumerator Firing()
     {
+        Debug.Log("firing");
         if (currentGun.isActiveAndEnabled && !currentGun.isFiring)
         {
             currentGun.isFiring = true;
-
             if (isOvercharged)
                 _damage = (byte)(currentGun.damage * 2);
             else

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.Networking;
+using InControl;
 
 public class PlayerManager : NetworkBehaviour
 {
@@ -43,6 +44,7 @@ public class PlayerManager : NetworkBehaviour
         playerHealth = GetComponent<PlayerHealth>();
         playerCamera = GetComponent<PlayerCamera>();
         myCamera = playerCamera.myCamera.gameObject;
+        controls = new Controls();
     }
 
     private void Start()
@@ -59,7 +61,10 @@ public class PlayerManager : NetworkBehaviour
 
     void OnEnable()
     {
-        controls = Controls.CreateWithDefaultBindings();
+        InputManager.AttachDevice(InputManager.ActiveDevice);
+        //controls = Controls.CreateWithDefaultBindings();
+        controls = new Controls();
+        Debug.Log(controls.Jump.Bindings.Count);
     }
 
     void OnDisable()
@@ -90,7 +95,10 @@ public class PlayerManager : NetworkBehaviour
             Moving();
 
         if (controls.Jump.WasPressed)
+        {
+            Debug.Log("Jump");
             Jumping();
+        }
 
         if (controls.Fire)
             Firing();
@@ -372,14 +380,16 @@ public class PlayerManager : NetworkBehaviour
     }
 
 
-    void SaveBindings()
+    public void SaveBindings()
     {
+        controls = new Controls();
         saveData = controls.Save();
         PlayerPrefs.SetString("Bindings", saveData);
     }
 
-    void LoadBindings()
+    public void LoadBindings()
     {
+        controls = new Controls();
         if (PlayerPrefs.HasKey("Bindings"))
         {
             saveData = PlayerPrefs.GetString("Bindings");

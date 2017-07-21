@@ -46,15 +46,15 @@ public class GameManager : NetworkBehaviour
         }
     }
 
-    void OnEnable()
-    {
-        controls = Controls.CreateWithDefaultBindings();
-    }
+    //void OnEnable()
+    //{
+    //    controls = Controls.CreateWithDefaultBindings();
+    //}
 
-    void OnDisable()
-    {
-        controls.Destroy();
-    }
+    //void OnDisable()
+    //{
+    //    controls.Destroy();
+    //}
 
     IEnumerator Start()
     {

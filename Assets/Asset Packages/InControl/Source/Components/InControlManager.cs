@@ -18,7 +18,7 @@ namespace InControl
 		public bool logDebugInfo = false;
 		public bool invertYAxis = false;
 		public bool useFixedUpdate = false;
-		public bool dontDestroyOnLoad = false;
+		public bool dontDestroyOnLoad = true;
 		public bool suspendInBackground = false;
 
 		public bool enableICade = false;

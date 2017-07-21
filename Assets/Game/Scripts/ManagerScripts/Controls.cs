@@ -1,9 +1,34 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections;
+using System;
+using System.IO;
+using System.Collections.Generic;
+using UnityEngine;
 using InControl;
-
 public class Controls : PlayerActionSet
 {
+    
+    //public Controls AssignKeyBindings()
+    //{
+        
+    //    //Controls controls = new Controls();
+    //    //controls.Load((PlayerPrefs.GetString("SaveInfoJump")));
+    //    ////controls.Jump.AddBinding(controls.Load((PlayerPrefs.GetString("SaveInfoJump"));
+
+    //    //controls.Load(PlayerPrefs.GetString("SaveInfoFire"));
+    //    //PlayerPrefs.GetString("SaveInfoAim");
+    //    //PlayerPrefs.GetString("SaveInfoSprint");
+    //    //PlayerPrefs.GetString("SaveInfoLeft");
+    //    //PlayerPrefs.GetString("SaveInfoRight");
+    //    //PlayerPrefs.GetString("SaveInfoUp");
+    //    //PlayerPrefs.GetString("SaveInfoDown");
+    //    //PlayerPrefs.GetString("SaveInfoCrouch");
+    //    //PlayerPrefs.GetString("SaveInfoLookLeft");
+    //    //PlayerPrefs.GetString("SaveInfoLookRight");
+    //    //PlayerPrefs.GetString("SaveInfoLookUp");
+    //    //PlayerPrefs.GetString("SaveInfoLookDown");
+    //    //Debug.Log("loading of assigned keys");
+    //    return null;
+    //}
     public PlayerAction Fire;
     public PlayerAction Aim;
     public PlayerAction Jump;
@@ -21,7 +46,7 @@ public class Controls : PlayerActionSet
 
     public PlayerTwoAxisAction Move;
     public PlayerTwoAxisAction Look;
-    
+
     public PlayerAction ScoreBoard;
 
 
@@ -44,14 +69,14 @@ public class Controls : PlayerActionSet
 
         Move = CreateTwoAxisPlayerAction(Left, Right, Down, Up);
         Look = CreateTwoAxisPlayerAction(LookLeft, LookRight, LookDown, LookUp);
-        
+
         ScoreBoard = CreatePlayerAction("Score Board");
     }
 
-
+   
     public static Controls CreateWithDefaultBindings()
     {
-        var controls = new Controls();
+        Controls controls = new Controls();
 
         controls.Fire.AddDefaultBinding(InputControlType.RightTrigger);
         controls.Fire.AddDefaultBinding(Mouse.LeftButton);

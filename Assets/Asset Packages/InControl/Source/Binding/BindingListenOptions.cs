@@ -1,4 +1,5 @@
-﻿namespace InControl
+﻿using UnityEngine;
+namespace InControl
 {
 	using System;
 
@@ -23,7 +24,7 @@
 		/// <summary>
 		/// Include mouse buttons when listening for new bindings.
 		/// </summary>
-		public bool IncludeMouseButtons = false;
+		public bool IncludeMouseButtons = true;
 
 		/// <summary>
 		/// Include keyboard keys when listening for new bindings.
@@ -41,7 +42,7 @@
 		/// enough bindings are removed to make room before adding the new binding.
 		/// When zero (default), no limit is applied.
 		/// </summary>
-		public uint MaxAllowedBindings = 0;
+		public uint MaxAllowedBindings = 1;
 
 		/// <summary>
 		/// The maximum number of bindings of a given type allowed for the action. 
@@ -50,7 +51,7 @@
 		/// When zero (default), no limit is applied.
 		/// When nonzero, this setting overrides MaxAllowedBindings.
 		/// </summary>
-		public uint MaxAllowedBindingsPerType = 0;
+		public uint MaxAllowedBindingsPerType = 1;
 
 		/// <summary>
 		/// Allow bindings that are already bound to any other action in the set.
@@ -61,14 +62,14 @@
 		/// If an existing duplicate binding exists, remove it before adding the new one.
 		/// When <code>true</code>, the value of AllowDuplicateBindingsPerSet is irrelevant.
 		/// </summary>
-		public bool UnsetDuplicateBindingsOnSet = false;
+		public bool UnsetDuplicateBindingsOnSet = true;
 
 
 		/// <summary>
 		/// If an existing duplicate binding already exists on the same action, 
 		/// reject the binding instead of accepting it doing nothing.
 		/// </summary>
-		public bool RejectRedundantBindings = false;
+		public bool RejectRedundantBindings = true;
 
 		/// <summary>
 		/// If not <code>null</code>, and this binding is on the listening action, this binding
@@ -103,6 +104,7 @@
 		{
 			if (OnBindingFound != null)
 			{
+                Debug.Log(bindingSource);
 				return OnBindingFound( playerAction, bindingSource );
 			}
 

@@ -10,7 +10,6 @@ namespace BindingsExample
 		PlayerActions playerActions;
 		string saveData;
 
-
 		void OnEnable()
 		{
 			// See PlayerActions.cs for this setup.
@@ -19,57 +18,10 @@ namespace BindingsExample
 
 			LoadBindings();
 		}
-
-
-		void OnDisable()
-		{
-			// This properly disposes of the action set and unsubscribes it from
-			// update events so that it doesn't do additional processing unnecessarily.
-			playerActions.Destroy();
-		}
-
-
 		void Start()
 		{
 			cachedRenderer = GetComponent<Renderer>();
 		}
-
-
-		void Update()
-		{
-			transform.Rotate( Vector3.down, 500.0f * Time.deltaTime * playerActions.Move.X, Space.World );
-			transform.Rotate( Vector3.right, 500.0f * Time.deltaTime * playerActions.Move.Y, Space.World );
-
-			var fireColor = playerActions.Fire.IsPressed ? Color.red : Color.white;
-			var jumpColor = playerActions.Jump.IsPressed ? Color.green : Color.white;
-
-			cachedRenderer.material.color = Color.Lerp( fireColor, jumpColor, 0.5f );
-		}
-
-
-		void SaveBindings()
-		{
-			saveData = playerActions.Save();
-			PlayerPrefs.SetString( "Bindings", saveData );
-		}
-
-
-		void LoadBindings()
-		{
-			if (PlayerPrefs.HasKey( "Bindings" ))
-			{
-				saveData = PlayerPrefs.GetString( "Bindings" );
-				playerActions.Load( saveData );
-			}
-		}
-
-
-		void OnApplicationQuit()
-		{
-			PlayerPrefs.Save();
-		}
-
-
 		void OnGUI()
 		{
 			const float h = 22.0f;
@@ -152,6 +104,39 @@ namespace BindingsExample
 				playerActions.Reset();
 			}
 		}
-	}
+        void Update()
+        {
+            transform.Rotate(Vector3.down, 500.0f * Time.deltaTime * playerActions.Move.X, Space.World);
+            transform.Rotate(Vector3.right, 500.0f * Time.deltaTime * playerActions.Move.Y, Space.World);
+
+            var fireColor = playerActions.Fire.IsPressed ? Color.red : Color.white;
+            var jumpColor = playerActions.Jump.IsPressed ? Color.green : Color.white;
+
+            cachedRenderer.material.color = Color.Lerp(fireColor, jumpColor, 0.5f);
+        }
+        void OnDisable()
+        {
+            // This properly disposes of the action set and unsubscribes it from
+            // update events so that it doesn't do additional processing unnecessarily.
+            playerActions.Destroy();
+        }
+        void SaveBindings()
+        {
+            saveData = playerActions.Save();
+            PlayerPrefs.SetString("Bindings", saveData);
+        }
+        void LoadBindings()
+        {
+            if (PlayerPrefs.HasKey("Bindings"))
+            {
+                saveData = PlayerPrefs.GetString("Bindings");
+                playerActions.Load(saveData);
+            }
+        }
+        void OnApplicationQuit()
+        {
+            PlayerPrefs.Save();
+        }
+    }
 }
 

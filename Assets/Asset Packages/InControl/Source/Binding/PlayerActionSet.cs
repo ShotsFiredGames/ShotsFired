@@ -383,6 +383,7 @@ namespace InControl
 			set
 			{
 				listenOptions = value ?? new BindingListenOptions();
+                Debug.Log(listenOptions.ToString());
 			}
 		}
 
