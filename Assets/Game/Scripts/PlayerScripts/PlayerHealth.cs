@@ -35,11 +35,6 @@ public class PlayerHealth : NetworkBehaviour
 
 	public SkinnedMeshRenderer[] playerMeshes;
 
-    // Delegates to notify other Player Scripts of Death
-    public delegate void OnDeath(string damageSource, CollisionDetection.CollisionFlag collisionLocation);
-    [SyncEvent]
-    public event OnDeath EventOnDeath;
-
     // Use this for initialization
     void Awake()
     {
@@ -138,8 +133,7 @@ public class PlayerHealth : NetworkBehaviour
                 go.layer = LayerMask.NameToLayer("Default");
 
             StartCoroutine(DespawnEffect());
-            EventOnDeath(damageSource, collisionLocation);
-            //playerManager.Dead(damageSource, collisionLocation);
+            playerManager.Dead(damageSource, collisionLocation);
 
             respawn = StartCoroutine(Respawn());
         }
@@ -164,6 +158,7 @@ public class PlayerHealth : NetworkBehaviour
         Transform respawnpoint = NetworkManager.singleton.GetStartPosition();
         transform.position = respawnpoint.position;
         transform.rotation = respawnpoint.rotation;
+        Debug.LogError("In respawn");
 
         if (!isLocalPlayer)
             foreach (GameObject go in collisionLocations)

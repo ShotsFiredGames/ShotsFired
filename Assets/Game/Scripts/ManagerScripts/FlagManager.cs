@@ -46,18 +46,22 @@ public class FlagManager : NetworkBehaviour
     }
 
     [Command]
-    public void CmdFlagPickedUp(byte flagNum)
+    public void CmdFlagPickedUp(byte flagNum, string carrierName)
     {
-        RpcFlagPickedUp(flagNum);
+        RpcFlagPickedUp(flagNum, carrierName);
     }
 
     [ClientRpc]
-    void RpcFlagPickedUp(byte flagNum)
+    void RpcFlagPickedUp(byte flagNum, string carrierName)
     {
         Flag flag = ConvertFlagFromIndex(flagNum);
         if (flag.resetTimer != null)
             StopCoroutine(flag.resetTimer);
 
+        Debug.LogError("The name of the new holder is: " + carrierName);
+        flag.carrier = PlayerWrangler.GetPlayer(carrierName).gameObject;
+        Debug.LogError("Flag is: " + flag.name);
+        Debug.LogError("Carrier is: " + flag.carrier.name);
         flag.carrier.GetComponent<PlayerManager>().hasFlag = true;
         flag.flagBase.hasFlag = false;
         flag.transform.SetParent(flag.carrier.transform);
@@ -89,15 +93,16 @@ public class FlagManager : NetworkBehaviour
     }
 
     [Command]
-    public void CmdFlagDropped(byte flagNum)
+    public void CmdFlagDropped(string owner)
     {
-        RpcFlagDropped(flagNum);
+        RpcFlagDropped(owner);
     }
 
     [ClientRpc]
-    public void RpcFlagDropped(byte flagNum)
+    public void RpcFlagDropped(string owner)
     {
-        Flag flag = ConvertFlagFromIndex(flagNum);
+        Flag flag = ConvertFlagFromPlayerName(owner);
+
         if (flag.carrier != null)
             flag.carrier.GetComponent<PlayerManager>().hasFlag = false;
 
@@ -111,5 +116,18 @@ public class FlagManager : NetworkBehaviour
     Flag ConvertFlagFromIndex(byte index)
     {
         return flags[index];
+    }
+
+    Flag ConvertFlagFromPlayerName(string owner)
+    {
+        PlayerManager player = PlayerWrangler.GetPlayer(owner);
+
+        foreach (Flag flag in flags)
+        {
+            if (flag.carrier.name.Equals(player.name))
+                return flag;
+        }
+
+        return null;
     }
 }

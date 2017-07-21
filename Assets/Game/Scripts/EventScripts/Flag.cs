@@ -36,9 +36,7 @@ public class Flag : MonoBehaviour
                     if (!flagBase.owner.Equals(other.GetComponent<PlayerManager>()))
                     {
                         isPickedUp = true;
-                        carrier = other.gameObject;
-                        FlagManager.instance.CmdFlagPickedUp(index);
-                        other.GetComponent<PlayerHealth>().EventOnDeath += CarrierDied;                        
+                        FlagManager.instance.CmdFlagPickedUp(index, other.transform.root.name);                    
                     }
                     else
                     {
@@ -86,12 +84,6 @@ public class Flag : MonoBehaviour
         return carrier.name;
     }
 
-    public void CarrierDied(string damageSource, CollisionDetection.CollisionFlag collisionLocation)
-    {
-        FlagManager.instance.CmdFlagDropped(index);
-        carrier.GetComponent<PlayerHealth>().EventOnDeath -= CarrierDied;
-    }
-
     public void ResetFlagPosition()
     {
         transform.parent = flagBase.transform;
@@ -104,7 +96,6 @@ public class Flag : MonoBehaviour
 
     void ResetCarrier()
     {
-        carrier.GetComponent<PlayerHealth>().EventOnDeath -= CarrierDied;
         carrier.GetComponent<PlayerManager>().hasFlag = false;
         carrier = null;
     }

@@ -60,14 +60,11 @@ public class PlayerManager : NetworkBehaviour
         if (playerHealth == null)
             playerHealth = GetComponent<PlayerHealth>();
 
-        playerHealth.EventOnDeath += Dead;
-
     }
 
     void OnDisable()
     {
         controls.Destroy();
-        playerHealth.EventOnDeath -= Dead;
     }
 
     void FixedUpdate()
@@ -342,6 +339,9 @@ public class PlayerManager : NetworkBehaviour
     public void Dead(string damageSource, CollisionDetection.CollisionFlag collisionLocation)
     {
         playerMovement.CancelSpeedBoost();
+
+        if (hasFlag)
+            FlagManager.instance.CmdFlagDropped(name);
 
         isDead = true;
         CmdDisarm();
