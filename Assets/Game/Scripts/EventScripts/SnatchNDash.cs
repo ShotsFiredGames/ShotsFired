@@ -48,6 +48,7 @@ public class SnatchNDash : GameEvent
 
             newFlag.index = FlagManager.instance.GetFlagNumber();
             newFlag.spawnPosition = bases[i].gameObject.transform;
+            newFlag.flagResetTime = flagResetTime;
             bases[i].flag = newFlag;
             bases[i].owner = players[i];
             newFlag.flagBase = bases[i];

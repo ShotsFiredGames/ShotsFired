@@ -96,7 +96,10 @@ public class Flag : MonoBehaviour
 
     void ResetCarrier()
     {
-        carrier.GetComponent<PlayerManager>().hasFlag = false;
-        carrier = null;
+        if (carrier != null)
+        {
+            carrier.GetComponent<PlayerManager>().hasFlag = false;
+            carrier = null;
+        }       
     }
 }

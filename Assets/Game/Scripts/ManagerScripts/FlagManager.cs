@@ -124,8 +124,11 @@ public class FlagManager : NetworkBehaviour
 
         foreach (Flag flag in flags)
         {
-            if (flag.carrier.name.Equals(player.name))
-                return flag;
+            if (flag.carrier != null)
+            {
+                if (flag.carrier.name.Equals(player.name))
+                    return flag;
+            }            
         }
 
         return null;
