@@ -7,7 +7,7 @@ Properties
     _Inside("_Inside", Range(0.0,2.0) ) = 0.0
     _Rim("_Rim", Range(0.0,1.0) ) = 1.2
     _Texture("_Texture", 2D) = "white" {}
-    _Speed("_Speed", Range(0.5,50.0) ) = 0.5
+    _Speed("_Speed", Range(0.5,5.0) ) = 0.5
     _Tile("_Tile", Range(1.0,10.0) ) = 5.0
     _Strength("_Strength", Range(0.0,5.0) ) = 1.5
 }

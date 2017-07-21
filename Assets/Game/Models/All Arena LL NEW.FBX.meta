@@ -1,0 +1,147 @@
+fileFormatVersion: 2
+guid: 6d3dd29d0c2d80c4c87e18c3f69657ed
+timeCreated: 1500259091
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: Arena002
+    100004: Circle004
+    100006: Circle005
+    100008: Circle006
+    100010: Cylinder004
+    100012: Cylinder006
+    100014: Donut001
+    100016: Donut002
+    100018: Loft001
+    100020: Loft002
+    100022: Lower Level Inner Walls V
+    100024: Object161
+    100026: Object170
+    100028: Object171
+    100030: Plane001
+    100032: Torus008
+    400000: //RootNode
+    400002: Arena002
+    400004: Circle004
+    400006: Circle005
+    400008: Circle006
+    400010: Cylinder004
+    400012: Cylinder006
+    400014: Donut001
+    400016: Donut002
+    400018: Loft001
+    400020: Loft002
+    400022: Lower Level Inner Walls V
+    400024: Object161
+    400026: Object170
+    400028: Object171
+    400030: Plane001
+    400032: Torus008
+    2300000: Arena002
+    2300002: Circle004
+    2300004: Circle005
+    2300006: Circle006
+    2300008: Cylinder004
+    2300010: Cylinder006
+    2300012: Donut001
+    2300014: Donut002
+    2300016: Loft001
+    2300018: Loft002
+    2300020: Lower Level Inner Walls V
+    2300022: Object170
+    3300000: Arena002
+    3300002: Circle004
+    3300004: Circle005
+    3300006: Circle006
+    3300008: Cylinder004
+    3300010: Cylinder006
+    3300012: Donut001
+    3300014: Donut002
+    3300016: Loft001
+    3300018: Loft002
+    3300020: Lower Level Inner Walls V
+    3300022: Object170
+    4300000: Arena002
+    4300002: Circle004
+    4300004: Circle005
+    4300006: Circle006
+    4300008: Cylinder004
+    4300010: Cylinder006
+    4300012: Donut001
+    4300014: Donut002
+    4300016: Object170
+    4300018: Lower Level Inner Walls V
+    4300020: Loft002
+    4300022: Loft001
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
