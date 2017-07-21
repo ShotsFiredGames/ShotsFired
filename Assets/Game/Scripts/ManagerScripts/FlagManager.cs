@@ -59,10 +59,10 @@ public class FlagManager : NetworkBehaviour
             StopCoroutine(flag.resetTimer);
 
         Debug.LogError("The name of the new holder is: " + carrierName);
-        flag.carrier = PlayerWrangler.GetPlayer(carrierName).gameObject;
+        flag.carrier = PlayerWrangler.GetPlayer(carrierName);
         Debug.LogError("Flag is: " + flag.name);
         Debug.LogError("Carrier is: " + flag.carrier.name);
-        flag.carrier.GetComponent<PlayerManager>().hasFlag = true;
+        flag.carrier.hasFlag = true;
         flag.flagBase.hasFlag = false;
         flag.transform.SetParent(flag.carrier.transform);
         flag.transform.position = flag.carrier.transform.position + new Vector3(0, flag.carrier.transform.localScale.y, 0);

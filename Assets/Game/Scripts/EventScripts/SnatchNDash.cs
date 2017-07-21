@@ -9,13 +9,7 @@ public class SnatchNDash : GameEvent
     public Flag flag;
     public FlagBase[] bases;
     public byte pointsForCapture;
-    public float flagResetTime;
-
-    [Space, Header("Audio Variables")]
-    public AudioSource flagSource;
-    public AudioClip pickupClip;
-    public AudioClip dropClip;
-    public AudioClip returnedClip;
+    public float flagResetTime;    
 
     List<Flag> snashFlags = new List<Flag>();
     Coroutine captureTheFlag;

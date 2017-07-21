@@ -5,7 +5,7 @@ using UnityEngine.Networking;
 public class Flag : MonoBehaviour
 {
     public Coroutine resetTimer;
-    public GameObject carrier;
+    public PlayerManager carrier;
     public float flagResetTime;
     public FlagBase flagBase;
 
@@ -22,7 +22,7 @@ public class Flag : MonoBehaviour
     void OnDisable()
     {
         if (carrier != null)
-            carrier.GetComponent<PlayerManager>().hasFlag = false;
+            carrier.hasFlag = false;
     }
     
     private void OnTriggerEnter(Collider other)
@@ -91,14 +91,14 @@ public class Flag : MonoBehaviour
         flagBase.hasFlag = true;
 
         if (carrier != null)
-            carrier.GetComponent<PlayerManager>().hasFlag = false;
+            carrier.hasFlag = false;
     }
 
     void ResetCarrier()
     {
         if (carrier != null)
         {
-            carrier.GetComponent<PlayerManager>().hasFlag = false;
+            carrier.hasFlag = false;
             carrier = null;
         }       
     }
