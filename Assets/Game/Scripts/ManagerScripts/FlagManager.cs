@@ -62,7 +62,7 @@ public class FlagManager : NetworkBehaviour
         flag.carrier = PlayerWrangler.GetPlayer(carrierName);
         Debug.LogError("Flag is: " + flag.name);
         Debug.LogError("Carrier is: " + flag.carrier.name);
-        flag.carrier.hasFlag = true;
+        flag.carrier.SetFlag(true);
         flag.flagBase.hasFlag = false;
         flag.transform.SetParent(flag.carrier.transform);
         flag.transform.position = flag.carrier.transform.position + new Vector3(0, flag.carrier.transform.localScale.y, 0);
@@ -89,7 +89,7 @@ public class FlagManager : NetworkBehaviour
         flag.ResetFlagPosition();
 
         if (flag.carrier != null)
-            flag.carrier.GetComponent<PlayerManager>().hasFlag = false;
+            flag.carrier.GetComponent<PlayerManager>().SetFlag(false);
     }
 
     [Command]
@@ -104,7 +104,7 @@ public class FlagManager : NetworkBehaviour
         Flag flag = ConvertFlagFromPlayerName(owner);
 
         if (flag.carrier != null)
-            flag.carrier.GetComponent<PlayerManager>().hasFlag = false;
+            flag.carrier.GetComponent<PlayerManager>().SetFlag(false);
 
         flag.transform.parent = null;
         StartCoroutine(flag.CanBePickedUp());

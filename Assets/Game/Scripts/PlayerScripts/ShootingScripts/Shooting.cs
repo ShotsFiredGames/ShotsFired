@@ -14,6 +14,9 @@ public class Shooting : NetworkBehaviour
     AudioSource hitMarkerSource;
     PlayerManager playerManager;
 
+    [Header("Shooting UI")]
+    public Text ammoUI;
+
     GameObject cam;
     Coroutine overcharged;
     bool isOvercharged;
@@ -24,6 +27,25 @@ public class Shooting : NetworkBehaviour
         cam = transform.Find("Main Camera").transform.Find("Camera").gameObject;
         playerManager = GetComponent<PlayerManager>();
         hitMarkerSource = hitMarker.GetComponent<AudioSource>();
+        ammoUI.text = "";
+    }
+
+    void Update()
+    {
+        if (currentGun == null)
+        {
+            ammoUI.text = "";
+            return;
+        }
+        if (!currentGun.isActiveAndEnabled)
+        {
+            ammoUI.text = "";
+        }
+        else
+        {
+            ammoUI.gameObject.SetActive(true);
+            ammoUI.text = currentGun.currentAmmo + " / " + currentGun.ammo;
+        }
     }
 
     [Client]
@@ -54,10 +76,15 @@ public class Shooting : NetworkBehaviour
                     break;
             }
 
+            if (!isOvercharged)
+                currentGun.currentAmmo--;
+
+            //ammoUI.text = currentGun.currentAmmo + " / " + currentGun.ammo;
+
             yield return new WaitForSeconds(currentGun.fireFreq);
 
-            if (!isOvercharged)
-                currentGun.UseAmmo();
+            if (currentGun.currentAmmo <= 0)
+                currentGun.Discard();
 
             currentGun.isFiring = false;
 
@@ -78,6 +105,7 @@ public class Shooting : NetworkBehaviour
 
         currentGun.shootingSource.clip = currentGun.shootingSound;
         currentGun.isFiring = false;
+        //ammoUI.text = currentGun.ammo + " / " + currentGun.ammo;
         muzzleFlash = currentGun.muzzleFlash;
     }
 
@@ -90,6 +118,7 @@ public class Shooting : NetworkBehaviour
                 if (currentGun.gameObject.activeSelf)
                     currentGun.shootingAnim.ResetTrigger("Fire");
             currentGun.SetActiveGun(false);
+            //ammoUI.text = "";
         }
     }
 

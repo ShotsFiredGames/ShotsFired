@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.Networking;
+using UnityEngine.UI;
 
 public class PlayerManager : NetworkBehaviour
 {
@@ -33,6 +34,7 @@ public class PlayerManager : NetworkBehaviour
 
     [HideInInspector]
     public bool hasFlag;
+    public Image haveFlag;
     public AudioMixer gameMixer;
 
     void Awake()
@@ -40,6 +42,7 @@ public class PlayerManager : NetworkBehaviour
         playerHealth = GetComponent<PlayerHealth>();
         playerCamera = GetComponent<PlayerCamera>();
         myCamera = playerCamera.myCamera.gameObject;
+        SetFlag(false);
     }
 
     private void Start()
@@ -129,6 +132,8 @@ public class PlayerManager : NetworkBehaviour
             if (GameObject.Find("GameManager") != null)
                 gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         }
+
+        haveFlag.gameObject.SetActive(hasFlag);
     }
 
     private void LateUpdate()
@@ -381,6 +386,11 @@ public class PlayerManager : NetworkBehaviour
             //turn off effects
         }
 
+    }
+
+    public void SetFlag(bool isGotten)
+    {
+        hasFlag = isGotten;
     }
 
     public void UpdateCursorLock()

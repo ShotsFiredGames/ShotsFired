@@ -22,7 +22,7 @@ public class Flag : MonoBehaviour
     void OnDisable()
     {
         if (carrier != null)
-            carrier.hasFlag = false;
+            carrier.SetFlag(false);
     }
     
     private void OnTriggerEnter(Collider other)
@@ -91,14 +91,14 @@ public class Flag : MonoBehaviour
         flagBase.hasFlag = true;
 
         if (carrier != null)
-            carrier.hasFlag = false;
+            carrier.SetFlag(false);
     }
 
     void ResetCarrier()
     {
         if (carrier != null)
         {
-            carrier.hasFlag = false;
+            carrier.SetFlag(false);
             carrier = null;
         }       
     }
