@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -22,7 +23,6 @@ public class EventManager : NetworkBehaviour
     {
         eventNames = GameCustomization.currentEvents;                       //Grabs a List of Usable Event Names From GameCustomization
         addOnNames = GameCustomization.currentAddOns;
-
                                                                             //Loops throught AllEvents and the List of Names
         foreach (GameEvent events in allEvents)
         {
@@ -47,19 +47,18 @@ public class EventManager : NetworkBehaviour
             }
         }
 
-        InvokeRepeating("ActivateNextEvent", GameCustomization.eventOccurenceRate, GameCustomization.eventOccurenceRate);
+        InvokeRepeating("ActivateNextEvent", GameCustomization.eventOccurenceRate/ 2, GameCustomization.eventOccurenceRate);
 	}
 
     [ServerCallback]
     void ActivateNextEvent()
     {
         byte newEvent = (byte)Random.Range(0, gameEvents.Count);
-        byte newAddOn = (byte)Random.Range(0, addOns.Count);
-        RpcActivateNextEvent(newEvent, newAddOn);
+        RpcActivateNextEvent(newEvent);
     }
 
     [ClientRpc]
-    void RpcActivateNextEvent(byte _newEvent, byte _newAddOn)
+    void RpcActivateNextEvent(byte _newEvent)
     {
         nextEvent = gameEvents[_newEvent];
 
@@ -71,6 +70,27 @@ public class EventManager : NetworkBehaviour
             currentEvent.StartEvent();
         }
 
+        StartCoroutine(NextAddons((byte)currentEvent.duration));
+    }
+
+    IEnumerator NextAddons(byte eventLength)
+    {
+        yield return new WaitForSeconds(eventLength / 3); //wait a third of the time
+        ActivateNextAddon();
+        yield return new WaitForSeconds(eventLength / 3); // wait another third of the time
+        ActivateNextAddon();
+    }
+
+    [ServerCallback]
+    void ActivateNextAddon()
+    {
+        byte newAddOn = (byte)Random.Range(0, addOns.Count);
+        RpcActiveNextAddon(newAddOn);
+    }
+
+    [ClientRpc]
+    void RpcActiveNextAddon(byte _newAddOn)
+    {
         currentAddOn = addOns[_newAddOn];
         currentAddOn.StartAddOn();
     }
