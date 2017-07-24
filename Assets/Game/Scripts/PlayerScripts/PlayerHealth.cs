@@ -75,9 +75,7 @@ public class PlayerHealth : NetworkBehaviour
     [ClientRpc]
     public void RpcTookDamage(short damage, string sourceID, CollisionDetection.CollisionFlag collisionLocation)                //This is called from CollisionDetection to determine the damage and the location of the incoming collision.
     {
-        Debug.LogError("RPC TookDamage");
         if (isDead) return;
-        currentHealth -= damage;
         Hit(collisionLocation);
         if (!source.isPlaying)
         {
@@ -85,24 +83,25 @@ public class PlayerHealth : NetworkBehaviour
             source.Play();
         }
 
-        if(currentHealth > (short)(maxHealth * 0.75f))
+        currentHealth -= damage;
+
+        if (currentHealth > (short)(maxHealth * 0.75f))
         {
             StopHeartbeat();
         }
-        else if(currentHealth <= (short)(maxHealth  * 0.75f) && currentHealth > (short)(maxHealth * 0.5f))
+        else if (currentHealth > (short)(maxHealth * 0.5f))
         {
             damageEffectAnim.SetInteger("DamageEffect", 1);
         }
-        else if(currentHealth <= (short)(maxHealth * 0.5f) && currentHealth > (short)(maxHealth * 0.25f))
+        else if (currentHealth > (short)(maxHealth * 0.25f))
         {
             damageEffectAnim.SetInteger("DamageEffect", 2);
         }
-        else if(currentHealth <= (short)(maxHealth * 0.25f) && currentHealth != 0)
+        else if (currentHealth > 0)
         {
             damageEffectAnim.SetInteger("DamageEffect", 3);
         }
-
-        if (currentHealth <= 0)
+        else
         {
             Died(sourceID, collisionLocation);
         }

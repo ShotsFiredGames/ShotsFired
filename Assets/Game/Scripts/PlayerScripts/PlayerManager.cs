@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.Networking;
+using UnityEngine.UI;
 using System.Linq;
 
 public class PlayerManager : NetworkBehaviour
@@ -37,7 +38,7 @@ public class PlayerManager : NetworkBehaviour
 
     [HideInInspector]
     public bool hasFlag;
-    CaptureTheFlag captureTheFlag;
+    public Image haveFlag;
     public AudioMixer gameMixer;
 
     void Awake()
@@ -51,7 +52,6 @@ public class PlayerManager : NetworkBehaviour
     {
         playerMovement = GetComponent<PlayerMovement>();
         animationManager = GetComponent<AnimationManager>();
-        captureTheFlag = GameObject.Find("CaptureTheFlag").GetComponent<CaptureTheFlag>();
 
         shooting = GetComponent<Shooting>();
         juggernaut = GetComponentInChildren<Juggernaut>();
@@ -98,6 +98,7 @@ public class PlayerManager : NetworkBehaviour
     private void Update()
     {
         UpdateCursorLock();
+        haveFlag.gameObject.SetActive(hasFlag);
 
         if (!isLocalPlayer) return;
 
@@ -366,7 +367,7 @@ public class PlayerManager : NetworkBehaviour
     public void Dead(string damageSource, CollisionDetection.CollisionFlag collisionLocation)
     {
         if (hasFlag)
-            captureTheFlag.CmdFlagDropped();
+            FlagManager.instance.CmdFlagDropped(name);
 
         playerMovement.CancelSpeedBoost();
 
