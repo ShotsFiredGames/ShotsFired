@@ -44,7 +44,16 @@ public class PlayerManager : NetworkBehaviour
         playerHealth = GetComponent<PlayerHealth>();
         playerCamera = GetComponent<PlayerCamera>();
         myCamera = playerCamera.myCamera.gameObject;
-        controls = new Controls();
+        //controls = new Controls();
+        //foreach (PlayerAction _pa in Controls.playerActionDictionary.Keys)
+        //{
+        //    foreach (BindingSource bs in _pa.Bindings)
+        //    {
+        //        Debug.Log(bs.Name.ToString() + " " + _pa.Name);
+        //        Debug.LogError("gotcha");
+        //    }
+        //    //Debug.Log(_pa.Bindings.Count);
+        //}
     }
 
     private void Start()
@@ -61,10 +70,14 @@ public class PlayerManager : NetworkBehaviour
 
     void OnEnable()
     {
-        InputManager.AttachDevice(InputManager.ActiveDevice);
-        //controls = Controls.CreateWithDefaultBindings();
         controls = new Controls();
-        Debug.Log(controls.Jump.Bindings.Count);
+        controls = Controls.CreateWithDefaultBindings();
+        /*
+         * going to have to have to call default bindings if none are setup or call the player's custom bindings if they have done so. 
+         * Then we will have to assign any changed key bindings.
+         * Will also have to do this in the game manager. OR can be done in the game manager. 
+         * Right now the bug is that the player will not spawn in the game. I am not sure 
+         * */
     }
 
     void OnDisable()

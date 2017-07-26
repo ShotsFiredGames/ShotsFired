@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Networking;
 using UnityEngine.Networking.Match;
+using InControl;
 
 public class GameManager : NetworkBehaviour
 {
@@ -46,15 +47,17 @@ public class GameManager : NetworkBehaviour
         }
     }
 
-    //void OnEnable()
-    //{
-    //    controls = Controls.CreateWithDefaultBindings();
-    //}
+    void OnEnable()
+    {
+        //foreach (PlayerAction _pa in Controls.playerActionDictionary.Keys)
+        //    controls = Controls.CreateNewBindings(_pa);
+        controls = Controls.CreateWithDefaultBindings();
+    }
 
-    //void OnDisable()
-    //{
-    //    controls.Destroy();
-    //}
+    void OnDisable()
+    {
+        controls.Destroy();
+    }
 
     IEnumerator Start()
     {
@@ -107,6 +110,7 @@ public class GameManager : NetworkBehaviour
 
     public void AddPlayer(string playerID)
     {
+        Debug.Log("add player");
         playerScores.Add(playerID, 0);
         GameObject temp = Instantiate(scoreboardTextObj, scorePanel.transform);
         scoreboardTextObjList.Add(temp.GetComponent<Text>());

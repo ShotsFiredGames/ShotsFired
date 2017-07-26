@@ -12,18 +12,18 @@ using UnityEngine.PostProcessing;
 
 public class MainMenuOptions : MonoBehaviour {
 
-    [SerializeField]
-    GameObject[] mainMenuBtns, mainOptionsSubBtns, displayMenuBtns, controlOptionsBtns;
+    public GameObject[] mainMenuBtns, mainOptionsSubBtns, displayMenuBtns, controlOptionsBtns;
     //[SerializeField]
     //Text resolutionValue;
     [SerializeField]
-    GameObject creditDisplay, menuPanel;
+    GameObject creditDisplay;
+    public GameObject menuPanel;
     [SerializeField]
     string[] keyBindingTitles;
     [SerializeField]
     Toggle fullscreenToggle;
-    [SerializeField]
-    Button fireKeyBinding, moveLeftKeyBinding, moveRightKeyBinding, jumpKeyBinding, upKeyBinding, downKeyBinding, lookLeftKeyBinding, lookRightKeyBinding;
+    //[SerializeField]
+    //Button fireKeyBinding, moveLeftKeyBinding, moveRightKeyBinding, jumpKeyBinding, upKeyBinding, downKeyBinding, lookLeftKeyBinding, lookRightKeyBinding;
     [SerializeField]
     Dropdown resolutionDropdown, textureQualityDropdown, antialiasingDropdown, vSyncDropdown;
 
@@ -47,11 +47,19 @@ public class MainMenuOptions : MonoBehaviour {
     private int resolutionIndex = 0;
     private bool muted = false, inUse = false;
     private int backspacingIndex = 0;
+ 
 
-
-    private void OnEnable()
+    private void OnEnabeled()
     {
         controls = new Controls();
+        DontDestroyOnLoad(this.gameObject);
+        //byte i = 0;
+        //foreach(PlayerAction _pa in controls.Actions)
+        //{
+        //    i++;
+        //    playerActionDictionary.Add(_pa, i);
+        //    //Debug.Log(playerActionDictionary.Keys + " " + playerActionDictionary.ContainsValue(i).ToString());
+        //}
         postProcs.ambientOcclusion.enabled = false;
         postProcs.motionBlur.enabled = false;
         sliderList.Add(masterVolumeSlider);
@@ -98,12 +106,18 @@ public class MainMenuOptions : MonoBehaviour {
         resolutionIndex = 0;
         Screen.fullScreen = !Screen.fullScreen;
         audioSliders = GameObject.FindGameObjectsWithTag("Volume");
-        ActivationOfButtons(mainMenuBtns, true);
-        ActivationOfButtons(displayMenuBtns, false);
-        ActivationOfButtons(mainOptionsSubBtns, false);
-        ActivationOfButtons(sliderList, false);
-        ActivationOfButtons(audioSliders, false);
-        ActivationOfButtons(controlOptionsBtns, false);
+        if(!mainMenuBtns[0].activeSelf)
+            ActivationOfButtons(mainMenuBtns, true);
+        if(displayMenuBtns[0].activeSelf)
+            ActivationOfButtons(displayMenuBtns, false);
+        if(mainOptionsSubBtns[0].activeSelf)
+            ActivationOfButtons(mainOptionsSubBtns, false);
+        if(sliderList[0].IsActive())
+            ActivationOfButtons(sliderList, false);
+        if(audioSliders[0].activeSelf)
+            ActivationOfButtons(audioSliders, false);
+        if(controlOptionsBtns[0].activeSelf)
+            ActivationOfButtons(controlOptionsBtns, false);
 
     }
     //private Dictionary<string, Key> playerActionDictionary = new Dictionary<string, Key>();
@@ -117,20 +131,38 @@ public class MainMenuOptions : MonoBehaviour {
     //        }
     //    }
     //}
+    private void FixedUpdate()
+    {
+        //Debug.Log(playerActionDictionary.Count);
+        if (controls != null)
+        {
+            foreach (PlayerAction _pa in Controls.playerActionDictionary.Keys)
+            {
+                if (_pa.HasChanged)
+                {
+                    Debug.Log("has changed");
+                    Controls.CreateNewBindings(_pa);
+                }
+
+                Debug.Log(_pa.Bindings.Count + " " + Controls.playerActionDictionary.Keys.Count);
+            }
+        }
+        //Debug.Log(controls.Jump.ActiveDevice.GetFirstPressedButton().Control.ToString());
+
+    }
     public void KeyBinding(string _ActionToBind)
     {
+        controls = new Controls();
         InputManager.AttachDevice(InputManager.ActiveDevice);
-
         switch (_ActionToBind)
         {
             case "Jump":
-                //Debug.Log("as");
-                controls.Jump.ClearBindings();                
+                foreach(PlayerAction _pa in Controls.playerActionDictionary.Keys)
+                    if (_pa.IsListeningForBinding)
+                        _pa.StopListeningForBinding();
+                controls.Jump.ClearBindings();
                 controls.Jump.ListenForBinding();
-
-                //Debug.Log(controls.Jump.Bindings.Count);
-
-
+                           
                 break;
             case "Fire":
                 Debug.Log(controls.Fire.Bindings.Count);
@@ -628,17 +660,18 @@ public class MainMenuOptions : MonoBehaviour {
                 //    break;
         }
     }
-    private void ActivationOfButtons(GameObject _go, bool _activation)
+    public void ActivationOfButtons(GameObject _go, bool _activation)
     {
         _go.SetActive(_activation);
     }
-    private void ActivationOfButtons(GameObject[] _btns, bool _activation)
+    public void ActivationOfButtons(GameObject[] _btns, bool _activation)
     {
+        Debug.Log(_btns[0].name.ToString());
         foreach (GameObject _btn in _btns)
             _btn.SetActive(_activation);
         //Debug.Log(_btns[0].gameObject.name.ToString());
     }
-    private void ActivationOfButtons(List<Slider> _btns, bool _activation)
+    public void ActivationOfButtons(List<Slider> _btns, bool _activation)
     {
         foreach (Slider _btn in _btns)
             _btn.gameObject.SetActive(_activation);

@@ -48,32 +48,74 @@ public class Controls : PlayerActionSet
     public PlayerTwoAxisAction Look;
 
     public PlayerAction ScoreBoard;
-
+    public static Dictionary<PlayerAction, byte> playerActionDictionary = new Dictionary<PlayerAction, byte>();
+    public static Dictionary<BindingSource, byte> bindingSourceDictionary = new Dictionary<BindingSource, byte>();
 
     public Controls()
     {
         Fire = CreatePlayerAction("Fire");
+        playerActionDictionary.Add(Fire, 0);
         Aim = CreatePlayerAction("Aim");
+        playerActionDictionary.Add(Aim, 1);
+
         Jump = CreatePlayerAction("Jump");
+        playerActionDictionary.Add(Jump, 2);
+
         Sprint = CreatePlayerAction("Sprint");
+        playerActionDictionary.Add(Sprint, 3);
+
         Left = CreatePlayerAction("Move Left");
+        playerActionDictionary.Add(Left, 4);
+
         Right = CreatePlayerAction("Move Right");
+        playerActionDictionary.Add(Right, 5);
+
         Up = CreatePlayerAction("Move Up");
+        playerActionDictionary.Add(Up, 6);
+
         Down = CreatePlayerAction("Move Down");
+        playerActionDictionary.Add(Down, 7);
+
         Crouch = CreatePlayerAction("Crouch");
+        playerActionDictionary.Add(Crouch, 8);
 
         LookLeft = CreatePlayerAction("Look Left");
+        playerActionDictionary.Add(LookLeft, 9);
         LookRight = CreatePlayerAction("Look Right");
+        playerActionDictionary.Add(LookRight, 10);
         LookUp = CreatePlayerAction("Look Up");
+        playerActionDictionary.Add(LookUp, 11);
         LookDown = CreatePlayerAction("Look Down");
+        playerActionDictionary.Add(LookDown, 12);
 
         Move = CreateTwoAxisPlayerAction(Left, Right, Down, Up);
         Look = CreateTwoAxisPlayerAction(LookLeft, LookRight, LookDown, LookUp);
 
         ScoreBoard = CreatePlayerAction("Score Board");
+        playerActionDictionary.Add(ScoreBoard, 13);
     }
 
-   
+    public static Controls CreateNewBindings(PlayerAction _pa)
+    {
+        Controls controls = new Controls();
+        try { 
+            foreach(BindingSource _bs in _pa.Bindings)
+            {
+                Debug.Log(_bs.Name.ToString());
+                for(byte i = 0; i < playerActionDictionary.Values.Count; i++)
+                {
+                    Debug.Log(_bs.Name.ToString() + " " + i);
+                    if (playerActionDictionary.ContainsValue(i))
+                        bindingSourceDictionary.Add(_bs, i);
+                }
+            }
+        }
+        catch
+        {
+            Debug.LogError("No bindings in " + _pa.Name.ToString());
+        }
+        return null;
+    }
     public static Controls CreateWithDefaultBindings()
     {
         Controls controls = new Controls();

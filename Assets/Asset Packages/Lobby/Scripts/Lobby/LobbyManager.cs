@@ -402,8 +402,10 @@ namespace Prototype.NetworkLobby
                     (lobbySlots[i] as LobbyPlayer).RpcUpdateCountdown(0);
                 }
             }
-
-            ServerChangeScene(playScene);
+            LoadingScreenScript lss = FindObjectOfType<LoadingScreenScript>();
+            lss.LoadScreen(); 
+            if(SceneManager.LoadSceneAsync(lss.path).isDone)
+                ServerChangeScene(playScene);
         }
 
         // ----------------- Client callbacks ------------------
