@@ -41,7 +41,9 @@ public class PlayerHealth : NetworkBehaviour
     void Awake()
     {
         respawnTime = GameCustomization.respawnTime;
-        maxHealth = GameCustomization.playerHealth;
+        Debug.LogError("Before: " + GameCustomization.playerHealth);
+       
+        
         playerManager = GetComponent<PlayerManager>();
     }
 
@@ -54,6 +56,8 @@ public class PlayerHealth : NetworkBehaviour
     public void Init()
     {
         isDead = false;
+        maxHealth = GameCustomization.playerHealth;
+        Debug.LogError(maxHealth);
         currentHealth = maxHealth;
         currMaxHealth = maxHealth;
         if (!isLocalPlayer)
@@ -105,6 +109,8 @@ public class PlayerHealth : NetworkBehaviour
         {
             Died(sourceID, collisionLocation);
         }
+
+        Debug.LogError("Current Health is: " + currentHealth);
     }
 
     void StopHeartbeat()

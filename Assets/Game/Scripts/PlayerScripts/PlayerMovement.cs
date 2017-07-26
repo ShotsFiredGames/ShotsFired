@@ -56,6 +56,7 @@ public class PlayerMovement : NetworkBehaviour
     void Start ()
     {
         speed = GameCustomization.playerSpeed;
+        Debug.LogError("Speed is: " + GameCustomization.playerSpeed);
         rb = GetComponent<Rigidbody>();
         playerManager = GetComponent<PlayerManager>();
         _jump = jumpForce;

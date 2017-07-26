@@ -1,20 +1,28 @@
 ﻿using UnityEngine;
+using UnityEngine.Networking;
 using System.Collections.Generic;
 
-public class GameCustomization : MonoBehaviour
+public class GameCustomization : NetworkBehaviour
 {
     public List<string> _currentEvents;
     public List<string> _currentAddOns;
+    [SyncVar]
     public float _respawnTime;
+    [SyncVar]
     public float _playerSpeed;
+    [SyncVar]
     public short _playerHealth;
+    [SyncVar]
     public bool _isAmmoUnlimited;
-    [Range(2, 20)]
+    [SyncVar]
     public float _abilityDuration;
-    [Range(2, 1000)]
+    [SyncVar]
     public float _eventOccurenceRate;
+    [SyncVar]
     public byte _gameLength;
+    [SyncVar]
     public short _pointsToWin;
+    [SyncVar]
     public byte _pointsPerKill;
 
     public static List<string> currentEvents;
@@ -33,14 +41,21 @@ public class GameCustomization : MonoBehaviour
     {
         currentEvents = _currentEvents;
         currentAddOns = _currentAddOns;
-        respawnTime = _respawnTime;
-        playerSpeed = _playerSpeed;
-        playerHealth = _playerHealth;
-        isAmmoUnlimited = _isAmmoUnlimited;
-        abilityDuration = _abilityDuration;
-        eventOccurenceRate = _eventOccurenceRate;
-        gameLength = _gameLength;
-        pointsToWin = _pointsToWin;
-        pointsPerKill = _pointsPerKill;
+        //respawnTime = _respawnTime;
+        //playerSpeed = _playerSpeed;
+        //playerHealth = _playerHealth;
+        //isAmmoUnlimited = _isAmmoUnlimited;
+        //abilityDuration = _abilityDuration;
+        //eventOccurenceRate = _eventOccurenceRate;
+        //gameLength = _gameLength;
+        //pointsToWin = _pointsToWin;
+        //pointsPerKill = _pointsPerKill;
     }
+/*
+    public static void SetValues(short pHealth)
+    {
+        playerHealth = pHealth;
+        Debug.LogError("Player Health in Customization: " + playerHealth);
+    }
+*/
 }

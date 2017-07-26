@@ -16,6 +16,8 @@ namespace Prototype.NetworkLobby
         //used on server to avoid assigning the same color to two player
         static List<int> _colorInUse = new List<int>();
 
+        public CustomizationToServer cusToServer { get; set; }
+
         public Button colorButton;
         public InputField nameInput;
         public Button readyButton;
@@ -65,6 +67,8 @@ namespace Prototype.NetworkLobby
             //will be created with the right value currently on server
             OnMyName(playerName);
             OnMyColor(playerColor);
+
+            //playerHealth = GameObject.Find("CustomMatchPanel").transform.Find(playerHealth.name).GetComponent<Slider>();
         }
 
         public override void OnStartAuthority()
@@ -106,6 +110,10 @@ namespace Prototype.NetworkLobby
             EventSystem.current.SetSelectedGameObject(readyButton.gameObject);
             remoteIcone.gameObject.SetActive(false);
             localIcone.gameObject.SetActive(true);
+
+            cusToServer = GetComponentInParent<CustomizationToServer>();
+            cusToServer.customizeMatchButton.gameObject.SetActive(isServer);
+
             CheckRemoveButton();
 
             if (playerColor == Color.white)

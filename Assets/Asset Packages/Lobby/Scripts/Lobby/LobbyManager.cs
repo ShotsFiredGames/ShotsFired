@@ -51,6 +51,7 @@ namespace Prototype.NetworkLobby
         public bool _isMatchmaking = false;
 
         protected bool _disconnectServer = false;
+        private bool setGameVars;
         
         protected ulong _currentMatchID;
 
@@ -358,7 +359,29 @@ namespace Prototype.NetworkLobby
 
             if (_lobbyHooks)
                 _lobbyHooks.OnLobbyServerSceneLoadedForPlayer(this, lobbyPlayer, gamePlayer);
+            
+            LobbyPlayer lp = lobbyPlayer.GetComponent<LobbyPlayer>();
 
+            if (lp != null)
+            {
+               CustomizationToServer cusToServer = lp.cusToServer;
+                if (!setGameVars && lp.isServer)
+                {
+                    setGameVars = true;
+                    GameCustomization.abilityDuration = cusToServer.abilityDuration.value;
+                    GameCustomization.eventOccurenceRate = cusToServer.eventOccurence.value;
+                    GameCustomization.gameLength = (byte) cusToServer.gameLength.value;
+                    GameCustomization.playerHealth = ((short) cusToServer.playerHealth.value);
+                    GameCustomization.playerSpeed = cusToServer.playerSpeed.value;
+                    GameCustomization.pointsPerKill = (byte) cusToServer.pointsPerKill.value;
+                    GameCustomization.pointsToWin = (short)cusToServer.pointsToWin.value;
+                    GameCustomization.respawnTime = cusToServer.respawnTime.value;
+                    GameCustomization.isAmmoUnlimited = cusToServer.unlimitedAmmo.isOn;
+                    Debug.LogError("PlayerHealth: " + lp.cusToServer.playerHealth.value);
+                    Debug.LogError("In manager: " + GameCustomization.playerHealth);
+                }
+            }
+            
             return true;
         }
 
