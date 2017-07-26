@@ -12,14 +12,14 @@ using UnityEngine.PostProcessing;
 
 public class MainMenuOptions : MonoBehaviour {
 
-    public GameObject[] mainMenuBtns, mainOptionsSubBtns, displayMenuBtns, controlOptionsBtns;
+    public GameObject[] mainMenuBtns, mainOptionsSubBtns, displayMenuBtns, controlOptionsBtns, audioMenuButtons;
     //[SerializeField]
     //Text resolutionValue;
     [SerializeField]
     GameObject creditDisplay;
     public GameObject menuPanel;
-    [SerializeField]
-    string[] keyBindingTitles;
+    //[SerializeField]
+    //string[] keyBindingTitles;
     [SerializeField]
     Toggle fullscreenToggle;
     //[SerializeField]
@@ -62,9 +62,6 @@ public class MainMenuOptions : MonoBehaviour {
         //}
         postProcs.ambientOcclusion.enabled = false;
         postProcs.motionBlur.enabled = false;
-        sliderList.Add(masterVolumeSlider);
-        sliderList.Add(musicVolumeSlider);
-        sliderList.Add(sfxVolumeSlider);
         sliderList.Add(rotationSpeedSlider);
 
         if (PlayerPrefs.GetInt("NewGame") == 0)                                  //Check to see if this is the first time game ran on this computer
@@ -142,6 +139,12 @@ public class MainMenuOptions : MonoBehaviour {
                 {
                     Debug.Log("has changed");
                     Controls.CreateNewBindings(_pa);
+
+                }
+                if (_pa.Bindings.Count > 0)
+                {
+                    EventSystem.current.currentSelectedGameObject.GetComponentInChildren<Text>().text = _pa.Bindings[0].Name.ToString();
+                    Debug.Log(EventSystem.current.currentSelectedGameObject.name.ToString());
                 }
 
                 Debug.Log(_pa.Bindings.Count + " " + Controls.playerActionDictionary.Keys.Count);
@@ -165,136 +168,104 @@ public class MainMenuOptions : MonoBehaviour {
                            
                 break;
             case "Fire":
-                Debug.Log(controls.Fire.Bindings.Count);
+                foreach (PlayerAction _pa in Controls.playerActionDictionary.Keys)
+                    if (_pa.IsListeningForBinding)
+                        _pa.StopListeningForBinding();
                 controls.Fire.ClearBindings();
                 controls.Fire.ListenForBinding();
-                if (!controls.Fire.IsListeningForBinding)
-                    Debug.Log(controls.Fire.Bindings.Count);
-                controls.Save();
-                PlayerPrefs.SetString("SaveInfoFire", controls.Save().ToString());
-                Debug.Log(controls.Save().ToString());
 
                 break;
             case "Aim":
-                Debug.Log(controls.Aim.Bindings.Count);
+                foreach (PlayerAction _pa in Controls.playerActionDictionary.Keys)
+                    if (_pa.IsListeningForBinding)
+                        _pa.StopListeningForBinding();
                 controls.Aim.ClearBindings();
                 controls.Aim.ListenForBinding();
-                if (!controls.Aim.IsListeningForBinding)
-                    Debug.Log(controls.Aim.Bindings.Count);
-                controls.Save();
-                PlayerPrefs.SetString("SaveInfoAim", controls.Save().ToString());
-                Debug.Log(controls.Save().ToString());
 
                 break;
             case "Sprint":
-                Debug.Log(controls.Sprint.Bindings.Count);
+                foreach (PlayerAction _pa in Controls.playerActionDictionary.Keys)
+                    if (_pa.IsListeningForBinding)
+                        _pa.StopListeningForBinding();
                 controls.Sprint.ClearBindings();
                 controls.Sprint.ListenForBinding();
-                if (!controls.Sprint.IsListeningForBinding)
-                    Debug.Log(controls.Sprint.Bindings.Count);
-                controls.Save();
-                PlayerPrefs.SetString("SaveInfoSprint", controls.Save().ToString());
-                Debug.Log(controls.Save().ToString());
 
                 break;
             case "Left":
+                foreach (PlayerAction _pa in Controls.playerActionDictionary.Keys)
+                    if (_pa.IsListeningForBinding)
+                        _pa.StopListeningForBinding();
                 controls.Left.ClearBindings();
                 controls.Left.ListenForBinding();
-                if (!controls.Left.IsListeningForBinding)
-                    Debug.Log(controls.Left.Bindings.Count);
-                controls.Save();
-                PlayerPrefs.SetString("SaveInfoLeft", controls.Save().ToString());
-                Debug.Log(controls.Save().ToString());
 
                 break;
             case "Right":
+                foreach (PlayerAction _pa in Controls.playerActionDictionary.Keys)
+                    if (_pa.IsListeningForBinding)
+                        _pa.StopListeningForBinding();
                 controls.Right.ClearBindings();
                 controls.Right.ListenForBinding();
-                if (!controls.Right.IsListeningForBinding)
-                    Debug.Log(controls.Right.Bindings.Count);
-                controls.Save();
-                PlayerPrefs.SetString("SaveInfoRight", controls.Save().ToString());
-                Debug.Log(controls.Save().ToString());
-
                 break;
             case "Up":
+                foreach (PlayerAction _pa in Controls.playerActionDictionary.Keys)
+                    if (_pa.IsListeningForBinding)
+                        _pa.StopListeningForBinding();
                 controls.Up.ClearBindings();
                 controls.Up.ListenForBinding();
-                if (!controls.Up.IsListeningForBinding)
-                    Debug.Log(controls.Up.Bindings.Count);
-                controls.Save();
-                PlayerPrefs.SetString("SaveInfoUp", controls.Save().ToString());
-                Debug.Log(controls.Save().ToString());
 
                 break;
             case "Down":
+                foreach (PlayerAction _pa in Controls.playerActionDictionary.Keys)
+                    if (_pa.IsListeningForBinding)
+                        _pa.StopListeningForBinding();
                 controls.Down.ClearBindings();
                 controls.Down.ListenForBinding();
-                if (!controls.Down.IsListeningForBinding)
-                    Debug.Log(controls.Down.Bindings.Count);
-                controls.Save();
-                PlayerPrefs.SetString("SaveInfoDown", controls.Save().ToString());
-                Debug.Log(controls.Save().ToString());
-
                 break;
             case "Crouch":
+                foreach (PlayerAction _pa in Controls.playerActionDictionary.Keys)
+                    if (_pa.IsListeningForBinding)
+                        _pa.StopListeningForBinding();
                 controls.Crouch.ClearBindings();
                 controls.Crouch.ListenForBinding();
-                if (!controls.Crouch.IsListeningForBinding)
-                    Debug.Log(controls.Crouch.Bindings.Count);
-                controls.Save();
-                PlayerPrefs.SetString("SaveInfoCrouch", controls.Save().ToString());
-                Debug.Log(controls.Save().ToString());
 
                 break;
             case "Look Left":
+                foreach (PlayerAction _pa in Controls.playerActionDictionary.Keys)
+                    if (_pa.IsListeningForBinding)
+                        _pa.StopListeningForBinding();
                 controls.LookLeft.ClearBindings();
                 controls.LookLeft.ListenForBinding();
-                if (!controls.LookLeft.IsListeningForBinding)
-                    Debug.Log(controls.LookLeft.Bindings.Count);
-                controls.Save();
-                PlayerPrefs.SetString("SaveInfoLookLeft", controls.Save().ToString());
-                Debug.Log(controls.Save().ToString());
 
                 break;
             case "Look Right":
+                foreach (PlayerAction _pa in Controls.playerActionDictionary.Keys)
+                    if (_pa.IsListeningForBinding)
+                        _pa.StopListeningForBinding();
                 controls.LookRight.ClearBindings();
                 controls.LookRight.ListenForBinding();
-                if (!controls.LookRight.IsListeningForBinding)
-                    Debug.Log(controls.LookRight.Bindings.Count);
-                controls.Save();
-                PlayerPrefs.SetString("SaveInfoLookRight", controls.Save().ToString());
-                Debug.Log(controls.Save().ToString());
-
                 break;
             case "Look Up":
+                foreach (PlayerAction _pa in Controls.playerActionDictionary.Keys)
+                    if (_pa.IsListeningForBinding)
+                        _pa.StopListeningForBinding();
                 controls.LookUp.ClearBindings();
                 controls.LookUp.ListenForBinding();
-                if (!controls.LookUp.IsListeningForBinding)
-                    Debug.Log(controls.LookUp.Bindings.Count);
-                controls.Save();
-                PlayerPrefs.SetString("SaveInfoLookUp", controls.Save().ToString());
-                Debug.Log(controls.Save().ToString());
 
                 break;
             case "Look Down":
+                foreach (PlayerAction _pa in Controls.playerActionDictionary.Keys)
+                    if (_pa.IsListeningForBinding)
+                        _pa.StopListeningForBinding();
                 controls.LookDown.ClearBindings();
                 controls.LookDown.ListenForBinding();
-                if (!controls.LookDown.IsListeningForBinding)
-                    Debug.Log(controls.LookDown.Bindings.Count);
-                controls.Save();
-                PlayerPrefs.SetString("SaveInfoLookDown", controls.Save().ToString());
-                Debug.Log(controls.Save().ToString());
 
                 break;
             case "ScoreBoard":
+                foreach (PlayerAction _pa in Controls.playerActionDictionary.Keys)
+                    if (_pa.IsListeningForBinding)
+                        _pa.StopListeningForBinding();
                 controls.ScoreBoard.ClearBindings();
                 controls.ScoreBoard.ListenForBinding();
-                if (!controls.ScoreBoard.IsListeningForBinding)
-                    Debug.Log(controls.ScoreBoard.Bindings.Count);
-                controls.Save();
-                PlayerPrefs.SetString("SaveInfoScoreBoard", controls.Save().ToString());
-                Debug.Log(controls.Save().ToString());
 
                 break;
         }
@@ -629,6 +600,8 @@ public class MainMenuOptions : MonoBehaviour {
     public void GoBack(int _backSub)
     {
         backspacingIndex += _backSub;
+        if (backspacingIndex < 0)
+            backspacingIndex = 0;
         switch (backspacingIndex)
         {
             case 0:
@@ -637,7 +610,7 @@ public class MainMenuOptions : MonoBehaviour {
                 ActivationOfButtons(mainOptionsSubBtns, false);
                 ActivationOfButtons(displayMenuBtns, false);
                 ActivationOfButtons(controlOptionsBtns, false);
-                ActivationOfButtons(menuPanel, false);
+                //ActivationOfButtons(menuPanel, false);
                 break;
             case 1:
                 inUse = false;
@@ -647,7 +620,7 @@ public class MainMenuOptions : MonoBehaviour {
                 ActivationOfButtons(audioSliders, false);
                 ActivationOfButtons(controlOptionsBtns, false);
                 ActivationOfButtons(creditDisplay, false);
-                ActivationOfButtons(menuPanel, false);
+                //ActivationOfButtons(menuPanel, false);
                 break;
                 //case 2:
                 //    ActivationOfButtons(mainMenuBtns, true);
@@ -666,10 +639,9 @@ public class MainMenuOptions : MonoBehaviour {
     }
     public void ActivationOfButtons(GameObject[] _btns, bool _activation)
     {
-        Debug.Log(_btns[0].name.ToString());
         foreach (GameObject _btn in _btns)
             _btn.SetActive(_activation);
-        //Debug.Log(_btns[0].gameObject.name.ToString());
+        Debug.Log(_btns[0].gameObject.name.ToString());
     }
     public void ActivationOfButtons(List<Slider> _btns, bool _activation)
     {
