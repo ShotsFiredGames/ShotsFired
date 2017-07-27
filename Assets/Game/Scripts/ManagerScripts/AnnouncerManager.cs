@@ -49,7 +49,13 @@ public class AnnouncerManager : NetworkBehaviour
         AudioClip[] startMatch = generalClips.GetStartMatchClipArray(sceneName);
         PlayRandomClipFromArray(startMatch);
     }
- 
+
+    [ServerCallback]
+    void GetRandomIndex(int maxVal)
+    {
+        arrayIndex = Random.Range(0, maxVal);
+    }
+
     void PlayRandomClipFromArray(AudioClip[] clips)
     {
         if (source.isPlaying)
@@ -62,10 +68,9 @@ public class AnnouncerManager : NetworkBehaviour
             source.Play();
     }
 
-    [ServerCallback]
-    void GetRandomIndex(int maxVal)
+    public void PlayEndMatchClip()
     {
-        arrayIndex = Random.Range(0, maxVal);
+        PlayRandomClipFromArray(generalClips.endMatch);
     }
 
     #region Clip Classes

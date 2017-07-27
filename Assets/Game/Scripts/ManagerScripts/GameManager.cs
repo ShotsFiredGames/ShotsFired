@@ -164,6 +164,7 @@ public class GameManager : NetworkBehaviour
     {
         endGameText.text = winningPlayer + " won!" + '\n' + "Press the Jump button to continue";
         endGameText.gameObject.SetActive(true);
+        AnnouncerManager.instance.PlayEndMatchClip();
         StartCoroutine(EndGame());
     }
 
