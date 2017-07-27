@@ -1,8 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.Networking;
  
-public class AnnouncerManager : MonoBehaviour
+public class AnnouncerManager : NetworkBehaviour
 {
     //Version of instance taken from "http://wiki.unity3d.com/index.php/AManagerClass"
     private static AnnouncerManager s_Instance = null;
@@ -36,33 +38,59 @@ public class AnnouncerManager : MonoBehaviour
     public SnatchNDashClips sndClips;
     public BallToTheWallClips bttwClips;
     public AddOnClips addOnClips;
-
-    [Header("Filler Lines")]
-    public FactionClips[] factionClips;
     public FillerClips fillerClips;
+
+    [SyncVar]
+    int arrayIndex;
  
     void Start()
     {
-        PlayRandomClipFromArray(generalClips.startMatch);
+        string sceneName = SceneManager.GetActiveScene().name;
+        AudioClip[] startMatch = generalClips.GetStartMatchClipArray(sceneName);
+        PlayRandomClipFromArray(startMatch);
     }
  
     void PlayRandomClipFromArray(AudioClip[] clips)
     {
         if (source.isPlaying)
             source.Stop();
- 
-        source.clip = clips[Random.Range(0, clips.Length)];
+
+        GetRandomIndex(clips.Length);
+        source.clip = clips[arrayIndex];
  
         if (source.clip != null)
             source.Play();
+    }
+
+    [ServerCallback]
+    void GetRandomIndex(int maxVal)
+    {
+        arrayIndex = Random.Range(0, maxVal);
     }
 
     #region Clip Classes
     [System.Serializable]
     public class GeneralClips
     {
-        public AudioClip[] startMatch;
+        public StartMatchClips scionArena;
         public AudioClip[] endMatch;
+
+        public AudioClip[] GetStartMatchClipArray(string sceneName)
+        {
+            switch (sceneName)
+            {
+                case "Game":
+                    return scionArena.startMatch;
+                default:
+                    return null;
+            }
+        }
+    }
+
+    [System.Serializable]
+    public class StartMatchClips
+    {
+        public AudioClip[] startMatch;
     }
 
     [System.Serializable]
@@ -102,12 +130,17 @@ public class AnnouncerManager : MonoBehaviour
     {
         public AudioClip[] firstBlood;
         public AudioClip[] killStreaks;
-        public AudioClip testTwo;
     }
 
     [System.Serializable]
     public class FillerClips
     {
+        public FactionClips redFactionClips;
+        public FactionClips blueFactionClips;
+        public FactionClips whiteFactionClips;
+        public FactionClips greenFactionClips;
+        public FactionClips blackFactionClips;
+        public FactionClips yellowFactionClips;
         public AudioClip[] randomLines;
     }
     #endregion
