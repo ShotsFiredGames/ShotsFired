@@ -36,6 +36,8 @@ public class AnnouncerManager : MonoBehaviour
     public SnatchNDashClips sndClips;
     public BallToTheWallClips bttwClips;
     public AddOnClips addOnClips;
+
+    [Header("Filler Lines")]
     public FactionClips[] factionClips;
     public FillerClips fillerClips;
  
@@ -61,7 +63,6 @@ public class AnnouncerManager : MonoBehaviour
     {
         public AudioClip[] startMatch;
         public AudioClip[] endMatch;
-        public AudioClip[] firstBlood;
     }
 
     [System.Serializable]
@@ -99,7 +100,8 @@ public class AnnouncerManager : MonoBehaviour
     [System.Serializable]
     public class FactionClips
     {
-        public AudioClip testOne;
+        public AudioClip[] firstBlood;
+        public AudioClip[] killStreaks;
         public AudioClip testTwo;
     }
 
