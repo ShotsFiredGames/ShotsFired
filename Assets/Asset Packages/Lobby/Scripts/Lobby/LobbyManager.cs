@@ -368,17 +368,30 @@ namespace Prototype.NetworkLobby
                 if (!setGameVars && lp.isServer)
                 {
                     setGameVars = true;
-                    GameCustomization.abilityDuration = cusToServer.abilityDuration.value;
-                    GameCustomization.eventOccurenceRate = cusToServer.eventOccurence.value;
-                    GameCustomization.gameLength = (byte) cusToServer.gameLength.value;
-                    GameCustomization.playerHealth = ((short) cusToServer.playerHealth.value);
-                    GameCustomization.playerSpeed = cusToServer.playerSpeed.value;
-                    GameCustomization.pointsPerKill = (byte) cusToServer.pointsPerKill.value;
-                    GameCustomization.pointsToWin = (short)cusToServer.pointsToWin.value;
-                    GameCustomization.respawnTime = cusToServer.respawnTime.value;
-                    GameCustomization.isAmmoUnlimited = cusToServer.unlimitedAmmo.isOn;
+                    GameCustomization.instance.abilityDuration = cusToServer.abilityDuration.value;
+                    GameCustomization.instance.eventOccurenceRate = cusToServer.eventOccurence.value;
+                    GameCustomization.instance.gameLength = (byte) cusToServer.gameLength.value;
+                    GameCustomization.instance.playerHealth = ((short) cusToServer.playerHealth.value);
+                    GameCustomization.instance.playerSpeed = cusToServer.playerSpeed.value;
+                    GameCustomization.instance.pointsPerKill = (byte) cusToServer.pointsPerKill.value;
+                    GameCustomization.instance.pointsToWin = (short)cusToServer.pointsToWin.value;
+                    GameCustomization.instance.respawnTime = cusToServer.respawnTime.value;
+                    GameCustomization.instance.isAmmoUnlimited = cusToServer.unlimitedAmmo.isOn;
+
+                    foreach (TextToggle toggle in cusToServer.events)
+                    {
+                        if (toggle.isActivate)
+                            GameCustomization.instance.currentEvents.Add(toggle.info);
+                    }
+
+                    foreach (TextToggle toggle in cusToServer.addOns)
+                    {
+                        if (toggle.isActivate)
+                            GameCustomization.instance.currentAddOns.Add(toggle.info);
+                    }
+
                     Debug.LogError("PlayerHealth: " + lp.cusToServer.playerHealth.value);
-                    Debug.LogError("In manager: " + GameCustomization.playerHealth);
+                    Debug.LogError("In manager: " + GameCustomization.instance.playerHealth);
                 }
             }
             

@@ -62,7 +62,7 @@ public abstract class Gun : MonoBehaviour
 
     public void SetAmmo()
     {
-        this.isAmmoUnlimited = GameCustomization.isAmmoUnlimited;
+        this.isAmmoUnlimited = GameCustomization.instance.isAmmoUnlimited;
         currentAmmo = ammo;
     }
 

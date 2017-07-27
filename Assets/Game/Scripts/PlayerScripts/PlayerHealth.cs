@@ -40,8 +40,8 @@ public class PlayerHealth : NetworkBehaviour
     // Use this for initialization
     void Awake()
     {
-        respawnTime = GameCustomization.respawnTime;
-        Debug.LogError("Before: " + GameCustomization.playerHealth);
+        respawnTime = GameCustomization.instance.respawnTime;
+        Debug.LogError("Before: " + GameCustomization.instance.playerHealth);
        
         
         playerManager = GetComponent<PlayerManager>();
@@ -56,7 +56,7 @@ public class PlayerHealth : NetworkBehaviour
     public void Init()
     {
         isDead = false;
-        maxHealth = GameCustomization.playerHealth;
+        maxHealth = GameCustomization.instance.playerHealth;
         Debug.LogError(maxHealth);
         currentHealth = maxHealth;
         currMaxHealth = maxHealth;
@@ -251,7 +251,7 @@ public class PlayerHealth : NetworkBehaviour
             isHealthIncreased = true;
             currMaxHealth = (short)(maxHealth * 4);
             currentHealth = currMaxHealth;
-            yield return new WaitForSeconds(GameCustomization.abilityDuration);
+            yield return new WaitForSeconds(GameCustomization.instance.abilityDuration);
             currMaxHealth = maxHealth;
             if (currentHealth > maxHealth)
                 currentHealth = maxHealth;

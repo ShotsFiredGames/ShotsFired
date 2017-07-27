@@ -27,7 +27,7 @@ public class Juggernaut : MonoBehaviour
     {
         isJuggernaut = true;
         juggernautEffect.SetActive(true);
-        yield return new WaitForSeconds(GameCustomization.abilityDuration);
+        yield return new WaitForSeconds(GameCustomization.instance.abilityDuration);
         juggernautEffect.SetActive(false);
         isJuggernaut = false;
     }

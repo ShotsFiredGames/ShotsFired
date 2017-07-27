@@ -18,6 +18,12 @@ public class CustomizationToServer : MonoBehaviour
     public Slider pointsPerKill;
     public Toggle unlimitedAmmo;
 
+    [Header("Event Toggles")]
+    public List<TextToggle> events = new List<TextToggle>();
+
+    [Header("AddOn Toggles")]
+    public List<TextToggle> addOns = new List<TextToggle>();
+
     // Use this for initialization
     void Start () {
 		

@@ -15,13 +15,15 @@ public class EventManager : NetworkBehaviour
     List<GameEvent> gameEvents = new List<GameEvent>();
     List<AddOn> addOns = new List<AddOn>();
 
-    List<string> eventNames;
-    List<string> addOnNames;
-    
+    SyncListString eventNames = new SyncListString();
+    SyncListString addOnNames = new SyncListString();
+
     void Start ()
     {
-        eventNames = GameCustomization.currentEvents;                       //Grabs a List of Usable Event Names From GameCustomization
-        addOnNames = GameCustomization.currentAddOns;
+        Debug.LogError(GameCustomization.instance.currentEvents.Count + ": number of strings");
+        eventNames = GameCustomization.instance.currentEvents;                       //Grabs a List of Usable Event Names From GameCustomization
+
+        addOnNames = GameCustomization.instance.currentAddOns;
 
                                                                             //Loops throught AllEvents and the List of Names
         foreach (GameEvent events in allEvents)
@@ -47,7 +49,7 @@ public class EventManager : NetworkBehaviour
             }
         }
 
-        InvokeRepeating("ActivateNextEvent", GameCustomization.eventOccurenceRate, GameCustomization.eventOccurenceRate);
+        InvokeRepeating("ActivateNextEvent", GameCustomization.instance.eventOccurenceRate, GameCustomization.instance.eventOccurenceRate);
 	}
 
     [ServerCallback]
@@ -73,5 +75,8 @@ public class EventManager : NetworkBehaviour
 
         currentAddOn = addOns[_newAddOn];
         currentAddOn.StartAddOn();
+
+
+        Debug.LogError(currentAddOn.name + " " + currentEvent.name);
     }
 }

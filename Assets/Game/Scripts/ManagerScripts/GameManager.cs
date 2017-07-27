@@ -59,7 +59,7 @@ public class GameManager : NetworkBehaviour
     IEnumerator Start()
     {
         networkManager = NetworkManager.singleton;
-        minutes = GameCustomization.gameLength;
+        minutes = GameCustomization.instance.gameLength;
         seconds = 1;
         StartTimer();
 
@@ -142,7 +142,7 @@ public class GameManager : NetworkBehaviour
     {
         string winningPlayer = GetWinningPlayer();
 
-        if (playerScores[winningPlayer] >= GameCustomization.pointsToWin)
+        if (playerScores[winningPlayer] >= GameCustomization.instance.pointsToWin)
         {
             gameOver = true;
         }

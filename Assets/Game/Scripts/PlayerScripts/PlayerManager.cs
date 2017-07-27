@@ -375,7 +375,7 @@ public class PlayerManager : NetworkBehaviour
         CmdDisarm();
         CmdCancelAbility();
         animationManager.IsDead(collisionLocation);
-        GameManager.instance.CmdAddScore(damageSource, GameCustomization.pointsPerKill);
+        GameManager.instance.CmdAddScore(damageSource, GameCustomization.instance.pointsPerKill);
     }
 
     public void Respawn()

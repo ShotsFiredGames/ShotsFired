@@ -284,7 +284,7 @@ public class Shooting : NetworkBehaviour
     IEnumerator OverchargedAbility()
     {
         isOvercharged = true;
-        yield return new WaitForSeconds(GameCustomization.abilityDuration);
+        yield return new WaitForSeconds(GameCustomization.instance.abilityDuration);
         isOvercharged = false;
     }
 

@@ -55,8 +55,8 @@ public class PlayerMovement : NetworkBehaviour
 
     void Start ()
     {
-        speed = GameCustomization.playerSpeed;
-        Debug.LogError("Speed is: " + GameCustomization.playerSpeed);
+        speed = GameCustomization.instance.playerSpeed;
+        Debug.LogError("Speed is: " + GameCustomization.instance.playerSpeed);
         rb = GetComponent<Rigidbody>();
         playerManager = GetComponent<PlayerManager>();
         _jump = jumpForce;
@@ -91,12 +91,12 @@ public class PlayerMovement : NetworkBehaviour
                 playerManager.Landed();
             }
 
-            if (speed != GameCustomization.playerSpeed && !isUsingBoots)
+            if (speed != GameCustomization.instance.playerSpeed && !isUsingBoots)
             {
                 if(speedBoostActive || speedBoosted)
                     speed = speedBoostSpeed;
                 else
-                    speed = GameCustomization.playerSpeed;
+                    speed = GameCustomization.instance.playerSpeed;
             }
         }
         else
@@ -209,7 +209,7 @@ public class PlayerMovement : NetworkBehaviour
             StopCoroutine(superboots);
 
             isUsingBoots = false;
-            speed = GameCustomization.playerSpeed;
+            speed = GameCustomization.instance.playerSpeed;
             jumpForce = _jump;
         }
     }
@@ -221,9 +221,9 @@ public class PlayerMovement : NetworkBehaviour
             isUsingBoots = true;
             speed = juggernautSpeed;
             jumpForce = jumpForce * 1.25f;
-            yield return new WaitForSeconds(GameCustomization.abilityDuration);
+            yield return new WaitForSeconds(GameCustomization.instance.abilityDuration);
             isUsingBoots = false;
-            speed = GameCustomization.playerSpeed;
+            speed = GameCustomization.instance.playerSpeed;
             jumpForce = _jump;
         }
 
@@ -234,7 +234,7 @@ public class PlayerMovement : NetworkBehaviour
         speed = speedBoostSpeed;
         yield return new WaitForSeconds(speedBoostDuration);
         if(!isUsingBoots)
-        speed = GameCustomization.playerSpeed;
+        speed = GameCustomization.instance.playerSpeed;
         speedBoostActive = false;
     }
 
