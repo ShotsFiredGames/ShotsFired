@@ -11,13 +11,21 @@ using System.Text.RegularExpressions;
 using UnityEngine.PostProcessing;
 
 public class MainMenuOptions : MonoBehaviour {
+    [Header("Main Menu Buttons")]
+    public GameObject[] mainMenuBtns;
+    [Space(10)]
+    [Header("Options")]
+    public GameObject[] mainOptionsSubBtns;
+    [Space(10)]
+    public GameObject[] displayMenuBtns;
 
-    public GameObject[] mainMenuBtns, mainOptionsSubBtns, displayMenuBtns, controlOptionsBtns, audioMenuButtons;
+    public GameObject[] controlOptionsBtns;
+    public GameObject[] audioMenuButtons;
     //[SerializeField]
     //Text resolutionValue;
     [SerializeField]
     GameObject creditDisplay;
-    public GameObject menuPanel;
+    public GameObject menuPanel, lobbyPanel;
     //[SerializeField]
     //string[] keyBindingTitles;
     [SerializeField]
@@ -25,7 +33,7 @@ public class MainMenuOptions : MonoBehaviour {
     //[SerializeField]
     //Button fireKeyBinding, moveLeftKeyBinding, moveRightKeyBinding, jumpKeyBinding, upKeyBinding, downKeyBinding, lookLeftKeyBinding, lookRightKeyBinding;
     [SerializeField]
-    Dropdown resolutionDropdown, textureQualityDropdown, antialiasingDropdown, vSyncDropdown;
+    Dropdown resolutionDropdown, textureQualityDropdown, antialiasingDropdown, vSyncDropdown, ambientOcclusion, motionBlur;
 
 
     [SerializeField]
@@ -41,11 +49,10 @@ public class MainMenuOptions : MonoBehaviour {
     PostProcessingProfile postProcs;
 
     private Controls controls;
-    private GameObject[] audioSliders;
     private GameSettings gameSettings = new GameSettings();
     private List<Slider> sliderList = new List<Slider>();
     private int resolutionIndex = 0;
-    private bool muted = false, inUse = false;
+    private bool muted = false, inUse = false, changeText = false;
     private int backspacingIndex = 0;
  
 
@@ -53,13 +60,6 @@ public class MainMenuOptions : MonoBehaviour {
     {
         controls = new Controls();
         DontDestroyOnLoad(this.gameObject);
-        //byte i = 0;
-        //foreach(PlayerAction _pa in controls.Actions)
-        //{
-        //    i++;
-        //    playerActionDictionary.Add(_pa, i);
-        //    //Debug.Log(playerActionDictionary.Keys + " " + playerActionDictionary.ContainsValue(i).ToString());
-        //}
         postProcs.ambientOcclusion.enabled = false;
         postProcs.motionBlur.enabled = false;
         sliderList.Add(rotationSpeedSlider);
@@ -87,22 +87,15 @@ public class MainMenuOptions : MonoBehaviour {
                 Mute();
             }
             gameSettings = new GameSettings();
-            //fullscreenToggle.onValueChanged.AddListener(delegate { OnFullscreenToggle(); });
             resolutionDropdown.onValueChanged.AddListener(delegate { OnResolutionChange(); });
             textureQualityDropdown.onValueChanged.AddListener(delegate { OnTextureQualityChange(); });
             antialiasingDropdown.onValueChanged.AddListener(delegate { OnAntialiasingChange(); });
             vSyncDropdown.onValueChanged.AddListener(delegate { OnVSyncChange(); });
-            //applyButton.onClick.AddListener(delegate { OnApplyButtonClicked(); });
-            resolutions = Screen.resolutions;
-            foreach (Resolution resolution in resolutions)
-            {
-                resolutionDropdown.options.Add(new Dropdown.OptionData(resolution.ToString()));
-            }
+           
 
         }
         resolutionIndex = 0;
         Screen.fullScreen = !Screen.fullScreen;
-        audioSliders = GameObject.FindGameObjectsWithTag("Volume");
         if(!mainMenuBtns[0].activeSelf)
             ActivationOfButtons(mainMenuBtns, true);
         if(displayMenuBtns[0].activeSelf)
@@ -111,27 +104,31 @@ public class MainMenuOptions : MonoBehaviour {
             ActivationOfButtons(mainOptionsSubBtns, false);
         if(sliderList[0].IsActive())
             ActivationOfButtons(sliderList, false);
-        if(audioSliders[0].activeSelf)
-            ActivationOfButtons(audioSliders, false);
+        if(audioMenuButtons[0].activeSelf)
+            ActivationOfButtons(audioMenuButtons, false);
         if(controlOptionsBtns[0].activeSelf)
             ActivationOfButtons(controlOptionsBtns, false);
-
+        if (!lobbyPanel.activeSelf)
+            ActivationOfButtons(lobbyPanel, false);
+      
     }
-    //private Dictionary<string, Key> playerActionDictionary = new Dictionary<string, Key>();
-    //private void SaveKeyBindings(string _key, Key _value)
-    //{
-    //    if(File.Exists(Application.dataPath + "/SettingsSaveFile"))
-    //    {
-    //        foreach (KeyValuePair<string, Key> kvp in playerActionDictionary)
-    //        {
-    //            File.AppendAllText(Application.dataPath + "/SettingsSaveFile.csv", kvp.Key.ToString() + " " + kvp.Value.ToString() + "\n");
-    //        }
-    //    }
-    //}
-    private void FixedUpdate()
+    private void Awake()
+    {
+        //foreach (Button _btn in GameObject.FindObjectsOfType<Button>())
+        //{
+        //    if (_btn.transform.Find("Text"))
+        //        _btn.transform.Find("Text").GetComponentInChildren<Text>().text = "Stuff";
+        //}
+        resolutions = Screen.resolutions;
+        foreach (Resolution resolution in resolutions)
+        {
+            resolutionDropdown.options.Add(new Dropdown.OptionData(resolution.ToString()));
+        }
+    }
+    private void LateUpdate()
     {
         //Debug.Log(playerActionDictionary.Count);
-        if (controls != null)
+        if (controls != null && changeText)
         {
             foreach (PlayerAction _pa in Controls.playerActionDictionary.Keys)
             {
@@ -139,15 +136,17 @@ public class MainMenuOptions : MonoBehaviour {
                 {
                     Debug.Log("has changed");
                     Controls.CreateNewBindings(_pa);
+                    changeText = false;
 
                 }
                 if (_pa.Bindings.Count > 0)
                 {
                     EventSystem.current.currentSelectedGameObject.GetComponentInChildren<Text>().text = _pa.Bindings[0].Name.ToString();
-                    Debug.Log(EventSystem.current.currentSelectedGameObject.name.ToString());
+                    changeText = false;
+                    //Debug.Log(EventSystem.current.currentSelectedGameObject.name.ToString());
                 }
 
-                Debug.Log(_pa.Bindings.Count + " " + Controls.playerActionDictionary.Keys.Count);
+                //Debug.Log(_pa.Bindings.Count + " " + Controls.playerActionDictionary.Keys.Count);
             }
         }
         //Debug.Log(controls.Jump.ActiveDevice.GetFirstPressedButton().Control.ToString());
@@ -165,6 +164,7 @@ public class MainMenuOptions : MonoBehaviour {
                         _pa.StopListeningForBinding();
                 controls.Jump.ClearBindings();
                 controls.Jump.ListenForBinding();
+                changeText = true;
                            
                 break;
             case "Fire":
@@ -173,6 +173,7 @@ public class MainMenuOptions : MonoBehaviour {
                         _pa.StopListeningForBinding();
                 controls.Fire.ClearBindings();
                 controls.Fire.ListenForBinding();
+                changeText = true;
 
                 break;
             case "Aim":
@@ -181,6 +182,7 @@ public class MainMenuOptions : MonoBehaviour {
                         _pa.StopListeningForBinding();
                 controls.Aim.ClearBindings();
                 controls.Aim.ListenForBinding();
+                changeText = true;
 
                 break;
             case "Sprint":
@@ -189,6 +191,7 @@ public class MainMenuOptions : MonoBehaviour {
                         _pa.StopListeningForBinding();
                 controls.Sprint.ClearBindings();
                 controls.Sprint.ListenForBinding();
+                changeText = true;
 
                 break;
             case "Left":
@@ -197,6 +200,7 @@ public class MainMenuOptions : MonoBehaviour {
                         _pa.StopListeningForBinding();
                 controls.Left.ClearBindings();
                 controls.Left.ListenForBinding();
+                changeText = true;
 
                 break;
             case "Right":
@@ -205,6 +209,8 @@ public class MainMenuOptions : MonoBehaviour {
                         _pa.StopListeningForBinding();
                 controls.Right.ClearBindings();
                 controls.Right.ListenForBinding();
+                changeText = true;
+
                 break;
             case "Up":
                 foreach (PlayerAction _pa in Controls.playerActionDictionary.Keys)
@@ -212,6 +218,7 @@ public class MainMenuOptions : MonoBehaviour {
                         _pa.StopListeningForBinding();
                 controls.Up.ClearBindings();
                 controls.Up.ListenForBinding();
+                changeText = true;
 
                 break;
             case "Down":
@@ -220,6 +227,8 @@ public class MainMenuOptions : MonoBehaviour {
                         _pa.StopListeningForBinding();
                 controls.Down.ClearBindings();
                 controls.Down.ListenForBinding();
+                changeText = true;
+
                 break;
             case "Crouch":
                 foreach (PlayerAction _pa in Controls.playerActionDictionary.Keys)
@@ -227,6 +236,7 @@ public class MainMenuOptions : MonoBehaviour {
                         _pa.StopListeningForBinding();
                 controls.Crouch.ClearBindings();
                 controls.Crouch.ListenForBinding();
+                changeText = true;
 
                 break;
             case "Look Left":
@@ -235,6 +245,7 @@ public class MainMenuOptions : MonoBehaviour {
                         _pa.StopListeningForBinding();
                 controls.LookLeft.ClearBindings();
                 controls.LookLeft.ListenForBinding();
+                changeText = true;
 
                 break;
             case "Look Right":
@@ -243,6 +254,8 @@ public class MainMenuOptions : MonoBehaviour {
                         _pa.StopListeningForBinding();
                 controls.LookRight.ClearBindings();
                 controls.LookRight.ListenForBinding();
+                changeText = true;
+
                 break;
             case "Look Up":
                 foreach (PlayerAction _pa in Controls.playerActionDictionary.Keys)
@@ -250,6 +263,7 @@ public class MainMenuOptions : MonoBehaviour {
                         _pa.StopListeningForBinding();
                 controls.LookUp.ClearBindings();
                 controls.LookUp.ListenForBinding();
+                changeText = true;
 
                 break;
             case "Look Down":
@@ -258,6 +272,7 @@ public class MainMenuOptions : MonoBehaviour {
                         _pa.StopListeningForBinding();
                 controls.LookDown.ClearBindings();
                 controls.LookDown.ListenForBinding();
+                changeText = true;
 
                 break;
             case "ScoreBoard":
@@ -266,106 +281,11 @@ public class MainMenuOptions : MonoBehaviour {
                         _pa.StopListeningForBinding();
                 controls.ScoreBoard.ClearBindings();
                 controls.ScoreBoard.ListenForBinding();
+                changeText = true;
 
                 break;
         }
     }
-    //public void OnClickKeyBindMoveLeft()
-    //{
-    //    if (!moveLeftKeyBinding.IsActive())
-    //        ActivationOfButtons(moveLeftKeyBinding.gameObject, true);
-    //}
-    //public void MoveLeftKeyBind()
-    //{
-    //    Key kc = (Key)System.Enum.Parse(typeof(KeyCode), moveLeftKeyBinding.text);
-    //    controls.Left.AddDefaultBinding(kc);
-    //    playerActionDictionary.Add("Move Left", kc);
-    //    SaveKeyBindings("Move Left", kc);
-    //    Debug.Log(controls.Left);
-    //}
-    //public void OnClickKeyBindMoveRight()
-    //{
-    //    if (!moveRightKeyBinding.IsActive())
-    //        ActivationOfButtons(moveRightKeyBinding.gameObject, true);
-    //}
-    //public void MoveRightKeyBind()
-    //{
-    //    Key kc = (Key)System.Enum.Parse(typeof(KeyCode), moveRightKeyBinding.text);
-    //    controls.Right.AddDefaultBinding(kc);
-    //    playerActionDictionary.Add("Move Right", kc);
-    //    SaveKeyBindings("Move Right", kc);
-    //    Debug.Log(controls.Right);
-    //}
-    //public void OnClickKeyBindJump()
-    //{
-    //    if (!jumpKeyBinding.IsActive())
-    //        ActivationOfButtons(jumpKeyBinding.gameObject, true);
-    //}
-    //public void JumpKeyBind()
-    //{
-    //    Key kc = (Key)System.Enum.Parse(typeof(KeyCode), jumpKeyBinding.text);
-    //    controls.Jump.ClearBindings();
-    //    controls.Jump.AddDefaultBinding(kc);
-    //    playerActionDictionary.Add("Jump", kc); ;
-    //    SaveKeyBindings("Jump", kc);
-    //    Debug.Log(controls.Jump.Bindings.Count);
-    //}
-    //public void OnClickKeyBindUP()
-    //{
-    //    if (!upKeyBinding.IsActive())
-    //        ActivationOfButtons(upKeyBinding.gameObject, true);
-    //}
-    //public void UpKeyBind()
-    //{
-    //    Key kc = (Key)System.Enum.Parse(typeof(KeyCode), upKeyBinding.text);
-    //    controls.Up.ClearBindings();
-    //    controls.Up.AddDefaultBinding(kc);
-    //    playerActionDictionary.Add("Up", kc); ;
-    //    SaveKeyBindings("Up", kc);
-    //    Debug.Log(controls.Up.Bindings.Count);
-    //}
-    //public void OnClickKeyBindDown()
-    //{
-    //    if (!downKeyBinding.IsActive())
-    //        ActivationOfButtons(downKeyBinding.gameObject, true);
-    //}
-    //public void DownKeyBind()
-    //{
-    //    Key kc = (Key)System.Enum.Parse(typeof(KeyCode), downKeyBinding.text);
-    //    controls.Down.ClearBindings();
-    //    controls.Down.AddDefaultBinding(kc);
-    //    playerActionDictionary.Add("Down", kc); ;
-    //    SaveKeyBindings("Down", kc);
-    //    Debug.Log(controls.Down.Bindings.Count);
-    //}
-    //public void OnClickKeyBindLookLeft()
-    //{
-    //    if (!lookLeftKeyBinding.IsActive())
-    //        ActivationOfButtons(lookLeftKeyBinding.gameObject, true);
-    //}
-    //public void LookLeftKeyBind()
-    //{
-    //    Key kc = (Key)System.Enum.Parse(typeof(KeyCode), lookLeftKeyBinding.text);
-    //    controls.LookLeft.ClearBindings();
-    //    controls.LookLeft.AddDefaultBinding(kc);
-    //    playerActionDictionary.Add("Look Left", kc); ;
-    //    SaveKeyBindings("Look Left", kc);
-    //    Debug.Log(controls.LookLeft.Bindings.Count);
-    //}
-    //public void OnClickKeyBindingLookRight()
-    //{
-    //    if (!lookRightKeyBinding.IsActive())
-    //        ActivationOfButtons(lookRightKeyBinding.gameObject, true);
-    //}
-    //public void LookRightKeyBind()
-    //{
-    //    Key kc = (Key)System.Enum.Parse(typeof(KeyCode), lookRightKeyBinding.text);
-    //    controls.LookRight.ClearBindings();
-    //    controls.LookRight.AddDefaultBinding(kc);
-    //    playerActionDictionary.Add("Look Right", kc); ;
-    //    SaveKeyBindings("Look Righ", kc);
-    //    Debug.Log(controls.LookRight.Bindings.Count);
-    //}
     public void OnResolutionChange()
     {
         Screen.SetResolution(resolutions[resolutionDropdown.value].width, resolutions[resolutionDropdown.value].height, Screen.fullScreen);
@@ -381,7 +301,6 @@ public class MainMenuOptions : MonoBehaviour {
     {
         QualitySettings.antiAliasing = (int)Mathf.Pow(2, antialiasingDropdown.value);
         gameSettings.antialiasing = antialiasingDropdown.value;
-        //Debug.Log(QualitySettings.antiAliasing.ToString());
     }
     public void OnVSyncChange()
     {
@@ -405,6 +324,7 @@ public class MainMenuOptions : MonoBehaviour {
         ActivationOfButtons(mainOptionsSubBtns, true);
         ActivationOfButtons(sliderList, false);
         ActivationOfButtons(creditDisplay, false);
+        ActivationOfButtons(lobbyPanel, false);
     }
     public void OnClickDisplayBtn(int _backspaceIndex)
     {
@@ -422,6 +342,7 @@ public class MainMenuOptions : MonoBehaviour {
             inUse = true;
             backspacingIndex += _backspaceIndex;
             ActivationOfButtons(controlOptionsBtns, true);
+
         }
     }
     public void OnClickAudioBtn(int _backspaceIndex)
@@ -432,7 +353,7 @@ public class MainMenuOptions : MonoBehaviour {
             backspacingIndex += _backspaceIndex;
             ActivationOfButtons(mainOptionsSubBtns, false);
             ActivationOfButtons(EventSystem.current.currentSelectedGameObject, true);
-            ActivationOfButtons(audioSliders, true);
+            ActivationOfButtons(audioMenuButtons, true);
         }
     }
     public void Lobby(int _backspaceIndex)
@@ -448,10 +369,13 @@ public class MainMenuOptions : MonoBehaviour {
     public void MotionBlurChange()
     {
         postProcs.motionBlur.enabled = !postProcs.motionBlur.enabled;
+        gameSettings.motionBlur = motionBlur.value;
+
     }
     public void AmbientOcclusionChange()
     {
         postProcs.ambientOcclusion.enabled = !postProcs.ambientOcclusion.enabled;
+        gameSettings.ambientOcclusion = ambientOcclusion.value;
     }
     public void FullScreen()
     {
@@ -470,11 +394,8 @@ public class MainMenuOptions : MonoBehaviour {
     public void SoundEffectsControl()
     {
         mixer.SetFloat("EventSFXVolume", sfxVolumeSlider.value);
-        //PlayerPrefs.SetFloat("EventSFXVolume", sfxVolumeSlider.value);
         mixer.SetFloat("GeneralSFXVolume", sfxVolumeSlider.value);
-        //PlayerPrefs.SetFloat("GeneralSFXVolume", sfxVolumeSlider.value);
         mixer.SetFloat("GunSoundsVolume", sfxVolumeSlider.value);
-        //PlayerPrefs.SetFloat("GunSoundsVolume", sfxVolumeSlider.value);
     }
     public void MuteAll()
     {
@@ -570,6 +491,18 @@ public class MainMenuOptions : MonoBehaviour {
                         int num = Int32.Parse(resultString);
                         gameSettings.SetGameSettings(num, resolutionDropdown, "resolutionIndex");
                     }
+                    else if (line.StartsWith("Ambient Occlusion"))
+                    {
+                        string resultString = Regex.Match(line, @"\d+").Value;
+                        int num = Int32.Parse(resultString);
+                        gameSettings.SetGameSettings(num, ambientOcclusion, "ambientOcclusion");
+                    }
+                    else if (line.StartsWith("Motion Blur"))
+                    {
+                        string resultString = Regex.Match(line, @"\d+").Value;
+                        int num = Int32.Parse(resultString);
+                        gameSettings.SetGameSettings(num, motionBlur, "motionBlur");
+                    }
                 }
             }
             sr.Close();
@@ -593,7 +526,7 @@ public class MainMenuOptions : MonoBehaviour {
         System.IO.StreamWriter sw;
         using (sw = File.AppendText(_path))
         {
-            File.WriteAllText(_path + ".csv", "vSync: " + gameSettings.vSync.ToString() +"\n" + "Rotation Sensitivity: " + rotationSpeedSlider.value.ToString() + "\n" + "Texture Quality: " + gameSettings.textureQuality.ToString() + "\n" + "Anti-aliasing: " + gameSettings.antialiasing.ToString() + "\n" + "Resolution Index: " + gameSettings.resolutionIndex.ToString());
+            File.WriteAllText(_path + ".csv", "vSync: " + gameSettings.vSync.ToString() +"\n" + "Rotation Sensitivity: " + rotationSpeedSlider.value.ToString() + "\n" + "Texture Quality: " + gameSettings.textureQuality.ToString() + "\n" + "Anti-aliasing: " + gameSettings.antialiasing.ToString() + "\n" + "Resolution Index: " + gameSettings.resolutionIndex.ToString() + "\n" + "Ambient Occlusion: " + gameSettings.ambientOcclusion.ToString() + "\n" + "Motion Blur: " + gameSettings.motionBlur.ToString());
         }
         sw.Close();
     }
@@ -610,27 +543,19 @@ public class MainMenuOptions : MonoBehaviour {
                 ActivationOfButtons(mainOptionsSubBtns, false);
                 ActivationOfButtons(displayMenuBtns, false);
                 ActivationOfButtons(controlOptionsBtns, false);
-                //ActivationOfButtons(menuPanel, false);
+                ActivationOfButtons(lobbyPanel, false);
                 break;
             case 1:
                 inUse = false;
                 ActivationOfButtons(mainMenuBtns, false);
                 ActivationOfButtons(mainOptionsSubBtns, true);
                 ActivationOfButtons(displayMenuBtns, false);
-                ActivationOfButtons(audioSliders, false);
+                ActivationOfButtons(audioMenuButtons, false);
                 ActivationOfButtons(controlOptionsBtns, false);
                 ActivationOfButtons(creditDisplay, false);
-                //ActivationOfButtons(menuPanel, false);
+                ActivationOfButtons(lobbyPanel, false);
                 break;
-                //case 2:
-                //    ActivationOfButtons(mainMenuBtns, true);
-                //    ActivationOfButtons(mainOptionsSubBtns, false);
-                //    ActivationOfButtons(displayMenuBtns, false);
-                //    ActivationOfButtons(controlOptionsBtns, false);
-                //    break;
-                //case 3:
-
-                //    break;
+                
         }
     }
     public void ActivationOfButtons(GameObject _go, bool _activation)

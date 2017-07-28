@@ -51,6 +51,7 @@ public class Controls : PlayerActionSet
     public static Dictionary<PlayerAction, byte> playerActionDictionary = new Dictionary<PlayerAction, byte>();
     public static Dictionary<BindingSource, byte> bindingSourceDictionary = new Dictionary<BindingSource, byte>();
 
+    
     public Controls()
     {
         Fire = CreatePlayerAction("Fire");

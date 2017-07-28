@@ -3,15 +3,20 @@ using System.Collections;
 using UnityEngine.UI;
 public class GameSettings : MonoBehaviour
 {
-    public bool fullscreen;
+    public int fullscreen;
     public int textureQuality;
     public int antialiasing;
     public int vSync;
     public int resolutionIndex;
     public int rotationSensitivity;
+    public int ambientOcclusion;
+    public int motionBlur;
     //public bool ambientToggleSetting;
 
-
+    private void OnEnable()
+    {
+        Controls.CreateWithDefaultBindings();
+    }
     public void SetGameSettings(int _value, Dropdown _drop, string _valueToChange)
     {
         _drop.value = _value;
@@ -29,11 +34,13 @@ public class GameSettings : MonoBehaviour
             case "resolutionIndex":
                 resolutionIndex = _value;
                 break;
+            case "ambientOcclusion":
+                ambientOcclusion = _value;
+                break;
+            case "motionBlur":
+                motionBlur = _value;
+                break;
         }
-    }
-    public void SetGameSettings(int _value, Slider _slider)
-    {
-
     }
 }
 
