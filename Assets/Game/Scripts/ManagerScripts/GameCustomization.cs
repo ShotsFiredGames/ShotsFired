@@ -2,6 +2,7 @@
 using UnityEngine.Networking;
 using UnityEngine.Networking.Types;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class GameCustomization : NetworkBehaviour
 {
@@ -51,9 +52,54 @@ public class GameCustomization : NetworkBehaviour
     [SyncVar]
     public byte pointsPerKill;
 
+    public static float s_respawnTime;
+    public static float s_playerSpeed;
+    public static short s_playerHealth;
+    public static bool s_isAmmoUnlimited;
+    public static float s_abilityDuration;
+    public static float s_eventOccurenceRate;
+    public static byte s_gameLength;
+    public static short s_pointsToWin;
+    public static byte s_pointsPerKill;
+
     void OnMySpeed(float speed)
     {
-        Debug.LogError("Speed Has changed");
+        Debug.LogError("Speed was : " + playerSpeed);
         playerSpeed = speed;
+        Debug.LogError("Speed Has changed: " + playerSpeed);
+    }
+
+    void Start()
+    {
+        s_Instance = this;
+        SceneHasChanged();
+        //Debug.LogError("Aekae");
+    }
+
+    public void SceneHasChanged()
+    {
+        respawnTime = s_respawnTime;
+        playerHealth = s_playerHealth;
+        isAmmoUnlimited = s_isAmmoUnlimited;
+        abilityDuration = s_abilityDuration;
+        eventOccurenceRate = s_eventOccurenceRate;
+        gameLength = s_gameLength;
+        pointsPerKill = s_pointsPerKill;
+        pointsToWin = s_pointsToWin;
+
+        Debug.LogError("Player Speed is: " + playerSpeed);
+    }
+
+    [Command]
+    public float CmdChangeSpeed()
+    {
+        float newSpeed = RpcChangeSpeed();
+        return newSpeed;
+    }
+
+    [ClientRpc]
+    float RpcChangeSpeed()
+    {
+        return s_playerSpeed;
     }
 }

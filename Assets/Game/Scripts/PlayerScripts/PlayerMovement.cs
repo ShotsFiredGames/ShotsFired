@@ -53,18 +53,21 @@ public class PlayerMovement : NetworkBehaviour
     bool isGaining;
     bool canSprint;
 
-    void Start ()
+
+    IEnumerator Start ()
     {
-        speed = GameCustomization.instance.playerSpeed;
-        Debug.LogError("Speed is: " + GameCustomization.instance.playerSpeed);
         rb = GetComponent<Rigidbody>();
         playerManager = GetComponent<PlayerManager>();
         _jump = jumpForce;
         playerCamera = GetComponent<PlayerCamera>();
-        airSpeed = speed * .85f;
         canSprint = true;
         stamina = maxStamina;
         staminaBar.fillAmount = stamina / maxStamina;
+        yield return new WaitForSeconds(1f);
+
+        speed = GameCustomization.instance.CmdChangeSpeed();
+        airSpeed = speed * .85f;
+        Debug.LogError("Speed is: " + GameCustomization.instance.playerSpeed);
     }
 
     public void AimAssist()
