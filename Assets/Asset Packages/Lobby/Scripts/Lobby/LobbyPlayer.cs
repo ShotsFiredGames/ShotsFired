@@ -16,6 +16,8 @@ namespace Prototype.NetworkLobby
         //used on server to avoid assigning the same color to two player
         static List<int> _colorInUse = new List<int>();
 
+        public CustomizationToServer cusToServer { get; set; }
+
         public Button colorButton;
         public InputField nameInput;
         public Button readyButton;
@@ -110,6 +112,9 @@ namespace Prototype.NetworkLobby
 
             if (playerColor == Color.white)
                 CmdColorChange();
+
+            cusToServer = GetComponentInParent<CustomizationToServer>();
+            cusToServer.customizeMatchButton.gameObject.SetActive(isServer);
 
             ChangeReadyButtonColor(JoinColor);
 
