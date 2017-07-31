@@ -308,7 +308,7 @@ public class CinemaThemesWindow : EditorWindow
 #else
         if (camera.gameObject.GetComponent("ColorCorrectionLut") == null)
         {
-            camera.gameObject.AddComponent("ColorCorrectionLut");
+            UnityEngineInternal.APIUpdaterRuntimeServices.AddComponent(camera.gameObject, "Assets/Asset Packages/PostProcessing/Cinema Suite/Cinema Themes/Editor/CinemaThemesWindow.cs (311,13)", "ColorCorrectionLut");
         }
         var ccl = camera.gameObject.GetComponent("ColorCorrectionLut");
 #endif
