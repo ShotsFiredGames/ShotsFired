@@ -156,7 +156,7 @@ public class GameManager : NetworkBehaviour
     [Command]
     void CmdGameOver(string winningPlayer)
     {
-        RpcGameOver(winningPlayer);
+        RpcGameOver(winningPlayer);        
     }
 
     [ClientRpc]

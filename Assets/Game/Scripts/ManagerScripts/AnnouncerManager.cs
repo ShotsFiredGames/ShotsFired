@@ -56,12 +56,15 @@ public class AnnouncerManager : NetworkBehaviour
         arrayIndex = Random.Range(0, maxVal);
     }
 
+    [ClientCallback]
     void PlayRandomClipFromArray(AudioClip[] clips)
     {
         if (source.isPlaying)
             source.Stop();
 
-        GetRandomIndex(clips.Length);
+        if(isServer)
+            GetRandomIndex(clips.Length);
+
         source.clip = clips[arrayIndex];
  
         if (source.clip != null)
@@ -72,6 +75,48 @@ public class AnnouncerManager : NetworkBehaviour
     {
         PlayRandomClipFromArray(generalClips.endMatch);
     }
+
+    #region Event Methods
+
+    public void PlayEventStartClip(string eventName)
+    {
+        switch(eventName)
+        {
+            case "TheReaperComes":
+                PlayRandomClipFromArray(reaperClips.reaperStart);
+                break;
+            case "SnatchNDash":
+                PlayRandomClipFromArray(sndClips.sndStart);
+                break;
+            case "BallToTheWall":
+                PlayRandomClipFromArray(bttwClips.bttwStart);
+                break;
+            default:
+                Debug.LogError("Could not find event: " + eventName + ". Did you forget to add it to the AnnouncerManager PlayEventStartClip method?");
+                break;
+        }        
+    }
+
+    public void PlayAddOnStartClip(string addOnName)
+    {
+        switch(addOnName)
+        {
+            case "HugeLoad":
+                PlayRandomClipFromArray(addOnClips.hugeLoadClips);
+                break;
+            case "MimicAppears":
+                PlayRandomClipFromArray(addOnClips.mimicClips);
+                break;
+            case "BombsAway":
+                PlayRandomClipFromArray(addOnClips.bombsAwayClips);
+                break;
+            default:
+                Debug.LogError("Could not find add-on: " + addOnName + ". Did you forget to add it to the AnnouncerManager PlayAddOnStartClip method?");
+                break;
+        }
+    }
+
+    #endregion
 
     #region Clip Classes
     [System.Serializable]

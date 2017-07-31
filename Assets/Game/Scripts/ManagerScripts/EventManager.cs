@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -17,13 +18,12 @@ public class EventManager : NetworkBehaviour
 
     List<string> eventNames;
     List<string> addOnNames;
-    
-    void Start ()
+
+    void Start()
     {
         eventNames = GameCustomization.currentEvents;                       //Grabs a List of Usable Event Names From GameCustomization
         addOnNames = GameCustomization.currentAddOns;
-
-                                                                            //Loops throught AllEvents and the List of Names
+        //Loops throught AllEvents and the List of Names
         foreach (GameEvent events in allEvents)
         {
             string currentName = events.nameEvent;
@@ -35,7 +35,7 @@ public class EventManager : NetworkBehaviour
             }
         }
 
-                                                                            //Loops throught AllAddOns and the List of Names
+        //Loops throught AllAddOns and the List of Names
         foreach (AddOn addOn in allAddOns)
         {
             string currentName = addOn.addOnName;
@@ -47,19 +47,18 @@ public class EventManager : NetworkBehaviour
             }
         }
 
-        InvokeRepeating("ActivateNextEvent", GameCustomization.eventOccurenceRate, GameCustomization.eventOccurenceRate);
-	}
+        InvokeRepeating("ActivateNextEvent", GameCustomization.eventOccurenceRate / 2, GameCustomization.eventOccurenceRate);
+    }
 
     [ServerCallback]
     void ActivateNextEvent()
     {
         byte newEvent = (byte)Random.Range(0, gameEvents.Count);
-        byte newAddOn = (byte)Random.Range(0, addOns.Count);
-        RpcActivateNextEvent(newEvent, newAddOn);
+        RpcActivateNextEvent(newEvent);
     }
 
     [ClientRpc]
-    void RpcActivateNextEvent(byte _newEvent, byte _newAddOn)
+    void RpcActivateNextEvent(byte _newEvent)
     {
         nextEvent = gameEvents[_newEvent];
 
@@ -69,9 +68,33 @@ public class EventManager : NetworkBehaviour
         {
             currentEvent = nextEvent;
             currentEvent.StartEvent();
+            AnnouncerManager.instance.PlayEventStartClip(currentEvent.nameEvent);
         }
 
+        if(isServer)
+            StartCoroutine(NextAddons((byte)currentEvent.duration));
+    }
+
+    IEnumerator NextAddons(byte eventLength)
+    {
+        yield return new WaitForSeconds(eventLength / 3); //wait a third of the time
+        ActivateNextAddon();
+        yield return new WaitForSeconds(eventLength / 3); // wait another third of the time
+        ActivateNextAddon();
+    }
+
+    [ServerCallback]
+    void ActivateNextAddon()
+    {
+        byte newAddOn = (byte)Random.Range(0, addOns.Count);
+        RpcActiveNextAddon(newAddOn);
+    }
+
+    [ClientRpc]
+    void RpcActiveNextAddon(byte _newAddOn)
+    {
         currentAddOn = addOns[_newAddOn];
         currentAddOn.StartAddOn();
+        AnnouncerManager.instance.PlayAddOnStartClip(currentAddOn.addOnName);
     }
 }

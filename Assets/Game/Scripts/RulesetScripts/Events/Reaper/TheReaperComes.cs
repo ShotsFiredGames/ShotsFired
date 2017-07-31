@@ -40,8 +40,11 @@ public class TheReaperComes : GameEvent
     public override void StartEvent()
     {
         foreach (GameObject go in objectsToSetActive)
-            go.SetActive(false);
-
+        {
+            if(go != null)
+                go.SetActive(false);
+        }
+                
         if (reapers.Count < 1)
             InitReapers();
 
@@ -62,7 +65,10 @@ public class TheReaperComes : GameEvent
     public override void EndEvent()
     {
         foreach (GameObject go in objectsToSetActive)
-            go.SetActive(true);
+        {
+            if(go != null)
+                go.SetActive(true);
+        }
 
         foreach (Reaper reaps in reapers)
         {
