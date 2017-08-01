@@ -5,21 +5,23 @@ using UnityEngine.UI;
 
 public class PlayerMovement : NetworkBehaviour
 {
-    public float maxVelocityChange = 10.0f;
-
+    [Header("Movement Variables")]
     public float rotationSpeed;
-    public float jumpForce;
-    public float gravity;
-    [Tooltip("This will change depending on the hieght of the character.")]
-    public float distToGrounded = 1.1f;
-    public LayerMask ground;
-    public float juggernautSpeed;
 
-    public float speedBoostSpeed;
-    public float speedBoostDuration;
     public float staminaDrainRate;
     public float staminaGainRate;
     public Image staminaBar;
+
+    [Space, Header("Jump Variables")]
+    public LayerMask ground;
+    public float distToGrounded = 1.1f;
+    public float jumpForce;
+    public float gravity;
+
+    [Space, Header("Ability Variables"),Tooltip("This will change depending on the hieght of the character.")]
+    public float juggernautSpeed;
+    public float speedBoostSpeed;
+    public float speedBoostDuration;
 
     float maxStamina = 100;
     float stamina;
@@ -33,6 +35,8 @@ public class PlayerMovement : NetworkBehaviour
     float speed;
     float xRotationValue;
     float _jump;
+    float sprintSpeed;
+    float aimSpeed;
     Quaternion rotation;
     Vector3 direction;
     Vector3 velocity;
@@ -56,6 +60,10 @@ public class PlayerMovement : NetworkBehaviour
     void Start ()
     {
         speed = GameCustomization.playerSpeed;
+        sprintSpeed = (speed + (speed * .5f));
+        aimSpeed = (speed - (speed * .5f));
+
+
         rb = GetComponent<Rigidbody>();
         playerManager = GetComponent<PlayerManager>();
         _jump = jumpForce;
@@ -113,10 +121,12 @@ public class PlayerMovement : NetworkBehaviour
 
     public void Move(float horizontal, float vertical)
     {
-        if(!isSprinting)
+        if(!isSprinting && !playerCamera.isAiming)
             direction = new Vector3(horizontal * speed, 0, vertical * speed);
-        else
-            direction = new Vector3(horizontal * (speed + (speed * .5f)), 0, vertical * (speed + (speed * .5f)));
+        else if(isSprinting && !playerCamera.isAiming)
+            direction = new Vector3(horizontal * sprintSpeed, 0, vertical * sprintSpeed);
+        else if(playerCamera.isAiming)
+            direction = new Vector3(horizontal * aimSpeed, 0, vertical * aimSpeed);
 
         direction *= Time.fixedDeltaTime;
         direction = transform.TransformDirection(direction);
