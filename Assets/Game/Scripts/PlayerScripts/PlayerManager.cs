@@ -42,6 +42,8 @@ public class PlayerManager : NetworkBehaviour
     public Image haveFlag;
     public AudioMixer gameMixer;
 
+    GunBob gunBob;
+    HeadBob headBob;
     bool jumped;
 
     void Awake()
@@ -49,6 +51,8 @@ public class PlayerManager : NetworkBehaviour
         playerHealth = GetComponent<PlayerHealth>();
         playerCamera = GetComponent<PlayerCamera>();
         myCamera = playerCamera.myCamera.gameObject;
+        gunBob = GetComponentInChildren<GunBob>();
+        headBob = GetComponentInChildren<HeadBob>();
     }
 
     private void Start()
@@ -197,12 +201,14 @@ public class PlayerManager : NetworkBehaviour
         playerMovement.Move(controls.Move.X, controls.Move.Y);
         playerMovement.Turn(controls.Look.X);
         animationManager.IsMoving();
+        StoppedSprinting();
     }
 
     void Idling()
     {
         playerMovement.Turn(controls.Look.X);
         animationManager.IsIdle();
+        StoppedSprinting();
     }
 
     void Sprinting()
@@ -247,6 +253,8 @@ public class PlayerManager : NetworkBehaviour
         if (!isAiming)
         {
             isAiming = true;
+            gunBob.Aiming(true);
+            headBob.Aiming(true);
             shooting.Aiming();
             playerCamera.Aim();
             animationManager.IsAiming();
@@ -257,6 +265,8 @@ public class PlayerManager : NetworkBehaviour
     {
         if (isAiming)
         {
+            gunBob.Aiming(false);
+            headBob.Aiming(false);
             shooting.NotAiming();
             playerCamera.StopAim();
             animationManager.StoppedAiming();
@@ -337,7 +347,7 @@ public class PlayerManager : NetworkBehaviour
     {
         if(oldGun != null)
         oldGun.SetActiveGun(false);
-
+        
         shooting.UnArmed();
         if (oldGun != null)
         {

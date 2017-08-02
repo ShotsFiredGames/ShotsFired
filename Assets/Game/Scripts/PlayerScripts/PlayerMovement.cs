@@ -50,6 +50,8 @@ public class PlayerMovement : NetworkBehaviour
     bool jumping;
     [HideInInspector]
     public bool isSprinting;
+    [HideInInspector]
+    public bool isGrounded;
 
     Coroutine sprinting;
     Coroutine stopSprinting;
@@ -90,6 +92,9 @@ public class PlayerMovement : NetworkBehaviour
     {
         if(Grounded())
         {
+            if (isGrounded != true)
+                isGrounded = true;
+
             if(!landed)
             { 
                 landed = true;
@@ -108,6 +113,9 @@ public class PlayerMovement : NetworkBehaviour
         }
         else
         {
+            if (isGrounded != false)
+                isGrounded = false;
+
             if (!jumping)
                 playerManager.Falling();
          
@@ -247,7 +255,7 @@ public class PlayerMovement : NetworkBehaviour
         speedBoostActive = false;
     }
 
-    bool Grounded()
+    public bool Grounded()
     {
         return Physics.Raycast(transform.position, Vector3.down, distToGrounded, ground);
     }

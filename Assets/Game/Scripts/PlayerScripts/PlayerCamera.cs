@@ -25,10 +25,12 @@ public class PlayerCamera : MonoBehaviour
     [HideInInspector]
     public bool isAiming;
     Coroutine currentAimCo;
+    GunBob gunBob;
 
     void Awake()
     {
         playerManager = GetComponent<PlayerManager>();
+        gunBob = GetComponentInChildren<GunBob>();
     }
 
     public void Look(float rightStickY)
@@ -145,11 +147,11 @@ public class PlayerCamera : MonoBehaviour
         if (gunHolder != null)
         {
             moveSpeed += aimSpeed * Time.fixedDeltaTime;
-            if (Vector3.Distance(gunHolder.transform.localPosition, newPos) > 0.01f)
-                gunHolder.transform.localPosition = Vector3.Lerp(gunHolder.transform.localPosition, newPos, moveSpeed);
+            if (Vector3.Distance(gunHolder.transform.localPosition, newPos) > 0.001f)
+                gunHolder.transform.localPosition = Vector3.Lerp(gunHolder.transform.localPosition, newPos + gunBob.GunBobPosition(), moveSpeed);
             else
             {
-                gunHolder.transform.localPosition = newPos;
+                gunHolder.transform.localPosition = newPos + gunBob.GunBobPosition();
                 atPos = true;
             }
 
