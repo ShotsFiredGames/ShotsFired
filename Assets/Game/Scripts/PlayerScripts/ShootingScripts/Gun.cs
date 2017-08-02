@@ -10,6 +10,15 @@ public abstract class Gun : MonoBehaviour
         Particle
     };
 
+    [Header("Gun Animation Variables")]
+    public float recoilAmount;
+    public float recoilRecoverTime;
+    [HideInInspector]
+    public float currentRecoilZPositon;
+    [HideInInspector]
+    public float currentRecoilZPositionVelocity;
+
+    [Space]
     public bool canAim;
     public WeaponType weaponType;
 	public AudioSource shootingSource;

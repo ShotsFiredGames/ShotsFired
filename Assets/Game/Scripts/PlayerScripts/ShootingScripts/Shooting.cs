@@ -21,6 +21,7 @@ public class Shooting : NetworkBehaviour
     Coroutine overcharged;
     bool isOvercharged;
     short _damage;                // this is the variable that gets affected by overcharged
+    GunBob gunBob;
 
     void Start()
     {
@@ -28,6 +29,7 @@ public class Shooting : NetworkBehaviour
         playerManager = GetComponent<PlayerManager>();
         hitMarkerSource = hitMarker.GetComponent<AudioSource>();
         ammoUI.text = "";
+        gunBob = GetComponentInChildren<GunBob>();
     }
 
     void Update()
@@ -79,6 +81,8 @@ public class Shooting : NetworkBehaviour
             if (!isOvercharged)
                 currentGun.currentAmmo--;
 
+            gunBob.ApplyRecoil();
+
             //ammoUI.text = currentGun.currentAmmo + " / " + currentGun.ammo;
 
             yield return new WaitForSeconds(currentGun.fireFreq);
@@ -93,6 +97,7 @@ public class Shooting : NetworkBehaviour
                 if (currentGun.gameObject.activeSelf)
                     currentGun.shootingAnim.ResetTrigger("Fire");
         }
+
     }
 
     public void SetWeapon(Gun weapon)
