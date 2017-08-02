@@ -1,19 +1,18 @@
 ﻿using UnityEngine;
-using UnityEngine.Networking;
 using System.Collections.Generic;
 
 public class TheReaperComes : GameEvent
 {
     public GameObject[] objectsToSetActive;
-    public Reaper reaper;
+    public GameObject reaper;
     public static List<Reaper> reapers = new List<Reaper>();
     public Transform[] reaperSpawns;
     [Tooltip("This number is subtracted. Make it positive if you want the player to lose points")]
     public byte pointsPlayerLosesOnDeath;
 
-    void Start()
+    void Awake()
     {
-        ClientScene.RegisterPrefab(reaper.gameObject);
+        PhotonView = GetComponent<PhotonView>();
     }
 
     private void InitReapers()
@@ -22,18 +21,11 @@ public class TheReaperComes : GameEvent
 
         for (byte i = 0; i < num; i++)
         {
-            Reaper newReaper = Instantiate(reaper);
-            reapers.Add(newReaper);
-
-            if (isServer)
+            if (PhotonNetwork.isMasterClient)
             {
-                NetworkServer.Spawn(newReaper.gameObject);
-            }
-            else
-            {
-                ClientScene.RegisterPrefab(newReaper.gameObject);
-            }
-                
+                GameObject newReaper = PhotonNetwork.Instantiate(reaper.name, Vector3.zero, Quaternion.identity, 0);
+                reapers.Add(newReaper.GetComponent<Reaper>());
+            }           
         }
     }
 

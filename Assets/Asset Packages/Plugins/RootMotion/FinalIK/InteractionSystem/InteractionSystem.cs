@@ -8,7 +8,7 @@ namespace RootMotion.FinalIK {
 	/// <summary>
 	/// Handles FBBIK interactions for a character.
 	/// </summary>
-	[HelpURL("https://www.youtube.com/watch?v=r5jiZnsDH3M")]
+	[HelpURLAttribute("https://www.youtube.com/watch?v=r5jiZnsDH3M")]
 	[AddComponentMenu("Scripts/RootMotion.FinalIK/Interaction System/Interaction System")]
 	public class InteractionSystem : MonoBehaviour {
 

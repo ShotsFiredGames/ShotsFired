@@ -1,9 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
 
-public class FlagManager : NetworkBehaviour
+public class FlagManager : Photon.MonoBehaviour
 {
     //Version of instance taken from "http://wiki.unity3d.com/index.php/AManagerClass"
     private static FlagManager s_Instance = null;
@@ -31,7 +29,6 @@ public class FlagManager : NetworkBehaviour
     }
 
     public byte pointsForCapture { get; set; }
-    [SyncVar]
     public byte flagNumber = 0;
     public List<Flag> flags = new List<Flag>();
 
@@ -45,14 +42,8 @@ public class FlagManager : NetworkBehaviour
         return flagNumber++;
     }
 
-    [Command]
-    public void CmdFlagPickedUp(byte flagNum, string carrierName)
-    {
-        RpcFlagPickedUp(flagNum, carrierName);
-    }
-
-    [ClientRpc]
-    void RpcFlagPickedUp(byte flagNum, string carrierName)
+    [PunRPC]
+    void RPC_FlagPickedUp(byte flagNum, string carrierName)
     {
         Flag flag = ConvertFlagFromIndex(flagNum);
         if (flag.resetTimer != null)
@@ -71,14 +62,8 @@ public class FlagManager : NetworkBehaviour
         //   flagSource.PlayOneShot(pickupClip);
     }
 
-    [Command]
-    public void CmdReturnFlag(byte flagNum)
-    {
-        RpcReturnFlag(flagNum);
-    }
-
-    [ClientRpc]
-    void RpcReturnFlag(byte flagNum)
+    [PunRPC]
+    void RPC_ReturnFlag(byte flagNum)
     {
         Flag flag = ConvertFlagFromIndex(flagNum);
         //if (flagSource != null)
@@ -92,14 +77,8 @@ public class FlagManager : NetworkBehaviour
             flag.carrier.GetComponent<PlayerManager>().hasFlag = false;
     }
 
-    [Command]
-    public void CmdFlagDropped(string owner)
-    {
-        RpcFlagDropped(owner);
-    }
-
-    [ClientRpc]
-    public void RpcFlagDropped(string owner)
+    [PunRPC]
+    public void RPC_FlagDropped(string owner)
     {
         Flag flag = ConvertFlagFromPlayerName(owner);
 

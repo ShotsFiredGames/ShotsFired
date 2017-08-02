@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
-using UnityEngine.Networking;
 
-public class Projectile : NetworkBehaviour
+public class Projectile : Photon.MonoBehaviour
 {
     public GameObject explosion;
 
@@ -18,13 +17,12 @@ public class Projectile : NetworkBehaviour
         rb = GetComponent<Rigidbody>();
     }
 
-    void Update()
+    void FixedUpdate()
     {
         transform.LookAt(direction);
         rb.AddForce(transform.forward * speed);
     }
 
-    [ServerCallback]
     void OnTriggerEnter(Collider other)
     {
         if (other.transform.root.name != playername)
@@ -39,17 +37,20 @@ public class Projectile : NetworkBehaviour
 
             if (!other.tag.Equals("Juggernaut") && !other.tag.Equals("Player") && !other.tag.Equals("IgnoreCollision") && !other.tag.Equals("SpeedBoost") && !other.tag.Equals("Flag") && !other.tag.Equals("PickUp"))
             {
-                explosion = Instantiate(explosion, transform.position, Quaternion.FromToRotation(Vector3.up, impactNormal)) as GameObject;
-                explosion.GetComponent<RocketExplosion>().SetVariables(playername);
+                if (PhotonNetwork.isMasterClient)
+                {
+                    GameObject _explosion = PhotonNetwork.Instantiate(explosion.name, transform.position, Quaternion.FromToRotation(Vector3.up, impactNormal), 0);
+                    _explosion.GetComponent<PhotonView>().RPC("RPC_SetExplosionVariables", PhotonTargets.All, playername);
+                }
 
-                NetworkServer.Spawn(explosion);
-                NetworkServer.UnSpawn(gameObject);
-                Destroy(gameObject);
+                if (photonView.isMine)
+                    PhotonNetwork.Destroy(photonView);
             }
         }
     }
 
-    public void SetVariables(float _speed, Vector3 _direction, string _playername, Vector3 hitNormal, short _damage)
+    [PunRPC]
+    public void RPC_SetProjectileVariables(float _speed, Vector3 _direction, string _playername, Vector3 hitNormal, short _damage)
     {
         speed = _speed;
         direction = _direction;

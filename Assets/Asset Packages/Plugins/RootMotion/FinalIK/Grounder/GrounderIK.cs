@@ -6,7 +6,7 @@ namespace RootMotion.FinalIK {
 	/// <summary>
 	/// Grounding for LimbIK, CCD and/or FABRIK solvers.
 	/// </summary>
-	[HelpURL("http://www.root-motion.com/finalikdox/html/page11.html")]
+	[HelpURLAttribute("http://www.root-motion.com/finalikdox/html/page11.html")]
 	[AddComponentMenu("Scripts/RootMotion.FinalIK/Grounder/Grounder IK")]
 	public class GrounderIK: Grounder {
 

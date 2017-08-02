@@ -1,8 +1,6 @@
-﻿using UnityEngine.Networking;
-using UnityEngine;
-using System.Collections;
+﻿using UnityEngine;
 
-public class PlayerSetup : NetworkBehaviour
+public class PlayerSetup : Photon.MonoBehaviour
 {
     public Behaviour[] componentsToDisable;
     public GameObject thirdPersonAnimations;
@@ -11,7 +9,7 @@ public class PlayerSetup : NetworkBehaviour
 
     private void Start()
     {
-        if (!isLocalPlayer)
+        if (!photonView.isMine)
         {
             for (int i = 0; i < componentsToDisable.Length; i++)
             {
@@ -24,41 +22,25 @@ public class PlayerSetup : NetworkBehaviour
             damageIndicators.SetActive(true);
         }
 
+        PhotonPlayer _photonPlayer = photonView.owner;
+        string _playerID = _photonPlayer.NickName;
+        PlayerManager _player = GetComponent<PlayerManager>();
+        PlayerWrangler.RegisterPlayer(_playerID, _player);
 
-        if (isLocalPlayer)
+        if (photonView.isMine)
         {
             collisionDetection = transform.Find("CollisionDetection").gameObject;
             foreach (Transform go in collisionDetection.GetComponentsInChildren<Transform>())
+            {
                 go.gameObject.layer = LayerMask.NameToLayer("Default");
-
-            gameObject.layer = LayerMask.NameToLayer("Default");
+                go.tag = "Untagged";
+            }
         }
         else
         {
             collisionDetection = transform.Find("CollisionDetection").gameObject;
             foreach (Transform go in collisionDetection.GetComponentsInChildren<Transform>())
                 go.gameObject.layer = LayerMask.NameToLayer("Collision");
-
-            gameObject.layer = LayerMask.NameToLayer("PlayerCollision");
         }
-    }
-
-    public override void OnStartClient()
-    {
-        base.OnStartClient();
-        StartCoroutine(WaitToRegister());        
-    }
-
-    IEnumerator WaitToRegister()
-    {
-        yield return new WaitUntil(CheckSpawns);
-        string _netID = GetComponent<NetworkIdentity>().netId.ToString();
-        PlayerManager _player = GetComponent<PlayerManager>();
-        PlayerWrangler.RegisterPlayer(_netID, _player);
-    }
-
-    bool CheckSpawns()
-    {
-        return NetworkServer.SpawnObjects();
     }
 }

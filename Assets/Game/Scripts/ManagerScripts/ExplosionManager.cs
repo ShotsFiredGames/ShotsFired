@@ -1,9 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
 
-public class ExplosionManager : NetworkBehaviour
+public class ExplosionManager : MonoBehaviour
 {
     //Version of instance taken from "http://wiki.unity3d.com/index.php/AManagerClass"
     private static ExplosionManager s_Instance = null;
@@ -33,14 +31,8 @@ public class ExplosionManager : NetworkBehaviour
     public GameObject explosion;
     List<GameObject> g_explosions = new List<GameObject>();
 
-    [Command]
-    public void CmdActivateExplosion(Vector3 location)
-    {
-        RpcActivateExplosion(location);
-    }
-
-    [ClientRpc]
-    public void RpcActivateExplosion(Vector3 location)
+    [PunRPC]
+    public void RPC_ActivateExplosion(Vector3 location)
     {
         GameObject explosionToUse = null;
         foreach (GameObject explode in g_explosions)

@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
-using UnityEngine.Networking;
 
-public class PickUp : NetworkBehaviour
+public class PickUp : MonoBehaviour
 {
     public enum PickUpType
     {

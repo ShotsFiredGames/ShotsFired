@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public abstract class Gun : MonoBehaviour
+public class Gun : MonoBehaviour
 {
     public enum WeaponType
     {
@@ -54,10 +54,18 @@ public abstract class Gun : MonoBehaviour
     public GameObject armedReticle;
     public GameObject scopedReticle;
 
+    void Start()
+    {
+        SetAmmo();
+    }
+
     //public abstract IEnumerator Fire();
 
-    public abstract void Discard();
-  
+    public void Discard()
+    {
+        playerManager.PhotonView.RPC("RPC_Disarm", PhotonTargets.All);
+    }
+
     //public void Overcharge();
 
     public void SetAmmo()

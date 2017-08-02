@@ -1,14 +1,10 @@
 ﻿using UnityEngine;
-using UnityEngine.Networking;
 
-public class KillBox : NetworkBehaviour {
+public class KillBox : MonoBehaviour {
 
-	[ServerCallback]
     void OnTriggerEnter(Collider other)
     {
         if(other.tag.Equals("Player"))
-        {
-            other.GetComponent<PlayerHealth>().RpcInstantDeath("Environment", CollisionDetection.CollisionFlag.Back);
-        }
+            other.GetComponent<PlayerHealth>().PhotonView.RPC("RPC_InstantDeath", PhotonTargets.All, "Environment", CollisionDetection.CollisionFlag.Back);
     }
 }

@@ -6,7 +6,7 @@ namespace RootMotion.FinalIK {
 	/// <summary>
 	/// %IK system for multiple branched %FABRIK chains.
 	/// </summary>
-	[HelpURL("http://www.root-motion.com/finalikdox/html/page5.html")]
+	[HelpURLAttribute("http://www.root-motion.com/finalikdox/html/page5.html")]
 	[AddComponentMenu("Scripts/RootMotion.FinalIK/IK/FABRIK Root")]
 	public class FABRIKRoot : IK {
 

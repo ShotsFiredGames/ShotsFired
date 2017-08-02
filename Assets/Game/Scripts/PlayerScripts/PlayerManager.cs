@@ -1,11 +1,10 @@
 ﻿using UnityEngine;
 using UnityEngine.Audio;
-using UnityEngine.Networking;
 using UnityEngine.UI;
-using System.Linq;
 
-public class PlayerManager : NetworkBehaviour
+public class PlayerManager : Photon.MonoBehaviour, IPunObservable
 {
+    public PhotonView PhotonView { get; private set; }
     AnimationManager animationManager;
     PlayerMovement playerMovement;
     PlayerCamera playerCamera;
@@ -46,6 +45,7 @@ public class PlayerManager : NetworkBehaviour
         playerHealth = GetComponent<PlayerHealth>();
         playerCamera = GetComponent<PlayerCamera>();
         myCamera = playerCamera.myCamera.gameObject;
+        PhotonView = photonView;
     }
 
     private void Start()
@@ -57,6 +57,18 @@ public class PlayerManager : NetworkBehaviour
         juggernaut = GetComponentInChildren<Juggernaut>();
 
         playerHealth.Init();
+    }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.isWriting)
+        {
+            stream.SendNext(isFiring);
+        }
+        else
+        {
+            this.isFiring = (bool)stream.ReceiveNext();
+        }
     }
 
     public void SetFaction(string myFaction, Material myColor)
@@ -88,6 +100,7 @@ public class PlayerManager : NetworkBehaviour
 
     void FixedUpdate()
     {
+        if (!photonView.isMine) return;
         RaycastHit hit;
         if (isArmed && Physics.BoxCast(myCamera.transform.position, (Vector3.one * .5f), myCamera.transform.forward * 1000, out hit, Quaternion.identity, Mathf.Infinity, layermask))
             playerMovement.AimAssist();
@@ -97,10 +110,9 @@ public class PlayerManager : NetworkBehaviour
 
     private void Update()
     {
+        if (!photonView.isMine) return;
         UpdateCursorLock();
         haveFlag.gameObject.SetActive(hasFlag);
-
-        if (!isLocalPlayer) return;
 
         if (gameManager != null)
         {
@@ -157,6 +169,7 @@ public class PlayerManager : NetworkBehaviour
 
     private void LateUpdate()
     {
+        if (!photonView.isMine) return;
         if (isDead) return;
         playerCamera.Look(controls.Look.Y);
     }
@@ -253,7 +266,6 @@ public class PlayerManager : NetworkBehaviour
         if (!isFiring)
             isFiring = true;
         StartCoroutine(shooting.Firing());
-
     }
 
     public void FireAnimation()
@@ -261,62 +273,39 @@ public class PlayerManager : NetworkBehaviour
         animationManager.IsFiring();
     }
 
-    [ClientCallback]
     void StopFiring()
     {
         if (!isFiring) return;
         isFiring = false;
-        shooting.CmdStopFiring();
+        shooting.StopFiring();
         animationManager.StoppedFiring();
     }
 
-    [Command]
-    public void CmdAbilityPickedUp(string abilityName)
+    [PunRPC]
+    public void RPC_AbilityPickedUp(string abilityName)
     {
-        RpcAbilityPickedUp(abilityName);
-    }
-
-    [ClientRpc]
-    void RpcAbilityPickedUp(string abilityName)
-    {
-        switch(abilityName)
+        switch (abilityName)
         {
             case "Juggernaut":
-                if(juggernaut != null)
-                {
-                    juggernaut.ActivateJuggernaut();
-                    playerMovement.SuperBoots();
-                }
+                juggernaut.ActivateJuggernaut();
+                playerMovement.SuperBoots();
                 break;
             case "Overcharged":
-                if(shooting != null)
                 shooting.ActivateOvercharged();
                 break;
         }
     }
 
-    [Command]
-    public void CmdCancelAbility()
-    {
-        RpcCancelAbility();
-    }
-
-    [ClientRpc]
-    void RpcCancelAbility()
+    [PunRPC]
+    public void RPC_CancelAbility()
     {
         playerMovement.CancelSuperBoots();
         juggernaut.CancelJuggernaut();
         shooting.CancelOvercharged();
     }
 
-    [Command]
-    public void CmdWeaponPickedUp(string gunName)
-    {
-        RpcWeaponPickedUp(gunName);
-    }
-
-    [ClientRpc]
-    public void RpcWeaponPickedUp(string gunName)
+    [PunRPC]
+    public void RPC_WeaponPickedUp(string gunName)
     {
         if(oldGun != null)
         oldGun.SetActiveGun(false);
@@ -348,14 +337,8 @@ public class PlayerManager : NetworkBehaviour
         animationManager.StoppedAiming();
     }
 
-    [Command]
-    public void CmdDisarm()
-    {
-        RpcDisarm();
-    }
-
-    [ClientRpc]
-    public void RpcDisarm()
+    [PunRPC]
+    public void RPC_Disarm()
     {
         isArmed = false;
         shooting.UnArmed();
@@ -367,15 +350,17 @@ public class PlayerManager : NetworkBehaviour
     public void Dead(string damageSource, CollisionDetection.CollisionFlag collisionLocation)
     {
         if (hasFlag)
-            FlagManager.instance.CmdFlagDropped(name);
+            photonView.RPC("RPC_FlagDropped", PhotonTargets.All, name);
 
         playerMovement.CancelSpeedBoost();
 
         isDead = true;
-        CmdDisarm();
-        CmdCancelAbility();
+        photonView.RPC("RPC_Disarm", PhotonTargets.All);
+        photonView.RPC("RPC_CancelAbility", PhotonTargets.All);
         animationManager.IsDead(collisionLocation);
-        GameManager.instance.CmdAddScore(damageSource, GameCustomization.pointsPerKill);
+        PhotonView gmPhotonView = gameManager.PhotonView;
+        if (gmPhotonView != null)
+            gmPhotonView.RPC("RPC_AddScore", PhotonTargets.All, damageSource, GameCustomization.pointsPerKill);
     }
 
     public void Respawn()

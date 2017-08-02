@@ -1,8 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
-using UnityEngine.Networking;
 
-public class Flag : MonoBehaviour
+public class Flag : Photon.MonoBehaviour
 {
     public Coroutine resetTimer;
     public PlayerManager carrier;
@@ -36,7 +35,7 @@ public class Flag : MonoBehaviour
                     if (!flagBase.owner.Equals(other.GetComponent<PlayerManager>()))
                     {
                         isPickedUp = true;
-                        FlagManager.instance.CmdFlagPickedUp(index, other.transform.root.name);
+                        photonView.RPC("RPC_FlagPickedUp", PhotonTargets.All, index, other.transform.root.name);
                     }
                     else
                     {
@@ -46,21 +45,14 @@ public class Flag : MonoBehaviour
                             Debug.LogError("returned your flag");
                         }
                         else
-                        {
                             Debug.LogError("This is your flag at base");
-                        }
                     }
                 }
                 else
-                {
                     Debug.LogError("They already have a flag");
-                }
             }
             else
-            {
                 print("someone already has it");
-            }
-
         }
     }
 
@@ -68,7 +60,7 @@ public class Flag : MonoBehaviour
     {
         ResetCarrier();
         yield return new WaitForSeconds(flagResetTime);
-        FlagManager.instance.CmdReturnFlag(index);
+        photonView.RPC("RPC_ReturnFlag", PhotonTargets.All, index);
     }
 
     public IEnumerator CanBePickedUp()

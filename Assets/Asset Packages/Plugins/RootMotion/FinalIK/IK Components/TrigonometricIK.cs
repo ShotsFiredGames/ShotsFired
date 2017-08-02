@@ -6,7 +6,7 @@ namespace RootMotion.FinalIK {
 	/// <summary>
 	/// Analytic %IK algorithm based on the law of cosines
 	/// </summary>
-	[HelpURL("http://www.root-motion.com/finalikdox/html/page9.html")]
+	[HelpURLAttribute("http://www.root-motion.com/finalikdox/html/page9.html")]
 	[AddComponentMenu("Scripts/RootMotion.FinalIK/IK/Trigonometric IK")]
 	public class TrigonometricIK : IK {
 

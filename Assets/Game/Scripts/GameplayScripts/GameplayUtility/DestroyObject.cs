@@ -1,15 +1,15 @@
 ﻿using System.Collections;
 using UnityEngine;
-using UnityEngine.Networking;
 
-public class DestroyObject : NetworkBehaviour
+public class DestroyObject : Photon.MonoBehaviour
 {
     public float destroyAfter;
 
     IEnumerator Start()
     {
         yield return new WaitForSeconds(destroyAfter);
-        NetworkServer.Destroy(gameObject);
-        Destroy(gameObject);
+        Debug.LogError(photonView.owner);
+        if (photonView.isMine)
+            PhotonNetwork.Destroy(photonView);
     }
 }

@@ -6,7 +6,7 @@ namespace RootMotion.FinalIK {
 	/// <summary>
 	/// %IK system for standard biped characters that is designed to replicate and enhance the behaviour of the Unity's built-in character %IK setup.
 	/// </summary>
-	[HelpURL("http://www.root-motion.com/finalikdox/html/page2.html")]
+	[HelpURLAttribute("http://www.root-motion.com/finalikdox/html/page2.html")]
 	[AddComponentMenu("Scripts/RootMotion.FinalIK/IK/Biped IK")]
 	public class BipedIK : SolverManager {
 

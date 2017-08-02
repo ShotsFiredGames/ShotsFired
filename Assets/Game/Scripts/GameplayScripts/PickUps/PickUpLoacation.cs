@@ -1,8 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
-using UnityEngine.Networking;
 
-public class PickUpLoacation : NetworkBehaviour
+public class PickUpLoacation : Photon.MonoBehaviour
 {
     public GameObject[] pickUpTypes;
     public Vector3 spawnOffset;
@@ -12,16 +11,14 @@ public class PickUpLoacation : NetworkBehaviour
     GameObject activePickUp;
     bool isSpawning;
 
-    [ServerCallback]
     private void Start()
     {
         SpawnRandomPickup();
     }
 
-    [ServerCallback]
     void Update()
     {
-        if (!isSpawning && activePickUp == null)
+        if (PhotonNetwork.isMasterClient && !isSpawning && activePickUp == null)
         {
             isSpawning = true;
             StartCoroutine(WaitToSpawn());
@@ -41,21 +38,22 @@ public class PickUpLoacation : NetworkBehaviour
 
     public void SpawnRandomPickup()
     {
-        activePickUp = Instantiate(pickUpTypes[Random.Range(0, pickUpTypes.Length)], transform.position + spawnOffset, Quaternion.identity) as GameObject;
+        if (PhotonNetwork.isMasterClient)
+        {
+            activePickUp = PhotonNetwork.Instantiate(pickUpTypes[Random.Range(0, pickUpTypes.Length)].name, transform.position + spawnOffset, Quaternion.identity, 0);
 
-        if (activePickUp.GetComponent<PickUp>() != null)
-            activePickUp.GetComponent<PickUp>().SetAnimator(anim);
-
-        NetworkServer.Spawn(activePickUp);
+            if (activePickUp.GetComponent<PickUp>() != null)
+                activePickUp.GetComponent<PickUp>().SetAnimator(anim);
+        }
     }
 
-    [Command]
-    public void CmdActivateMimic()
+    [PunRPC]
+    public void RPC_ActivateMimic()
     {
         if (activePickUp == null)
         {
-            activePickUp = Instantiate(pickUpTypes[Random.Range(0, pickUpTypes.Length)], transform.position + spawnOffset, Quaternion.identity) as GameObject;
-            NetworkServer.Spawn(activePickUp);
+            if (PhotonNetwork.isMasterClient)
+                activePickUp = PhotonNetwork.Instantiate(pickUpTypes[Random.Range(0, pickUpTypes.Length)].name, transform.position + spawnOffset, Quaternion.identity, 0);
         }
 
         activePickUp.tag = ("Mimic");
@@ -66,11 +64,5 @@ public class PickUpLoacation : NetworkBehaviour
             rotate = GetComponentInChildren<Rotate>();
         else
             rotate.isMimic = true;
-    }
-
-    void UnspawnPickup()
-    {
-        NetworkServer.UnSpawn(activePickUp);
-        Destroy(activePickUp);
     }
 }

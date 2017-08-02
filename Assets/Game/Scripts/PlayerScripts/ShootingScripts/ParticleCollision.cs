@@ -1,9 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Networking;
+﻿using UnityEngine;
 
-public class ParticleCollision : NetworkBehaviour
+public class ParticleCollision : MonoBehaviour
 {
     public Gun shotGun;
 
@@ -14,7 +11,6 @@ public class ParticleCollision : NetworkBehaviour
         damage = shotGun.damage;
     }
     
-    [ServerCallback]
     public void DealDamage(GameObject other)
     {
         if (other.tag.Equals("Player"))

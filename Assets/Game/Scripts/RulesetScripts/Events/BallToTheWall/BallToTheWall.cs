@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using UnityEngine;
-using UnityEngine.Networking;
 
 public class BallToTheWall : GameEvent
 {
@@ -18,21 +15,33 @@ public class BallToTheWall : GameEvent
     public GameObject ball;
     public GameObject ballRespawn;
     GameObject activeBall;
+
+    void Awake()
+    {
+        PhotonView = GetComponent<PhotonView>();
+    }
     
     private void Start()
     {
-        activeBall = Instantiate(ball, ballRespawn.transform.position, ballRespawn.transform.rotation);
-        activeBall.transform.parent = transform;
-        activeBall.GetComponent<Ball>().SetVariables(this);
-        SpawnBall();
-        activeBall.SetActive(false);
+        if (PhotonNetwork.isMasterClient)
+        {
+            int _viewID = PhotonNetwork.AllocateViewID();
+            PhotonView.RPC("RPC_SpawnBall", PhotonTargets.All, _viewID);
+        }
+            //activeBall = PhotonNetwork.Instantiate(ball.name, ballRespawn.transform.position, ballRespawn.transform.rotation, 0);
+        //activeBall.transform.parent = transform;
+        //activeBall.GetComponent<Ball>().SetVariables(this);
+        //activeBall.SetActive(false);
     }
 
-    [ServerCallback]
-    void SpawnBall()
+    [PunRPC]
+    void RPC_SpawnBall(int _viewID)
     {
-        for (int i = 0; i < PlayerWrangler.GetAllPlayers().Length; i++)
-            NetworkServer.SpawnWithClientAuthority(activeBall, PlayerWrangler.GetAllPlayers()[i].gameObject);
+        activeBall = Instantiate(ball, ballRespawn.transform.position, ballRespawn.transform.rotation);
+        activeBall.GetComponent<PhotonView>().viewID = _viewID;
+        activeBall.transform.parent = transform;
+        activeBall.GetComponent<Ball>().SetVariables(this);
+        activeBall.SetActive(false);
     }
 
     public override void StartEvent()
@@ -82,7 +91,8 @@ public class BallToTheWall : GameEvent
 
     public void PlayerScored(string player)
     {
-        GameManager.instance.CmdAddScore(player, scoreAmount);
+        if (GameManager.instance.PhotonView != null)
+            GameManager.instance.PhotonView.RPC("RPC_AddScore", PhotonTargets.All, player, scoreAmount);
     }
 
     public void RespawnBall()

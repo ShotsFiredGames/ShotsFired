@@ -12,7 +12,7 @@ namespace RootMotion.FinalIK {
 	/// http://users.soe.ucsc.edu/~avg/Papers/jtl.pdf
 	/// 
 	/// </summary>
-	[HelpURL("http://www.root-motion.com/finalikdox/html/page12.html")]
+	[HelpURLAttribute("http://www.root-motion.com/finalikdox/html/page12.html")]
 	[AddComponentMenu("Scripts/RootMotion.FinalIK/Rotation Limits/Rotation Limit Polygonal")]
 	public class RotationLimitPolygonal : RotationLimit {
 

@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class FlagBase : MonoBehaviour
 {
@@ -27,7 +25,7 @@ public class FlagBase : MonoBehaviour
                 if (!capturedFlag.index.Equals(flag.index)) //if the flag isn't the flag the base owns
                 {
                     Debug.LogError("Flag reset");
-                    FlagManager.instance.CmdReturnFlag(other.GetComponent<Flag>().index);
+                    FlagManager.instance.photonView.RPC("RPC_ReturnFlag", PhotonTargets.All, other.GetComponent<Flag>().index);
                     hasFlag = false;
                 }
             }

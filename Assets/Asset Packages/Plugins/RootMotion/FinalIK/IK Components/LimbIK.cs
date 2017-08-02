@@ -6,7 +6,7 @@ namespace RootMotion.FinalIK {
 	/// <summary>
 	/// %IK component for IKSolverLimb.
 	/// </summary>
-	[HelpURL("http://www.root-motion.com/finalikdox/html/page7.html")]
+	[HelpURLAttribute("http://www.root-motion.com/finalikdox/html/page7.html")]
 	[AddComponentMenu("Scripts/RootMotion.FinalIK/IK/Limb IK")]
 	public class LimbIK : IK {
 

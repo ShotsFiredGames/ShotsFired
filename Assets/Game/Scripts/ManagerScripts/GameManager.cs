@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Networking;
-using UnityEngine.Networking.Match;
+using UnityEngine.SceneManagement;
 
-public class GameManager : NetworkBehaviour
+public class GameManager : Photon.PunBehaviour
 {
     public static GameManager instance;
-    public GameObject originalSpawnPoints;
-    public GameObject newSpawnPoints;
+    public GameObject playerPrefab;
+    public List<GameObject> originalSpawnPoints;
+    public List<GameObject> newSpawnPoints;
     public Text timerText;
     public Text endGameText;
     public GameObject scorePanel;
@@ -17,9 +17,10 @@ public class GameManager : NetworkBehaviour
     [HideInInspector]
     public List<Text> scoreboardTextObjList;
 
+    public PhotonView PhotonView { get; private set; }
+
     public Dictionary<string, short> playerScores;
 
-    NetworkManager networkManager;
     Controls controls;
 
     [HideInInspector]
@@ -27,10 +28,62 @@ public class GameManager : NetworkBehaviour
 
     bool gameOver;
 
-    [SyncVar]
     byte minutes;
-    [SyncVar]
     byte seconds;
+
+    #region Photon Methods
+    public override void OnLeftRoom()
+    {
+        SceneManager.LoadScene(0);
+    }
+
+    public void LeaveRoom()
+    {
+        PhotonNetwork.LeaveRoom();
+    }
+
+    void LoadArena()
+    {
+        if (!PhotonNetwork.isMasterClient)
+            Debug.LogError("PhotonNetwork: Trying to Load a level but we are not the master client");
+
+        Debug.Log("PhotonNetwork : Loading Level");
+        PhotonNetwork.LoadLevel("Game");
+    }
+
+    public override void OnPhotonPlayerConnected(PhotonPlayer newPlayer)
+    {
+        Debug.Log("OnPhotonPlayerConnected() " + newPlayer.NickName);
+
+        if (PhotonNetwork.isMasterClient)
+            Debug.Log("OnPhotonPlayerConnected isMasterClient " + PhotonNetwork.isMasterClient);
+    }
+
+    public override void OnPhotonPlayerDisconnected(PhotonPlayer other)
+    {
+        Debug.Log("OnPhotonPlayerDisconnected() " + other.NickName);
+
+        if (PhotonNetwork.isMasterClient)
+            Debug.Log("OnPhotonPlayerDisonnected isMasterClient " + PhotonNetwork.isMasterClient);
+    }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.isWriting)
+        {
+            if (PhotonNetwork.isMasterClient)
+            {
+                stream.SendNext(minutes);
+                stream.SendNext(seconds);
+            }
+        }
+        else
+        {
+            minutes = (byte)stream.ReceiveNext();
+            seconds = (byte)stream.ReceiveNext();
+        }
+    }
+    #endregion
 
     void Awake()
     {
@@ -39,11 +92,8 @@ public class GameManager : NetworkBehaviour
         else
             instance = this;
 
+        PhotonView = GetComponent<PhotonView>();
         playerScores = new Dictionary<string, short>();
-        foreach (Transform child in newSpawnPoints.transform)
-        {
-            NetworkManager.UnRegisterStartPosition(child);
-        }
     }
 
     void OnEnable()
@@ -56,27 +106,15 @@ public class GameManager : NetworkBehaviour
         controls.Destroy();
     }
 
-    IEnumerator Start()
+    void Start()
     {
-        networkManager = NetworkManager.singleton;
         minutes = GameCustomization.gameLength;
         seconds = 1;
-        StartTimer();
-
-        yield return new WaitForSeconds(5);
-        foreach (Transform child in originalSpawnPoints.transform)
-        {
-            NetworkManager.UnRegisterStartPosition(child);
-        }
-
-        foreach (Transform child in newSpawnPoints.transform)
-        {
-            NetworkManager.RegisterStartPosition(child);
-        }
+        StartCoroutine(Timer());
     }
 
-    [ServerCallback]
-    void StartTimer()
+    [PunRPC]
+    public void RPC_StartTimer()
     {
         StartCoroutine(Timer());
     }
@@ -119,15 +157,8 @@ public class GameManager : NetworkBehaviour
         isActive = _isActive;
     }
 
-    [Command]
-    public void CmdAddScore(string player, short amount)
-    {
-        if (!playerScores.ContainsKey(player)) return;
-        RpcAddScore(player, amount);
-    }
-
-    [ClientRpc]
-    public void RpcAddScore(string player, short amount)
+    [PunRPC]
+    public void RPC_AddScore(string player, short amount)
     {
         if (!playerScores.ContainsKey(player)) return;
         playerScores[player] += amount;
@@ -143,24 +174,13 @@ public class GameManager : NetworkBehaviour
         string winningPlayer = GetWinningPlayer();
 
         if (playerScores[winningPlayer] >= GameCustomization.pointsToWin)
-        {
             gameOver = true;
-        }
 
         if (gameOver)
-        {
-            CmdGameOver(winningPlayer);
-        }
+            GameOver(winningPlayer);
     }
 
-    [Command]
-    void CmdGameOver(string winningPlayer)
-    {
-        RpcGameOver(winningPlayer);
-    }
-
-    [ClientRpc]
-    void RpcGameOver(string winningPlayer)
+    void GameOver(string winningPlayer)
     {
         endGameText.text = winningPlayer + " won!" + '\n' + "Press the Jump button to continue";
         endGameText.gameObject.SetActive(true);
@@ -172,13 +192,11 @@ public class GameManager : NetworkBehaviour
         UpdateTimerText();
     }
 
-    [Client]
     void UpdateTimerText()
     {
         timerText.text = string.Format("{0:0}:{1:00}", minutes, seconds);
     }
 
-    [Client]
     void UpdateScoreText()
     {
         byte count = 0;
@@ -192,7 +210,7 @@ public class GameManager : NetworkBehaviour
     IEnumerator EndGame()
     {
         yield return new WaitUntil(ButtonPressed);
-        LoadMainMenu();
+        LeaveRoom();
     }
 
     bool ButtonPressed()
@@ -203,17 +221,10 @@ public class GameManager : NetworkBehaviour
             return false;
     }
 
-    public void LoadMainMenu()
-    {
-        MatchInfo matchInfo = networkManager.matchInfo;
-        networkManager.matchMaker.DropConnection(matchInfo.networkId, matchInfo.nodeId, 0, networkManager.OnDropConnection);
-        networkManager.StopHost();
-    }
-
     //==========Event Methods==========
     public void FlagCaptured(string player, byte score)
     {
-        CmdAddScore(player, score);
+        photonView.RPC("RPC_AddScore", PhotonTargets.All, player, score);
     }
 
     public string GetWinningPlayer()
@@ -230,5 +241,10 @@ public class GameManager : NetworkBehaviour
         }
 
         return playerName;
+    }
+
+    public Transform GetSpawnPoint()
+    {
+        return newSpawnPoints[Random.Range(0, newSpawnPoints.Count)].transform;
     }
 }

@@ -1,12 +1,12 @@
 ﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Networking;
 
-
-public class PlayerHealth : NetworkBehaviour
+public class PlayerHealth : Photon.MonoBehaviour
 {
     PlayerManager playerManager;
+
+    public PhotonView PhotonView { get; private set; }
 
     public Image dmgIndicatorLeft;
     public Image dmgIndicatorRight;
@@ -15,19 +15,16 @@ public class PlayerHealth : NetworkBehaviour
     public Material dmgEffect;
     public GameObject despawnEffect;
     public GameObject[] collisionLocations;
-
     public Animator damageEffectAnim;
     public AudioSource source;
     public AudioClip[] hitEffects;
+
     float respawnTime;
     short currMaxHealth;
     short maxHealth;
-    [SyncVar]
     short currentHealth;
 
-    [SyncVar]
     bool isDead;
-
     bool isHealthIncreased;
 
     GameObject collisionDetection;
@@ -37,17 +34,16 @@ public class PlayerHealth : NetworkBehaviour
 
     public SkinnedMeshRenderer[] playerMeshes;
 
-    // Use this for initialization
     void Awake()
     {
         respawnTime = GameCustomization.respawnTime;
         maxHealth = GameCustomization.playerHealth;
         playerManager = GetComponent<PlayerManager>();
+        PhotonView = GetComponent<PhotonView>();
     }
 
-    private IEnumerator Start()
+    private void Start()
     {
-        yield return new WaitForSeconds(1);
         ballToTheWall = GameObject.Find("BallToTheWall").GetComponent<BallToTheWall>();
     }
 
@@ -56,7 +52,7 @@ public class PlayerHealth : NetworkBehaviour
         isDead = false;
         currentHealth = maxHealth;
         currMaxHealth = maxHealth;
-        if (!isLocalPlayer)
+        if (!photonView.isMine)
         {
             collisionDetection = transform.Find("CollisionDetection").gameObject;
             foreach (Transform go in collisionDetection.GetComponentsInChildren<Transform>())
@@ -64,26 +60,18 @@ public class PlayerHealth : NetworkBehaviour
         }
     }
 
-    [Command]
-    public void CmdTookDamage(short damage, string sourceID, CollisionDetection.CollisionFlag collisionLocation)
+    [PunRPC]
+    public void RPC_TookDamage(short damage, string sourceID, CollisionDetection.CollisionFlag collisionLocation)                //This is called from CollisionDetection to determine the damage and the location of the incoming collision.
     {
-        Debug.LogError("Cmd TookDamage");
+        if (!photonView.isMine) return;
         if (isDead) return;
-        RpcTookDamage(damage, sourceID, collisionLocation);
-    }
-
-    [ClientRpc]
-    public void RpcTookDamage(short damage, string sourceID, CollisionDetection.CollisionFlag collisionLocation)                //This is called from CollisionDetection to determine the damage and the location of the incoming collision.
-    {
-        if (isDead) return;
+        currentHealth -= damage;
         Hit(collisionLocation);
         if (!source.isPlaying)
         {
             source.clip = hitEffects[Random.Range(0, hitEffects.Length)];
             source.Play();
-        }
-
-        currentHealth -= damage;
+        }        
 
         if (currentHealth > (short)(maxHealth * 0.75f))
         {
@@ -112,23 +100,14 @@ public class PlayerHealth : NetworkBehaviour
         damageEffectAnim.SetInteger("DamageEffect", 0);
     }
 
-
-    [Command]
-    public void CmdInstantDeath(string damageSource, CollisionDetection.CollisionFlag collisionLocation)
-    {
-        if (isDead) return;
-        RpcInstantDeath(damageSource, collisionLocation);
-    }
-
-    [ClientRpc]
-    public void RpcInstantDeath(string damageSource, CollisionDetection.CollisionFlag collisionLocation)
+    [PunRPC]
+    public void RPC_InstantDeath(string damageSource, CollisionDetection.CollisionFlag collisionLocation)
     {
         if (isDead) return;
         currentHealth = 0;
         Died(damageSource, collisionLocation);
     }
 
-    [Client]
     void Died(string damageSource, CollisionDetection.CollisionFlag collisionLocation)                                           //Died gets called when health is or goes below 0.
     {
         if (isDead == true) return;
@@ -165,14 +144,14 @@ public class PlayerHealth : NetworkBehaviour
             ballToTheWall = GameObject.Find("BallToTheWall").GetComponent<BallToTheWall>();
 
         if (!ballToTheWall.ballToTheWallActive)
-            respawnpoint = NetworkManager.singleton.GetStartPosition();
+            respawnpoint = GameManager.instance.GetSpawnPoint();
         else
             respawnpoint = ballToTheWall.spawnpoints[Random.Range(0, ballToTheWall.spawnpoints.Length)].transform;
 
         transform.position = respawnpoint.position;
         transform.rotation = respawnpoint.rotation;
 
-        if (!isLocalPlayer)
+        if (!photonView.isMine)
             foreach (GameObject go in collisionLocations)
                 go.layer = LayerMask.NameToLayer("Collision");
 
@@ -186,7 +165,6 @@ public class PlayerHealth : NetworkBehaviour
         respawn = null;
     }
 
-    [Client]
     void Hit(CollisionDetection.CollisionFlag collisionLocation)
     {
         switch (collisionLocation)

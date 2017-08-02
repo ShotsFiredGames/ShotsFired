@@ -6,7 +6,7 @@ namespace RootMotion.FinalIK {
 	/// <summary>
 	/// Grounding for BipedIK characters.
 	/// </summary>
-	[HelpURL("http://www.root-motion.com/finalikdox/html/page11.html")]
+	[HelpURLAttribute("http://www.root-motion.com/finalikdox/html/page11.html")]
 	[AddComponentMenu("Scripts/RootMotion.FinalIK/Grounder/Grounder Biped")]
 	public class GrounderBipedIK: Grounder {
 

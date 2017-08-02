@@ -1,9 +1,8 @@
 ﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Networking;
 
-public class Shooting : NetworkBehaviour
+public class Shooting : Photon.MonoBehaviour
 {
     public Gun currentGun;
     public GameObject gunHolder;
@@ -48,7 +47,6 @@ public class Shooting : NetworkBehaviour
         }
     }
 
-    [Client]
     public IEnumerator Firing()
     {
         if (currentGun.isActiveAndEnabled && !currentGun.isFiring)
@@ -122,28 +120,16 @@ public class Shooting : NetworkBehaviour
         }
     }
 
-    [Command]
-    public void CmdStopFiring()
-    {
-        RpcStopFiring();
-    }
-
-    [ClientRpc]
-    void RpcStopFiring()
+    //maybe make RPC
+    public void StopFiring()
     {
         currentGun.shootingSource.PlayOneShot(currentGun.trailClip);
     }
 
-    [Command]
-    public void CmdStartMuzzleFlash()
+    //Maybe make RPC
+    public void StartMuzzleFlash()
     {
         if (muzzleFlash == null) return;
-        RpcStartMuzzleFlash();
-    }
-
-    [ClientRpc]
-    void RpcStartMuzzleFlash()
-    {
         StartCoroutine(MuzzleFlash());                                                                          //Activate the MuzzleFlash
     }
 
@@ -170,30 +156,25 @@ public class Shooting : NetworkBehaviour
         hitMarker.enabled = (false);
     }
 
-    [Command]
-    public void CmdBulletHole(Vector3 position, Quaternion rotation, string hitType)
+    public void SpawnBulletHole(Vector3 position, Quaternion rotation, string hitType)
     {
         switch (hitType)
         {
             case "Wall":
-                GameObject wallHit = Instantiate(currentGun.wallHit, position, rotation) as GameObject;
-                NetworkServer.Spawn(wallHit);
+                PhotonNetwork.Instantiate(currentGun.wallHit.name, position, rotation, 0);
                 break;
             case "Player":
-                GameObject playerHit = Instantiate(currentGun.playerHit, position, rotation) as GameObject;
-                NetworkServer.Spawn(playerHit);
+                PhotonNetwork.Instantiate(currentGun.playerHit.name, position, rotation, 0);
                 break;
         }
     }
 
-    [Command]
-    void CmdPlayerShot(string hitPlayer, string hitCollider, short _damage)
+    void PlayerShot(string hitPlayer, string hitCollider, short _damage)
     {
         PlayerWrangler.GetPlayer(hitPlayer).transform.Find("CollisionDetection").transform.Find(hitCollider).GetComponent<CollisionDetection>().OnHit(_damage, transform.name);
     }
 
-    [Command]
-    void CmdReaperShot(string thisPlayer, string chasingPlayer, short _damage)
+    void ReaperShot(string thisPlayer, string chasingPlayer, short _damage)
     {
         TheReaperComes.GetReaperChasingWhom(chasingPlayer).HitBy(_damage, thisPlayer);
     }
@@ -205,50 +186,47 @@ public class Shooting : NetworkBehaviour
         return hit;
     }
 
-    [Client]
     void HitscanShot()
     {
-        CmdStartMuzzleFlash();
+        StartMuzzleFlash();
         RaycastHit hit = CastMyRay();
         if (hit.point == Vector3.zero) return;
 
         if (hit.transform.tag.Equals("Collision"))
         {
             StartCoroutine(HitMarker());
-            CmdPlayerShot(hit.transform.root.name, hit.transform.name, _damage);
+            PlayerShot(hit.transform.root.name, hit.transform.name, _damage);
             Vector3 position = hit.point + (hit.normal * .1f);
             Quaternion rotation = Quaternion.LookRotation(hit.normal);
-            CmdBulletHole(position, rotation, "Player");
+            if(PhotonNetwork.isMasterClient)
+                SpawnBulletHole(position, rotation, "Player");
         }
         else if (hit.transform.tag.Equals("Reaper"))
         {
             StartCoroutine(HitMarker());
-            CmdReaperShot(transform.root.name, hit.transform.GetComponent<Reaper>().GetTargetPlayer(), _damage);
+            ReaperShot(transform.root.name, hit.transform.GetComponent<Reaper>().GetTargetPlayer(), _damage);
         }
         else
         {
             Vector3 position = hit.point + (hit.normal * .1f);
             Quaternion rotation = Quaternion.LookRotation(hit.normal);
-            CmdBulletHole(position, rotation, "Wall");
+            SpawnBulletHole(position, rotation, "Wall");
         }
     }
 
-    [Client]
     void ParticleShot()
     {
-        CmdStartMuzzleFlash();
+        StartMuzzleFlash();
     }
 
-    [Client]
     void ProjectileShot()
     {
-        CmdStartMuzzleFlash();
+        StartMuzzleFlash();
         RaycastHit hit = CastMyRay();
-        CmdProjectileShot(hit.point, hit.normal);
+        ProjectileShot(hit.point, hit.normal);
     }
 
-    [Command]
-    void CmdProjectileShot(Vector3 direction, Vector3 hitNormal)
+    void ProjectileShot(Vector3 direction, Vector3 hitNormal)
     {
         if (currentGun != null)
         {
@@ -256,21 +234,12 @@ public class Shooting : NetworkBehaviour
             if (currentGun.shootingAnim != null)
                 if (currentGun.gameObject.activeSelf)
                     currentGun.shootingAnim.SetTrigger("Fire");
-            
-            GameObject bullet = Instantiate(currentGun.projectile, currentGun.gunbarrel.transform.position, currentGun.gunbarrel.transform.rotation) as GameObject;
-            NetworkServer.Spawn(bullet);
-            RpcProjectileShot(bullet.GetComponent<NetworkIdentity>(), direction, hitNormal);
+
+            GameObject bullet = PhotonNetwork.Instantiate(currentGun.projectile.name, currentGun.gunbarrel.transform.position, currentGun.gunbarrel.transform.rotation, 0);
+            bullet.GetComponent<PhotonView>().RPC("RPC_SetProjectileVariables", PhotonTargets.All, currentGun.speed, direction, transform.name, hitNormal, _damage);
         }
     }
 
-    [ClientRpc]
-    void RpcProjectileShot(NetworkIdentity bullet, Vector3 direction, Vector3 hitNormal)
-    {
-        if (bullet != null)
-            bullet.GetComponent<Projectile>().SetVariables(currentGun.speed, direction, transform.name, hitNormal, 65);
-    }
-
-    [Client]
     void SustainedShot()
     {
 

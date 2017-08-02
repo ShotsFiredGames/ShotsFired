@@ -17,6 +17,7 @@ public class CollisionDetection : MonoBehaviour
 
     PlayerHealth health;
     PlayerManager playerManager;
+    PhotonView photonView;
     string faction;
     Material factionColor;
 
@@ -24,6 +25,7 @@ public class CollisionDetection : MonoBehaviour
     {
         health = GetComponentInParent<PlayerHealth>();                                                                    //References to the health and shooting scripts
         playerManager = GetComponentInParent<PlayerManager>();
+        photonView = GetComponentInParent<PhotonView>();
         yield return new WaitForSeconds(1);
         faction = playerManager.GetFaction();
         factionColor = playerManager.GetFactionColor();
@@ -31,45 +33,27 @@ public class CollisionDetection : MonoBehaviour
     
     public void OnHit(short damage, string sourceID)                                                                                         //Gets called from the shooting scripts raycast, we use other to determine how much damage we will take.
     {
-        Debug.LogError("TookDamage");
+        if (sourceID == transform.root.name) return;
         if (health.isPlayerDead()) return;
         switch(collisionLocation)                                                                                         //Find the collisionLocation this collider is marked with.
         {
             case CollisionFlag.FrontHeadShot:
-                if(playerManager.isServer)
-                    health.RpcTookDamage((byte)(damage * 2), sourceID, CollisionFlag.FrontHeadShot);
-                else
-                    health.CmdTookDamage((byte)(damage * 2), sourceID, CollisionFlag.FrontHeadShot);
+                photonView.RPC("RPC_TookDamage", PhotonTargets.All, (short)(damage * 2), sourceID, CollisionFlag.FrontHeadShot);      //Tell our health script how much damage we took from the enemies shooting script and the location we were hit from.
                 break;
             case CollisionFlag.BackHeadShot:
-                if (playerManager.isServer)
-                    health.RpcTookDamage((byte)(damage * 2), sourceID, CollisionFlag.BackHeadShot);
-                else
-                    health.CmdTookDamage((byte)(damage * 2), sourceID, CollisionFlag.BackHeadShot);
+                photonView.RPC("RPC_TookDamage", PhotonTargets.All, (short)(damage * 2), sourceID, CollisionFlag.FrontHeadShot);
                 break;
             case CollisionFlag.Front:
-                if (playerManager.isServer)
-                    health.RpcTookDamage(damage, sourceID, CollisionFlag.Front);
-                else
-                    health.CmdTookDamage((byte)(damage), sourceID, CollisionFlag.Front);
+                photonView.RPC("RPC_TookDamage", PhotonTargets.All, damage, sourceID, CollisionFlag.FrontHeadShot);
                 break;
             case CollisionFlag.Back:
-                if (playerManager.isServer)
-                    health.RpcTookDamage(damage, sourceID, CollisionFlag.Back);
-                else
-                    health.CmdTookDamage((byte)(damage), sourceID, CollisionFlag.Back);
+                photonView.RPC("RPC_TookDamage", PhotonTargets.All, damage, sourceID, CollisionFlag.FrontHeadShot);
                 break;
             case CollisionFlag.Left:
-                if (playerManager.isServer)
-                    health.RpcTookDamage(damage, sourceID, CollisionFlag.Left);
-                else
-                    health.CmdTookDamage((byte)(damage), sourceID, CollisionFlag.Left);
+                photonView.RPC("RPC_TookDamage", PhotonTargets.All, damage, sourceID, CollisionFlag.FrontHeadShot);
                 break;
             case CollisionFlag.Right:
-                if (playerManager.isServer)
-                    health.RpcTookDamage(damage, sourceID, CollisionFlag.Right);
-                else
-                    health.CmdTookDamage((byte)(damage), sourceID, CollisionFlag.Right);
+                photonView.RPC("RPC_TookDamage", PhotonTargets.All, damage, sourceID, CollisionFlag.FrontHeadShot);
                 break;
         }
     }

@@ -1,9 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Networking;
+﻿using UnityEngine;
 
-public abstract class AddOn : NetworkBehaviour
+public abstract class AddOn : MonoBehaviour
 {
     public string addOnName;
 

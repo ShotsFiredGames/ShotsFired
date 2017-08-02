@@ -14,8 +14,8 @@ public class GiftedGun : AddOn
         {
             if(player != null)
             {
-                player.CmdDisarm();
-                player.CmdWeaponPickedUp(possibleGunNames[Random.Range(0, possibleGunNames.Count)]);
+                player.PhotonView.RPC("RPC_Disarm", PhotonTargets.All);
+                player.PhotonView.RPC("RPC_WeaponPickedUp", PhotonTargets.All, possibleGunNames[Random.Range(0, possibleGunNames.Count)]);
             }
         }
     }

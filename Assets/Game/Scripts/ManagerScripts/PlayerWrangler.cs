@@ -1,9 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-public class PlayerWrangler : MonoBehaviour
+public class PlayerWrangler : Photon.MonoBehaviour
 {
     public static PlayerWrangler instance;
     public GameManager gameManager;
@@ -37,7 +36,6 @@ public class PlayerWrangler : MonoBehaviour
         Life
     };
 
-
     void Awake()
     {
         if (instance != null)
@@ -53,11 +51,11 @@ public class PlayerWrangler : MonoBehaviour
         _yellow = yellow;
     }
 
-    public static void RegisterPlayer(string netId, PlayerManager player)
+    public static void RegisterPlayer(string _playerId, PlayerManager player)
     {
         playerCount++;
-        string playerID = PLAYER_ID_PREFIX + playerCount;
-        players.Add(playerID, player);
+        player.transform.name = _playerId;
+        players.Add(_playerId, player);
 
         switch(playerCount)
         {
@@ -81,8 +79,7 @@ public class PlayerWrangler : MonoBehaviour
                 break;
         }
         
-        player.transform.name = playerID;
-        GameManager.instance.AddPlayer(playerID);
+        GameManager.instance.AddPlayer(_playerId);
     }
 
     public static void UnRegisterPlayer(string playerID)

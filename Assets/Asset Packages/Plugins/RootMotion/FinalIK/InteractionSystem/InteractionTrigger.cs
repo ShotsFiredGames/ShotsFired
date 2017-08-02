@@ -10,7 +10,7 @@ namespace RootMotion.FinalIK {
 	/// The InteractionSystem can then use it to find the most appropriate InteractionObject and effectors to interact with.
 	/// Use InteractionSystem.GetClosestTriggerIndex() and InteractionSystem.TriggerInteration() to trigger the interactions that the character is in contact with.
 	/// </summary>
-	[HelpURL("https://www.youtube.com/watch?v=-TDZpNjt2mk&index=15&list=PLVxSIA1OaTOu8Nos3CalXbJ2DrKnntMv6")]
+	[HelpURLAttribute("https://www.youtube.com/watch?v=-TDZpNjt2mk&index=15&list=PLVxSIA1OaTOu8Nos3CalXbJ2DrKnntMv6")]
 	[AddComponentMenu("Scripts/RootMotion.FinalIK/Interaction System/Interaction Trigger")]
 	public class InteractionTrigger: MonoBehaviour {
 	

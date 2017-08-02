@@ -7,7 +7,7 @@ namespace RootMotion.FinalIK {
 	/// <summary>
 	/// The target of an effector in the InteractionSystem.
 	/// </summary>
-	[HelpURL("https://www.youtube.com/watch?v=r5jiZnsDH3M")]
+	[HelpURLAttribute("https://www.youtube.com/watch?v=r5jiZnsDH3M")]
 	[AddComponentMenu("Scripts/RootMotion.FinalIK/Interaction System/Interaction Target")]
 	public class InteractionTarget : MonoBehaviour {
 

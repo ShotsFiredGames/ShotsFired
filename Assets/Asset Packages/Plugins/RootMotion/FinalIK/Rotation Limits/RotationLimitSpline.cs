@@ -7,7 +7,7 @@ namespace RootMotion.FinalIK {
 	/// Using a spline to limit the range of rotation on universal and ball-and-socket joints. 
 	/// Reachable area is defined by an AnimationCurve orthogonally mapped onto a sphere.
 	/// </summary>
-	[HelpURL("http://www.root-motion.com/finalikdox/html/page12.html")]
+	[HelpURLAttribute("http://www.root-motion.com/finalikdox/html/page12.html")]
 	[AddComponentMenu("Scripts/RootMotion.FinalIK/Rotation Limits/Rotation Limit Spline")]
 	public class RotationLimitSpline : RotationLimit {
 

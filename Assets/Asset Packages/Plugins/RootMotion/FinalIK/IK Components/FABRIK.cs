@@ -6,7 +6,7 @@ namespace RootMotion.FinalIK {
 	/// <summary>
 	/// Forward and Backward Reaching %IK solver component.
 	/// </summary>
-	[HelpURL("http://www.root-motion.com/finalikdox/html/page4.html")]
+	[HelpURLAttribute("http://www.root-motion.com/finalikdox/html/page4.html")]
 	[AddComponentMenu("Scripts/RootMotion.FinalIK/IK/FABRIK")]
 	public class FABRIK : IK {
 

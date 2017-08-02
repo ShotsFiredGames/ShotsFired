@@ -1,5 +1,4 @@
-﻿
-public class StripTease : AddOn
+﻿public class StripTease : AddOn
 {
     PlayerManager[] allPlayers;
 
@@ -10,7 +9,7 @@ public class StripTease : AddOn
         foreach (PlayerManager player in allPlayers)
         {
             if(player != null)
-            player.CmdDisarm();
+                player.PhotonView.RPC("RPC_Disarm", PhotonTargets.All);
         }
     }
 }

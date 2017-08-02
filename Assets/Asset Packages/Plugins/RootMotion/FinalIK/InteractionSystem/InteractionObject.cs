@@ -6,7 +6,7 @@ namespace RootMotion.FinalIK {
 	/// <summary>
 	/// Object than the InteractionSystem can interact with.
 	/// </summary>
-	[HelpURL("https://www.youtube.com/watch?v=r5jiZnsDH3M")]
+	[HelpURLAttribute("https://www.youtube.com/watch?v=r5jiZnsDH3M")]
 	[AddComponentMenu("Scripts/RootMotion.FinalIK/Interaction System/Interaction Object")]
 	public class InteractionObject : MonoBehaviour {
 

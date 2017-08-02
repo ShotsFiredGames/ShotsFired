@@ -1,8 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
-using UnityEngine.Networking;
 
-public class Reaper : NetworkBehaviour
+public class Reaper : MonoBehaviour
 {
     [Header("Stats")]
     public float speed;
@@ -14,15 +13,14 @@ public class Reaper : NetworkBehaviour
     [Tooltip("The vertical offset for the players. 0 means feet.")]
     public float attackingOffset;
 
-    [SyncVar]
+    public PhotonView PhotonView { get; private set; }
+
     short currentHealth;
     short points;
     bool isDead;
 
-    [SyncVar]
     private Vector3 spawnPoint;
     private float currentDistance;
-    [SyncVar]
     private float currentSpeed;
     PlayerManager targetPlayer;
     GameObject targetPlayerObject;
@@ -55,8 +53,9 @@ public class Reaper : NetworkBehaviour
             {
                 if (!targetPlayer.isDead)
                 {
-                    targetPlayer.GetComponent<PlayerHealth>().CmdInstantDeath("Reaper", CollisionDetection.CollisionFlag.Back);
-                    GameManager.instance.CmdAddScore(GetTargetPlayer(), (short)-points);
+                    targetPlayer.GetComponent<PlayerHealth>().PhotonView.RPC("RPC_InstantDeath", PhotonTargets.All, "Reaper", CollisionDetection.CollisionFlag.Back);
+                    if (GameManager.instance.PhotonView != null)
+                        GameManager.instance.PhotonView.RPC("RPC_AddScore", PhotonTargets.All, GetTargetPlayer(), (short)-points);
                     currentSpeed = speed;
                 }
             }
@@ -69,9 +68,8 @@ public class Reaper : NetworkBehaviour
             IncreaseSpeed();
         else
         {
-            RpcReaperTookDamage(damage);
+            PhotonView.RPC("RPC_ReaperTookDamage", PhotonTargets.All, damage);
         }
-
     }
 
     public void IncreaseSpeed()
@@ -79,20 +77,13 @@ public class Reaper : NetworkBehaviour
         currentSpeed += shotSpeedIncrease;
     }
 
-    [Command]
-    public void CmdReaperTookDamage(short damage)
-    {
-        RpcReaperTookDamage(damage);
-    }
-
-    [ClientRpc]
-    public void RpcReaperTookDamage(short damage)
+    [PunRPC]
+    public void RPC_ReaperTookDamage(short damage)
     {
         currentHealth -= damage;
 
-        if (currentHealth <= 0 && !isDead)
+        if (currentHealth <= 0)
             respawn = StartCoroutine(Respawn());
-
     }
 
     public string GetTargetPlayer()
@@ -119,10 +110,10 @@ public class Reaper : NetworkBehaviour
 
     IEnumerator Respawn()
     {
-        CmdSetReaperPosition(new Vector3(-1000, -1000, -1000), GetTargetPlayer());
+        PhotonView.RPC("CmdSetReaperPosition", PhotonTargets.All, new Vector3(-1000, -1000, -1000), GetTargetPlayer());
         isDead = true;
         yield return new WaitForSeconds(1f);
-        CmdSetReaperPosition(spawnPoint, GetTargetPlayer());
+        PhotonView.RPC("CmdSetReaperPosition", PhotonTargets.All, spawnPoint, GetTargetPlayer());
         transform.rotation = Quaternion.identity;
         currentSpeed = speed;
 
@@ -131,14 +122,8 @@ public class Reaper : NetworkBehaviour
         gameObject.SetActive(true);
     }
 
-    [Command]
-    void CmdSetReaperPosition(Vector3 newPosition, string whichReaper)
-    {
-        RpcSetReaperPosition(newPosition, whichReaper);
-    }
-
-    [ClientRpc]
-    void RpcSetReaperPosition(Vector3 newPosition, string whichReaper)
+    [PunRPC]
+    void RPC_SetReaperPosition(Vector3 newPosition, string whichReaper)
     {
         Reaper persuer = TheReaperComes.GetReaperChasingWhom(whichReaper);
 

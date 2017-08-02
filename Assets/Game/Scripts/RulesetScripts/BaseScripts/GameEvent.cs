@@ -1,11 +1,12 @@
 ﻿using System.Collections;
 using UnityEngine;
-using UnityEngine.Networking;
 
-public abstract class GameEvent : NetworkBehaviour {
+public abstract class GameEvent : MonoBehaviour {
 
     public float duration;
     public string nameEvent;
+
+    public PhotonView PhotonView { get; protected set; }
 
     public abstract void StartEvent();
     public abstract void EndEvent();

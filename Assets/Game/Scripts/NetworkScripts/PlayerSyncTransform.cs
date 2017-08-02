@@ -1,34 +1,18 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Networking;
 
-[NetworkSettings(channel = 0, sendInterval = 0.033f)]
-public class PlayerSyncTransform : NetworkBehaviour
+public class PlayerSyncTransform : Photon.MonoBehaviour
 {
-
-    [SyncVar]
     Vector3 syncPos;
-    [SyncVar]
-    float syncRot;
+    Quaternion syncRot;
     [SerializeField]
     float lerpRate = 15;
 
-    Vector3 lastPos;
-    float lastRot;
-    float posThreshold = 0.5f;
-    float rotThreshold = 5;
-
     #region Latency Variables
-    private NetworkClient nClient;
     private int latency;
     [SerializeField]
     Text latencyText;
     #endregion
-
-    void Start()
-    {
-        nClient = GameObject.Find("LobbyManager").GetComponent<NetworkManager>().client;
-    }
 
     void Update()
     {
@@ -36,18 +20,26 @@ public class PlayerSyncTransform : NetworkBehaviour
         ShowLatency();
     }
 
-    void FixedUpdate()
+    void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
-        TransmitPosToServer();
-        TransmitRotToServer();
+        if (stream.isWriting)
+        {
+            stream.SendNext(transform.position);
+            stream.SendNext(transform.rotation);
+        }
+        else
+        {
+            syncPos = (Vector3)stream.ReceiveNext();
+            syncRot = (Quaternion)stream.ReceiveNext();
+        }
     }
 
     void LerpPlayer()
     {
-        if (!isLocalPlayer)
+        if (!photonView.isMine)
         {
             transform.position = Vector3.Lerp(transform.position, syncPos, Time.deltaTime * lerpRate);
-            LerpPlayerRot(syncRot);
+            transform.rotation = Quaternion.Lerp(transform.rotation, syncRot, Time.deltaTime * lerpRate);
         }
     }
 
@@ -57,53 +49,12 @@ public class PlayerSyncTransform : NetworkBehaviour
         transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(newRot), Time.deltaTime * lerpRate);
     }
 
-    [Command]
-    void CmdSendPosition(Vector3 playerPos)
-    {
-        syncPos = playerPos;
-    }
-
-    [Command]
-    void CmdSendRotation(float playerRot)
-    {
-        syncRot = playerRot;
-    }
-
-    [ClientCallback]
-    void TransmitPosToServer()
-    {
-        if (isLocalPlayer && Vector3.Distance(transform.position, lastPos) > posThreshold)
-        {
-            CmdSendPosition(transform.position);
-            lastPos = transform.position;
-        }
-    }
-
-    [ClientCallback]
-    void TransmitRotToServer()
-    {
-        if (isLocalPlayer && CheckIfBeyondThreshold(transform.localEulerAngles.y, lastRot))
-        {
-            lastRot = transform.localEulerAngles.y;
-            CmdSendRotation(lastRot);
-        }
-    }
-
-    [ClientCallback]
     void ShowLatency()
     {
-        if (isLocalPlayer)
+        if (photonView.isMine)
         {
-            latency = nClient.GetRTT();
+            latency = PhotonNetwork.GetPing();
             latencyText.text = latency.ToString();
         }
-    }
-
-    bool CheckIfBeyondThreshold(float currentRot, float lastRot)
-    {
-        if (Mathf.Abs(currentRot - lastRot) > rotThreshold)
-            return true;
-        else
-            return false;
     }
 }

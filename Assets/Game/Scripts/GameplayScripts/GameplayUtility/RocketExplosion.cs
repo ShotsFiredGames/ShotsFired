@@ -1,15 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
 
-public class RocketExplosion : NetworkBehaviour
+public class RocketExplosion : MonoBehaviour
 {
     public byte damage;
     string playername;
     List<string> players = new List<string>();
 
-    [ServerCallback]
     void OnTriggerEnter(Collider other)
     {
         if (gameObject.activeInHierarchy && other.transform.root.name != playername)
@@ -30,7 +27,8 @@ public class RocketExplosion : NetworkBehaviour
         players.Clear();
     }
 
-    public void SetVariables(string _playername)
+    [PunRPC]
+    public void RPC_SetExplosionVariables(string _playername)
     {
         playername = _playername;
     }

@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class MimicAppears : AddOn
 {
@@ -9,6 +7,6 @@ public class MimicAppears : AddOn
     public override void StartAddOn()
     {
         PickUpLoacation validLocation = validLocations[Random.Range(0, validLocations.Length)];
-        validLocation.CmdActivateMimic();
+        validLocation.photonView.RPC("RPC_ActivateMimic", PhotonTargets.All);
     }
 }

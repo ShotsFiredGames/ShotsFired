@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
-using UnityEngine.Networking;
 
-public class PickUpManager : NetworkBehaviour
+public class PickUpManager : Photon.MonoBehaviour
 {
     PlayerManager playerManager;
     public AudioSource pickupSource;
@@ -16,14 +15,14 @@ public class PickUpManager : NetworkBehaviour
         playerManager = GetComponent<PlayerManager>();
     }
 
-    [ClientRpc]
-    public void RpcApplyPickUp(string pickUpType, string pickUp)
+    [PunRPC]
+    public void RPC_ApplyPickUp(string pickUpType, string pickUp)
     {
         switch (pickUpType)
         {
             case "Gun":
                 pickupSource.PlayOneShot(gunPickUpSound);
-                playerManager.CmdWeaponPickedUp(pickUp);
+                playerManager.PhotonView.RPC("RPC_WeaponPickedUp", PhotonTargets.All, pickUp);
                 break;
             case "Ability":
                 switch (pickUp)
@@ -38,12 +37,11 @@ public class PickUpManager : NetworkBehaviour
                         pickupSource.PlayOneShot(juggernautSound);
                         break;
                 }
-                playerManager.CmdAbilityPickedUp(pickUp);
+                playerManager.PhotonView.RPC("RPC_AbilityPickedUp", PhotonTargets.All, pickUp);
                 break;
         }
     }
 
-    [ServerCallback]
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag.Equals("PickUp"))
@@ -63,16 +61,16 @@ public class PickUpManager : NetworkBehaviour
                     break;
             }
 
-            NetworkServer.UnSpawn(other.gameObject);
-            Destroy(other.gameObject);
+            if (PhotonNetwork.isMasterClient)
+                PhotonNetwork.Destroy(other.GetComponent<PhotonView>());
         }
 
         if (other.tag.Equals("Mimic"))
         {
-            ExplosionManager.instance.RpcActivateExplosion(other.gameObject.transform.position);
-            NetworkServer.UnSpawn(other.gameObject);
-            Destroy(other.gameObject);
-            GetComponent<PlayerHealth>().CmdInstantDeath("Mimic", CollisionDetection.CollisionFlag.Front);
+            photonView.RPC("RpcActivateExplosion", PhotonTargets.All, other.gameObject.transform.position);
+            if (PhotonNetwork.isMasterClient)
+                PhotonNetwork.Destroy(other.GetComponent<PhotonView>());
+            photonView.RPC("RPC_InstantDeath", PhotonTargets.All, "Mimic", CollisionDetection.CollisionFlag.Front);
         }
 
         if (other.tag.Equals("SpeedBoost"))
@@ -96,13 +94,13 @@ public class PickUpManager : NetworkBehaviour
             case PickUp.GunType.None:
                 break;
             case PickUp.GunType.MachineGun:
-                RpcApplyPickUp("Gun", "MachineGun");
+                playerManager.PhotonView.RPC("RPC_ApplyPickUp", PhotonTargets.All, "Gun", "MachineGun");
                 break;
             case PickUp.GunType.RocketLauncher:
-                RpcApplyPickUp("Gun", "RocketLauncher");
+                playerManager.PhotonView.RPC("RPC_ApplyPickUp", PhotonTargets.All, "Gun", "RocketLauncher");
                 break;
             case PickUp.GunType.ShotGun:
-                RpcApplyPickUp("Gun", "ShotGun");
+                playerManager.PhotonView.RPC("RPC_ApplyPickUp", PhotonTargets.All, "Gun", "ShotGun");
                 break;
         }
     }
@@ -114,10 +112,10 @@ public class PickUpManager : NetworkBehaviour
             case PickUp.AbilityType.None:
                 break;
             case PickUp.AbilityType.Juggernaut:
-                RpcApplyPickUp("Ability", "Juggernaut");
+                playerManager.PhotonView.RPC("RPC_ApplyPickUp", PhotonTargets.All, "Ability", "Juggernaut");
                 break;
             case PickUp.AbilityType.Overcharged:
-                RpcApplyPickUp("Ability", "Overcharged");
+                playerManager.PhotonView.RPC("RPC_ApplyPickUp", PhotonTargets.All, "Ability", "Overcharged");
                 break;
         }
     }

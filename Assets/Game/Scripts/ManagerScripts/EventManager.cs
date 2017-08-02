@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Networking;
 
-public class EventManager : NetworkBehaviour
+public class EventManager : Photon.MonoBehaviour
 {
     public GameEvent[] allEvents;
     public static GameEvent currentEvent;
@@ -47,18 +46,18 @@ public class EventManager : NetworkBehaviour
             }
         }
 
-        InvokeRepeating("ActivateNextEvent", GameCustomization.eventOccurenceRate / 2, GameCustomization.eventOccurenceRate);
+        if(PhotonNetwork.isMasterClient)
+            InvokeRepeating("ActivateNextEvent", GameCustomization.eventOccurenceRate / 2, GameCustomization.eventOccurenceRate);
     }
 
-    [ServerCallback]
     void ActivateNextEvent()
     {
         byte newEvent = (byte)Random.Range(0, gameEvents.Count);
-        RpcActivateNextEvent(newEvent);
+        photonView.RPC("RPC_ActivateNextEvent", PhotonTargets.All, newEvent);
     }
 
-    [ClientRpc]
-    void RpcActivateNextEvent(byte _newEvent)
+    [PunRPC]
+    void RPC_ActivateNextEvent(byte _newEvent)
     {
         nextEvent = gameEvents[_newEvent];
 
@@ -70,7 +69,8 @@ public class EventManager : NetworkBehaviour
             currentEvent.StartEvent();
         }
 
-        StartCoroutine(NextAddons((byte)currentEvent.duration));
+        if (PhotonNetwork.isMasterClient)
+            StartCoroutine(NextAddons((byte)currentEvent.duration));
     }
 
     IEnumerator NextAddons(byte eventLength)
@@ -81,15 +81,14 @@ public class EventManager : NetworkBehaviour
         ActivateNextAddon();
     }
 
-    [ServerCallback]
     void ActivateNextAddon()
     {
         byte newAddOn = (byte)Random.Range(0, addOns.Count);
-        RpcActiveNextAddon(newAddOn);
+        photonView.RPC("RPC_ActivateNextAddOn", PhotonTargets.All, newAddOn);
     }
 
-    [ClientRpc]
-    void RpcActiveNextAddon(byte _newAddOn)
+    [PunRPC]
+    void RPC_ActivateNextAddOn(byte _newAddOn)
     {
         currentAddOn = addOns[_newAddOn];
         currentAddOn.StartAddOn();
