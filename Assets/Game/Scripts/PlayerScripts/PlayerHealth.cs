@@ -77,12 +77,14 @@ public class PlayerHealth : NetworkBehaviour
     {
         if (isDead) return;
         Hit(collisionLocation);
+
         if (!source.isPlaying)
         {
             source.clip = hitEffects[Random.Range(0, hitEffects.Length)];
             source.Play();
         }
 
+        playerManager.ShakeCam(.15f, .04f);
         currentHealth -= damage;
 
         if (currentHealth > (short)(maxHealth * 0.75f))

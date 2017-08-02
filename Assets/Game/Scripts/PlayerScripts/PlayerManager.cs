@@ -28,6 +28,7 @@ public class PlayerManager : NetworkBehaviour
     bool isFiring;
     public Gun[] guns;
     public LayerMask layermask;
+    public CameraShake camShake;
 
     float yRotationValue;
     GameObject myCamera;
@@ -40,6 +41,8 @@ public class PlayerManager : NetworkBehaviour
     public bool hasFlag;
     public Image haveFlag;
     public AudioMixer gameMixer;
+
+    bool jumped;
 
     void Awake()
     {
@@ -129,15 +132,16 @@ public class PlayerManager : NetworkBehaviour
 
         ApplyMovementInput();
 
-        if (controls.Move.Value.Equals(Vector2.zero))
+        if (!controls.Move && !controls.Sprint)
             Idling();
-        else
+        else if (controls.Move && !controls.Sprint)
             Moving();
-
-        if (controls.Sprint && !isAiming)
+        else if (controls.Move && controls.Sprint && !controls.Aim)
             Sprinting();
+        else if (controls.Move && controls.Sprint && controls.Aim)
+            Moving();
         else
-            StoppedSprinting();
+            Idling();
 
         if (controls.Jump.WasPressed)
             Jumping();
@@ -159,6 +163,11 @@ public class PlayerManager : NetworkBehaviour
     {
         if (isDead) return;
         playerCamera.Look(controls.Look.Y);
+    }
+
+    public void ShakeCam(float shakeIntensity, float shakeDecay)
+    {
+        camShake.DoShake(shakeIntensity, shakeDecay);
     }
 
     public void SetRotationValue(float value)
@@ -198,6 +207,8 @@ public class PlayerManager : NetworkBehaviour
 
     void Sprinting()
     {
+        playerMovement.Move(controls.Move.X, controls.Move.Y);
+        playerMovement.Turn(controls.Look.X);
         playerMovement.Sprint();
         animationManager.IsSprinting();
     }
@@ -210,18 +221,24 @@ public class PlayerManager : NetworkBehaviour
 
     void Jumping()
     {
+        jumped = true;
         playerMovement.Jump();
         animationManager.IsJumping();
     }
 
     public void Landed()
     {
+        if(!jumped)
+        ShakeCam(.075f, .06f);
+
+        jumped = false;
         animationManager.IsLanding();
     }
 
     public void Falling()
     {
         animationManager.IsFalling();
+        jumped = false;
     }
 
     void Aim()
