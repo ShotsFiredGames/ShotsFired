@@ -256,9 +256,10 @@ public class PlayerManager : NetworkBehaviour
             gunBob.Aiming(true);
             headBob.Aiming(true);
             shooting.Aiming();
-            playerCamera.Aim();
             animationManager.IsAiming();
         }
+
+        playerCamera.Aim();
     }
 
     void StopAiming()
@@ -268,10 +269,11 @@ public class PlayerManager : NetworkBehaviour
             gunBob.Aiming(false);
             headBob.Aiming(false);
             shooting.NotAiming();
-            playerCamera.StopAim();
             animationManager.StoppedAiming();
             isAiming = false;
         }
+
+        playerCamera.StopAim();
     }
 
     void Firing()

@@ -23,6 +23,7 @@ public class GunBob : MonoBehaviour
     {
         headbob = transform.parent.GetComponent<HeadBob>();
         shooting = transform.root.GetComponent<Shooting>();
+        aiming = 1;
 	}
 	
 	void Update ()
