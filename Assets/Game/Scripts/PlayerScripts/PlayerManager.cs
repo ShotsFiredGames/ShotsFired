@@ -238,8 +238,8 @@ public class PlayerManager : NetworkBehaviour
 
     public void Landed()
     {
-        if(!jumped)
-        ShakeCam(.075f, .06f);
+        if (playerMovement.canShake)
+            ShakeCam(.225f, .12f);
 
         jumped = false;
         animationManager.IsLanding();

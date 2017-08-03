@@ -55,16 +55,19 @@ public class PlayerMovement : NetworkBehaviour
 
     Coroutine sprinting;
     Coroutine stopSprinting;
+    Coroutine checkFall;
     bool isDraining;
     bool isGaining;
     bool canSprint;
+    [HideInInspector]
+    public bool canShake;
+    bool checkingFall;
 
     void Start ()
     {
         speed = GameCustomization.playerSpeed;
         sprintSpeed = (speed + (speed * .5f));
         aimSpeed = (speed - (speed * .5f));
-
 
         rb = GetComponent<Rigidbody>();
         playerManager = GetComponent<PlayerManager>();
@@ -101,6 +104,13 @@ public class PlayerMovement : NetworkBehaviour
                 jumping = false;
                // lockMovement = false;
                 playerManager.Landed();
+
+                if (checkFall != null)
+                {
+                    StopCoroutine(checkFall);
+                    canShake = false;
+                    checkingFall = false;
+                }
             }
 
             if (speed != GameCustomization.playerSpeed && !isUsingBoots)
@@ -116,8 +126,13 @@ public class PlayerMovement : NetworkBehaviour
             if (isGrounded != false)
                 isGrounded = false;
 
-            if (!jumping)
-                playerManager.Falling();
+            if(!checkingFall)
+            {
+                checkingFall = true;
+                checkFall = StartCoroutine(CheckFall());
+            }
+
+            playerManager.Falling();
          
             landed = false;
             if (speed != airSpeed && !isUsingBoots)
@@ -125,6 +140,13 @@ public class PlayerMovement : NetworkBehaviour
 
             rb.velocity += Physics.gravity * gravity * Time.fixedDeltaTime;
         }
+    }
+
+    IEnumerator CheckFall()
+    {
+        yield return new WaitForSeconds(1f);
+        checkingFall = false;
+        canShake = true;
     }
 
     public void Move(float horizontal, float vertical)

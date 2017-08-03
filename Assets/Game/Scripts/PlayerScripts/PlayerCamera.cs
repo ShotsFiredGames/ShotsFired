@@ -77,7 +77,6 @@ public class PlayerCamera : MonoBehaviour
 
     public void StopAim()
     {
-        print("Stop Aim");
         if (isAiming)
             isAiming = false;
 
