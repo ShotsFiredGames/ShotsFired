@@ -49,10 +49,10 @@ public class FlagManager : Photon.MonoBehaviour
         if (flag.resetTimer != null)
             StopCoroutine(flag.resetTimer);
 
-        Debug.LogError("The name of the new holder is: " + carrierName);
+        //Debug.LogError("The name of the new holder is: " + carrierName);
         flag.carrier = PlayerWrangler.GetPlayer(carrierName);
-        Debug.LogError("Flag is: " + flag.name);
-        Debug.LogError("Carrier is: " + flag.carrier.name);
+        //Debug.LogError("Flag is: " + flag.name);
+        //Debug.LogError("Carrier is: " + flag.carrier.name);
         flag.carrier.hasFlag = true;
         flag.flagBase.hasFlag = false;
         flag.transform.SetParent(flag.carrier.transform);
@@ -69,7 +69,8 @@ public class FlagManager : Photon.MonoBehaviour
         //if (flagSource != null)
         //flagSource.PlayOneShot(returnedClip);
 
-        FlagReturned(flag.GetStringOfCarrier());
+		if(PhotonNetwork.isMasterClient)
+        	FlagReturned(flag.GetStringOfCarrier());
         StartCoroutine(flag.CanBePickedUp());
         flag.ResetFlagPosition();
 

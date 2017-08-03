@@ -8,7 +8,6 @@ public class DestroyObject : Photon.MonoBehaviour
     IEnumerator Start()
     {
         yield return new WaitForSeconds(destroyAfter);
-        Debug.LogError(photonView.owner);
         if (photonView.isMine)
             PhotonNetwork.Destroy(photonView);
     }

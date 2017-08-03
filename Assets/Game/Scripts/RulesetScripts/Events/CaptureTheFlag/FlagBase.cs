@@ -17,20 +17,18 @@ public class FlagBase : MonoBehaviour
         if (other.tag.Equals("Flag")) // if a flag enters the base
         {
             Flag capturedFlag = other.GetComponent<Flag>();
-            Debug.LogError("Flag returned: " + hasFlag);
+            //Debug.Log("Flag returned: " + hasFlag);
             if (hasFlag) //if the base has its flag
             {
-                Debug.LogError("Base has a flag that belongs to: " + owner.name);
-                Debug.LogError("Flag being captured is: " + capturedFlag.name);
+                //Debug.LogError("Base has a flag that belongs to: " + owner.name);
+                //Debug.Log("Flag being captured is: " + capturedFlag.name);
                 if (!capturedFlag.index.Equals(flag.index)) //if the flag isn't the flag the base owns
                 {
-                    Debug.LogError("Flag reset");
+                    //Debug.Log("Flag reset");
                     FlagManager.instance.photonView.RPC("RPC_ReturnFlag", PhotonTargets.All, other.GetComponent<Flag>().index);
                     hasFlag = false;
                 }
             }
         }
     }
-
-
 }

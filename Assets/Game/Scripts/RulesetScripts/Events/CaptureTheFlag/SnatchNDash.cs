@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -12,33 +13,44 @@ public class SnatchNDash : GameEvent
 
     List<Flag> snashFlags = new List<Flag>();
     Coroutine captureTheFlag;
+	List<PlayerManager> players = new List<PlayerManager>();
 
     bool spawnedFlags;
 
+	void Awake()
+	{
+		PhotonView = GetComponent<PhotonView>();
+	}
+
     private void InitFlags()
-    {
-        PlayerManager[] players = PlayerWrangler.GetAllPlayers();
-
-        for (byte i = 0; i < players.Length; i++)
+	{
+		players = PlayerWrangler.GetAllPlayers().ToList();
+		for (int i = 0; i < players.Count; i++)
         {
-            if (PhotonNetwork.isMasterClient)
-            {
-                Flag newFlag = PhotonNetwork.Instantiate(flag.name, Vector3.zero, Quaternion.identity, 0).GetComponent<Flag>();
-                newFlag.flagBase = bases[i];
-                FlagManager.instance.flags.Add(newFlag);
-                snashFlags.Add(newFlag);
-
-                newFlag.index = FlagManager.instance.GetFlagNumber();
-                newFlag.spawnPosition = bases[i].gameObject.transform;
-                newFlag.flagResetTime = flagResetTime;
-                bases[i].flag = newFlag;
-                bases[i].owner = players[i];
-                newFlag.gameObject.SetActive(true);
-            }
+			int viewID = PhotonNetwork.AllocateViewID ();
+			PhotonView.RPC ("RPC_SpawnFlags", PhotonTargets.All, viewID, i, players[i].name);
         }
 
         spawnedFlags = true;
     }
+
+	[PunRPC]
+	void RPC_SpawnFlags(int _viewID, int index, string _ownerID)
+	{
+		Flag newFlag = Instantiate(flag).GetComponent<Flag>();
+		newFlag.GetComponent<PhotonView> ().viewID = _viewID;
+		newFlag.flagBase = bases[index];
+		FlagManager.instance.flags.Add(newFlag);
+		snashFlags.Add(newFlag);
+
+		newFlag.index = FlagManager.instance.GetFlagNumber();
+		newFlag.spawnPosition = bases[index].gameObject.transform;
+		newFlag.flagResetTime = flagResetTime;
+		bases[index].flag = newFlag;
+		PlayerManager _owner = PlayerWrangler.GetPlayer (_ownerID);
+		bases[index].owner = _owner;
+		newFlag.gameObject.SetActive(true);
+	}
 
     public override void StartEvent()
     {
@@ -48,7 +60,7 @@ public class SnatchNDash : GameEvent
         foreach (FlagBase fb in bases)
             fb.gameObject.SetActive(true);
 
-        if (!spawnedFlags)
+		if (PhotonNetwork.isMasterClient && !spawnedFlags)
             InitFlags();
 
         ActivateFlags(true);

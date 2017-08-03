@@ -1,23 +1,15 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 
-public class PlayerSyncTransform : Photon.MonoBehaviour
+public class SyncTransform : Photon.MonoBehaviour
 {
     Vector3 syncPos;
     Quaternion syncRot;
     [SerializeField]
     float lerpRate = 15;
 
-    #region Latency Variables
-    private int latency;
-    [SerializeField]
-    Text latencyText;
-    #endregion
-
     void Update()
     {
-        LerpPlayer();
-        ShowLatency();
+        LerpPlayer();        
     }
 
     void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
@@ -47,14 +39,5 @@ public class PlayerSyncTransform : Photon.MonoBehaviour
     {
         Vector3 newRot = new Vector3(0, newAngle, 0);
         transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(newRot), Time.deltaTime * lerpRate);
-    }
-
-    void ShowLatency()
-    {
-        if (photonView.isMine)
-        {
-            latency = PhotonNetwork.GetPing();
-            latencyText.text = latency.ToString();
-        }
-    }
+    }    
 }

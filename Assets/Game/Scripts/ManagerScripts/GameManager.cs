@@ -222,7 +222,7 @@ public class GameManager : Photon.PunBehaviour
     }
 
     //==========Event Methods==========
-    public void FlagCaptured(string player, byte score)
+	public void FlagCaptured(string player, short score)
     {
         photonView.RPC("RPC_AddScore", PhotonTargets.All, player, score);
     }

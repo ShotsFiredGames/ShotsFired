@@ -32,5 +32,4 @@ public abstract class GameEvent : MonoBehaviour {
         yield return new WaitForSeconds(duration);
         EndEvent();
     }
-
 }

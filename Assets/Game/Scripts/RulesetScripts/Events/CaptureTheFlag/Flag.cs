@@ -28,31 +28,25 @@ public class Flag : Photon.MonoBehaviour
     {
         if (other.tag.Equals("Player"))
         {
-            if (!isPickedUp)
-            {
-                if (!other.GetComponent<PlayerManager>().hasFlag)
-                {
-                    if (!flagBase.owner.Equals(other.GetComponent<PlayerManager>()))
-                    {
-                        isPickedUp = true;
-                        photonView.RPC("RPC_FlagPickedUp", PhotonTargets.All, index, other.transform.root.name);
-                    }
-                    else
-                    {
-                        if (!flagBase.hasFlag)
-                        {
-                            ResetFlagPosition();
-                            Debug.LogError("returned your flag");
-                        }
-                        else
-                            Debug.LogError("This is your flag at base");
-                    }
-                }
-                else
-                    Debug.LogError("They already have a flag");
-            }
-            else
-                print("someone already has it");
+			if (!isPickedUp) {
+				if (!other.GetComponent<PlayerManager> ().hasFlag) {
+					if (!flagBase.owner.Equals (other.GetComponent<PlayerManager> ())) {
+						isPickedUp = true;
+						FlagManager.instance.photonView.RPC ("RPC_FlagPickedUp", PhotonTargets.All, index, other.transform.root.name);
+					} else {
+						if (!flagBase.hasFlag) {
+							ResetFlagPosition ();
+							//Debug.LogError("returned your flag");
+						} else {
+							//Debug.LogError ("This is your flag at base");
+						}
+					}
+				} else {
+					//Debug.Log ("They already have a flag");
+				}
+			} else {
+				//print ("someone already has it");
+			}
         }
     }
 
@@ -60,7 +54,7 @@ public class Flag : Photon.MonoBehaviour
     {
         ResetCarrier();
         yield return new WaitForSeconds(flagResetTime);
-        photonView.RPC("RPC_ReturnFlag", PhotonTargets.All, index);
+		FlagManager.instance.photonView.RPC("RPC_ReturnFlag", PhotonTargets.All, index);
     }
 
     public IEnumerator CanBePickedUp()
