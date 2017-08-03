@@ -25,12 +25,15 @@ public class PlayerCamera : MonoBehaviour
     [HideInInspector]
     public bool isAiming;
     Coroutine currentAimCo;
+    Shooting shooting;
     GunBob gunBob;
 
     void Awake()
     {
         playerManager = GetComponent<PlayerManager>();
+        shooting = GetComponent<Shooting>();
         gunBob = GetComponentInChildren<GunBob>();
+        gunHolder = shooting.gunHolder;
     }
 
     public void Look(float rightStickY)
@@ -74,13 +77,18 @@ public class PlayerCamera : MonoBehaviour
 
     public void StopAim()
     {
+        print("Stop Aim");
         if (isAiming)
             isAiming = false;
 
         GetGun();
         if (currentAimCo != null)
             StopMyCoroutine(currentAimCo);
-        SetView(basePosition, baseRotation, baseFieldOfView);
+
+        if (shooting.currentGun != null)
+            SetView(basePosition, baseRotation, baseFieldOfView);
+        else
+            SetView(Vector3.zero, Vector3.zero, 60);
     }
 
     public void SetFieldOfView(int view)
@@ -92,16 +100,15 @@ public class PlayerCamera : MonoBehaviour
 
     void GetGun()
     {
-        if (currentGun != GetComponent<Shooting>().currentGun)
+        if (currentGun != shooting.currentGun)
         {
-            gunHolder = GetComponent<Shooting>().gunHolder;
-            currentGun = GetComponent<Shooting>().currentGun.gameObject;
+            currentGun = shooting.currentGun.gameObject;
             if (currentGun == null) return;
 
-            basePosition = currentGun.GetComponent<Gun>().basePosition;
-			baseRotation = currentGun.GetComponent<Gun> ().baseRotation;
-            aimPosition = currentGun.GetComponent<Gun>().aimPosition;
-			aimRotation = currentGun.GetComponent<Gun> ().aimRotation;
+            basePosition = shooting.currentGun.basePosition;
+			baseRotation = shooting.currentGun.baseRotation;
+            aimPosition = shooting.currentGun.aimPosition;
+			aimRotation = shooting.currentGun.aimRotation;
         }
     }
 
@@ -163,11 +170,11 @@ public class PlayerCamera : MonoBehaviour
                 atRot = true;
             }
 
-            if (myCamera.fieldOfView != newFOV)
-                myCamera.fieldOfView = Mathf.Lerp(myCamera.fieldOfView, newFOV, moveSpeed);
+            if (myCamera.fieldOfView != newFOV + playerManager.sprintFoV)
+                myCamera.fieldOfView = Mathf.Lerp(myCamera.fieldOfView, newFOV + playerManager.sprintFoV, moveSpeed);
             else
             {
-                myCamera.fieldOfView = newFOV;
+                myCamera.fieldOfView = newFOV + playerManager.sprintFoV;
                 atFOV = true;
             }
 

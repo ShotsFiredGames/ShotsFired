@@ -41,6 +41,8 @@ public class PlayerManager : NetworkBehaviour
     public bool hasFlag;
     public Image haveFlag;
     public AudioMixer gameMixer;
+    [HideInInspector]
+    public int sprintFoV;
 
     GunBob gunBob;
     HeadBob headBob;
@@ -217,12 +219,14 @@ public class PlayerManager : NetworkBehaviour
         playerMovement.Turn(controls.Look.X);
         playerMovement.Sprint();
         animationManager.IsSprinting();
+        sprintFoV = 10;
     }
 
     void StoppedSprinting()
     {
         playerMovement.StopSprint();
         animationManager.StoppedSprinting();
+        sprintFoV = 0;
     }
 
     void Jumping()
@@ -373,7 +377,6 @@ public class PlayerManager : NetworkBehaviour
 
         newGun.SetActiveGun(true);
         isAiming = false;
-        playerCamera.StopAim();
         animationManager.StoppedAiming();
     }
 
