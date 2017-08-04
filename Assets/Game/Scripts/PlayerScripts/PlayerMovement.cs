@@ -144,7 +144,7 @@ public class PlayerMovement : NetworkBehaviour
 
     IEnumerator CheckFall()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(1.5f);
         checkingFall = false;
         canShake = true;
     }
