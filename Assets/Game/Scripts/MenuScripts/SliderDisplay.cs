@@ -13,11 +13,13 @@ public class SliderDisplay : MonoBehaviour
     {
         text = GetComponent<Text>();
         display = transform.GetComponentInParent<Slider>();
+        display.onValueChanged.AddListener(delegate { ValueChangeCheck(); });
         message = text.text;
+        text.text = message + display.value.ToString("F2");
     }
 
-    void Update()
+    void ValueChangeCheck()
     {
-        text.text = message + display.value;
+        text.text = message + display.value.ToString("F2");
     }
 }
