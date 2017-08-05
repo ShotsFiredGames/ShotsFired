@@ -31,6 +31,7 @@ public class FlagManager : NetworkBehaviour
     }
 
     public byte pointsForCapture { get; set; }
+    public byte pointsForHolding { private get; set; }
     [SyncVar]
     public byte flagNumber = 0;
     public List<Flag> flags = new List<Flag>();
@@ -38,6 +39,11 @@ public class FlagManager : NetworkBehaviour
     public void FlagReturned(string player)
     {
         GameManager.instance.FlagCaptured(player, pointsForCapture);
+    }
+
+    public void FlagHeld(string player)
+    {
+        GameManager.instance.FlagCaptured(player, pointsForHolding);
     }
 
     public byte GetFlagNumber()
@@ -66,9 +72,6 @@ public class FlagManager : NetworkBehaviour
         flag.flagBase.hasFlag = false;
         flag.transform.SetParent(flag.carrier.transform);
         flag.transform.position = flag.carrier.transform.position + new Vector3(0, flag.carrier.transform.localScale.y, 0);
-
-        // if (flagSource != null)
-        //   flagSource.PlayOneShot(pickupClip);
     }
 
     [Command]
@@ -81,8 +84,6 @@ public class FlagManager : NetworkBehaviour
     void RpcReturnFlag(byte flagNum)
     {
         Flag flag = ConvertFlagFromIndex(flagNum);
-        //if (flagSource != null)
-        //flagSource.PlayOneShot(returnedClip);
 
         FlagReturned(flag.GetStringOfCarrier());
         StartCoroutine(flag.CanBePickedUp());
@@ -109,8 +110,6 @@ public class FlagManager : NetworkBehaviour
         flag.transform.parent = null;
         StartCoroutine(flag.CanBePickedUp());
         flag.resetTimer = StartCoroutine(flag.ResetTimer());
-        //if (flagSource != null)
-        //flagSource.PlayOneShot(dropClip);
     }
 
     Flag ConvertFlagFromIndex(byte index)

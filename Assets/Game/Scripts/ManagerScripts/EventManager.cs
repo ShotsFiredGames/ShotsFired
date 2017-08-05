@@ -11,7 +11,8 @@ public class EventManager : NetworkBehaviour
 
     public AddOn[] allAddOns;
     public static AddOn currentAddOn;
-    //AddOn nextAddOn;
+
+    public bool isTesting;
 
     List<GameEvent> gameEvents = new List<GameEvent>();
     List<AddOn> addOns = new List<AddOn>();
@@ -53,7 +54,7 @@ public class EventManager : NetworkBehaviour
     [ServerCallback]
     void ActivateNextEvent()
     {
-        byte newEvent = (byte)Random.Range(0, gameEvents.Count);
+        byte newEvent = (byte)GetRandomNumber(gameEvents.Count);
         RpcActivateNextEvent(newEvent);
     }
 
@@ -84,7 +85,7 @@ public class EventManager : NetworkBehaviour
     [ServerCallback]
     void ActivateNextAddon()
     {
-        byte newAddOn = (byte)Random.Range(0, addOns.Count);
+        byte newAddOn = (byte)GetRandomNumber(addOns.Count);
         RpcActiveNextAddon(newAddOn);
     }
 
@@ -93,5 +94,13 @@ public class EventManager : NetworkBehaviour
     {
         currentAddOn = addOns[_newAddOn];
         currentAddOn.StartAddOn();
+    }
+
+    int GetRandomNumber(int max)
+    {
+        if (isTesting)
+            return 0;
+        else
+            return Random.Range(0, max);
     }
 }
