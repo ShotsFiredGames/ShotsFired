@@ -17,36 +17,46 @@ public class TheReaperComes : GameEvent
 
     private void InitReapers()
     {
-        byte num = PlayerWrangler.GetNumOfPlayers();
+		PlayerManager[] players = PlayerWrangler.GetAllPlayers();
 
-        for (byte i = 0; i < num; i++)
+		for (byte i = 0; i < players.Length; i++)
         {
-            if (PhotonNetwork.isMasterClient)
-            {
-                GameObject newReaper = PhotonNetwork.Instantiate(reaper.name, Vector3.zero, Quaternion.identity, 0);
-                reapers.Add(newReaper.GetComponent<Reaper>());
-            }           
+			int viewID = PhotonNetwork.AllocateViewID ();
+			PhotonView.RPC ("RPC_SpawnReapers", PhotonTargets.All, viewID, (byte) i, players[i].name);
         }
     }
+
+	[PunRPC]
+	void RPC_SpawnReapers(int _viewID, byte index, string targetID)
+	{
+		GameObject newReaper = Instantiate (reaper);
+		Reaper _reaper = newReaper.GetComponent<Reaper> ();
+		newReaper.GetComponent<PhotonView> ().viewID = _viewID;
+		reapers.Add(_reaper);
+		_reaper.enabled = true;
+		_reaper.SetTargetPlayer (PlayerWrangler.GetPlayer (targetID));
+		_reaper.SetSpawnPoint (reaperSpawns [index]);
+		_reaper.SetPoints (pointsPlayerLosesOnDeath);
+		_reaper.Setup ();
+
+	}
 
     public override void StartEvent()
     {
         foreach (GameObject go in objectsToSetActive)
             go.SetActive(false);
 
-        if (reapers.Count < 1)
+		if (PhotonNetwork.isMasterClient && reapers.Count < 1)
             InitReapers();
 
-        PlayerManager[] players = PlayerWrangler.GetAllPlayers();
+		byte num = PlayerWrangler.GetNumOfPlayers();
 
-        for (byte index = 0; index < players.Length; index++)
-        {
-            reapers[index].enabled = true;
-            reapers[index].SetTargetPlayer(players[index]);
-            reapers[index].SetSpawnPoint(reaperSpawns[index]);
-            reapers[index].SetPoints(pointsPlayerLosesOnDeath);
-            reapers[index].Setup();
-        }
+		if (reapers.Count > 0) {
+			for (byte index = 0; index < num; index++) {
+				reapers [index].enabled = true;
+				reapers [index].Setup ();
+			}
+		}
 
         gameEventDur = StartCoroutine(EventDuration());
     }
