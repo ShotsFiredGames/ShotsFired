@@ -11,7 +11,7 @@ public class Flag : MonoBehaviour
 
     [HideInInspector]
     public bool isPickedUp;
-    public Transform spawnPosition { get; set; }
+    public GameObject spawnPosition { get; set; }
     public byte index { get; set; }
 
     void OnEnable()
@@ -86,9 +86,11 @@ public class Flag : MonoBehaviour
 
     public void ResetFlagPosition()
     {
-        transform.parent = flagBase.transform;
-        transform.position = flagBase.transform.position + new Vector3(0, 1, 0);
-        flagBase.hasFlag = true;
+        transform.parent = spawnPosition.transform;
+        transform.position = spawnPosition.transform.position + new Vector3(0, 1, 0);
+
+        if (flagBase != null)
+            flagBase.hasFlag = true;
 
         if (carrier != null)
             carrier.hasFlag = false;

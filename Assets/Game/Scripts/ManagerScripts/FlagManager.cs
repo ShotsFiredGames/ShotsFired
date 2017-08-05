@@ -69,9 +69,11 @@ public class FlagManager : NetworkBehaviour
         Debug.LogError("Flag is: " + flag.name);
         Debug.LogError("Carrier is: " + flag.carrier.name);
         flag.carrier.hasFlag = true;
-        flag.flagBase.hasFlag = false;
         flag.transform.SetParent(flag.carrier.transform);
         flag.transform.position = flag.carrier.transform.position + new Vector3(0, flag.carrier.transform.localScale.y, 0);
+
+        if (flag.flagBase != null)
+            flag.flagBase.hasFlag = false;
     }
 
     [Command]

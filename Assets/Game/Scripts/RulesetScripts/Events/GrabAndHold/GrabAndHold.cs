@@ -37,7 +37,7 @@ public class GrabAndHold : GameEvent {
         }
 
         newFlag.index = FlagManager.instance.GetFlagNumber();
-        newFlag.spawnPosition = spawn.transform;
+        newFlag.spawnPosition = spawn;
         newFlag.flagResetTime = flagResetTime;
         newFlag.timeIncrement = timeIncrement;
         newFlag.gameObject.SetActive(true);
