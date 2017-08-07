@@ -32,9 +32,6 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
     GameObject myCamera;
     Gun oldGun;
 
-    public bool lockCursor;
-    private bool m_cursorIsLocked = true;
-
     [HideInInspector]
     public bool hasFlag;
     public Image haveFlag;
@@ -111,7 +108,7 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
     private void Update()
     {
         if (!photonView.isMine) return;
-        UpdateCursorLock();
+        
         haveFlag.gameObject.SetActive(hasFlag);
 
         if (gameManager != null)
@@ -393,34 +390,7 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
             //turn off effects
         }
 
-    }
-
-    public void UpdateCursorLock()
-    {
-        //if the user set "lockCursor" we check & properly lock the cursos
-        if (lockCursor)
-            InternalLockUpdate();
-    }
-
-    private void InternalLockUpdate()
-    {
-        if (Input.GetKeyUp(KeyCode.Escape))
-            m_cursorIsLocked = false;
-        else if (Input.GetMouseButtonUp(0))
-            m_cursorIsLocked = true;
-
-        if (m_cursorIsLocked)
-        {
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
-        }
-        else if (!m_cursorIsLocked)
-        {
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-        }
-    }
-
+    }    
 
     void SaveBindings()
     {

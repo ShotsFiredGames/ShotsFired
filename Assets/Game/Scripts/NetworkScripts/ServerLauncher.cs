@@ -32,6 +32,10 @@ public class ServerLauncher : Photon.PunBehaviour {
     [SerializeField]
     GameObject currentRoomPanel;
     [SerializeField]
+    GameObject roomStateButton;
+    [SerializeField]
+    GameObject startMatchButton;
+    [SerializeField]
     GameObject _playerListingPrefab;
     [SerializeField]
     GameObject playerListingContent;
@@ -50,8 +54,7 @@ public class ServerLauncher : Photon.PunBehaviour {
     {
         progressLabel.SetActive(false);
         if(!PhotonNetwork.connected)
-            PhotonNetwork.ConnectUsingSettings(_gameVersion);
-        //mainMenuPanel.SetActive(true);
+            PhotonNetwork.ConnectUsingSettings(_gameVersion);        
     }
 
     #region OnClick Functions
@@ -165,6 +168,12 @@ public class ServerLauncher : Photon.PunBehaviour {
         if (photonPlayer == null) return;
 
         PlayerLeftRoom(photonPlayer);
+
+        if (!PhotonNetwork.isMasterClient)
+        {
+            roomStateButton.SetActive(false);
+            startMatchButton.SetActive(false);
+        }
         GameObject playerListingObj = Instantiate(_playerListingPrefab, playerListingContent.transform);
         PlayerListing pl = playerListingObj.GetComponent<PlayerListing>();
         pl.ApplyPhotonPlayer(photonPlayer);

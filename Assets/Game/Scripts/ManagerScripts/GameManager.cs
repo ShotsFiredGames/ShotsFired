@@ -67,7 +67,7 @@ public class GameManager : Photon.PunBehaviour
             Debug.Log("OnPhotonPlayerDisonnected isMasterClient " + PhotonNetwork.isMasterClient);
     }
 
-    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
         if (stream.isWriting)
         {
@@ -110,13 +110,8 @@ public class GameManager : Photon.PunBehaviour
     {
         minutes = GameCustomization.gameLength;
         seconds = 1;
-        StartCoroutine(Timer());
-    }
-
-    [PunRPC]
-    public void RPC_StartTimer()
-    {
-        StartCoroutine(Timer());
+        if(PhotonNetwork.isMasterClient)
+            StartCoroutine(Timer());
     }
 
     IEnumerator Timer()

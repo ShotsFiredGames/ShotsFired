@@ -3,7 +3,6 @@ using UnityEngine.SceneManagement;
 
 public class PlayerNetwork : MonoBehaviour
 {
-
     public static PlayerNetwork instance;
     public string PlayerName { get; private set; }
     PhotonView photonView;
@@ -14,8 +13,6 @@ public class PlayerNetwork : MonoBehaviour
         instance = this;
         PlayerName = PhotonNetwork.playerName;
         photonView = GetComponent<PhotonView>();
-
-        //photonView.viewID = Random.Range()
 
         PhotonNetwork.sendRate = 60;
         PhotonNetwork.sendRateOnSerialize = 30;
@@ -59,8 +56,6 @@ public class PlayerNetwork : MonoBehaviour
         {
             Debug.Log("All players are in the game scene.");
             photonView.RPC("RPC_CreatePlayer", PhotonTargets.All);
-            if (PhotonNetwork.isMasterClient)
-                GameManager.instance.GetComponent<PhotonView>().RPC("RPC_StartTimer", PhotonTargets.All);
         }
     }
 
