@@ -8,10 +8,14 @@ public class BombsAway : AddOn
     List<GameObject> availibleBombs;
     int halfOfBombs;
 
+    void Awake()
+    {
+        PhotonView = GetComponent<PhotonView>();
+    }
+
     private void Start()
     {
         availibleBombs = new List<GameObject>();
-
         PopulateList();
     }
 
@@ -23,12 +27,14 @@ public class BombsAway : AddOn
 
     IEnumerator SpawnBombs()
     {
-        for(int i = 0; i < bombs.Count; i++)
+        for (int i = 0; i < bombs.Count; i++)
         {
             yield return new WaitForSeconds(.33f);
-            GameObject bombToActivate = NextBomb();
-            bombToActivate.SetActive(true);
-            availibleBombs.Remove(bombToActivate);
+            if (PhotonNetwork.isMasterClient)
+            {
+                byte bombIndex = (byte)Random.Range(0, availibleBombs.Count);
+                PhotonView.RPC("RPC_ActivateBomb", PhotonTargets.All, bombIndex);
+            }
         }
     }
 
@@ -37,11 +43,19 @@ public class BombsAway : AddOn
         return bombs[Random.Range(0, availibleBombs.Count)];
     }
 
+    [PunRPC]
+    void RPC_ActivateBomb(byte index)
+    {
+        GameObject bombToActivate = bombs[index];
+        bombToActivate.SetActive(true);
+        availibleBombs.Remove(bombToActivate);
+    }
+
     void PopulateList()
     {
-        for(int i = 0; i < bombs.Count; i++)
+        for (int i = 0; i < bombs.Count; i++)
         {
-            if(!availibleBombs.Contains(bombs[i]))
+            if (!availibleBombs.Contains(bombs[i]))
             {
                 availibleBombs.Add(bombs[i]);
             }

@@ -33,7 +33,7 @@ public class PlayerSetup : Photon.MonoBehaviour
             foreach (Transform go in collisionDetection.GetComponentsInChildren<Transform>())
             {
                 go.gameObject.layer = LayerMask.NameToLayer("Default");
-                go.tag = "Untagged";
+                //go.tag = "Untagged";
             }
         }
         else

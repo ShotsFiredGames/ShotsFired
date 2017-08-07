@@ -160,6 +160,7 @@ public class GameManager : Photon.PunBehaviour
     [PunRPC]
     public void RPC_AddScore(string player, short amount)
     {
+        if (player == null) return;
         if (!playerScores.ContainsKey(player)) return;
         playerScores[player] += amount;
 

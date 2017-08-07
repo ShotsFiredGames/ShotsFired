@@ -27,10 +27,10 @@ public class Reaper : MonoBehaviour
     GameManager gameManager;
     Coroutine respawn;
 
-	void Awake()
-	{
-		PhotonView = GetComponent<PhotonView>();
-	}
+    void Awake()
+    {
+        PhotonView = GetComponent<PhotonView>();
+    }
 
     public void Setup()
     {
@@ -115,10 +115,10 @@ public class Reaper : MonoBehaviour
 
     IEnumerator Respawn()
     {
-		PhotonView.RPC("RPC_SetReaperPosition", PhotonTargets.All, new Vector3(-1000, -1000, -1000), GetTargetPlayer());
+        PhotonView.RPC("RPC_SetReaperPosition", PhotonTargets.All, new Vector3(-1000, -1000, -1000), GetTargetPlayer());
         isDead = true;
         yield return new WaitForSeconds(1f);
-		PhotonView.RPC("RPC_SetReaperPosition", PhotonTargets.All, spawnPoint, GetTargetPlayer());
+        PhotonView.RPC("RPC_SetReaperPosition", PhotonTargets.All, spawnPoint, GetTargetPlayer());
         transform.rotation = Quaternion.identity;
         currentSpeed = speed;
 

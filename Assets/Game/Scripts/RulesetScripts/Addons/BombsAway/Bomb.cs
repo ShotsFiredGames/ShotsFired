@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Bomb : MonoBehaviour
@@ -41,6 +40,4 @@ public class Bomb : MonoBehaviour
         full.SetActive(false);
         explode.SetActive(true);
     }
-
-
 }

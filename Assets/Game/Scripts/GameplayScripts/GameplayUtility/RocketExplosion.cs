@@ -9,6 +9,8 @@ public class RocketExplosion : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
+        //Debug.LogError("playername: " + playername);
+        //Debug.LogError(other.transform.root.name);
         if (gameObject.activeInHierarchy && other.transform.root.name != playername)
         {
             if (other.tag.Equals("Collision"))
