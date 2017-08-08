@@ -59,6 +59,7 @@ public class BallToTheWall : GameEvent
         {
             PlayerWrangler.GetAllPlayers()[i].transform.position = spawnpoints[i].transform.position;
             PlayerWrangler.GetAllPlayers()[i].transform.rotation = spawnpoints[i].transform.rotation;
+            PlayerWrangler.GetAllPlayers()[i].RPC_Disarm();
         }
 
         for (int i = 0; i < goals.Length; i++)

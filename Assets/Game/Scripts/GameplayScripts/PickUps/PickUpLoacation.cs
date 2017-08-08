@@ -16,6 +16,11 @@ public class PickUpLoacation : Photon.MonoBehaviour
         SpawnRandomPickup();
     }
 
+    private void OnDisable()
+    {
+        StopAllCoroutines();
+    }
+
     void Update()
     {
         if (PhotonNetwork.isMasterClient && !isSpawning && activePickUp == null)
