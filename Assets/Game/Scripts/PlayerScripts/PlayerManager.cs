@@ -27,6 +27,7 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
     bool isFiring;
     public Gun[] guns;
     public LayerMask layermask;
+    public CameraShake camShake;
 
     float yRotationValue;
     GameObject myCamera;
@@ -36,12 +37,20 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
     public bool hasFlag;
     public Image haveFlag;
     public AudioMixer gameMixer;
+    [HideInInspector]
+    public int sprintFoV;
+
+    GunBob gunBob;
+    HeadBob headBob;
+    bool jumped;
 
     void Awake()
     {
         playerHealth = GetComponent<PlayerHealth>();
         playerCamera = GetComponent<PlayerCamera>();
         myCamera = playerCamera.myCamera.gameObject;
+        gunBob = GetComponentInChildren<GunBob>();
+        headBob = GetComponentInChildren<HeadBob>();
         PhotonView = photonView;
     }
 
@@ -139,15 +148,16 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
 
         ApplyMovementInput();
 
-        if (controls.Move.Value.Equals(Vector2.zero))
+        if (!controls.Move && !controls.Sprint)
             Idling();
-        else
+        else if (controls.Move && !controls.Sprint)
             Moving();
-
-        if (controls.Sprint && !isAiming)
+        else if (controls.Move && controls.Sprint && !controls.Aim)
             Sprinting();
+        else if (controls.Move && controls.Sprint && controls.Aim)
+            Moving();
         else
-            StoppedSprinting();
+            Idling();
 
         if (controls.Jump.WasPressed)
             Jumping();
@@ -170,6 +180,11 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
         if (!photonView.isMine) return;
         if (isDead) return;
         playerCamera.Look(controls.Look.Y);
+    }
+
+    public void ShakeCam(float shakeIntensity, float shakeDecay)
+    {
+        camShake.DoShake(shakeIntensity, shakeDecay);
     }
 
     public void SetRotationValue(float value)
@@ -199,40 +214,51 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
         playerMovement.Move(controls.Move.X, controls.Move.Y);
         playerMovement.Turn(controls.Look.X);
         animationManager.IsMoving();
+        StoppedSprinting();
     }
 
     void Idling()
     {
         playerMovement.Turn(controls.Look.X);
         animationManager.IsIdle();
+        StoppedSprinting();
     }
 
     void Sprinting()
     {
+        playerMovement.Move(controls.Move.X, controls.Move.Y);
+        playerMovement.Turn(controls.Look.X);
         playerMovement.Sprint();
         animationManager.IsSprinting();
+        sprintFoV = 10;
     }
 
     void StoppedSprinting()
     {
         playerMovement.StopSprint();
         animationManager.StoppedSprinting();
+        sprintFoV = 0;
     }
 
     void Jumping()
     {
+        jumped = true;
         playerMovement.Jump();
         animationManager.IsJumping();
     }
-
     public void Landed()
     {
+        if (playerMovement.canShake)
+            ShakeCam(.225f, .12f);
+
+        jumped = false;
         animationManager.IsLanding();
     }
 
     public void Falling()
     {
         animationManager.IsFalling();
+        jumped = false;
     }
 
     void Aim()
@@ -241,21 +267,27 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
         if (!isAiming)
         {
             isAiming = true;
+            gunBob.Aiming(true);
+            headBob.Aiming(true);
             shooting.Aiming();
-            playerCamera.Aim();
             animationManager.IsAiming();
         }
+
+        playerCamera.Aim();
     }
 
     void StopAiming()
     {
         if (isAiming)
         {
+            gunBob.Aiming(false);
+            headBob.Aiming(false);
             shooting.NotAiming();
-            playerCamera.StopAim();
             animationManager.StoppedAiming();
             isAiming = false;
         }
+
+        playerCamera.StopAim();
     }
 
     void Firing()

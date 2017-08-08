@@ -14,6 +14,7 @@ public class PickUpLoacation : Photon.MonoBehaviour
     private void Start()
     {
         SpawnRandomPickup();
+        anim = GetComponentInChildren<Animator>();
     }
 
     private void OnDisable()

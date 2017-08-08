@@ -9,6 +9,13 @@ public class Bomb : MonoBehaviour
 
     Coroutine bombExploding;
 
+    private void Start()
+    {
+        fill = transform.Find("Fill").gameObject;
+        full = transform.Find("Full").gameObject;
+        explode = transform.Find("Explosion").gameObject;
+    }
+
     private void OnEnable()
     {
         explode.SetActive(false);

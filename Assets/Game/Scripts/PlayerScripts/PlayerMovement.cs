@@ -4,57 +4,73 @@ using UnityEngine.UI;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public float maxVelocityChange = 10.0f;
-
+    [Header("Movement Variables")]
     public float rotationSpeed;
-    public float jumpForce;
-    public float gravity;
-    [Tooltip("This will change depending on the hieght of the character.")]
-    public float distToGrounded = 1.1f;
-    public LayerMask ground;
-    public float juggernautSpeed;
 
-    public float speedBoostSpeed;
-    public float speedBoostDuration;
     public float staminaDrainRate;
     public float staminaGainRate;
     public Image staminaBar;
 
-    float maxStamina = 100;
-    float stamina;
+    [Space, Header("Jump Variables")]
+    public LayerMask ground;
+    public float distToGrounded = 1.1f;
+    public float jumpForce;
+    public float gravity;
 
-    Rigidbody rb;
-    PlayerManager playerManager;
-    PlayerCamera playerCamera;
-    Coroutine superboots;
-    Coroutine speedboost;
+    [Space, Header("Ability Variables"), Tooltip("This will change depending on the hieght of the character.")]
+    public float speedBoostDuration;
+    public float juggernautSpeed;
+    public float speedBoostSpeed;
 
-    float speed;
-    float xRotationValue;
-    float _jump;
-    Quaternion rotation;
-    Vector3 direction;
-    Vector3 velocity;
-    bool isJumping;
-    bool isUsingBoots;
-    float airSpeed;
-    bool aimAssist;
-    bool speedBoostActive;
-    bool speedBoosted;
-    bool landed;
-    bool jumping;
     [HideInInspector]
     public bool isSprinting;
+    [HideInInspector]
+    public bool isGrounded;
+    [HideInInspector]
+    public bool canShake;
 
-    Coroutine sprinting;
+    PlayerManager playerManager;
+    PlayerCamera playerCamera;
+    Rigidbody rb;
+
     Coroutine stopSprinting;
+    Coroutine superboots;
+    Coroutine speedboost;
+    Coroutine sprinting;
+    Coroutine checkFall;
+
+    Quaternion rotation;
+
+    Vector3 direction;
+    Vector3 velocity;
+
+    float maxStamina = 100;
+    float xRotationValue;
+    float sprintSpeed;
+    float aimSpeed;
+    float airSpeed;
+    float stamina;
+    float _jump;
+    float speed;
+
+    bool speedBoostActive;
+    bool isUsingBoots;
+    bool speedBoosted;
+    bool checkingFall;
     bool isDraining;
+    bool isJumping;
+    bool aimAssist;
     bool isGaining;
     bool canSprint;
+    bool jumping;
+    bool landed;
 
-    void Start ()
+    void Start()
     {
         speed = GameCustomization.playerSpeed;
+        sprintSpeed = (speed + (speed * .5f));
+        aimSpeed = (speed - (speed * .5f));
+
         rb = GetComponent<Rigidbody>();
         playerManager = GetComponent<PlayerManager>();
         _jump = jumpForce;
@@ -79,19 +95,29 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if(Grounded())
+        if (Grounded())
         {
-            if(!landed)
-            { 
+            if (isGrounded != true)
+                isGrounded = true;
+
+            if (!landed)
+            {
                 landed = true;
                 jumping = false;
-               // lockMovement = false;
+                // lockMovement = false;
                 playerManager.Landed();
+
+                if (checkFall != null)
+                {
+                    StopCoroutine(checkFall);
+                    canShake = false;
+                    checkingFall = false;
+                }
             }
 
             if (speed != GameCustomization.playerSpeed && !isUsingBoots)
             {
-                if(speedBoostActive || speedBoosted)
+                if (speedBoostActive || speedBoosted)
                     speed = speedBoostSpeed;
                 else
                     speed = GameCustomization.playerSpeed;
@@ -99,8 +125,16 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            if (!jumping)
-                playerManager.Falling();
+            if (isGrounded != false)
+                isGrounded = false;
+
+            if (!checkingFall)
+            {
+                checkingFall = true;
+                checkFall = StartCoroutine(CheckFall());
+            }
+
+            playerManager.Falling();
 
             landed = false;
             if (speed != airSpeed && !isUsingBoots)
@@ -110,16 +144,26 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    IEnumerator CheckFall()
+    {
+        yield return new WaitForSeconds(1.5f);
+        checkingFall = false;
+        canShake = true;
+    }
+
     public void Move(float horizontal, float vertical)
     {
-        if(!isSprinting)
+        if (!isSprinting && !playerCamera.isAiming)
             direction = new Vector3(horizontal * speed, 0, vertical * speed);
-        else
-            direction = new Vector3(horizontal * (speed + (speed * .5f)), 0, vertical * (speed + (speed * .5f)));
+        else if (isSprinting && !playerCamera.isAiming)
+            direction = new Vector3(horizontal * sprintSpeed, 0, vertical * sprintSpeed);
+        else if (playerCamera.isAiming)
+            direction = new Vector3(horizontal * aimSpeed, 0, vertical * aimSpeed);
 
         direction *= Time.fixedDeltaTime;
         direction = transform.TransformDirection(direction);
-        rb.MovePosition(transform.position + direction);
+        //rb.MovePosition(transform.position + direction);
+        rb.velocity = new Vector3(direction.x, rb.velocity.y, direction.z);
     }
 
     public void Turn(float horizontal2)
@@ -183,21 +227,21 @@ public class PlayerMovement : MonoBehaviour
     }
 
     public void ActivateSpeedBoost()
-     {
-         if (!speedBoostActive)
-         {
+    {
+        if (!speedBoostActive)
+        {
             speedBoostActive = true;
             speedBoosted = false;
             speedboost = StartCoroutine(SpeedBoost());
-         }
-      }
- 
-     public void CancelSpeedBoost()
-     {
-         speedBoostActive = false;
-         if (speedboost != null)
-             StopCoroutine(speedboost);
-      }
+        }
+    }
+
+    public void CancelSpeedBoost()
+    {
+        speedBoostActive = false;
+        if (speedboost != null)
+            StopCoroutine(speedboost);
+    }
 
 
     public void CancelSuperBoots()
@@ -231,12 +275,12 @@ public class PlayerMovement : MonoBehaviour
     {
         speed = speedBoostSpeed;
         yield return new WaitForSeconds(speedBoostDuration);
-        if(!isUsingBoots)
-        speed = GameCustomization.playerSpeed;
+        if (!isUsingBoots)
+            speed = GameCustomization.playerSpeed;
         speedBoostActive = false;
     }
 
-    bool Grounded()
+    public bool Grounded()
     {
         return Physics.Raycast(transform.position, Vector3.down, distToGrounded, ground);
     }
@@ -286,7 +330,7 @@ public class PlayerMovement : MonoBehaviour
     public void StopSprint()
     {
         if (isSprinting != false)
-        isSprinting = false;
+            isSprinting = false;
 
         if (staminaBar.IsActive())
             staminaBar.gameObject.SetActive(false);
