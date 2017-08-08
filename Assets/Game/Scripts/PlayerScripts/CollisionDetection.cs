@@ -61,7 +61,7 @@ public class CollisionDetection : MonoBehaviour
         if (other.transform.tag.Equals("Ball"))
         {
             other.GetComponent<Rigidbody>().AddForce(transform.forward * .75f, ForceMode.VelocityChange);
-            other.GetComponent<Ball>().PhotonView.RPC("RPC_SetFaction", PhotonTargets.All, faction);
+            other.GetComponent<Ball>().PhotonView.RPC("RPC_SetFactionBall", PhotonTargets.All, faction);
         }
     }
 }

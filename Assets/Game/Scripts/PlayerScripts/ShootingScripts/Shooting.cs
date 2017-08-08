@@ -70,6 +70,9 @@ public class Shooting : Photon.MonoBehaviour
                 case Gun.WeaponType.Sustained:
                     SustainedShot();
                     break;
+                case Gun.WeaponType.Particle:
+                    ParticleShot();
+                    break;
                 default:
                     break;
             }
@@ -126,8 +129,8 @@ public class Shooting : Photon.MonoBehaviour
         currentGun.shootingSource.PlayOneShot(currentGun.trailClip);
     }
 
-    //Maybe make RPC
-    public void StartMuzzleFlash()
+    [PunRPC]
+    public void RPC_StartMuzzleFlash()
     {
         if (muzzleFlash == null) return;
         StartCoroutine(MuzzleFlash());                                                                          //Activate the MuzzleFlash
@@ -188,7 +191,7 @@ public class Shooting : Photon.MonoBehaviour
 
     void HitscanShot()
     {
-        StartMuzzleFlash();
+        photonView.RPC("RPC_StartMuzzleFlash", PhotonTargets.All);
         RaycastHit hit = CastMyRay();
         if (hit.point == Vector3.zero) return;
 
@@ -216,12 +219,12 @@ public class Shooting : Photon.MonoBehaviour
 
     void ParticleShot()
     {
-        StartMuzzleFlash();
+        photonView.RPC("RPC_StartMuzzleFlash", PhotonTargets.All);
     }
 
     void ProjectileShot()
     {
-        StartMuzzleFlash();
+        photonView.RPC("RPC_StartMuzzleFlash", PhotonTargets.All);
         RaycastHit hit = CastMyRay();
         ProjectileShot(hit.point, hit.normal);
     }
@@ -230,7 +233,6 @@ public class Shooting : Photon.MonoBehaviour
     {
         if (currentGun != null)
         {
-
             if (currentGun.shootingAnim != null)
                 if (currentGun.gameObject.activeSelf)
                     currentGun.shootingAnim.SetTrigger("Fire");

@@ -32,7 +32,7 @@ public class Ball : MonoBehaviour
     }
 
     [PunRPC]
-    public void RPC_SetFaction(string myFaction)
+    public void RPC_SetFactionBall(string myFaction)
     {
         faction = myFaction;
         rend.material = PlayerWrangler.GetFactionMaterial(faction);

@@ -60,22 +60,22 @@ public class PlayerWrangler : Photon.MonoBehaviour
         switch(playerCount)
         {
             case 1:
-                player.GetComponent<PlayerManager>().SetFaction("Water", _blue);
+                player.GetComponent<PhotonView>().RPC("RPC_SetFactionPlayer", PhotonTargets.AllBuffered, "Water");
                 break;
             case 2:
-                player.GetComponent<PlayerManager>().SetFaction("Earth", _black);
+                player.GetComponent<PhotonView>().RPC("RPC_SetFactionPlayer", PhotonTargets.AllBuffered, "Earth");
                 break;
             case 3:
-                player.GetComponent<PlayerManager>().SetFaction("Fire", _red);
+                player.GetComponent<PhotonView>().RPC("RPC_SetFactionPlayer", PhotonTargets.AllBuffered, "Fire");
                 break;
             case 4:
-                player.GetComponent<PlayerManager>().SetFaction("Air", _white);
+                player.GetComponent<PhotonView>().RPC("RPC_SetFactionPlayer", PhotonTargets.AllBuffered, "Air");
                 break;
             case 5:
-                player.GetComponent<PlayerManager>().SetFaction("Death", _green);
+                player.GetComponent<PhotonView>().RPC("RPC_SetFactionPlayer", PhotonTargets.AllBuffered, "Death");
                 break;
             case 6:
-                player.GetComponent<PlayerManager>().SetFaction("Life", _yellow);
+                player.GetComponent<PhotonView>().RPC("RPC_SetFactionPlayer", PhotonTargets.AllBuffered, "Life");
                 break;
         }
         

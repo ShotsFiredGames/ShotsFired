@@ -68,11 +68,12 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
         }
     }
 
-    public void SetFaction(string myFaction, Material myColor)
+    [PunRPC]
+    public void RPC_SetFactionPlayer(string myFaction)
     {
         faction = myFaction;
-        factionColor = myColor;
-        rend.material = myColor;
+        factionColor = PlayerWrangler.GetFactionMaterial(faction);
+        rend.material = factionColor;
     }
 
     public string GetFaction()
