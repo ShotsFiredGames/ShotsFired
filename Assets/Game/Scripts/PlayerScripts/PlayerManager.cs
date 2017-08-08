@@ -355,7 +355,7 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
         photonView.RPC("RPC_Disarm", PhotonTargets.All);
         photonView.RPC("RPC_CancelAbility", PhotonTargets.All);
         animationManager.IsDead(collisionLocation);
-        PhotonView gmPhotonView = gameManager.PhotonView;
+        PhotonView gmPhotonView = GameManager.instance.PhotonView;
         if (gmPhotonView != null)
             gmPhotonView.RPC("RPC_AddScore", PhotonTargets.All, damageSource, GameCustomization.pointsPerKill);
     }
