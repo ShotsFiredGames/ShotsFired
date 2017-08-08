@@ -34,6 +34,7 @@ public class PickUpLoacation : Photon.MonoBehaviour
     IEnumerator WaitToSpawn()
     {
         yield return new WaitForSeconds(spawnDelay);
+        if(anim != null)
         anim.SetBool("HasAbility", true);
         yield return new WaitForSeconds(1);
         SpawnRandomPickup();
@@ -60,7 +61,7 @@ public class PickUpLoacation : Photon.MonoBehaviour
         activePickUp.transform.SetParent(transform);
         activePickUp.GetComponent<PhotonView>().viewID = id;
 
-        if (activePickUp.GetComponent<PickUp>() != null)
+        if (activePickUp.GetComponent<PickUp>() != null && anim != null)
             activePickUp.GetComponent<PickUp>().SetAnimator(anim);
     }
     
