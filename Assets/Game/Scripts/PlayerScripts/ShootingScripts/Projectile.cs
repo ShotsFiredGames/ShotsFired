@@ -1,8 +1,10 @@
 ﻿using UnityEngine;
+using System.Collections;
 
 public class Projectile : Photon.MonoBehaviour
 {
     public GameObject explosion;
+    public float destroyAfter;
 
     float speed;
     Vector3 direction;
@@ -12,9 +14,12 @@ public class Projectile : Photon.MonoBehaviour
 
     Vector3 impactNormal; //Used to rotate impactparticle.
 
-    private void Start()
+    IEnumerator Start()
     {
         rb = GetComponent<Rigidbody>();
+        yield return new WaitForSeconds(destroyAfter);
+        if (photonView.isMine)
+            PhotonNetwork.Destroy(photonView);
     }
 
     void FixedUpdate()
