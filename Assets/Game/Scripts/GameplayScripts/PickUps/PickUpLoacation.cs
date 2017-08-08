@@ -46,7 +46,7 @@ public class PickUpLoacation : Photon.MonoBehaviour
         if (PhotonNetwork.isMasterClient)
         {
             activePickUp = PhotonNetwork.Instantiate(pickUpTypes[Random.Range(0, pickUpTypes.Length)].name, transform.position + spawnOffset, Quaternion.identity, 0);
-
+            activePickUp.transform.SetParent(transform);
             if (activePickUp.GetComponent<PickUp>() != null)
                 activePickUp.GetComponent<PickUp>().SetAnimator(anim);
         }
