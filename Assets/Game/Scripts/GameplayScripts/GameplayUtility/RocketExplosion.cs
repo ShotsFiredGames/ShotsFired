@@ -6,7 +6,7 @@ public class RocketExplosion : MonoBehaviour
     public byte damage;
     string playername;
     List<string> players = new List<string>();
-
+    
     void OnTriggerEnter(Collider other)
     {
         //Debug.LogError("playername: " + playername);

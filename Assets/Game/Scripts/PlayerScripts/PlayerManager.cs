@@ -347,7 +347,7 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
     public void Dead(string damageSource, CollisionDetection.CollisionFlag collisionLocation)
     {
         if (hasFlag)
-            photonView.RPC("RPC_FlagDropped", PhotonTargets.All, name);
+            FlagManager.instance.photonView.RPC("RPC_FlagDropped", PhotonTargets.All, name);
 
         playerMovement.CancelSpeedBoost();
 
