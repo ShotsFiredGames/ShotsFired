@@ -91,8 +91,6 @@ public class BallToTheWall : GameEvent
 
     public void RespawnBall()
     {
-        //if(PhotonNetwork.isMasterClient)
-        Debug.LogError("THIS SHOULD RESET THE POSITION");
         activeBall.transform.position = ballRespawn.transform.position;
     }
 }
