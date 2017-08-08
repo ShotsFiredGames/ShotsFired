@@ -19,7 +19,7 @@ public class Projectile : Photon.MonoBehaviour
         rb = GetComponent<Rigidbody>();
         yield return new WaitForSeconds(destroyAfter);
         if (PhotonNetwork.isMasterClient)
-            photonView.RPC("RPC_DestroyProjectile", PhotonTargets.All);
+            photonView.RPC("RPC_DestroyProjectile", PhotonTargets.AllBuffered);
     }
 
     void FixedUpdate()
@@ -46,7 +46,7 @@ public class Projectile : Photon.MonoBehaviour
                 {
                     GameObject _explosion = PhotonNetwork.Instantiate(explosion.name, transform.position, Quaternion.FromToRotation(Vector3.up, impactNormal), 0);
                     _explosion.GetComponent<PhotonView>().RPC("RPC_SetExplosionVariables", PhotonTargets.All, playername);
-                    photonView.RPC("RPC_DestroyProjectile", PhotonTargets.All);
+                    photonView.RPC("RPC_DestroyProjectile", PhotonTargets.AllBuffered);
                 }
             }
         }
