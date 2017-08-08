@@ -355,7 +355,7 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
 
         if (newGun == null) Debug.LogError("Incorrect Name of Gun");
         
-        animationManager.SetGunAnimator(newGun.anim);
+       // animationManager.SetGunAnimator(newGun.anim);
         shooting.SetWeapon(newGun);
 
         shooting.NotAiming();
