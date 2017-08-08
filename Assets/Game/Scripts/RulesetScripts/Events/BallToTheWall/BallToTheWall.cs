@@ -84,13 +84,14 @@ public class BallToTheWall : GameEvent
 
     public void PlayerScored(string player)
     {
-        if (GameManager.instance.PhotonView != null)
+        if (GameManager.instance.PhotonView != null && PhotonNetwork.isMasterClient)
             GameManager.instance.PhotonView.RPC("RPC_AddScore", PhotonTargets.All, player, scoreAmount);
     }
 
     public void RespawnBall()
     {
         //if(PhotonNetwork.isMasterClient)
+        Debug.LogError("THIS SHOULD RESET THE POSITION");
         activeBall.transform.position = ballRespawn.transform.position;
     }
 }

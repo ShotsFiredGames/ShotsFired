@@ -16,6 +16,7 @@ public class Goal : MonoBehaviour
             {
                 if(PlayerWrangler.GetAllPlayers()[i].GetFaction() == other.GetComponent<Ball>().GetFaction())
                 {
+                    Debug.LogError("Goal");
                     ballToTheWall.PlayerScored(PlayerWrangler.GetAllPlayers()[i].name);
                     StartCoroutine(other.GetComponent<Ball>().Respawn());
                 }

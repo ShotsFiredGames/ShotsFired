@@ -45,6 +45,7 @@ public class Ball : MonoBehaviour
 
     public IEnumerator Respawn()
     {
+        Debug.LogError("ball respawn");
         yield return new WaitForSeconds(1);
         rend.material.color = Color.white;
         GetComponent<Rigidbody>().velocity = Vector3.zero;
