@@ -62,7 +62,10 @@ public class PickUpManager : Photon.MonoBehaviour
             }
 
             if (PhotonNetwork.isMasterClient)
-                PhotonNetwork.Destroy(other.GetComponent<PhotonView>());
+            {
+                if(other.GetComponent<PhotonView>())
+                    photonView.RPC("RPC_DestroyPickup", PhotonTargets.AllBuffered, other.GetComponent<PhotonView>().viewID);
+            }
         }
 
         if (other.tag.Equals("Mimic"))
@@ -118,5 +121,11 @@ public class PickUpManager : Photon.MonoBehaviour
                 playerManager.PhotonView.RPC("RPC_ApplyPickUp", PhotonTargets.All, "Ability", "Overcharged");
                 break;
         }
+    }
+
+    [PunRPC]
+    void RPC_DestroyPickup(int pickupID)
+    {
+        Destroy(PhotonView.Find(pickupID).gameObject);
     }
 }

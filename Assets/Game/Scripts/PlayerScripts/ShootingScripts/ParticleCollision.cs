@@ -14,10 +14,7 @@ public class ParticleCollision : MonoBehaviour
     public void DealDamage(GameObject other)
     {
         if (other.tag.Equals("Player"))
-        {
-            Debug.LogError("Hit");
             other.GetComponentInChildren<CollisionDetection>().OnHit(damage, transform.root.name);
-        }
 
         if (other.tag.Equals("Reaper"))
             other.GetComponent<Reaper>().HitBy(damage, transform.root.name);
