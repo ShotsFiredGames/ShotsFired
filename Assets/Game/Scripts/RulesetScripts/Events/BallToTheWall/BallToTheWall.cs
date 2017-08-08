@@ -64,7 +64,7 @@ public class BallToTheWall : GameEvent
         for (int i = 0; i < goals.Length; i++)
             goals[i].enabled = true;
 
-        StartCoroutine(EventDuration());
+        gameEventDur = StartCoroutine(EventDuration());
     }
 
     public override void EndEvent()
@@ -80,12 +80,6 @@ public class BallToTheWall : GameEvent
 
         activeBall.SetActive(false);
         ballToTheWallActive = false;
-    }
-
-    new IEnumerator EventDuration()
-    {
-        yield return new WaitForSeconds(duration);
-        EndEvent();
     }
 
     public void PlayerScored(string player)
