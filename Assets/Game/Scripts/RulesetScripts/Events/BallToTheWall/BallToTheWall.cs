@@ -96,7 +96,7 @@ public class BallToTheWall : GameEvent
 
     public void RespawnBall()
     {
-        if(PhotonNetwork.isMasterClient)
-            activeBall.transform.position = ballRespawn.transform.position;
+        //if(PhotonNetwork.isMasterClient)
+        activeBall.transform.position = ballRespawn.transform.position;
     }
 }
