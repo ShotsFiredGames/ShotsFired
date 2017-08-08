@@ -20,6 +20,7 @@ public class Shooting : Photon.MonoBehaviour
     Coroutine overcharged;
     bool isOvercharged;
     short _damage;                // this is the variable that gets affected by overcharged
+    GunBob gunBob;
 
     void Start()
     {
@@ -27,6 +28,7 @@ public class Shooting : Photon.MonoBehaviour
         playerManager = GetComponent<PlayerManager>();
         hitMarkerSource = hitMarker.GetComponent<AudioSource>();
         ammoUI.text = "";
+        gunBob = GetComponentInChildren<GunBob>();
     }
 
     void Update()
@@ -79,6 +81,8 @@ public class Shooting : Photon.MonoBehaviour
 
             if (!isOvercharged)
                 currentGun.currentAmmo--;
+
+            gunBob.ApplyRecoil();
 
             //ammoUI.text = currentGun.currentAmmo + " / " + currentGun.ammo;
 
