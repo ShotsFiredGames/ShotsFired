@@ -6,17 +6,16 @@ public class JumpPad : MonoBehaviour
     public Vector3 liftStrength;
     public AudioSource padSource;
     public AudioClip launchClip;
-   // public bool lockMovement;
+
+    private void Start()
+    {
+        padSource = GetComponent<AudioSource>();
+    }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag.Equals("Player"))
-        {
-            //if(lockMovement)
-            //other.GetComponent<PlayerMovement>().lockMovement = true;
-
             Lift(other.gameObject);
-        }
     }
     private void Lift(GameObject _liftedObject)
     {
@@ -24,6 +23,8 @@ public class JumpPad : MonoBehaviour
         {
             if(padSource != null)
                 padSource.PlayOneShot(launchClip);
+
+            _liftedObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
             _liftedObject.GetComponent<Rigidbody>().velocity = liftStrength;
         }
     }
