@@ -19,7 +19,6 @@ public class CollisionDetection : MonoBehaviour
     PlayerManager playerManager;
     PhotonView photonView;
     string faction;
-    Material factionColor;
 
     IEnumerator Start()
     {
@@ -28,7 +27,6 @@ public class CollisionDetection : MonoBehaviour
         photonView = GetComponentInParent<PhotonView>();
         yield return new WaitForSeconds(1);
         faction = playerManager.GetFaction();
-        factionColor = playerManager.GetFactionColor();
     }
     
     public void OnHit(short damage, string sourceID)                                                                                         //Gets called from the shooting scripts raycast, we use other to determine how much damage we will take.
@@ -63,7 +61,7 @@ public class CollisionDetection : MonoBehaviour
         if (other.transform.tag.Equals("Ball"))
         {
             other.GetComponent<Rigidbody>().AddForce(transform.forward * .75f, ForceMode.VelocityChange);
-            other.GetComponent<Ball>().SetFaction(faction, factionColor);
+            other.GetComponent<Ball>().PhotonView.RPC("RPC_SetFaction", PhotonTargets.All, faction);
         }
     }
 }

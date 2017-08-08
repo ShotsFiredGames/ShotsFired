@@ -101,4 +101,25 @@ public class PlayerWrangler : Photon.MonoBehaviour
     {
         return players.Values.ToArray();
     }
+
+    public static Material GetFactionMaterial(string factionName)
+    {
+        switch(factionName)
+        {
+            case "Water":
+                return _blue;
+            case "Earth":
+                return _black;
+            case "Fire":
+                return _red;
+            case "Air":
+                return _white;
+            case "Death":
+                return _green;
+            case "Life":
+                return _yellow;
+            default:
+                return null;
+        }
+    }
 }

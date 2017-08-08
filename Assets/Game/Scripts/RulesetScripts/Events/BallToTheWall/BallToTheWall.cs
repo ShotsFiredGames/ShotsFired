@@ -28,7 +28,7 @@ public class BallToTheWall : GameEvent
             int _viewID = PhotonNetwork.AllocateViewID();
             PhotonView.RPC("RPC_SpawnBall", PhotonTargets.All, _viewID);
         }
-            //activeBall = PhotonNetwork.Instantiate(ball.name, ballRespawn.transform.position, ballRespawn.transform.rotation, 0);
+        //activeBall = PhotonNetwork.Instantiate(ball.name, ballRespawn.transform.position, ballRespawn.transform.rotation, 0);
         //activeBall.transform.parent = transform;
         //activeBall.GetComponent<Ball>().SetVariables(this);
         //activeBall.SetActive(false);
@@ -64,8 +64,7 @@ public class BallToTheWall : GameEvent
         for (int i = 0; i < goals.Length; i++)
             goals[i].enabled = true;
 
-            StartCoroutine(EventDuration());
-
+        StartCoroutine(EventDuration());
     }
 
     public override void EndEvent()
@@ -97,6 +96,7 @@ public class BallToTheWall : GameEvent
 
     public void RespawnBall()
     {
-        activeBall.transform.position = ballRespawn.transform.position;
+        if(PhotonNetwork.isMasterClient)
+            activeBall.transform.position = ballRespawn.transform.position;
     }
 }

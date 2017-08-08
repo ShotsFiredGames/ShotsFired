@@ -1,14 +1,18 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
 
-public class Ball : NetworkBehaviour
+public class Ball : MonoBehaviour
 {
+    public PhotonView PhotonView { get; private set; }
     string faction;
     Material factionColor;
     Renderer rend;
     BallToTheWall ballToTheWall;
+
+    void Awake()
+    {
+        PhotonView = GetComponent<PhotonView>();
+    }
 
 	void Start ()
     {
@@ -27,11 +31,11 @@ public class Ball : NetworkBehaviour
         ballToTheWall = _ballToTheWall;
     }
 
-    public void SetFaction(string myFaction, Material myColor)
+    [PunRPC]
+    public void RPC_SetFaction(string myFaction)
     {
         faction = myFaction;
-        factionColor = myColor;
-        rend.material = factionColor;
+        rend.material = PlayerWrangler.GetFactionMaterial(faction);
     }
 
     public string GetFaction()
