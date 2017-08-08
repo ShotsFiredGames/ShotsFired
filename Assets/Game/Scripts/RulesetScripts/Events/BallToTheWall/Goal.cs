@@ -8,6 +8,7 @@ public class Goal : MonoBehaviour
     {
         ballToTheWall = GameObject.Find("BallToTheWall").GetComponent<BallToTheWall>();
     }
+
     private void OnTriggerEnter(Collider other)
     {
         if(other.tag.Equals("Ball"))
