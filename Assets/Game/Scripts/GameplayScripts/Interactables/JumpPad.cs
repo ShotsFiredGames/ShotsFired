@@ -23,6 +23,8 @@ public class JumpPad : MonoBehaviour
         {
             if(padSource != null)
                 padSource.PlayOneShot(launchClip);
+
+            _liftedObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
             _liftedObject.GetComponent<Rigidbody>().velocity = liftStrength;
         }
     }
