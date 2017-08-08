@@ -18,8 +18,8 @@ public class Projectile : Photon.MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         yield return new WaitForSeconds(destroyAfter);
-        if (photonView.isMine)
-            PhotonNetwork.Destroy(photonView);
+        //if (photonView.isMine)
+        //    PhotonNetwork.Destroy(photonView);
     }
 
     void FixedUpdate()
