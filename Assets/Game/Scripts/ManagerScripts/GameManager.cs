@@ -181,6 +181,11 @@ public class GameManager : Photon.PunBehaviour
         endGameText.text = winningPlayer + " won!" + '\n' + "Press the Jump button to continue";
         endGameText.gameObject.SetActive(true);
         StartCoroutine(EndGame());
+        if(PhotonNetwork.isMasterClient)
+        {
+            int arrayIndex = AnnouncerManager.instance.GetRandomIndex(AnnouncerManager.instance.generalClips.endMatch.Length);
+            AnnouncerManager.instance.PhotonView.RPC("RPC_PlayEndMatchClip", PhotonTargets.All, arrayIndex);
+        }
     }
 
     void Update()

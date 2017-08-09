@@ -67,6 +67,11 @@ public class EventManager : Photon.MonoBehaviour
         {
             currentEvent = nextEvent;
             currentEvent.StartEvent();
+            if(PhotonNetwork.isMasterClient)
+            {
+                int arrayIndex = AnnouncerManager.instance.GetRandomEventIndex(currentEvent.nameEvent);
+                AnnouncerManager.instance.PhotonView.RPC("RPC_PlayEventStartClip", PhotonTargets.All, currentEvent.nameEvent, arrayIndex);
+            }
         }
 
         if (PhotonNetwork.isMasterClient)
@@ -92,5 +97,11 @@ public class EventManager : Photon.MonoBehaviour
     {
         currentAddOn = addOns[_newAddOn];
         currentAddOn.StartAddOn();
+
+        if (PhotonNetwork.isMasterClient)
+        {
+            int arrayIndex = AnnouncerManager.instance.GetRandomAddOnIndex(currentAddOn.addOnName);
+            AnnouncerManager.instance.PhotonView.RPC("RPC_PlayAddOnStartClip", PhotonTargets.All, currentAddOn.addOnName, arrayIndex);
+        }
     }
 }
