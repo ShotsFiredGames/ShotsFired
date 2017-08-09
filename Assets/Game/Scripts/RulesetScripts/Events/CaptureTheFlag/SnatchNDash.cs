@@ -43,7 +43,7 @@ public class SnatchNDash : GameEvent
 		snashFlags.Add(newFlag);
 
 		newFlag.index = FlagManager.instance.GetFlagNumber();
-		newFlag.spawnPosition = bases[index].gameObject.transform;
+		newFlag.spawnPosition = bases[index].gameObject;
 		newFlag.flagResetTime = flagResetTime;
 		bases[index].flag = newFlag;
 		PlayerManager _owner = PlayerWrangler.GetPlayer (_ownerID);

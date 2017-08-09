@@ -29,12 +29,18 @@ public class FlagManager : Photon.MonoBehaviour
     }
 
     public byte pointsForCapture { get; set; }
+    public byte pointsForHolding { private get; set; }
     public byte flagNumber = 0;
     public List<Flag> flags = new List<Flag>();
 
     public void FlagReturned(string player)
     {
         GameManager.instance.FlagCaptured(player, pointsForCapture);
+    }
+
+    public void FlagHeld(string player)
+    {
+        GameManager.instance.FlagCaptured(player, pointsForHolding);
     }
 
     public byte GetFlagNumber()
@@ -49,17 +55,14 @@ public class FlagManager : Photon.MonoBehaviour
         if (flag.resetTimer != null)
             StopCoroutine(flag.resetTimer);
 
-        //Debug.LogError("The name of the new holder is: " + carrierName);
         flag.carrier = PlayerWrangler.GetPlayer(carrierName);
-        //Debug.LogError("Flag is: " + flag.name);
-        //Debug.LogError("Carrier is: " + flag.carrier.name);
         flag.carrier.hasFlag = true;
         flag.flagBase.hasFlag = false;
         flag.transform.SetParent(flag.carrier.transform);
         flag.transform.position = flag.carrier.transform.position + new Vector3(0, flag.carrier.transform.localScale.y, 0);
 
-        // if (flagSource != null)
-        //   flagSource.PlayOneShot(pickupClip);
+        if (flag.flagBase != null)
+            flag.flagBase.hasFlag = false;
     }
 
     [PunRPC]
