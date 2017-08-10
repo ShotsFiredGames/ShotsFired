@@ -34,7 +34,7 @@ public class PlayerNetwork : MonoBehaviour
     void MasterLoadedGame()
     {
         photonView.RPC("RPC_LoadedGameScene", PhotonTargets.MasterClient);
-        photonView.RPC("RPC_LoadGameOthers", PhotonTargets.Others);
+        //photonView.RPC("RPC_LoadGameOthers", PhotonTargets.Others);
     }
 
     void NonMasterLoadedGame()
