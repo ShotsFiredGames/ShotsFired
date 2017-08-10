@@ -46,6 +46,7 @@ public class GameCustomization : MonoBehaviour
         //print(PhotonNetwork.room.CustomProperties.TryGetValue(CustomizationToServer.PLAYERHEALTH, out playerHealth) + " whatever is in customprops");
         string hp = PhotonNetwork.room.CustomProperties[CustomizationToServer.PLAYERHEALTH].ToString();
         playerHealth = short.Parse(hp);
+        print("Player health: " + playerHealth);
         string respawn = PhotonNetwork.room.CustomProperties[CustomizationToServer.RESPAWNTIME].ToString();
         respawnTime = float.Parse(respawn);
     }

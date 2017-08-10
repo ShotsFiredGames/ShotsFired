@@ -44,5 +44,7 @@ public class CustomizationToServer : MonoBehaviour
         roomProps[RESPAWNTIME] = respawnTime.value;
         PhotonNetwork.room.SetCustomProperties(roomProps);
         print(PhotonNetwork.room.CustomProperties + " onclick");
+
+        //do a for loop that loops through each of the addons/events
     }
 }
