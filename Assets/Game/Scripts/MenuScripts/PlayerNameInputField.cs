@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using UnityEngine.UI;
+﻿using UnityEngine.UI;
 using UnityEngine;
 
 [RequireComponent(typeof(InputField))]
@@ -25,7 +24,7 @@ public class PlayerNameInputField : MonoBehaviour {
 	public void SetPlayerName(string value)
     {
         string addedNum = "#" + Random.Range(10000, 99999);
-        PhotonNetwork.playerName = value + addedNum + " ";         //force a trailing space string in case value is an empty string, else playerName would not be updated.
+        PhotonNetwork.playerName = value + addedNum;
         PlayerPrefs.SetString(playerNamePrefKey, value + addedNum);
     }
 }

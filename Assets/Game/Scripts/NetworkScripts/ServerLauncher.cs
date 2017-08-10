@@ -42,6 +42,10 @@ public class ServerLauncher : Photon.PunBehaviour
     [SerializeField]
     GameObject playerListingContent;
     List<PlayerListing> playerListings = new List<PlayerListing>();
+    [SerializeField]
+    GameObject loadingScreen;
+    [SerializeField]
+    GameObject loadingBarPrefab;
     #endregion
 
     void Awake()
@@ -109,13 +113,20 @@ public class ServerLauncher : Photon.PunBehaviour
         if (!PhotonNetwork.isMasterClient) return;
         PhotonNetwork.room.IsOpen = false;
         PhotonNetwork.room.IsVisible = false;
-
         StartCoroutine(StartLoading());
     }
 
     IEnumerator StartLoading()
     {
-        AsyncOperation operation = PhotonNetwork.LoadLevelASync("Game");
+        loadingScreen.SetActive(true);
+        print(PhotonNetwork.playerList.Length);
+        for(int i = 0; i < PhotonNetwork.playerList.Length; i++)
+        {
+            GameObject newLoadingBar = Instantiate(loadingBarPrefab, loadingScreen.transform);
+            newLoadingBar.transform.Find("PlayerName").GetComponent<Text>().text = PhotonNetwork.playerList[i].NickName.Substring(0, PhotonNetwork.playerList[i].NickName.Length - 6);
+        }
+
+        AsyncOperation operation = PhotonNetwork.LoadLevelASync("Game");        
 
         while(!operation.isDone)
         {
