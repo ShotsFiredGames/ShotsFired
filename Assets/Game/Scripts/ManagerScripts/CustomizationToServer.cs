@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿//using System.Collections;
+using ExitGames.Client.Photon;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -24,13 +25,24 @@ public class CustomizationToServer : MonoBehaviour
     [Header("AddOn Toggles")]
     public List<TextToggle> addOns = new List<TextToggle>();
 
+    Hashtable roomProps;
+
+    public const string PLAYERHEALTH = "hp";
+    public const string RESPAWNTIME = "rt";
+
     // Use this for initialization
-    void Start () {
-		
+    void Start ()
+    {
+        roomProps = new Hashtable() { { PLAYERHEALTH, playerHealth.value }, { RESPAWNTIME, respawnTime.value} };
+        PhotonNetwork.room.SetCustomProperties(roomProps);
+        print(PhotonNetwork.room.CustomProperties + " in start");
 	}
 	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+	public void UpdateValues()
+    {
+        roomProps[PLAYERHEALTH] = playerHealth.value;
+        roomProps[RESPAWNTIME] = respawnTime.value;
+        PhotonNetwork.room.SetCustomProperties(roomProps);
+        print(PhotonNetwork.room.CustomProperties + " onclick");
+    }
 }

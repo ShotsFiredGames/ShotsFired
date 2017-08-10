@@ -73,7 +73,7 @@ public class ServerLauncher : Photon.PunBehaviour {
         RoomOptions roomOptions = new RoomOptions() { IsVisible = true, IsOpen = true, MaxPlayers = maxPlayersPerRoom };
         if (PhotonNetwork.CreateRoom(_roomName.text, roomOptions, TypedLobby.Default))
         {
-            Debug.Log("Created room successfully");
+            Debug.Log("Created room successfully you know?");
         }
         else
             Debug.Log("Create room failed to send");

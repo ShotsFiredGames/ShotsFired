@@ -30,17 +30,23 @@ public class GameCustomization : MonoBehaviour
     public static short pointsPerKill;
 
     private void Awake()
-    {
+    {        
         currentEvents = _currentEvents;
         currentAddOns = _currentAddOns;
-        respawnTime = _respawnTime;
+        //respawnTime = _respawnTime;
         playerSpeed = _playerSpeed;
-        playerHealth = _playerHealth;
+        //playerHealth = _playerHealth;
         isAmmoUnlimited = _isAmmoUnlimited;
         abilityDuration = _abilityDuration;
         eventOccurenceRate = _eventOccurenceRate;
         gameLength = _gameLength;
         pointsToWin = _pointsToWin;
         pointsPerKill = _pointsPerKill;
+
+        //print(PhotonNetwork.room.CustomProperties.TryGetValue(CustomizationToServer.PLAYERHEALTH, out playerHealth) + " whatever is in customprops");
+        string hp = PhotonNetwork.room.CustomProperties[CustomizationToServer.PLAYERHEALTH].ToString();
+        playerHealth = short.Parse(hp);
+        string respawn = PhotonNetwork.room.CustomProperties[CustomizationToServer.RESPAWNTIME].ToString();
+        respawnTime = float.Parse(respawn);
     }
 }
