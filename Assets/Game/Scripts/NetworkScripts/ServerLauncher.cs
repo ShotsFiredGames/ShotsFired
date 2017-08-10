@@ -17,6 +17,7 @@ public class ServerLauncher : Photon.PunBehaviour
     [Tooltip("The UI Label to inform the user that the connection is in progress")]
     public GameObject progressLabel;
     public float Progress { get; private set; }
+    public PhotonView PhotonView { get; private set; }
     #endregion
 
     #region Private Variables
@@ -47,7 +48,6 @@ public class ServerLauncher : Photon.PunBehaviour
     GameObject loadingScreen;
     [SerializeField]
     GameObject loadingBarPrefab;
-    public PhotonView PhotonView { get; private set; }
     #endregion
 
     void Awake()
@@ -116,41 +116,46 @@ public class ServerLauncher : Photon.PunBehaviour
         if (!PhotonNetwork.isMasterClient) return;
         PhotonNetwork.room.IsOpen = false;
         PhotonNetwork.room.IsVisible = false;
+        PhotonView.RPC("RPC_StartLoading", PhotonTargets.All);
+    }
+
+    [PunRPC]
+    void RPC_StartLoading()
+    {
+        if (PhotonNetwork.isMasterClient)
+        {
+            for (int i = 0; i < PhotonNetwork.playerList.Length; i++)
+            {
+                string playerName = PhotonNetwork.playerList[i].NickName.Substring(0, PhotonNetwork.playerList[i].NickName.Length - 6);
+                int viewID = PhotonNetwork.AllocateViewID();
+                PhotonView.RPC("RPC_CreateLoadBar", PhotonTargets.All, viewID, playerName, PhotonNetwork.playerList[i]);     //
+            }
+        }
+
         StartCoroutine(StartLoading());
     }
 
     IEnumerator StartLoading()
     {
-        loadingScreen.SetActive(true);
-        for(int i = 0; i < PhotonNetwork.playerList.Length; i++)
-        {
-            string playerName = PhotonNetwork.playerList[i].NickName.Substring(0, PhotonNetwork.playerList[i].NickName.Length - 6);
-            int viewID = PhotonNetwork.AllocateViewID();
-            PhotonView.RPC("RPC_CreateLoadBar", PhotonTargets.All, viewID, playerName);
-        }
-
         AsyncOperation operation = PhotonNetwork.LoadLevelASync("Game");
 
         while(!operation.isDone)
         {
             Progress = Mathf.Clamp01(operation.progress / .9f);
-            print(Progress);
-
-            if (operation.isDone)
-                print("Done loading");
-
             yield return null;
         }
     }
 
     [PunRPC]
-    void RPC_CreateLoadBar(int viewID, string playerName)
+    void RPC_CreateLoadBar(int viewID, string playerName, PhotonPlayer newOwner)   //
     {
+        loadingScreen.SetActive(true);
         GameObject newLoadingBar = Instantiate(loadingBarPrefab, loadingScreen.transform);
         newLoadingBar.transform.Find("PlayerName").GetComponent<Text>().text = playerName;
-        GetComponentInChildren<PhotonView>().viewID = viewID;
-        print(GetComponentInChildren<PhotonView>().viewID);
-        print("Creating load bar");
+        PhotonView newView = newLoadingBar.GetComponentInChildren<PhotonView>();
+        newView.viewID = viewID;
+        if (PhotonNetwork.isMasterClient)
+            newView.TransferOwnership(newOwner);
     }
 
     #endregion

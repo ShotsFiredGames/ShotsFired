@@ -3239,7 +3239,7 @@ public static class PhotonNetwork
 
     public static AsyncOperation LoadLevelASync(string levelName)
     {
-        networkingPeer.SetLevelInPropsIfSynced(levelName);
+        //networkingPeer.SetLevelInPropsIfSynced(levelName);
 
       //  PhotonNetwork.isMessageQueueRunning = false;
        // networkingPeer.loadingLevelAndPausedNetwork = true;
