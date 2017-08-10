@@ -3202,6 +3202,15 @@ public static class PhotonNetwork
         SceneManager.LoadScene(levelNumber);
     }
 
+    public static AsyncOperation LoadLevelASync(int levelNumber)
+    {
+        networkingPeer.SetLevelInPropsIfSynced(levelNumber);
+
+        //PhotonNetwork.isMessageQueueRunning = false;
+       // networkingPeer.loadingLevelAndPausedNetwork = true;
+        return SceneManager.LoadSceneAsync(levelNumber);
+    }
+
     /// <summary>Wraps loading a level to pause the network mesage-queue. Optionally syncs the loaded level in a room.</summary>
     /// <remarks>
     /// While loading levels, it makes sense to not dispatch messages received by other players.
@@ -3226,6 +3235,15 @@ public static class PhotonNetwork
         PhotonNetwork.isMessageQueueRunning = false;
         networkingPeer.loadingLevelAndPausedNetwork = true;
         SceneManager.LoadScene(levelName);
+    }
+
+    public static AsyncOperation LoadLevelASync(string levelName)
+    {
+        networkingPeer.SetLevelInPropsIfSynced(levelName);
+
+      //  PhotonNetwork.isMessageQueueRunning = false;
+       // networkingPeer.loadingLevelAndPausedNetwork = true;
+        return SceneManager.LoadSceneAsync(levelName);
     }
 
 

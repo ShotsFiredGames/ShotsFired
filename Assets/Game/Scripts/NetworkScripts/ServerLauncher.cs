@@ -1,8 +1,10 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 using System.Collections.Generic;
 
-public class ServerLauncher : Photon.PunBehaviour {
+public class ServerLauncher : Photon.PunBehaviour
+{
 
     #region Public Variables
     public static ServerLauncher instance;
@@ -107,7 +109,21 @@ public class ServerLauncher : Photon.PunBehaviour {
         if (!PhotonNetwork.isMasterClient) return;
         PhotonNetwork.room.IsOpen = false;
         PhotonNetwork.room.IsVisible = false;
-        PhotonNetwork.LoadLevel("Game");
+
+        StartCoroutine(StartLoading());
+    }
+
+    IEnumerator StartLoading()
+    {
+        AsyncOperation operation = PhotonNetwork.LoadLevelASync("Game");
+
+        while(!operation.isDone)
+        {
+            float progress = Mathf.Clamp01(operation.progress / .9f);
+            print(progress);
+
+            yield return null;
+        }
     }
 
     #endregion
