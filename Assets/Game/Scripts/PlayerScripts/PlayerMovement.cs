@@ -162,8 +162,8 @@ public class PlayerMovement : MonoBehaviour
 
         direction *= Time.fixedDeltaTime;
         direction = transform.TransformDirection(direction);
-        //rb.MovePosition(transform.position + direction);
-        rb.velocity = new Vector3(direction.x, rb.velocity.y, direction.z);
+        rb.MovePosition(transform.position + direction);
+        //rb.velocity = new Vector3(direction.x, rb.velocity.y, direction.z);
     }
 
     public void Turn(float horizontal2)
