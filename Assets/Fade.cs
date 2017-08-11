@@ -102,6 +102,8 @@ public class Fade : MonoBehaviour
 
     public void FadeToBlack()
     {
+        if (image == null)
+            image = GetComponent<Image>();
         image.color = Color.black;
     }
 }
