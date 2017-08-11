@@ -33,6 +33,7 @@ public class GameManager : Photon.PunBehaviour
     byte minutes;
     byte seconds;
     byte countdownTime;
+    byte playersInGame;
 
     #region Photon Methods
     public override void OnLeftRoom()
@@ -105,18 +106,31 @@ public class GameManager : Photon.PunBehaviour
     void OnEnable()
     {
         controls = Controls.CreateWithDefaultBindings();
-        CinematicCameraSystem.OnCinematicFinished += StartGame;
+        CinematicCameraSystem.OnCinematicFinished += CinematicIsDone;
     }
 
     void OnDisable()
     {
         controls.Destroy();
-        CinematicCameraSystem.OnCinematicFinished -= StartGame;
+        CinematicCameraSystem.OnCinematicFinished -= CinematicIsDone;
     }
 
     void Start()
     {
         minutes = GameCustomization.gameLength;
+    }
+
+    [PunRPC]
+    void RPC_CinematicIsDone()
+    {
+        playersInGame++;
+        if(playersInGame == PhotonNetwork.playerList.Length)
+            StartGame();
+    }
+
+    void CinematicIsDone()
+    {
+        photonView.RPC("RPC_CinematicIsDone", PhotonTargets.All);
     }
 
     void StartGame()
@@ -129,11 +143,10 @@ public class GameManager : Photon.PunBehaviour
     {
         for(byte i = 10; i > 0; i--)
         {
-            countdownAnim.SetTrigger("Countdown");
-
             if(PhotonNetwork.isMasterClient)
                 countdownTime = i;
 
+            countdownAnim.SetTrigger("Countdown");
             countDownTimer.text = countdownTime.ToString();
             yield return new WaitForSeconds(1);
         }
