@@ -18,6 +18,11 @@ public class EventManager : Photon.MonoBehaviour
     List<string> eventNames;
     List<string> addOnNames;
 
+    private void Awake()
+    {
+        PhotonNetwork.OnEventCall += ActivateEvents;
+    }
+
     void Start()
     {
         eventNames = GameCustomization.currentEvents;                       //Grabs a List of Usable Event Names From GameCustomization
@@ -45,8 +50,11 @@ public class EventManager : Photon.MonoBehaviour
                     addOns.Add(addOn);                                      //add the event to the playable list of events
             }
         }
+    }
 
-        if(PhotonNetwork.isMasterClient)
+    void ActivateEvents(byte eventcode, object content, int senderid)
+    {
+        if (eventcode == 0 && PhotonNetwork.isMasterClient)
             InvokeRepeating("ActivateNextEvent", GameCustomization.eventOccurenceRate / 2, GameCustomization.eventOccurenceRate);
     }
 

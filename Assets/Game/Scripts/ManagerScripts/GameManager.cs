@@ -12,6 +12,7 @@ public class GameManager : Photon.PunBehaviour
     public List<GameObject> newSpawnPoints;
     public Text timerText;
     public Text endGameText;
+    public Text countDownTimer;
     public GameObject scorePanel;
     public GameObject scoreboardTextObj;
     [HideInInspector]
@@ -99,19 +100,46 @@ public class GameManager : Photon.PunBehaviour
     void OnEnable()
     {
         controls = Controls.CreateWithDefaultBindings();
+        CinematicCameraSystem.OnCinematicFinished += StartGame;
     }
 
     void OnDisable()
     {
         controls.Destroy();
+        CinematicCameraSystem.OnCinematicFinished -= StartGame;
     }
 
     void Start()
     {
         minutes = GameCustomization.gameLength;
-        seconds = 1;
-        if(PhotonNetwork.isMasterClient)
+    }
+
+    void StartGame()
+    {
+        countDownTimer.enabled = true;
+        StartCoroutine(StartCountdown());
+    }
+
+    IEnumerator StartCountdown()
+    {
+        for(int i = 10; i > 0; i--)
+        {
+            countDownTimer.text = i.ToString();
+            yield return new WaitForSeconds(1);
+        }
+        countDownTimer.text = "Fight!";
+        yield return new WaitForSeconds(1);
+        countDownTimer.enabled = false;
+
+        timerText.enabled = true;
+        if (PhotonNetwork.isMasterClient)
+        {
             StartCoroutine(Timer());
+            byte eventcode = 0;
+            RaiseEventOptions eventOptions = new RaiseEventOptions();
+            eventOptions.Receivers = ReceiverGroup.All;
+            PhotonNetwork.RaiseEvent(eventcode, true, true, eventOptions);
+        }
     }
 
     IEnumerator Timer()

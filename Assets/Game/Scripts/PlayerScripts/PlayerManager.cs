@@ -43,9 +43,11 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
     GunBob gunBob;
     HeadBob headBob;
     bool jumped;
+    bool canMove;
 
     void Awake()
     {
+        PhotonNetwork.OnEventCall += EnableMovement;
         playerHealth = GetComponent<PlayerHealth>();
         playerCamera = GetComponent<PlayerCamera>();
         myCamera = playerCamera.myCamera.gameObject;
@@ -74,6 +76,15 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
         else
         {
             this.isFiring = (bool)stream.ReceiveNext();
+        }
+    }
+
+    void EnableMovement(byte eventcode, object content, int senderid)
+    {
+        if (eventcode == 0)
+        {
+            canMove = (bool)content;
+            shooting.UnArmed();
         }
     }
 
@@ -171,8 +182,6 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
             Aim();
         else
             StopAiming();
-
-      
     }
 
     private void LateUpdate()
@@ -211,8 +220,9 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
 
     void Moving()
     {
-        playerMovement.Move(controls.Move.X, controls.Move.Y);
         playerMovement.Turn(controls.Look.X);
+        if (!canMove) return;
+        playerMovement.Move(controls.Move.X, controls.Move.Y);
         animationManager.IsMoving();
         StoppedSprinting();
     }
@@ -226,8 +236,9 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
 
     void Sprinting()
     {
-        playerMovement.Move(controls.Move.X, controls.Move.Y);
         playerMovement.Turn(controls.Look.X);
+        if (!canMove) return;
+        playerMovement.Move(controls.Move.X, controls.Move.Y);
         playerMovement.Sprint();
         animationManager.IsSprinting();
         sprintFoV = 10;
@@ -242,6 +253,7 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
 
     void Jumping()
     {
+        if (!canMove) return;
         jumped = true;
         playerMovement.Jump();
         animationManager.IsJumping();
