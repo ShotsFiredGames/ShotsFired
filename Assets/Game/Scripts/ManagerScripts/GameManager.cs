@@ -23,6 +23,7 @@ public class GameManager : Photon.PunBehaviour
     public Dictionary<string, short> playerScores;
 
     Controls controls;
+    Animator countdownAnim;
 
     [HideInInspector]
     public bool isActive;
@@ -95,6 +96,7 @@ public class GameManager : Photon.PunBehaviour
 
         PhotonView = GetComponent<PhotonView>();
         playerScores = new Dictionary<string, short>();
+        countdownAnim = countDownTimer.GetComponent<Animator>();
     }
 
     void OnEnable()
@@ -124,6 +126,7 @@ public class GameManager : Photon.PunBehaviour
     {
         for(int i = 10; i > 0; i--)
         {
+            countdownAnim.SetTrigger("Countdown");
             countDownTimer.text = i.ToString();
             yield return new WaitForSeconds(1);
         }

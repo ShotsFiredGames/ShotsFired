@@ -74,6 +74,8 @@ public class Fade : MonoBehaviour
 
     bool FadingIn()
     {
+        if (image == null)
+            image = GetComponent<Image>();
         image.color = Color.Lerp(image.color, Color.black, Time.deltaTime * 10f);
         fadeInTimer += 1 / 60.0f;
         if (image.color == Color.clear)
