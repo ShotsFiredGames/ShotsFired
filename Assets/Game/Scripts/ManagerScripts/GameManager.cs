@@ -32,6 +32,7 @@ public class GameManager : Photon.PunBehaviour
 
     byte minutes;
     byte seconds;
+    int countdownTime;
 
     #region Photon Methods
     public override void OnLeftRoom()
@@ -77,12 +78,14 @@ public class GameManager : Photon.PunBehaviour
             {
                 stream.SendNext(minutes);
                 stream.SendNext(seconds);
+                stream.SendNext(countdownTime);
             }
         }
         else
         {
             minutes = (byte)stream.ReceiveNext();
             seconds = (byte)stream.ReceiveNext();
+            countdownTime = (byte)stream.ReceiveNext();
         }
     }
     #endregion
@@ -127,7 +130,11 @@ public class GameManager : Photon.PunBehaviour
         for(int i = 10; i > 0; i--)
         {
             countdownAnim.SetTrigger("Countdown");
-            countDownTimer.text = i.ToString();
+
+            if(PhotonNetwork.isMasterClient)
+                countdownTime = i;
+
+            countDownTimer.text = countdownTime.ToString();
             yield return new WaitForSeconds(1);
         }
         countDownTimer.text = "Fight!";
