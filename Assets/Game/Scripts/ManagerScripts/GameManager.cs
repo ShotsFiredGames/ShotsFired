@@ -32,7 +32,7 @@ public class GameManager : Photon.PunBehaviour
 
     byte minutes;
     byte seconds;
-    int countdownTime;
+    byte countdownTime;
 
     #region Photon Methods
     public override void OnLeftRoom()
@@ -127,7 +127,7 @@ public class GameManager : Photon.PunBehaviour
 
     IEnumerator StartCountdown()
     {
-        for(int i = 10; i > 0; i--)
+        for(byte i = 10; i > 0; i--)
         {
             countdownAnim.SetTrigger("Countdown");
 
