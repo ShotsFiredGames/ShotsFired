@@ -99,5 +99,10 @@ public class Fade : MonoBehaviour
         else
             return false;
     }
+
+    public void FadeToBlack()
+    {
+        image.color = Color.black;
+    }
 }
 

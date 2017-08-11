@@ -63,6 +63,7 @@ public class CinematicCameraSystem : MonoBehaviour
 
     public IEnumerator StartCinematic()
     {
+        fadeScript.FadeToBlack();
         cinematicCam1.transform.localPosition = cam1StartPostion;
         cinematicCam2.transform.localPosition = cam2StartPostion;
         cinematicCam3.transform.localPosition = cam3StartPostion;
