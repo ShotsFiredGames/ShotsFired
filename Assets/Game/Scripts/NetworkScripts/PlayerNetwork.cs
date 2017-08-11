@@ -56,7 +56,16 @@ public class PlayerNetwork : MonoBehaviour
         {
             Debug.Log("All players are in the game scene.");
             photonView.RPC("RPC_CreatePlayer", PhotonTargets.All);
+            photonView.RPC("RPC_DestroyLobby", PhotonTargets.All);
         }
+    }
+
+    [PunRPC]
+    void RPC_DestroyLobby()
+    {
+        Destroy(ServerLauncher.instance.loadingScreen);
+        Destroy(ServerLauncher.instance.gameObject);
+        StartCoroutine(CinematicCameraSystem.instance.StartCinematic());
     }
 
     [PunRPC]

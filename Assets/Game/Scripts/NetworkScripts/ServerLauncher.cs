@@ -18,6 +18,7 @@ public class ServerLauncher : Photon.PunBehaviour
     public GameObject progressLabel;
     public float Progress { get; private set; }
     public PhotonView PhotonView { get; private set; }
+    public GameObject loadingScreen;
     #endregion
 
     #region Private Variables
@@ -44,8 +45,6 @@ public class ServerLauncher : Photon.PunBehaviour
     [SerializeField]
     GameObject playerListingContent;
     List<PlayerListing> playerListings = new List<PlayerListing>();
-    [SerializeField]
-    GameObject loadingScreen;
     [SerializeField]
     GameObject loadingBarPrefab;
     #endregion

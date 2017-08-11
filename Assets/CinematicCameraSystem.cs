@@ -5,6 +5,31 @@ using UnityEngine.UI;
 
 public class CinematicCameraSystem : MonoBehaviour
 {
+    #region Instance
+    private static CinematicCameraSystem s_Instance = null;
+    public static CinematicCameraSystem instance
+    {
+        get
+        {
+            if (s_Instance == null)
+            {
+                // This is where the magic happens.
+                //  FindObjectOfType(...) returns the first AManager object in the scene.
+                s_Instance = FindObjectOfType(typeof(CinematicCameraSystem)) as CinematicCameraSystem;
+            }
+
+            // If it is still null, create a new instance
+            if (s_Instance == null)
+            {
+                GameObject obj = new GameObject("CinematicCameraSystem");
+                s_Instance = obj.AddComponent(typeof(CinematicCameraSystem)) as CinematicCameraSystem;
+                Debug.Log("Could not locate an CinematicCameraSystem object. CinematicCameraSystem was Generated Automaticly.");
+            }
+
+            return s_Instance;
+        }
+    }
+    #endregion
     public GameObject cinematicCam1;
     public Vector3 cam1StartPostion;
     public Vector3 cam1EndPosition;
@@ -36,7 +61,7 @@ public class CinematicCameraSystem : MonoBehaviour
     bool moveCam2;
     bool moveCam3;
 
-    private IEnumerator Start()
+    public IEnumerator StartCinematic()
     {
         cinematicCam1.transform.localPosition = cam1StartPostion;
         cinematicCam2.transform.localPosition = cam2StartPostion;
