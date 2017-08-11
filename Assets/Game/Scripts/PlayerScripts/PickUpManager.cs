@@ -129,6 +129,8 @@ public class PickUpManager : Photon.MonoBehaviour
     [PunRPC]
     void RPC_DestroyPickup(int viewID)
     {
-        Destroy(PhotonView.Find(viewID).gameObject);
+        PhotonView pv = PhotonView.Find(viewID);
+        if (pv)
+            Destroy(pv.gameObject);
     }
 }
