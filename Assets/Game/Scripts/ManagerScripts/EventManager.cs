@@ -15,11 +15,37 @@ public class EventManager : Photon.MonoBehaviour
     List<GameEvent> gameEvents = new List<GameEvent>();
     List<AddOn> addOns = new List<AddOn>();
 
-    List<string> eventNames;
-    List<string> addOnNames;
+    string eventNames;
+    string addOnNames;
 
     void Start()
     {
+        eventNames = GameCustomization.currentEvents;                       //Grabs a List of Wanted Events From GameCustomization
+        addOnNames = GameCustomization.currentAddOns;
+
+        for (int parse = 0; parse < eventNames.Length; parse++)
+        {
+            string charName = eventNames.Substring(parse, 1);
+
+            if (charName.Equals("1"))
+                gameEvents.Add(allEvents[parse]);
+        }
+
+       /* foreach (GameEvent ge in gameEvents)
+        {
+            print(ge.nameEvent + " is an activated Event");
+        }*/
+
+
+        for (int parse = 0; parse < addOnNames.Length; parse++)
+        {
+            string charName = addOnNames.Substring(parse, 1);
+
+            if (charName.Equals("1"))
+                addOns.Add(allAddOns[parse]);
+        }
+
+        /*
         eventNames = GameCustomization.currentEvents;                       //Grabs a List of Usable Event Names From GameCustomization
         addOnNames = GameCustomization.currentAddOns;
         //Loops throught AllEvents and the List of Names
@@ -45,8 +71,9 @@ public class EventManager : Photon.MonoBehaviour
                     addOns.Add(addOn);                                      //add the event to the playable list of events
             }
         }
+        */
 
-        if(PhotonNetwork.isMasterClient)
+        if (PhotonNetwork.isMasterClient)
             InvokeRepeating("ActivateNextEvent", GameCustomization.eventOccurenceRate / 2, GameCustomization.eventOccurenceRate);
     }
 
