@@ -86,6 +86,9 @@ public class BallToTheWall : GameEvent
         yield return new WaitForSeconds(.5f);
         countdownText.enabled = false;
 
+        for (int i = 0; i < PlayerWrangler.GetAllPlayers().Length; i++)
+            PlayerWrangler.GetAllPlayers()[i].canMove = true;
+
         gameEventDur = StartCoroutine(EventDuration());
     }
 
@@ -99,9 +102,6 @@ public class BallToTheWall : GameEvent
 
         for (int i = 0; i < objectsToSetInActive.Length; i++)
             objectsToSetInActive[i].SetActive(true);
-
-        for (int i = 0; i < PlayerWrangler.GetAllPlayers().Length; i++)
-            PlayerWrangler.GetAllPlayers()[i].canMove = true;
 
         activeBall.SetActive(false);
         ballToTheWallActive = false;
