@@ -10,6 +10,8 @@ public class PickUpManager : Photon.MonoBehaviour
 
     public AudioClip gunPickUpSound;
 
+    PhotonView pv;
+
     private void Awake()
     {
         playerManager = GetComponent<PlayerManager>();
@@ -61,11 +63,13 @@ public class PickUpManager : Photon.MonoBehaviour
                     break;
             }
 
+            pv = other.GetComponent<PhotonView>();
+
             if (PhotonNetwork.isMasterClient)
             {
                 if(other.GetComponent<PhotonView>())
                 {
-                    photonView.RPC("RPC_DestroyPickup", PhotonTargets.OthersBuffered, other.GetComponent<PhotonView>().viewID);
+                    photonView.RPC("RPC_DestroyPickup", PhotonTargets.OthersBuffered, pv.viewID);
                     Destroy(other.gameObject);
                 }
             }
@@ -129,8 +133,7 @@ public class PickUpManager : Photon.MonoBehaviour
     [PunRPC]
     void RPC_DestroyPickup(int viewID)
     {
-        PhotonView pv = PhotonView.Find(viewID);
-        if (pv)
+        if(pv != null)
             Destroy(pv.gameObject);
     }
 }
