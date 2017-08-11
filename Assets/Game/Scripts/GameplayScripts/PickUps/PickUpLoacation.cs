@@ -50,7 +50,7 @@ public class PickUpLoacation : Photon.MonoBehaviour
             int randomPickUp = Random.Range(0, pickUpTypes.Length);
 
             int viewID = PhotonNetwork.AllocateViewID();
-            photonView.RPC("RPC_InstantiatePickUp", PhotonTargets.All, viewID, randomPickUp);
+            photonView.RPC("RPC_InstantiatePickUp", PhotonTargets.AllBuffered, viewID, randomPickUp);
         }
     }
 
