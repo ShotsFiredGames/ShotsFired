@@ -65,7 +65,6 @@ public class PickUpManager : Photon.MonoBehaviour
             {
                 if(other.GetComponent<PhotonView>())
                 {
-                    Debug.LogError("Calling RPC" + other.GetComponent<PhotonView>().viewID);
                     photonView.RPC("RPC_DestroyPickup", PhotonTargets.AllBuffered, other.GetComponent<PhotonView>().viewID);
                 }
             }
@@ -129,8 +128,6 @@ public class PickUpManager : Photon.MonoBehaviour
     [PunRPC]
     void RPC_DestroyPickup(int viewID)
     {
-        Debug.LogError("The original viewID " + viewID);
-        Debug.LogError(" The PhotonView I found " + PhotonView.Find(viewID));
         Destroy(PhotonView.Find(viewID).gameObject);
     }
 }
