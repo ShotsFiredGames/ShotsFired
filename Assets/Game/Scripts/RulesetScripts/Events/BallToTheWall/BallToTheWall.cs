@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BallToTheWall : GameEvent
 {
@@ -11,14 +12,17 @@ public class BallToTheWall : GameEvent
     public GameObject[] objectsToSetInActive;
     public GameObject[] spawnpoints;
     public Collider[] goals;
+    public Text countdownText;
 
     public GameObject ball;
     public GameObject ballRespawn;
     GameObject activeBall;
+    Animator countdownAnim;
 
     void Awake()
     {
         PhotonView = GetComponent<PhotonView>();
+        countdownAnim = countdownText.GetComponent<Animator>();
     }
     
     private void Start()
@@ -59,11 +63,28 @@ public class BallToTheWall : GameEvent
         {
             PlayerWrangler.GetAllPlayers()[i].transform.position = spawnpoints[i].transform.position;
             PlayerWrangler.GetAllPlayers()[i].transform.rotation = spawnpoints[i].transform.rotation;
+            PlayerWrangler.GetAllPlayers()[i].canMove = false;
             PlayerWrangler.GetAllPlayers()[i].RPC_Disarm();
         }
 
         for (int i = 0; i < goals.Length; i++)
             goals[i].enabled = true;
+
+        StartCoroutine(EventWaitTime());
+    }
+
+    IEnumerator EventWaitTime()
+    {
+        countdownText.enabled = true;
+        for(int i = 3; i > 0; i--)
+        {
+            countdownAnim.SetTrigger("Countdown");
+            countdownText.text = i.ToString();
+            yield return new WaitForSeconds(1);
+        }
+        countdownText.text = "Begin!";
+        yield return new WaitForSeconds(.5f);
+        countdownText.enabled = false;
 
         gameEventDur = StartCoroutine(EventDuration());
     }
@@ -78,6 +99,9 @@ public class BallToTheWall : GameEvent
 
         for (int i = 0; i < objectsToSetInActive.Length; i++)
             objectsToSetInActive[i].SetActive(true);
+
+        for (int i = 0; i < PlayerWrangler.GetAllPlayers().Length; i++)
+            PlayerWrangler.GetAllPlayers()[i].canMove = true;
 
         activeBall.SetActive(false);
         ballToTheWallActive = false;

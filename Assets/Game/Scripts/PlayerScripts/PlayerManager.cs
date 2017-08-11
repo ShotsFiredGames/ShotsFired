@@ -34,6 +34,8 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
     Gun oldGun;
 
     [HideInInspector]
+    public bool canMove;
+    [HideInInspector]
     public bool hasFlag;
     public Image haveFlag;
     public AudioMixer gameMixer;
@@ -43,7 +45,6 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
     GunBob gunBob;
     HeadBob headBob;
     bool jumped;
-    bool canMove;
 
     void Awake()
     {

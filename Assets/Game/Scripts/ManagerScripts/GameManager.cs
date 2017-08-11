@@ -141,7 +141,7 @@ public class GameManager : Photon.PunBehaviour
 
     IEnumerator StartCountdown()
     {
-        for(byte i = 10; i > 0; i--)
+        for(byte i = 5; i > 0; i--)
         {
             if(PhotonNetwork.isMasterClient)
                 countdownTime = i;
