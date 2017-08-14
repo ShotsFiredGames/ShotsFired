@@ -16,8 +16,6 @@ public class DisplaySettingsManager : MonoBehaviour
     public Resolution[] resolutions;
     public GameSettings gameSettings;
 
-    bool savedSettings;
-
     void OnEnable()
     {
         gameSettings = new GameSettings();
@@ -33,8 +31,7 @@ public class DisplaySettingsManager : MonoBehaviour
             resolutionDropdown.options.Add(new Dropdown.OptionData(resolution.ToString()));
         }
 
-        if (savedSettings)
-            LoadSettings();
+        LoadSettings();
     }
 
     public void OnFullscreenToggle()
@@ -73,7 +70,6 @@ public class DisplaySettingsManager : MonoBehaviour
     {
         string jsonData = JsonUtility.ToJson(gameSettings, true);
         File.WriteAllText(Application.persistentDataPath + "/gamesettings.json", jsonData);
-        savedSettings = true;
     }
 
     public void LoadSettings()
@@ -92,7 +88,7 @@ public class DisplaySettingsManager : MonoBehaviour
         }
         catch (Exception e)
         {
-            Debug.LogError(e.Message);
+            Debug.LogError("Settings have yet to have been created.");
         }
     }
 }

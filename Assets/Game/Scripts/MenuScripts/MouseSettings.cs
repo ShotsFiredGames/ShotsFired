@@ -7,19 +7,34 @@
 
     public class MouseSettings : MonoBehaviour
     {
-        Slider slider;
+        public Slider mouseSlider;
         // Use this for initialization
         void Start()
         {
-            slider = GetComponent<Slider>();
-            slider.onValueChanged.AddListener(delegate { ValueChangeCheck(); });
+            mouseSlider.onValueChanged.AddListener(delegate { ValueChangeCheck(); });
+
+            if (PlayerPrefs.GetInt("MouseSettings") == 0)
+            {
+                PlayerPrefs.SetFloat("MouseLevels", mouseSlider.value);
+                PlayerPrefs.SetInt("MouseSettings", 1);
+            }
+            else
+            {
+                mouseSlider.value = PlayerPrefs.GetFloat("MouseLevels");
+                MouseBindingSource.ScaleX = mouseSlider.value;
+                MouseBindingSource.ScaleY = mouseSlider.value;
+                MouseBindingSource.ScaleZ = mouseSlider.value;
+            }
+            
         }
 
         void ValueChangeCheck()
         {
-            MouseBindingSource.ScaleX = slider.value;
-            MouseBindingSource.ScaleY = slider.value;
-            MouseBindingSource.ScaleZ = slider.value;
+            print(mouseSlider.value + " print mouseSlider value");
+            MouseBindingSource.ScaleX = mouseSlider.value;
+            MouseBindingSource.ScaleY = mouseSlider.value;
+            MouseBindingSource.ScaleZ = mouseSlider.value;
+            PlayerPrefs.SetFloat("MouseLevels", mouseSlider.value);
         }
     }
 }
