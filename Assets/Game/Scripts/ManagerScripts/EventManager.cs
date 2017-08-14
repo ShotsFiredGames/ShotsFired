@@ -33,7 +33,7 @@ public class EventManager : Photon.MonoBehaviour
 
          foreach (GameEvent ge in gameEvents)
          {
-             print(ge.nameEvent + " is an activated Event");
+             Debug.LogError(ge.nameEvent + " is an activated Event");
          }
 
 
