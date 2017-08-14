@@ -392,12 +392,12 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
     
     public void Dead(string damageSource, CollisionDetection.CollisionFlag collisionLocation)
     {
+        isDead = true;
         if (hasFlag)
             FlagManager.instance.photonView.RPC("RPC_FlagDropped", PhotonTargets.All, name);
 
         playerMovement.CancelSpeedBoost();
-
-        isDead = true;
+        
         photonView.RPC("RPC_Disarm", PhotonTargets.All);
         photonView.RPC("RPC_CancelAbility", PhotonTargets.All);
         animationManager.IsDead(collisionLocation);
