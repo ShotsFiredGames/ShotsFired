@@ -15,46 +15,37 @@ public class EventManager : Photon.MonoBehaviour
     List<GameEvent> gameEvents = new List<GameEvent>();
     List<AddOn> addOns = new List<AddOn>();
 
-    List<string> eventNames;
-    List<string> addOnNames;
-
-    private void Awake()
-    {
-        PhotonNetwork.OnEventCall += ActivateEvents;
-    }
+    string eventNames;
+    string addOnNames;
 
     void Start()
     {
-        eventNames = GameCustomization.currentEvents;                       //Grabs a List of Usable Event Names From GameCustomization
+        eventNames = GameCustomization.currentEvents;                       //Grabs a List of Wanted Events From GameCustomization
         addOnNames = GameCustomization.currentAddOns;
-        //Loops throught AllEvents and the List of Names
-        foreach (GameEvent events in allEvents)
-        {
-            string currentName = events.nameEvent;
 
-            foreach (string name in eventNames)
-            {
-                if (currentName.Equals(name))                               //if the names are equal
-                    gameEvents.Add(events);                                 //add the event to the playable list of events
-            }
+        for (int parse = 0; parse < eventNames.Length; parse++)
+        {
+            string charName = eventNames.Substring(parse, 1);
+
+            if (charName.Equals("1"))
+                gameEvents.Add(allEvents[parse]);
         }
 
-        //Loops throught AllAddOns and the List of Names
-        foreach (AddOn addOn in allAddOns)
+         foreach (GameEvent ge in gameEvents)
+         {
+             print(ge.nameEvent + " is an activated Event");
+         }
+
+
+        for (int parse = 0; parse < addOnNames.Length; parse++)
         {
-            string currentName = addOn.addOnName;
+            string charName = addOnNames.Substring(parse, 1);
 
-            foreach (string name in addOnNames)
-            {
-                if (currentName.Equals(name))                               //if the names are equal
-                    addOns.Add(addOn);                                      //add the event to the playable list of events
-            }
+            if (charName.Equals("1"))
+                addOns.Add(allAddOns[parse]);
         }
-    }
 
-    void ActivateEvents(byte eventcode, object content, int senderid)
-    {
-        if (eventcode == 0 && PhotonNetwork.isMasterClient)
+        if (PhotonNetwork.isMasterClient)
             InvokeRepeating("ActivateNextEvent", GameCustomization.eventOccurenceRate / 2, GameCustomization.eventOccurenceRate);
     }
 
@@ -75,7 +66,7 @@ public class EventManager : Photon.MonoBehaviour
         {
             currentEvent = nextEvent;
             currentEvent.StartEvent();
-            if(PhotonNetwork.isMasterClient)
+            if (PhotonNetwork.isMasterClient)
             {
                 int arrayIndex = AnnouncerManager.instance.GetRandomEventIndex(currentEvent.nameEvent);
                 AnnouncerManager.instance.PhotonView.RPC("RPC_PlayEventStartClip", PhotonTargets.All, currentEvent.nameEvent, arrayIndex);

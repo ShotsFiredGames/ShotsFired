@@ -39,6 +39,8 @@ public class ServerLauncher : Photon.PunBehaviour
     [SerializeField]
     GameObject roomStateButton;
     [SerializeField]
+    GameObject customizeButton;
+    [SerializeField]
     GameObject startMatchButton;
     [SerializeField]
     GameObject _playerListingPrefab;
@@ -220,6 +222,7 @@ public class ServerLauncher : Photon.PunBehaviour
         {
             roomStateButton.SetActive(false);
             startMatchButton.SetActive(false);
+            customizeButton.SetActive(false);
         }
         GameObject playerListingObj = Instantiate(_playerListingPrefab, playerListingContent.transform);
         PlayerListing pl = playerListingObj.GetComponent<PlayerListing>();
