@@ -28,11 +28,16 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
     public Gun[] guns;
     public LayerMask layermask;
     public CameraShake camShake;
+    public AudioSource jumpSource;
+    public AudioClip jumpSound;
+    public AudioClip landSound;
 
     float yRotationValue;
     GameObject myCamera;
     Gun oldGun;
 
+    public static bool isWalking;
+    public static bool isSprinting;
     [HideInInspector]
     public bool canMove;
     [HideInInspector]
@@ -221,6 +226,8 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
 
     void Moving()
     {
+        isSprinting = false;
+        isWalking = true;
         playerMovement.Turn(controls.Look.X);
         if (!canMove) return;
         playerMovement.Move(controls.Move.X, controls.Move.Y);
@@ -230,6 +237,8 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
 
     void Idling()
     {
+        isWalking = false;
+        isSprinting = false;
         playerMovement.Turn(controls.Look.X);
         animationManager.IsIdle();
         StoppedSprinting();
@@ -237,6 +246,8 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
 
     void Sprinting()
     {
+        isWalking = false;
+        isSprinting = true;
         playerMovement.Turn(controls.Look.X);
         if (!canMove) return;
         playerMovement.Move(controls.Move.X, controls.Move.Y);
@@ -247,6 +258,8 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
 
     void StoppedSprinting()
     {
+        isSprinting = false;
+
         playerMovement.StopSprint();
         animationManager.StoppedSprinting();
         sprintFoV = 0;
@@ -255,21 +268,32 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
     void Jumping()
     {
         if (!canMove) return;
+        isWalking = false;
+        isSprinting = false;
         jumped = true;
         playerMovement.Jump();
         animationManager.IsJumping();
+        jumpSource.clip = jumpSound;
+        jumpSource.Play();
     }
     public void Landed()
     {
         if (playerMovement.canShake)
             ShakeCam(.225f, .12f);
 
+        isWalking = false;
+        isSprinting = false;
+
         jumped = false;
         animationManager.IsLanding();
+        jumpSource.clip = landSound;
+        jumpSource.Play();
     }
 
     public void Falling()
     {
+        isWalking = false;
+        isSprinting = false;
         animationManager.IsFalling();
         jumped = false;
     }
