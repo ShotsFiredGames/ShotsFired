@@ -52,6 +52,9 @@ public class FlagManager : Photon.MonoBehaviour
     void RPC_FlagPickedUp(byte flagNum, string carrierName)
     {
         Flag flag = ConvertFlagFromIndex(flagNum);
+
+        Debug.LogError("The flag " + flag.name + " has been picked up.");
+
         if (flag.resetTimer != null)
             StopCoroutine(flag.resetTimer);
 
@@ -85,6 +88,7 @@ public class FlagManager : Photon.MonoBehaviour
     public void RPC_FlagDropped(string owner)
     {
         Flag flag = ConvertFlagFromPlayerName(owner);
+        Debug.LogError("The flag " + flag.name + " has been dropped.");
 
         if (flag != null && flag.carrier != null)
             flag.carrier.GetComponent<PlayerManager>().hasFlag = false;

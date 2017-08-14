@@ -435,8 +435,18 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
             gameMixer.SetFloat("ReaperVolume", -80);
             //turn off effects
         }
+    }
 
-    }    
+    public bool FlagPickUpCheck()  //returns false if the player cannot pickup a flag
+    {
+        print(hasFlag + "  " + isDead);
+        if (hasFlag)
+            return false;
+        if (isDead)
+            return false;
+
+        return true;
+    }
 
     void SaveBindings()
     {

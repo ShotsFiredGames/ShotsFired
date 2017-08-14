@@ -29,7 +29,7 @@ public class Flag : Photon.MonoBehaviour
         if (other.tag.Equals("Player"))
         {
 			if (!isPickedUp) {
-				if (!other.GetComponent<PlayerManager> ().hasFlag) {
+				if (other.GetComponent<PlayerManager> ().FlagPickUpCheck()) {
 					if (!flagBase.owner.Equals (other.GetComponent<PlayerManager> ())) {
 						isPickedUp = true;
 						FlagManager.instance.photonView.RPC ("RPC_FlagPickedUp", PhotonTargets.All, index, other.transform.root.name);
