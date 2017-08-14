@@ -44,6 +44,7 @@ public class PlayerHealth : Photon.MonoBehaviour
 
     private void Start()
     {
+        if (GameObject.Find("BallToTheWall") != null)
         ballToTheWall = GameObject.Find("BallToTheWall").GetComponent<BallToTheWall>();
     }
 
