@@ -403,8 +403,6 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
         {
             tag.Equals("Player");
         }
-
-        Debug.LogError("The tag is: " + tag);
     }
     
     public void Dead(string damageSource, CollisionDetection.CollisionFlag collisionLocation)

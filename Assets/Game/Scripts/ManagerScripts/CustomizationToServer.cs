@@ -45,7 +45,6 @@ public class CustomizationToServer : MonoBehaviour
         if (PhotonNetwork.room == null) return;
         if (roomProps != null) return;
 
-        print("Init Values");
         string eventsString = ConvertTextTogglesToString(events);
         string addonString = ConvertTextTogglesToString(addOns);
 
@@ -60,7 +59,6 @@ public class CustomizationToServer : MonoBehaviour
         roomProps[PLAYERHEALTH] = playerHealth.value;
         roomProps[RESPAWNTIME] = respawnTime.value;
         roomProps[PLAYERSPEED] = playerSpeed.value;
-        print(roomProps[PLAYERSPEED] + " the player speed");
         roomProps[ABILITYDURATION] = abilityDuration.value;
         roomProps[EVENTOCCURENCE] = eventOccurence.value;
         roomProps[GAMELENGTH] = gameLength.value;
