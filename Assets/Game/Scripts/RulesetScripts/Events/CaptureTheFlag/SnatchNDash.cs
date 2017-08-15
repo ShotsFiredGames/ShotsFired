@@ -61,8 +61,13 @@ public class SnatchNDash : GameEvent
 		if (PhotonNetwork.isMasterClient && !spawnedFlags)
             InitFlags();
 
+        foreach (FlagBase fb in bases)
+        {
+            if (fb.owner != null)
+                fb.gameObject.SetActive(true);
+        }
+
         ActivateFlags(true);
-        //flagSource = flag.GetComponent<AudioSource>();
 
         FlagManager.instance.pointsForCapture = pointsForCapture;
         gameEventDur = StartCoroutine(EventDuration());
