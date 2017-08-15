@@ -15,6 +15,7 @@ public class PlatformManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+        es = MainMenuObjectWrangler.Instance.eventSystem.GetComponent<EventSystem>();
 #if UNITY_WSA_10_0
         Application.targetFrameRate = 30;
         systemType = SystemType.XBOX;

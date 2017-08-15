@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -53,18 +54,85 @@ public class ServerLauncher : Photon.PunBehaviour
 
     void Awake()
     {
-        instance = this;
+        InitializeInstance();
         PhotonNetwork.logLevel = LogLevel;
         PhotonNetwork.autoJoinLobby = false;
         PhotonNetwork.automaticallySyncScene = false;
-        PhotonView = GetComponent<PhotonView>();
+        SceneManager.sceneLoaded += OnSceneFinishedLoading;
+    }
+
+    void InitializeInstance()
+    {
+        if (instance != null && instance == this)
+        {
+            InitializePhotonView();
+            return;
+        }
+
+        if(instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        instance = this;
+        InitializePhotonView();
+    }
+
+    void InitializePhotonView()
+    {
+        if (PhotonView != null && PhotonView == GetComponent<PhotonView>())
+            return;
+
+        if (!GetComponent<PhotonView>())
+        {
+            PhotonView = gameObject.AddComponent<PhotonView>();
+            PhotonView.viewID = 998;
+        }
     }
 
     void Start()
     {
         progressLabel.SetActive(false);
-        if(!PhotonNetwork.connected)
-            PhotonNetwork.ConnectUsingSettings(_gameVersion);        
+        ConnectToNetwork();
+    }
+
+    void ConnectToNetwork()
+    {
+        if (!PhotonNetwork.connected)
+            PhotonNetwork.ConnectUsingSettings(_gameVersion);
+    }
+
+    void OnSceneFinishedLoading(Scene scene, LoadSceneMode mode)
+    {
+        if(scene.buildIndex == 0)
+        {
+            InitializeInstance();
+            ConnectToNetwork();
+            playerListings.Clear();            
+            if (!mainMenuPanel)
+                mainMenuPanel = MainMenuObjectWrangler.Instance.mainMenuPanel;
+            if(!progressLabel)
+                progressLabel = MainMenuObjectWrangler.Instance.progressLabel;
+            if (!loadingScreen)
+                loadingScreen = DoNotDestroyOnLoad.Instance.loadingScreen;
+            if(!lobbyPanel)
+                lobbyPanel = MainMenuObjectWrangler.Instance.lobbyPanel;
+            if(!_roomName)
+                _roomName = MainMenuObjectWrangler.Instance._roomName;
+            if(!roomListingContent)
+                roomListingContent = MainMenuObjectWrangler.Instance.roomListingContent;
+            if(!currentRoomPanel)
+                currentRoomPanel = MainMenuObjectWrangler.Instance.currentRoomPanel;
+            if(!roomStateButton)
+                roomStateButton = MainMenuObjectWrangler.Instance.roomStateButton;
+            if(!customizeButton)
+                customizeButton = MainMenuObjectWrangler.Instance.customizeButton;
+            if(!startMatchButton)
+                startMatchButton = MainMenuObjectWrangler.Instance.startMatchButton;
+            if(!playerListingContent)
+                playerListingContent = MainMenuObjectWrangler.Instance.playerListingContent;
+        }
     }
 
     #region OnClick Functions
@@ -196,9 +264,13 @@ public class ServerLauncher : Photon.PunBehaviour
 
         foreach(RoomListing rl in removeRooms)
         {
-            GameObject rlObj = rl.gameObject;
+            if (rl != null)
+            {
+                GameObject rlObj = rl.gameObject;                
+                Destroy(rlObj);
+            }
+
             roomListings.Remove(rl);
-            Destroy(rlObj);
         }
     }
 
@@ -207,7 +279,11 @@ public class ServerLauncher : Photon.PunBehaviour
         int index = playerListings.FindIndex(x => x.PhotonPlayer == photonPlayer);
         if(index != -1)
         {
-            Destroy(playerListings[index].gameObject);
+            if (playerListings[index] != null)
+            {
+                Destroy(playerListings[index].gameObject);                
+            }
+
             playerListings.RemoveAt(index);
         }
     }
@@ -223,6 +299,12 @@ public class ServerLauncher : Photon.PunBehaviour
             roomStateButton.SetActive(false);
             startMatchButton.SetActive(false);
             customizeButton.SetActive(false);
+        }
+        else if(PhotonNetwork.isMasterClient)
+        {
+            roomStateButton.SetActive(true);
+            startMatchButton.SetActive(true);
+            customizeButton.SetActive(true);
         }
         GameObject playerListingObj = Instantiate(_playerListingPrefab, playerListingContent.transform);
         PlayerListing pl = playerListingObj.GetComponent<PlayerListing>();
@@ -241,8 +323,10 @@ public class ServerLauncher : Photon.PunBehaviour
 
     public override void OnDisconnectedFromPhoton()
     {
-        progressLabel.SetActive(false);
-        mainMenuPanel.SetActive(true);
+        if(progressLabel != null)
+            progressLabel.SetActive(false);
+        if(mainMenuPanel != null)
+            mainMenuPanel.SetActive(true);
         Debug.Log("OnDisconnectedFromPhoton was called by PUN");
     }
 

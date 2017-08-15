@@ -30,7 +30,7 @@ public class NotSoPausedPauseMenu : MonoBehaviour {
 
     public void LeaveRoom()
     {
-        PhotonNetwork.LeaveRoom();
+        PhotonNetwork.Disconnect();
     }
 
     private void UpdateCursorLock(bool isLocked)
