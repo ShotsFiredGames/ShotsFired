@@ -49,15 +49,14 @@ public class SnatchNDash : GameEvent
 		PlayerManager _owner = PlayerWrangler.GetPlayer (_ownerID);
 		bases[index].owner = _owner;
 		newFlag.gameObject.SetActive(true);
-	}
+        bases[index].gameObject.SetActive(true);
+        bases[index].gameObject.GetComponent<Renderer>().material.color = PlayerWrangler.GetFactionMaterial(_owner.faction).color;
+    }
 
     public override void StartEvent()
     {
         foreach (GameObject go in objectsToSetActive)
             go.SetActive(false);
-
-        foreach (FlagBase fb in bases)
-            fb.gameObject.SetActive(true);
 
 		if (PhotonNetwork.isMasterClient && !spawnedFlags)
             InitFlags();

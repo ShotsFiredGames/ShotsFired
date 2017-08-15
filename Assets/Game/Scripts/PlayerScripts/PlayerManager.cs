@@ -13,7 +13,7 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
 
     PlayerHealth playerHealth;
     public bool isDead;
-    string faction;
+    public string faction { get; set; }
     Material factionColor;
 
     Shooting shooting;
