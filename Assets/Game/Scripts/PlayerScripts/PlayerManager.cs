@@ -389,17 +389,32 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
         animationManager.Disarmed();
         playerCamera.SetFieldOfView(60);
     }
+
+    [PunRPC]
+    public void RPC_DeathState(bool isPlayerDead)
+    {
+        isDead = isPlayerDead;
+
+        if (isPlayerDead)
+        {
+            tag.Equals("Dead");
+        }
+        else
+        {
+            tag.Equals("Player");
+        }
+
+        Debug.LogError("The tag is: " + tag);
+    }
     
     public void Dead(string damageSource, CollisionDetection.CollisionFlag collisionLocation)
     {
-        isDead = true;
+        photonView.RPC("RPC_DeathState", PhotonTargets.All, true);
 
         if (hasFlag)
             FlagManager.instance.photonView.RPC("RPC_FlagDropped", PhotonTargets.All, name);
 
-        playerMovement.CancelSpeedBoost();
-
-        
+        playerMovement.CancelSpeedBoost();        
         photonView.RPC("RPC_Disarm", PhotonTargets.All);
         photonView.RPC("RPC_CancelAbility", PhotonTargets.All);
         animationManager.IsDead(collisionLocation);
@@ -412,7 +427,7 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
     {
         ReaperEffectsActivate(false);
         animationManager.IsRespawning();
-        isDead = false;
+        photonView.RPC("RPC_DeathState", PhotonTargets.All, false);
     }
 
     Gun FindGun(string gunName)
