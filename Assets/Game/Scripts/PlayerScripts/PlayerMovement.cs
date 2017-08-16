@@ -28,6 +28,8 @@ public class PlayerMovement : MonoBehaviour
     public bool isGrounded;
     [HideInInspector]
     public bool canShake;
+    [HideInInspector]
+    public bool waitForShutOff;
 
     PlayerManager playerManager;
     PlayerCamera playerCamera;
@@ -64,6 +66,7 @@ public class PlayerMovement : MonoBehaviour
     bool canSprint;
     bool jumping;
     bool landed;
+    bool airControlOff;
 
     void Start()
     {
@@ -112,6 +115,8 @@ public class PlayerMovement : MonoBehaviour
                     StopCoroutine(checkFall);
                     canShake = false;
                     checkingFall = false;
+                    airControlOff = false;
+                    waitForShutOff = false;
                 }
             }
 
@@ -137,8 +142,10 @@ public class PlayerMovement : MonoBehaviour
             playerManager.Falling();
 
             landed = false;
-            if (speed != airSpeed && !isUsingBoots)
+            if (speed != airSpeed && !isUsingBoots && !airControlOff)
                 speed = airSpeed;
+            else if (speed != 0 && airControlOff)
+                speed = 0;
 
             rb.velocity += Physics.gravity * gravity * Time.fixedDeltaTime;
         }
@@ -149,6 +156,11 @@ public class PlayerMovement : MonoBehaviour
         yield return new WaitForSeconds(1.5f);
         checkingFall = false;
         canShake = true;
+
+        if(waitForShutOff)
+            yield return new WaitForSeconds(3);
+
+        airControlOff = true;
     }
 
     public void Move(float horizontal, float vertical)

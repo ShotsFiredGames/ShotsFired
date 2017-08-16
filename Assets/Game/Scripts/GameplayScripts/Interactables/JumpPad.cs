@@ -3,6 +3,7 @@ using System.Collections;
 
 public class JumpPad : MonoBehaviour
 {
+    public bool centerPad;
     public Vector3 liftStrength;
     public AudioSource padSource;
     public AudioClip launchClip;
@@ -23,9 +24,12 @@ public class JumpPad : MonoBehaviour
         {
             if(padSource != null)
                 padSource.PlayOneShot(launchClip);
+            if (centerPad)
+                _liftedObject.GetComponent<PlayerMovement>().waitForShutOff = true;
 
             _liftedObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
             _liftedObject.GetComponent<Rigidbody>().velocity = liftStrength;
+
         }
     }
 }
