@@ -145,7 +145,7 @@ public class PlayerMovement : MonoBehaviour
             if (speed != airSpeed && !isUsingBoots && !airControlOff)
                 speed = airSpeed;
             else if (speed != 0 && airControlOff)
-                speed = 0;
+                speed = 0.1f;
 
             rb.velocity += Physics.gravity * gravity * Time.fixedDeltaTime;
         }
