@@ -139,15 +139,14 @@ public class PlayerHealth : Photon.MonoBehaviour
 		foreach (SkinnedMeshRenderer rend in playerMeshes)
 			rend.enabled = false;
         yield return new WaitForSeconds(respawnTime);
-
-
+        
         if (ballToTheWall == null && GameObject.Find("BallToTheWall") != null)
             ballToTheWall = GameObject.Find("BallToTheWall").GetComponent<BallToTheWall>();
 
-        if (!ballToTheWall.ballToTheWallActive)
+        //if (ballToTheWall != null && !ballToTheWall.ballToTheWallActive)
             respawnpoint = GameManager.instance.GetSpawnPoint();
-        else
-            respawnpoint = ballToTheWall.spawnpoints[Random.Range(0, ballToTheWall.spawnpoints.Length)].transform;
+      //  else
+         //   respawnpoint = ballToTheWall.spawnpoints[Random.Range(0, ballToTheWall.spawnpoints.Length)].transform;
 
         transform.position = respawnpoint.position;
         transform.rotation = respawnpoint.rotation;
