@@ -294,7 +294,7 @@ public class PlayerMovement : MonoBehaviour
 
     public bool Grounded()
     {
-        return Physics.Raycast(transform.position, Vector3.down, distToGrounded, ground);
+        return Physics.BoxCast(transform.position, (Vector3.one * .5f), Vector3.down, Quaternion.identity, distToGrounded, ground);
     }
 
     public void Sprint()
