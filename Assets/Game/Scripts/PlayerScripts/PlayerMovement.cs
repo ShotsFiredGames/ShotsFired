@@ -139,28 +139,33 @@ public class PlayerMovement : MonoBehaviour
                 checkFall = StartCoroutine(CheckFall());
             }
 
+
             playerManager.Falling();
 
             landed = false;
             if (speed != airSpeed && !isUsingBoots && !airControlOff)
                 speed = airSpeed;
             else if (speed != 0 && airControlOff)
-                speed = 0.1f;
+                speed = 0;
 
             rb.velocity += Physics.gravity * gravity * Time.fixedDeltaTime;
         }
     }
 
+    private void OnCollisionEnter(Collision other)
+    {
+        if(!isGrounded && other.gameObject.layer == LayerMask.NameToLayer("Ground"))
+        {
+            print("Collided");
+            airControlOff = true;
+        }
+    }
+
     IEnumerator CheckFall()
     {
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(1.5f);                                   
         checkingFall = false;
         canShake = true;
-
-        if(waitForShutOff)
-            yield return new WaitForSeconds(3);
-
-        airControlOff = true;
     }
 
     public void Move(float horizontal, float vertical)
