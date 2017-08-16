@@ -121,6 +121,9 @@ public class PlayerMovement : MonoBehaviour
                 }
             }
 
+            if (juggActive && speed != GameCustomization.playerSpeed)
+                speed = GameCustomization.playerSpeed;
+
             if (speed != GameCustomization.playerSpeed && !juggActive)
             {
                 if (speedBoostActive || speedBoosted)

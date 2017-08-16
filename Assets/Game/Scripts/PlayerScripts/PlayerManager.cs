@@ -171,10 +171,7 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
         else if (controls.Move && !controls.Sprint)
             Moving();
         else if (controls.Move && controls.Sprint && !controls.Aim)
-            if (playerMovement.canSprint)
-                Sprinting();
-            else
-                Moving();
+            Sprinting();
         else if (controls.Move && controls.Sprint && controls.Aim)
             Moving();
         else
@@ -251,6 +248,7 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
     void Sprinting()
     {
         playerMovement.Turn(controls.Look.X);
+
         if (!canMove) return;
         playerMovement.Move(controls.Move.X, controls.Move.Y);
 
