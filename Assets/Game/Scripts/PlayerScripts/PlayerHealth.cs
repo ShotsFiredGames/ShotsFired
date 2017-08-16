@@ -141,7 +141,7 @@ public class PlayerHealth : Photon.MonoBehaviour
         yield return new WaitForSeconds(respawnTime);
 
 
-        if (ballToTheWall == null)
+        if (ballToTheWall == null && GameObject.Find("BallToTheWall") != null)
             ballToTheWall = GameObject.Find("BallToTheWall").GetComponent<BallToTheWall>();
 
         if (!ballToTheWall.ballToTheWallActive)
