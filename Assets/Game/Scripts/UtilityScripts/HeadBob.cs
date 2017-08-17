@@ -29,7 +29,8 @@ public class HeadBob : MonoBehaviour
 
 	void Update ()
     {
-		if(playerMovement.isGrounded)
+        if (!playerManager.canMove) return;
+        if (playerMovement.isGrounded)
             headbobStepCounter += Vector3.Distance(parentLastPosition, transform.root.position) * headbobSpeed;
 
         transform.localPosition = new Vector3(Mathf.Sin(headbobStepCounter) * headbobAmountX , 
