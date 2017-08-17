@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
 using UnityEngine;
 
 public class GiftedGun : AddOn
 {
     public List<string> possibleGunNames;
+    public GameObject[] gunSpawns;
+    public GameObject[] gunThatSpawnFromGunSpawns;
+    GameObject[] previousGunSpawns;
     PlayerManager[] allPlayers;
 
     public override void StartAddOn()
@@ -19,4 +22,10 @@ public class GiftedGun : AddOn
             }
         }
     }
+/*
+    IEnumerator ChangeGunSpawns()
+    {
+
+    }
+    */
 }
