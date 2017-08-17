@@ -28,11 +28,16 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
     public Gun[] guns;
     public LayerMask layermask;
     public CameraShake camShake;
+    public AudioSource jumpSource;
+    public AudioClip[] jumpSounds;
+    public AudioClip[] landSounds;
 
     float yRotationValue;
     GameObject myCamera;
     Gun oldGun;
 
+    public static bool isWalking;
+    public static bool isSprinting;
     [HideInInspector]
     public bool canMove;
     [HideInInspector]
@@ -192,9 +197,9 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
         playerCamera.Look(controls.Look.Y);
     }
 
-    public void ShakeCam(float shakeIntensity, float shakeDecay)
+    public void ShakeCam(float shakeIntensity, float shakeDecay, float shakeSpeed)
     {
-        camShake.DoShake(shakeIntensity, shakeDecay);
+        camShake.DoShake(shakeIntensity, shakeDecay, shakeSpeed);
     }
 
     public void SetRotationValue(float value)
@@ -221,6 +226,8 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
 
     void Moving()
     {
+        isSprinting = false;
+        isWalking = true;
         playerMovement.Turn(controls.Look.X);
         if (!canMove) return;
         playerMovement.Move(controls.Move.X, controls.Move.Y);
@@ -230,6 +237,8 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
 
     void Idling()
     {
+        isWalking = false;
+        isSprinting = false;
         playerMovement.Turn(controls.Look.X);
         animationManager.IsIdle();
         StoppedSprinting();
@@ -237,32 +246,52 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
 
     void Sprinting()
     {
+
         playerMovement.Turn(controls.Look.X);
+
         if (!canMove) return;
         playerMovement.Move(controls.Move.X, controls.Move.Y);
-        playerMovement.Sprint();
-        animationManager.IsSprinting();
-        sprintFoV = 10;
+
+        if (playerMovement.isGrounded)
+        {
+            isWalking = false;
+            isSprinting = true;
+            playerMovement.Sprint();
+            animationManager.IsSprinting();
+            sprintFoV = 10;
+        }
     }
 
-    void StoppedSprinting()
+    public void StoppedSprinting()
     {
+        isSprinting = false;
+
         playerMovement.StopSprint();
         animationManager.StoppedSprinting();
-        sprintFoV = 0;
+        if (!playerMovement.juggActive)
+            sprintFoV = 0;
     }
 
     void Jumping()
     {
         if (!canMove) return;
+        isWalking = false;
+        isSprinting = false;
         jumped = true;
         playerMovement.Jump();
         animationManager.IsJumping();
+        jumpSource.clip = jumpSounds[Random.Range(0, jumpSounds.Length)];
+        jumpSource.Play();
     }
     public void Landed()
     {
+        jumpSource.PlayOneShot(landSounds[Random.Range(0, landSounds.Length)]);
+
         if (playerMovement.canShake)
-            ShakeCam(.225f, .12f);
+            ShakeCam(1f, .1f, .01f);
+
+        isWalking = false;
+        isSprinting = false;
 
         jumped = false;
         animationManager.IsLanding();
@@ -270,6 +299,8 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
 
     public void Falling()
     {
+        isWalking = false;
+        isSprinting = false;
         animationManager.IsFalling();
         jumped = false;
     }

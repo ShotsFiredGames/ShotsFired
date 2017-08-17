@@ -19,7 +19,6 @@ public class PlayerMovement : MonoBehaviour
 
     [Space, Header("Ability Variables"), Tooltip("This will change depending on the hieght of the character.")]
     public float speedBoostDuration;
-    public float juggernautSpeed;
     public float speedBoostSpeed;
 
     [HideInInspector]
@@ -28,6 +27,12 @@ public class PlayerMovement : MonoBehaviour
     public bool isGrounded;
     [HideInInspector]
     public bool canShake;
+    [HideInInspector]
+    public bool waitForShutOff;
+    [HideInInspector]
+    public bool juggActive;
+    [HideInInspector]
+    public bool canSprint;
 
     PlayerManager playerManager;
     PlayerCamera playerCamera;
@@ -54,16 +59,15 @@ public class PlayerMovement : MonoBehaviour
     float speed;
 
     bool speedBoostActive;
-    bool isUsingBoots;
     bool speedBoosted;
     bool checkingFall;
     bool isDraining;
     bool isJumping;
     bool aimAssist;
     bool isGaining;
-    bool canSprint;
     bool jumping;
     bool landed;
+    bool airControlOff;
 
     void Start()
     {
@@ -112,10 +116,15 @@ public class PlayerMovement : MonoBehaviour
                     StopCoroutine(checkFall);
                     canShake = false;
                     checkingFall = false;
+                    airControlOff = false;
+                    waitForShutOff = false;
                 }
             }
 
-            if (speed != GameCustomization.playerSpeed && !isUsingBoots)
+            if (juggActive && speed != GameCustomization.playerSpeed)
+                speed = GameCustomization.playerSpeed;
+
+            if (speed != GameCustomization.playerSpeed && !juggActive)
             {
                 if (speedBoostActive || speedBoosted)
                     speed = speedBoostSpeed;
@@ -134,13 +143,26 @@ public class PlayerMovement : MonoBehaviour
                 checkFall = StartCoroutine(CheckFall());
             }
 
+            if (isSprinting && !juggActive)
+                playerManager.StoppedSprinting();
+
             playerManager.Falling();
 
             landed = false;
-            if (speed != airSpeed && !isUsingBoots)
+            if (speed != airSpeed && !juggActive && !airControlOff)
                 speed = airSpeed;
+            else if (speed != 0 && airControlOff)
+                speed = 0;
 
             rb.velocity += Physics.gravity * gravity * Time.fixedDeltaTime;
+        }
+    }
+
+    private void OnCollisionEnter(Collision other)
+    {
+        if (!isGrounded && other.gameObject.layer == LayerMask.NameToLayer("Ground"))
+        {
+            airControlOff = true;
         }
     }
 
@@ -212,7 +234,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void SuperBoots()
     {
-        if (!isUsingBoots)
+        if (!juggActive)
         {
             CancelSpeedBoost();
             superboots = StartCoroutine(MovementIncrease());
@@ -250,7 +272,7 @@ public class PlayerMovement : MonoBehaviour
         {
             StopCoroutine(superboots);
 
-            isUsingBoots = false;
+            juggActive = false;
             speed = GameCustomization.playerSpeed;
             jumpForce = _jump;
         }
@@ -258,31 +280,28 @@ public class PlayerMovement : MonoBehaviour
 
     IEnumerator MovementIncrease()
     {
-        if (!isUsingBoots)
+        if (!juggActive)
         {
-            isUsingBoots = true;
-            speed = juggernautSpeed;
+            juggActive = true;
             jumpForce = jumpForce * 1.25f;
             yield return new WaitForSeconds(GameCustomization.abilityDuration);
-            isUsingBoots = false;
-            speed = GameCustomization.playerSpeed;
+            juggActive = false;
             jumpForce = _jump;
         }
-
     }
 
     IEnumerator SpeedBoost()
     {
         speed = speedBoostSpeed;
         yield return new WaitForSeconds(speedBoostDuration);
-        if (!isUsingBoots)
+        if (!juggActive)
             speed = GameCustomization.playerSpeed;
         speedBoostActive = false;
     }
 
     public bool Grounded()
     {
-        return Physics.Raycast(transform.position, Vector3.down, distToGrounded, ground);
+        return Physics.BoxCast(transform.position, (Vector3.one * .5f), Vector3.down, Quaternion.identity, distToGrounded, ground);
     }
 
     public void Sprint()
@@ -298,13 +317,14 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            isSprinting = false;
+            if (!juggActive)
+                isSprinting = false;
         }
 
         if (!staminaBar.IsActive())
             staminaBar.gameObject.SetActive(true);
 
-        if (!isDraining && stamina > 0)
+        if (!juggActive && !isDraining && stamina > 0)
         {
             isDraining = true;
             sprinting = StartCoroutine(DrainStamina());
@@ -319,10 +339,12 @@ public class PlayerMovement : MonoBehaviour
         if (stamina <= 0)
         {
             canSprint = false;
-            isSprinting = false;
+            if (!juggActive)
+                isSprinting = false;
             isDraining = false;
             yield break;
         }
+
         yield return new WaitForSeconds(staminaDrainRate);
         isDraining = false;
     }
@@ -334,6 +356,9 @@ public class PlayerMovement : MonoBehaviour
 
         if (staminaBar.IsActive())
             staminaBar.gameObject.SetActive(false);
+
+        if (playerManager.sprintFoV != 0)
+            playerManager.sprintFoV = 0;
 
         if (!isGaining && stamina < maxStamina)
         {
