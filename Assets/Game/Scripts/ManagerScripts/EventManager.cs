@@ -36,13 +36,17 @@ public class EventManager : Photon.MonoBehaviour
              Debug.LogError(ge.nameEvent + " is an activated Event");
          }
 
-
         for (int parse = 0; parse < addOnNames.Length; parse++)
         {
             string charName = addOnNames.Substring(parse, 1);
 
             if (charName.Equals("1"))
                 addOns.Add(allAddOns[parse]);
+        }
+
+        foreach (AddOn ao in addOns)
+        {
+            Debug.LogError(ao.addOnName + " is an activated addon");
         }
 
         if (PhotonNetwork.isMasterClient)
