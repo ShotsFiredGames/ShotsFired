@@ -8,7 +8,7 @@ public class PickUpLoacation : Photon.MonoBehaviour
     public float spawnDelay;
     public Animator anim;
 
-    GameObject activePickUp;
+    public GameObject activePickUp { get; set; }
     bool isSpawning;
 
     private void Start()
@@ -54,6 +54,15 @@ public class PickUpLoacation : Photon.MonoBehaviour
         }
     }
 
+    public void SpawnSelectPickup(int pickupID)
+    {
+        if (PhotonNetwork.isMasterClient)
+        {
+            int viewID = PhotonNetwork.AllocateViewID();
+            photonView.RPC("RPC_InstantiatePickUp", PhotonTargets.AllBuffered, viewID, pickupID);
+        }
+    }
+
     [PunRPC]
     void RPC_InstantiatePickUp(int id, int pickUp)
     {
@@ -86,5 +95,14 @@ public class PickUpLoacation : Photon.MonoBehaviour
             rotate = GetComponentInChildren<Rotate>();
         else
             rotate.isMimic = true;
+    }
+
+    [PunRPC]
+    public void RPC_DestoryItsPickup()
+    {
+        PhotonView pv = activePickUp.GetComponent<PhotonView>();
+
+        if (pv != null)
+            Destroy(pv.gameObject);
     }
 }
