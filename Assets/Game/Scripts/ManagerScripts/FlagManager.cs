@@ -90,7 +90,10 @@ public class FlagManager : Photon.MonoBehaviour
     {
         Flag flag = ConvertFlagFromPlayerName(owner);
 
-        if (flag != null && flag.carrier != null)
+        if (flag == null)
+            return;
+
+        if (flag.carrier != null)
             flag.carrier.GetComponent<PlayerManager>().hasFlag = false;
 
         flag.transform.parent = null;

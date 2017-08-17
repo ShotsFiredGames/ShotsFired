@@ -77,7 +77,7 @@ public class PlayerMovement : MonoBehaviour
         //sprintSpeed = (speed + (speed * .5f));
         //aimSpeed = (speed - (speed * .5f));
 
-        SetSpeed(GameCustomization.playerSpeed);
+        SetSpeed((byte)GameCustomization.playerSpeed);
         rb = GetComponent<Rigidbody>();
         playerManager = GetComponent<PlayerManager>();
         _jump = jumpForce;
@@ -88,7 +88,7 @@ public class PlayerMovement : MonoBehaviour
         staminaBar.fillAmount = stamina / maxStamina;
     }
 
-    public void SetSpeed(float speedToSet)
+    public void SetSpeed(byte speedToSet)
     {
         defaultSpeed = speedToSet;
         speed = speedToSet;
