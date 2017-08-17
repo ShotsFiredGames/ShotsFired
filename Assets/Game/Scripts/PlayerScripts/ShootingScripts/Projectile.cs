@@ -12,6 +12,7 @@ public class Projectile : Photon.MonoBehaviour
     Rigidbody rb;
     short damage;
     bool explosive;
+    float lerpSpeed;
 
     Vector3 impactNormal; //Used to rotate impactparticle.
 
@@ -32,7 +33,8 @@ public class Projectile : Photon.MonoBehaviour
         }
         else
         {
-            transform.position = Vector3.Lerp(transform.position, direction, speed * Time.deltaTime);
+            lerpSpeed += speed * Time.deltaTime;
+            transform.position = Vector3.Lerp(transform.position, direction, lerpSpeed);
         }
     }
 
