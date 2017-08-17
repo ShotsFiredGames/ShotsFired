@@ -67,11 +67,8 @@ public class PlayerHealth : Photon.MonoBehaviour
         if (isDead) return;
         currentHealth -= damage;
         Hit(collisionLocation);
-        if (!source.isPlaying)
-        {
-            source.clip = hitEffects[Random.Range(0, hitEffects.Length)];
-            source.Play();
-        }        
+
+        source.PlayOneShot(hitEffects[Random.Range(0, hitEffects.Length)]); 
 
         if (currentHealth > (short)(maxHealth * 0.75f))
         {
