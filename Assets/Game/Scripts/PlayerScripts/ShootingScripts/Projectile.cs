@@ -11,6 +11,7 @@ public class Projectile : Photon.MonoBehaviour
     string playername;
     Rigidbody rb;
     short damage;
+    bool explosive;
 
     Vector3 impactNormal; //Used to rotate impactparticle.
 
@@ -24,8 +25,15 @@ public class Projectile : Photon.MonoBehaviour
 
     void FixedUpdate()
     {
-        transform.LookAt(direction);
-        rb.AddForce(transform.forward * speed);
+        if(explosive)
+        {
+            transform.LookAt(direction);
+            rb.AddForce(transform.forward * speed);
+        }
+        else
+        {
+            transform.position = Vector3.Lerp(transform.position, direction, speed * Time.deltaTime);
+        }
     }
 
     void OnTriggerEnter(Collider other)
@@ -44,8 +52,11 @@ public class Projectile : Photon.MonoBehaviour
             {
                 if (PhotonNetwork.isMasterClient)
                 {
-                    GameObject _explosion = PhotonNetwork.Instantiate(explosion.name, transform.position, Quaternion.FromToRotation(Vector3.up, impactNormal), 0);
-                    _explosion.GetComponent<PhotonView>().RPC("RPC_SetExplosionVariables", PhotonTargets.All, playername);
+                    if(explosive)
+                    {
+                        GameObject _explosion = PhotonNetwork.Instantiate(explosion.name, transform.position, Quaternion.FromToRotation(Vector3.up, impactNormal), 0);
+                        _explosion.GetComponent<PhotonView>().RPC("RPC_SetExplosionVariables", PhotonTargets.All, playername);
+                    }
                     photonView.RPC("RPC_DestroyProjectile", PhotonTargets.AllBuffered);
                 }
             }
@@ -59,12 +70,13 @@ public class Projectile : Photon.MonoBehaviour
     }
 
     [PunRPC]
-    public void RPC_SetProjectileVariables(float _speed, Vector3 _direction, string _playername, Vector3 hitNormal, short _damage)
+    public void RPC_SetProjectileVariables(float _speed, Vector3 _direction, string _playername, Vector3 hitNormal, short _damage, bool _explosive)
     {
         speed = _speed;
         direction = _direction;
         playername = _playername;
         impactNormal = hitNormal;
         damage = _damage;
+        explosive = _explosive;
     }
 }

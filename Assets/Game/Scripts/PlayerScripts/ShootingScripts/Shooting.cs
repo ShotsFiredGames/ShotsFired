@@ -205,20 +205,41 @@ public class Shooting : Photon.MonoBehaviour
             PlayerShot(hit.transform.root.name, hit.transform.name, _damage);
             Vector3 position = hit.point + (hit.normal * .1f);
             Quaternion rotation = Quaternion.LookRotation(hit.normal);
-            if(PhotonNetwork.isMasterClient)
+
+            if (PhotonNetwork.isMasterClient)
                 SpawnBulletHole(position, rotation, "Player");
+
+
+            Vector3 direction = hit.point;
+            Vector3 hitNormal = hit.normal;
+            GameObject bullet = PhotonNetwork.Instantiate(currentGun.projectile.name, currentGun.gunbarrel.transform.position, currentGun.gunbarrel.transform.rotation, 0);
+            bullet.GetComponent<PhotonView>().RPC("RPC_SetProjectileVariables", PhotonTargets.All, currentGun.speed, direction, transform.name, hitNormal, (short)0, false);
+
         }
         else if (hit.transform.tag.Equals("Reaper"))
         {
             StartCoroutine(HitMarker());
             ReaperShot(transform.root.name, hit.transform.GetComponent<Reaper>().GetTargetPlayer(), _damage);
+
+            Vector3 direction = hit.point;
+            Vector3 hitNormal = hit.normal;
+            GameObject bullet = PhotonNetwork.Instantiate(currentGun.projectile.name, currentGun.gunbarrel.transform.position, currentGun.gunbarrel.transform.rotation, 0);
+            bullet.GetComponent<PhotonView>().RPC("RPC_SetProjectileVariables", PhotonTargets.All, currentGun.speed, direction, transform.name, hitNormal, (short)0, false);
         }
         else
         {
             Vector3 position = hit.point + (hit.normal * .1f);
             Quaternion rotation = Quaternion.LookRotation(hit.normal);
             SpawnBulletHole(position, rotation, "Wall");
+
+
+            Vector3 direction = hit.point;
+            Vector3 hitNormal = hit.normal;
+            GameObject bullet = PhotonNetwork.Instantiate(currentGun.projectile.name, currentGun.gunbarrel.transform.position, currentGun.gunbarrel.transform.rotation, 0);
+            bullet.GetComponent<PhotonView>().RPC("RPC_SetProjectileVariables", PhotonTargets.All, currentGun.speed, direction, transform.name, hitNormal, (short)0, false);
         }
+
+       
     }
 
     void ParticleShot()
@@ -242,7 +263,7 @@ public class Shooting : Photon.MonoBehaviour
                     currentGun.shootingAnim.SetTrigger("Fire");
 
             GameObject bullet = PhotonNetwork.Instantiate(currentGun.projectile.name, currentGun.gunbarrel.transform.position, currentGun.gunbarrel.transform.rotation, 0);
-            bullet.GetComponent<PhotonView>().RPC("RPC_SetProjectileVariables", PhotonTargets.All, currentGun.speed, direction, transform.name, hitNormal, _damage);
+            bullet.GetComponent<PhotonView>().RPC("RPC_SetProjectileVariables", PhotonTargets.All, currentGun.speed, direction, transform.name, hitNormal, _damage, true);
         }
     }
 
