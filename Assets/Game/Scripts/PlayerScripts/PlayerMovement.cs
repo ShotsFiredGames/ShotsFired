@@ -54,9 +54,11 @@ public class PlayerMovement : MonoBehaviour
     float sprintSpeed;
     float aimSpeed;
     float airSpeed;
+    float defaultSpeed;
     float stamina;
     float _jump;
     float speed;
+    
 
     bool speedBoostActive;
     bool speedBoosted;
@@ -71,18 +73,28 @@ public class PlayerMovement : MonoBehaviour
 
     void Start()
     {
-        speed = GameCustomization.playerSpeed;
-        sprintSpeed = (speed + (speed * .5f));
-        aimSpeed = (speed - (speed * .5f));
+        //speed = GameCustomization.playerSpeed;
+        //sprintSpeed = (speed + (speed * .5f));
+        //aimSpeed = (speed - (speed * .5f));
 
+        SetSpeed(GameCustomization.playerSpeed);
         rb = GetComponent<Rigidbody>();
         playerManager = GetComponent<PlayerManager>();
         _jump = jumpForce;
         playerCamera = GetComponent<PlayerCamera>();
-        airSpeed = speed * .85f;
+        //airSpeed = speed * .85f;
         canSprint = true;
         stamina = maxStamina;
         staminaBar.fillAmount = stamina / maxStamina;
+    }
+
+    public void SetSpeed(float speedToSet)
+    {
+        defaultSpeed = speedToSet;
+        speed = speedToSet;
+        sprintSpeed = (speedToSet + (speedToSet * .5f));
+        aimSpeed = (speedToSet - (speedToSet * .5f));
+        airSpeed = speedToSet * .85f;
     }
 
     public void AimAssist()
@@ -119,17 +131,6 @@ public class PlayerMovement : MonoBehaviour
                     airControlOff = false;
                     waitForShutOff = false;
                 }
-            }
-
-            if (juggActive && speed != GameCustomization.playerSpeed)
-                speed = GameCustomization.playerSpeed;
-
-            if (speed != GameCustomization.playerSpeed && !juggActive)
-            {
-                if (speedBoostActive || speedBoosted)
-                    speed = speedBoostSpeed;
-                else
-                    speed = GameCustomization.playerSpeed;
             }
         }
         else
@@ -230,73 +231,6 @@ public class PlayerMovement : MonoBehaviour
         {
             rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
         }
-    }
-
-    public void SuperBoots()
-    {
-        if (!juggActive)
-        {
-            CancelSpeedBoost();
-            superboots = StartCoroutine(MovementIncrease());
-        }
-    }
-
-    public void SpeedBoosted()
-    {
-        CancelSpeedBoost();
-        speedBoosted = true;
-        speed = speedBoostSpeed;
-    }
-
-    public void ActivateSpeedBoost()
-    {
-        if (!speedBoostActive)
-        {
-            speedBoostActive = true;
-            speedBoosted = false;
-            speedboost = StartCoroutine(SpeedBoost());
-        }
-    }
-
-    public void CancelSpeedBoost()
-    {
-        speedBoostActive = false;
-        if (speedboost != null)
-            StopCoroutine(speedboost);
-    }
-
-
-    public void CancelSuperBoots()
-    {
-        if (superboots != null)
-        {
-            StopCoroutine(superboots);
-
-            juggActive = false;
-            speed = GameCustomization.playerSpeed;
-            jumpForce = _jump;
-        }
-    }
-
-    IEnumerator MovementIncrease()
-    {
-        if (!juggActive)
-        {
-            juggActive = true;
-            jumpForce = jumpForce * 1.25f;
-            yield return new WaitForSeconds(GameCustomization.abilityDuration);
-            juggActive = false;
-            jumpForce = _jump;
-        }
-    }
-
-    IEnumerator SpeedBoost()
-    {
-        speed = speedBoostSpeed;
-        yield return new WaitForSeconds(speedBoostDuration);
-        if (!juggActive)
-            speed = GameCustomization.playerSpeed;
-        speedBoostActive = false;
     }
 
     public bool Grounded()

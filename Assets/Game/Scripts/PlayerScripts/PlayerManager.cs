@@ -102,6 +102,12 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
         rend.material = factionColor;
     }
 
+    [PunRPC]
+    public void RPC_SetGravity(double newGravity)
+    {
+        Physics.gravity = new Vector3 (0, (float)-newGravity);
+    }
+
     public string GetFaction()
     {
         return faction;
@@ -207,16 +213,6 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
         yRotationValue = value;
     }
 
-
-    public void EnteredSpeedBoost()
-    {
-        playerMovement.SpeedBoosted();
-    }
-
-    public void SpeedBoost()
-    {
-        playerMovement.ActivateSpeedBoost();
-    }
     ////Player States////
 
     void ApplyMovementInput()
@@ -246,7 +242,6 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
 
     void Sprinting()
     {
-
         playerMovement.Turn(controls.Look.X);
 
         if (!canMove) return;
@@ -362,7 +357,7 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
         {
             case "Juggernaut":
                 juggernaut.ActivateJuggernaut();
-                playerMovement.SuperBoots();
+                //playerMovement.SuperBoots();
                 break;
             case "Overcharged":
                 shooting.ActivateOvercharged();
@@ -371,9 +366,15 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
     }
 
     [PunRPC]
+    public void RPC_SetSpeed(byte newSpeed)
+    {
+        playerMovement.SetSpeed(newSpeed);
+    }
+
+    [PunRPC]
     public void RPC_CancelAbility()
     {
-        playerMovement.CancelSuperBoots();
+        //playerMovement.CancelSuperBoots();
         juggernaut.CancelJuggernaut();
         shooting.CancelOvercharged();
     }
@@ -443,7 +444,7 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
         if (hasFlag)
             FlagManager.instance.photonView.RPC("RPC_FlagDropped", PhotonTargets.All, name);
 
-        playerMovement.CancelSpeedBoost();        
+        //playerMovement.CancelSpeedBoost();        
         photonView.RPC("RPC_Disarm", PhotonTargets.All);
         photonView.RPC("RPC_CancelAbility", PhotonTargets.All);
         animationManager.IsDead(collisionLocation);
