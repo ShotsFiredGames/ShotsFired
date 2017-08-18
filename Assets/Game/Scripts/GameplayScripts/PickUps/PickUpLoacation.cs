@@ -70,7 +70,7 @@ public class PickUpLoacation : Photon.MonoBehaviour
     {
         foreach (GameObject pickup in pickUpTypes)
         {
-            Debug.LogError(gameObject.name + " has a pickup " + activePickUp.name);
+            Debug.LogError(gameObject.name + " has a pickup " + pickup.name);
         }
 
         activePickUp = Instantiate(pickUpTypes[pickUp], transform.position + spawnOffset, Quaternion.identity);
