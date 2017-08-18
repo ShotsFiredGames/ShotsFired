@@ -6,8 +6,8 @@ public class GiftedGun : AddOn
 {
     public List<string> possibleGunNames;
     public PickUpLoacation[] gunSpawns;
-    public GameObject[] gunThatSpawnFromGunSpawns;
-    GameObject[][] previousGunSpawns;
+    public PickUp[] gunThatSpawnFromGunSpawns;
+    PickUp[][] previousGunSpawns;
     PlayerManager[] allPlayers;
 
     PhotonView pv;
@@ -19,7 +19,7 @@ public class GiftedGun : AddOn
 
     public override void StartAddOn()
     {
-        previousGunSpawns = new GameObject[gunSpawns.Length][];
+        previousGunSpawns = new PickUp[gunSpawns.Length][];
         allPlayers = PlayerWrangler.GetAllPlayers();
 
         foreach (PlayerManager player in allPlayers)
@@ -45,8 +45,7 @@ public class GiftedGun : AddOn
             Destroy(gunSpawn.activePickUp);
         }
 
-        pv.RPC("RPC_SetNewGunTypes", PhotonTargets.All, index);
-        gunSpawn.SpawnSelectPickup(0);
+        gunSpawn.SpawnSelectPickup("ShotGun");
         yield return new WaitForSeconds(GameCustomization.eventOccurenceRate / 3);
 
         if (PhotonNetwork.isMasterClient)
@@ -55,7 +54,6 @@ public class GiftedGun : AddOn
             Destroy(gunSpawn.activePickUp);
         }
 
-        pv.RPC("RPC_SetOldGunTypes", PhotonTargets.All, index);
         gunSpawn.SpawnRandomPickup();
     }
 

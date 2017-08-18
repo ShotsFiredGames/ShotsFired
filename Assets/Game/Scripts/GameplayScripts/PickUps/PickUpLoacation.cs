@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class PickUpLoacation : Photon.MonoBehaviour
 {
-    public GameObject[] pickUpTypes;
+    public PickUp[] pickUpTypes;
     public Vector3 spawnOffset;
     public float spawnDelay;
     public Animator anim;
@@ -36,7 +36,7 @@ public class PickUpLoacation : Photon.MonoBehaviour
     {
         yield return new WaitForSeconds(spawnDelay);
         if(anim != null)
-        anim.SetBool("HasAbility", true);
+            anim.SetBool("HasAbility", true);
         yield return new WaitForSeconds(1);
         SpawnRandomPickup();
 
@@ -55,7 +55,7 @@ public class PickUpLoacation : Photon.MonoBehaviour
         }
     }
 
-    public void SpawnSelectPickup(int pickupID)
+    public void SpawnSelectPickup(string gunName)
     {
         if (waitTime != null)
             StopCoroutine(waitTime);
@@ -63,19 +63,33 @@ public class PickUpLoacation : Photon.MonoBehaviour
         if (PhotonNetwork.isMasterClient)
         {
             int viewID = PhotonNetwork.AllocateViewID();
+            int pickupID = ConvertStringtoIndex(gunName);
+            Debug.LogError("The pickup Id is: " + pickupID + " for " + gameObject.name);
             photonView.RPC("RPC_InstantiatePickUp", PhotonTargets.AllBuffered, viewID, pickupID);
         }
     }
 
+    int ConvertStringtoIndex(string gunName)
+    {
+        for (int index = 0; index < pickUpTypes.Length; index++)
+        {
+            if (pickUpTypes[index].gun.ToString().Equals(gunName))
+                return index;
+        }
+
+        return 0;
+    }
+
+
     [PunRPC]
     void RPC_InstantiatePickUp(int id, int pickUp)
     {
-        foreach (GameObject pickup in pickUpTypes)
+        foreach (PickUp pickup in pickUpTypes)
         {
             Debug.LogError(gameObject.name + " has a pickup " + pickup.name);
         }
 
-        activePickUp = Instantiate(pickUpTypes[pickUp], transform.position + spawnOffset, Quaternion.identity);
+        activePickUp = Instantiate(pickUpTypes[pickUp].gameObject, transform.position + spawnOffset, Quaternion.identity);
         activePickUp.transform.SetParent(transform);
         activePickUp.GetComponent<PhotonView>().viewID = id;
 

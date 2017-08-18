@@ -120,7 +120,7 @@ public class PlayerMovement : MonoBehaviour
             {
                 landed = true;
                 jumping = false;
-                // lockMovement = false;
+                //lockMovement = false;
                 playerManager.Landed();
 
                 if (checkFall != null)
