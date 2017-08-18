@@ -278,6 +278,7 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
         jumpSource.clip = jumpSounds[Random.Range(0, jumpSounds.Length)];
         jumpSource.Play();
     }
+
     public void Landed()
     {
         jumpSource.PlayOneShot(landSounds[Random.Range(0, landSounds.Length)]);
@@ -350,6 +351,29 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
         animationManager.StoppedFiring();
     }
 
+    public void Dead(string damageSource, CollisionDetection.CollisionFlag collisionLocation)
+    {
+        photonView.RPC("RPC_DeathState", PhotonTargets.All, true);
+
+        if (hasFlag)
+            FlagManager.instance.photonView.RPC("RPC_FlagDropped", PhotonTargets.All, name);
+
+        //playerMovement.CancelSpeedBoost();        
+        photonView.RPC("RPC_Disarm", PhotonTargets.All);
+        photonView.RPC("RPC_CancelAbility", PhotonTargets.All);
+        animationManager.IsDead(collisionLocation);
+        PhotonView gmPhotonView = GameManager.instance.PhotonView;
+        if (gmPhotonView != null)
+            gmPhotonView.RPC("RPC_AddScore", PhotonTargets.All, damageSource, GameCustomization.pointsPerKill);
+    }
+
+    public void Respawn()
+    {
+        ReaperEffectsActivate(false);
+        animationManager.IsRespawning();
+        photonView.RPC("RPC_DeathState", PhotonTargets.All, false);
+    }
+
     [PunRPC]
     public void RPC_AbilityPickedUp(string abilityName)
     {
@@ -412,6 +436,16 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
         animationManager.StoppedAiming();
     }
 
+    Gun FindGun(string gunName)
+    {
+        foreach (Gun gun in guns)
+        {
+            if (gun.gunName.Equals(gunName))
+                return gun;
+        }
+        return null;
+    }
+
     [PunRPC]
     public void RPC_Disarm()
     {
@@ -423,7 +457,7 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
     }
 
     [PunRPC]
-    public void RPC_DeathState(bool isPlayerDead)
+    public void RPC_DeathState(bool isPlayerDead) //sets the tag of the player to Dead to prevent getting hit by triggers that evolve the player
     {
         isDead = isPlayerDead;
 
@@ -435,39 +469,6 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
         {
             tag.Equals("Player");
         }
-    }
-    
-    public void Dead(string damageSource, CollisionDetection.CollisionFlag collisionLocation)
-    {
-        photonView.RPC("RPC_DeathState", PhotonTargets.All, true);
-
-        if (hasFlag)
-            FlagManager.instance.photonView.RPC("RPC_FlagDropped", PhotonTargets.All, name);
-
-        //playerMovement.CancelSpeedBoost();        
-        photonView.RPC("RPC_Disarm", PhotonTargets.All);
-        photonView.RPC("RPC_CancelAbility", PhotonTargets.All);
-        animationManager.IsDead(collisionLocation);
-        PhotonView gmPhotonView = GameManager.instance.PhotonView;
-        if (gmPhotonView != null)
-            gmPhotonView.RPC("RPC_AddScore", PhotonTargets.All, damageSource, GameCustomization.pointsPerKill);
-    }
-
-    public void Respawn()
-    {
-        ReaperEffectsActivate(false);
-        animationManager.IsRespawning();
-        photonView.RPC("RPC_DeathState", PhotonTargets.All, false);
-    }
-
-    Gun FindGun(string gunName)
-    {
-        foreach (Gun gun in guns)
-        {
-            if (gun.gunName.Equals(gunName))
-                return gun;
-        }
-        return null;
     }
 
     public void ReaperEffectsActivate(bool isActive)

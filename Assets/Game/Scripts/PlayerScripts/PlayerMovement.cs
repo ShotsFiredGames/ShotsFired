@@ -171,7 +171,9 @@ public class PlayerMovement : MonoBehaviour
     {
         yield return new WaitForSeconds(1.5f);
         checkingFall = false;
-        canShake = true;
+
+        if (Mathf.Abs(Physics.gravity.y) >= 9.8f)
+            canShake = true;
     }
 
     public void Move(float horizontal, float vertical)

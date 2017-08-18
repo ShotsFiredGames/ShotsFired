@@ -35,15 +35,21 @@ public class GiftedGun : AddOn
         if (PhotonNetwork.isMasterClient)
         {
             gunSpawn.photonView.RPC("RPC_DestoryItsPickup", PhotonTargets.OthersBuffered);
-            Debug.LogError("Destoryed " + gunSpawn.activePickUp);
             Destroy(gunSpawn.activePickUp);
         }
 
-        Debug.LogError("Activated Gun Changes");
         previousGunSpawns[index] = gunSpawn.pickUpTypes;
         gunSpawn.pickUpTypes = gunThatSpawnFromGunSpawns;
         gunSpawn.SpawnSelectPickup(0);
         yield return new WaitForSeconds(GameCustomization.eventOccurenceRate / 3);
+
+        if (PhotonNetwork.isMasterClient)
+        {
+            gunSpawn.photonView.RPC("RPC_DestoryItsPickup", PhotonTargets.OthersBuffered);
+            Destroy(gunSpawn.activePickUp);
+        }
+
         gunSpawn.pickUpTypes = previousGunSpawns[index];
+        gunSpawn.SpawnRandomPickup();
     }
 }
