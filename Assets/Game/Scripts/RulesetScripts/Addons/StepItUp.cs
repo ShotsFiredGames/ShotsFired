@@ -30,7 +30,7 @@ public class StepItUp : AddOn
         {
             if (player != null)
             {
-                player.PhotonView.RPC("RPC_SetSpeed", PhotonTargets.All, GameCustomization.playerSpeed);
+                player.PhotonView.RPC("RPC_SetSpeed", PhotonTargets.All, (byte) GameCustomization.playerSpeed);
             }
         }
     }

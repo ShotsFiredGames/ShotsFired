@@ -100,9 +100,15 @@ public class PickUpLoacation : Photon.MonoBehaviour
     [PunRPC]
     public void RPC_DestoryItsPickup()
     {
-        PhotonView pv = activePickUp.GetComponent<PhotonView>();
+        PhotonView pv;
 
-        if (pv != null)
-            Destroy(pv.gameObject);
+        if (activePickUp != null)
+        {
+            pv = activePickUp.GetComponent<PhotonView>();
+
+            if (pv != null)
+                Destroy(pv.gameObject);
+        }
+           
     }
 }
