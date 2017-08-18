@@ -64,7 +64,6 @@ public class PickUpLoacation : Photon.MonoBehaviour
         {
             int viewID = PhotonNetwork.AllocateViewID();
             int pickupID = ConvertStringtoIndex(gunName);
-            Debug.LogError("The pickup Id is: " + pickupID + " for " + gameObject.name);
             photonView.RPC("RPC_InstantiatePickUp", PhotonTargets.AllBuffered, viewID, pickupID);
         }
     }
@@ -84,11 +83,6 @@ public class PickUpLoacation : Photon.MonoBehaviour
     [PunRPC]
     void RPC_InstantiatePickUp(int id, int pickUp)
     {
-        foreach (PickUp pickup in pickUpTypes)
-        {
-            Debug.LogError(gameObject.name + " has a pickup " + pickup.name);
-        }
-
         activePickUp = Instantiate(pickUpTypes[pickUp].gameObject, transform.position + spawnOffset, Quaternion.identity);
         activePickUp.transform.SetParent(transform);
         activePickUp.GetComponent<PhotonView>().viewID = id;

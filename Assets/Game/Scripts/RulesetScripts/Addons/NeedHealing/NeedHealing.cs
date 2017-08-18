@@ -17,7 +17,6 @@ public class NeedHealing : AddOn
         {
             pad.SetValues(healthAmount, healFreq);
         }
-
     }
 
     public override void StartAddOn()
