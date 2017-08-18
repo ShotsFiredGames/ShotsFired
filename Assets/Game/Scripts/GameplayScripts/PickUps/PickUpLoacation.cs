@@ -10,6 +10,7 @@ public class PickUpLoacation : Photon.MonoBehaviour
 
     public GameObject activePickUp { get; set; }
     bool isSpawning;
+    Coroutine waitTime;
 
     private void Start()
     {
@@ -27,7 +28,7 @@ public class PickUpLoacation : Photon.MonoBehaviour
         if (PhotonNetwork.isMasterClient && !isSpawning && activePickUp == null)
         {
             isSpawning = true;
-            StartCoroutine(WaitToSpawn());
+            waitTime = StartCoroutine(WaitToSpawn());
         }
     }
 
@@ -56,6 +57,7 @@ public class PickUpLoacation : Photon.MonoBehaviour
 
     public void SpawnSelectPickup(int pickupID)
     {
+        StopCoroutine(waitTime);
         if (PhotonNetwork.isMasterClient)
         {
             int viewID = PhotonNetwork.AllocateViewID();
@@ -66,6 +68,11 @@ public class PickUpLoacation : Photon.MonoBehaviour
     [PunRPC]
     void RPC_InstantiatePickUp(int id, int pickUp)
     {
+        foreach (GameObject pickup in pickUpTypes)
+        {
+            Debug.LogError(gameObject.name + " has a pickup " + activePickUp);
+        }
+
         activePickUp = Instantiate(pickUpTypes[pickUp], transform.position + spawnOffset, Quaternion.identity);
         activePickUp.transform.SetParent(transform);
         activePickUp.GetComponent<PhotonView>().viewID = id;

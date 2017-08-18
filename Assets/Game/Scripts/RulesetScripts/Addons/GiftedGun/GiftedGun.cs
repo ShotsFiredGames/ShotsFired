@@ -52,4 +52,10 @@ public class GiftedGun : AddOn
         gunSpawn.pickUpTypes = previousGunSpawns[index];
         gunSpawn.SpawnRandomPickup();
     }
+
+    [PunRPC]
+    void SetNewGunTypes(int index)
+    {
+        
+    }
 }

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public abstract class AddOn : MonoBehaviour
+public abstract class AddOn : Photon.MonoBehaviour
 {
     public string addOnName;
     public PhotonView PhotonView { get; protected set; }
