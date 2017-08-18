@@ -7,10 +7,16 @@ public class WeAllFloatOn : AddOn
     public double newGravityValue;
     PlayerManager[] allPlayers;
 
+    Coroutine gravityChange;
+
     public override void StartAddOn()
     {
         allPlayers = PlayerWrangler.GetAllPlayers();
-        StartCoroutine(SetSpeedValues());
+
+        if (gravityChange != null)
+            StopCoroutine(gravityChange);
+
+        gravityChange = StartCoroutine(SetSpeedValues());
     }
 
     IEnumerator SetSpeedValues()

@@ -106,6 +106,7 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
     public void RPC_SetGravity(double newGravity)
     {
         Physics.gravity = new Vector3 (0, (float)-newGravity);
+        Debug.LogError("New gravity is :" + Physics.gravity);
     }
 
     public string GetFaction()
