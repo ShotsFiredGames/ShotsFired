@@ -163,7 +163,8 @@ public class PlayerMovement : MonoBehaviour
     {
         if (!isGrounded && other.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {
-            airControlOff = true;
+            if (Mathf.Abs(Physics.gravity.y) >= 9.8f)
+                airControlOff = true;
         }
     }
 
