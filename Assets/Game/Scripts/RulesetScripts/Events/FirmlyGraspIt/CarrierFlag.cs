@@ -17,7 +17,8 @@ public class CarrierFlag : Flag
                 if (other.GetComponent<PlayerManager>().CheckAbilityToPickupFlag())
                 {
                     isPickedUp = true;
-                    FlagManager.instance.photonView.RPC("RPC_FlagPickedUp", PhotonTargets.All, index, other.transform.root.name);
+					FlagManager.instance.Local_FlagPickedUp (index, other.transform.root.name);
+					FlagManager.instance.photonView.RPC("RPC_FlagPickedUp", PhotonTargets.Others, index, other.transform.root.name);
                 }
             }
         }

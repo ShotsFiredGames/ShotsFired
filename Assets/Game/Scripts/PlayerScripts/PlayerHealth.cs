@@ -60,6 +60,37 @@ public class PlayerHealth : Photon.MonoBehaviour
         }
     }
 
+	public void Local_TookDamage (short damage, string sourceID, CollisionDetection.CollisionFlag collisionLocation)                //This is called from CollisionDetection to determine the damage and the location of the incoming collision.
+	{
+		if (!photonView.isMine) return;
+		if (isDead) return;
+		currentHealth -= damage;
+		Hit(collisionLocation);
+
+		source.PlayOneShot(hitEffects[Random.Range(0, hitEffects.Length)]); 
+
+		if (currentHealth > (short)(maxHealth * 0.75f))
+		{
+			StopHeartbeat();
+		}
+		else if (currentHealth > (short)(maxHealth * 0.5f))
+		{
+			damageEffectAnim.SetInteger("DamageEffect", 1);
+		}
+		else if (currentHealth > (short)(maxHealth * 0.25f))
+		{
+			damageEffectAnim.SetInteger("DamageEffect", 2);
+		}
+		else if (currentHealth > 0)
+		{
+			damageEffectAnim.SetInteger("DamageEffect", 3);
+		}
+		else
+		{
+			Died(sourceID, collisionLocation);
+		}
+	}
+
     [PunRPC]
     public void RPC_TookDamage(short damage, string sourceID, CollisionDetection.CollisionFlag collisionLocation)                //This is called from CollisionDetection to determine the damage and the location of the incoming collision.
     {
@@ -96,6 +127,13 @@ public class PlayerHealth : Photon.MonoBehaviour
     {
         damageEffectAnim.SetInteger("DamageEffect", 0);
     }
+
+	public void Local_InstantDeath(string damageSource, CollisionDetection.CollisionFlag collisionLocation)
+	{
+		if (isDead) return;
+		currentHealth = 0;
+		Died(damageSource, collisionLocation);
+	}
 
     [PunRPC]
     public void RPC_InstantDeath(string damageSource, CollisionDetection.CollisionFlag collisionLocation)
@@ -226,7 +264,6 @@ public class PlayerHealth : Photon.MonoBehaviour
                 currentHealth = maxHealth;
 
             isHealthIncreased = false;
-        }
-        
+        }        
     }
 }

@@ -13,6 +13,7 @@ public class PickUpLoacation : Photon.MonoBehaviour
 
     private void Start()
     {
+		PhotonNetwork.UseRpcMonoBehaviourCache = true;
         SpawnRandomPickup();
         anim = GetComponentInChildren<Animator>();
     }
@@ -50,9 +51,20 @@ public class PickUpLoacation : Photon.MonoBehaviour
             int randomPickUp = Random.Range(0, pickUpTypes.Length);
 
             int viewID = PhotonNetwork.AllocateViewID();
-            photonView.RPC("RPC_InstantiatePickUp", PhotonTargets.AllBuffered, viewID, randomPickUp);
+			Local_InstantiatePickUp (viewID, randomPickUp);
+			photonView.RPC("RPC_InstantiatePickUp", PhotonTargets.OthersBuffered, viewID, randomPickUp);
         }
     }
+
+	void Local_InstantiatePickUp(int id, int pickUp)
+	{
+		activePickUp = Instantiate(pickUpTypes[pickUp], transform.position + spawnOffset, Quaternion.identity);
+		activePickUp.transform.SetParent(transform);
+		activePickUp.GetComponent<PhotonView>().viewID = id;
+
+		if (activePickUp.GetComponent<PickUp>() != null && anim != null)
+			activePickUp.GetComponent<PickUp>().SetAnimator(anim);
+	}
 
     [PunRPC]
     void RPC_InstantiatePickUp(int id, int pickUp)

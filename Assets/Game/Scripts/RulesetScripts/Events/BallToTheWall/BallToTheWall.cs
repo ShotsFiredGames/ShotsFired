@@ -64,7 +64,8 @@ public class BallToTheWall : GameEvent
             PlayerWrangler.GetAllPlayers()[i].transform.position = spawnpoints[i].transform.position;
             PlayerWrangler.GetAllPlayers()[i].transform.rotation = spawnpoints[i].transform.rotation;
             PlayerWrangler.GetAllPlayers()[i].canMove = false;
-            PlayerWrangler.GetAllPlayers()[i].RPC_Disarm();
+			PlayerWrangler.GetAllPlayers () [i].Local__Disarm ();
+			//PlayerWrangler.GetAllPlayers()[i].PhotonView.RPC("RPC_Disarm", PhotonTargets.Others);
         }
 
         for (int i = 0; i < goals.Length; i++)
@@ -109,8 +110,10 @@ public class BallToTheWall : GameEvent
 
     public void PlayerScored(string player)
     {
-        if (GameManager.instance.PhotonView != null && PhotonNetwork.isMasterClient)
-            GameManager.instance.PhotonView.RPC("RPC_AddScore", PhotonTargets.All, player, scoreAmount);
+		if (GameManager.instance.PhotonView != null && PhotonNetwork.isMasterClient) {
+			GameManager.instance.Local_AddScore (player, scoreAmount);
+			GameManager.instance.PhotonView.RPC ("RPC_AddScore", PhotonTargets.Others, player, scoreAmount);
+		}
     }
 
     public void RespawnBall()

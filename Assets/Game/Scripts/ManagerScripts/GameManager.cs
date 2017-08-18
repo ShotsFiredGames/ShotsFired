@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class GameManager : Photon.PunBehaviour
+public class GameManager : Photon.PunBehaviour, IPunObservable
 {
     public static GameManager instance;
     public GameObject playerPrefab;
@@ -33,6 +33,7 @@ public class GameManager : Photon.PunBehaviour
     byte minutes;
     byte seconds;
     byte countdownTime;
+	byte oldCountTime;
     byte playersInGame;
 
     #region Photon Methods
@@ -71,7 +72,7 @@ public class GameManager : Photon.PunBehaviour
             Debug.Log("OnPhotonPlayerDisonnected isMasterClient " + PhotonNetwork.isMasterClient);
     }
 
-    void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
         if (stream.isWriting)
         {
@@ -88,6 +89,9 @@ public class GameManager : Photon.PunBehaviour
             seconds = (byte)stream.ReceiveNext();
             countdownTime = (byte)stream.ReceiveNext();
         }
+
+		UpdateCountdownText ();
+		UpdateTimerText();
     }
     #endregion
 
@@ -146,8 +150,8 @@ public class GameManager : Photon.PunBehaviour
             if(PhotonNetwork.isMasterClient)
                 countdownTime = i;
 
-            countdownAnim.SetTrigger("Countdown");
-            countDownTimer.text = countdownTime.ToString();
+//            countdownAnim.SetTrigger("Countdown");
+//            countDownTimer.text = countdownTime.ToString();
             yield return new WaitForSeconds(1);
         }
         countDownTimer.text = "Fight!";
@@ -159,11 +163,23 @@ public class GameManager : Photon.PunBehaviour
         {
             StartCoroutine(Timer());
             byte eventcode = 0;
-            RaiseEventOptions eventOptions = new RaiseEventOptions();
+			RaiseEventOptions eventOptions = new RaiseEventOptions();
             eventOptions.Receivers = ReceiverGroup.All;
             PhotonNetwork.RaiseEvent(eventcode, true, true, eventOptions);
         }
     }
+
+	void UpdateCountdownText()
+	{
+		if (!countDownTimer.enabled)
+			return;
+		
+		if (oldCountTime != countdownTime) {
+			oldCountTime = countdownTime;
+			countdownAnim.SetTrigger ("Countdown");
+			countDownTimer.text = countdownTime.ToString ();
+		}
+	}
 
     IEnumerator Timer()
     {
@@ -203,6 +219,19 @@ public class GameManager : Photon.PunBehaviour
         isActive = _isActive;
     }
 
+	//this should be called for the local player so the RPC doesn't have to be targeted at everyone
+	public void Local_AddScore(string player, short amount)
+	{
+		if (player == null) return;
+		if (!playerScores.ContainsKey(player)) return;
+		playerScores[player] += amount;
+
+		if (playerScores[player] < 0) //check to prevent scores from being negative
+			playerScores[player] = 0;
+
+		CheckScores();
+	}
+
     [PunRPC]
     public void RPC_AddScore(string player, short amount)
     {
@@ -240,13 +269,10 @@ public class GameManager : Photon.PunBehaviour
         }
     }
 
-    void Update()
-    {
-        UpdateTimerText();
-    }
-
     void UpdateTimerText()
     {
+		if (!timerText.enabled)
+			return;
         timerText.text = string.Format("{0:0}:{1:00}", minutes, seconds);
     }
 
@@ -277,7 +303,8 @@ public class GameManager : Photon.PunBehaviour
     //==========Event Methods==========
 	public void FlagCaptured(string player, short score)
     {
-        photonView.RPC("RPC_AddScore", PhotonTargets.All, player, score);
+		Local_AddScore (player, score);
+		photonView.RPC("RPC_AddScore", PhotonTargets.OthersBuffered, player, score);
     }
 
     public string GetWinningPlayer()

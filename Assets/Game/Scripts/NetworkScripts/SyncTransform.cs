@@ -1,18 +1,24 @@
 ﻿using UnityEngine;
 
-public class SyncTransform : Photon.MonoBehaviour
+public class SyncTransform : MonoBehaviour, IPunObservable
 {
     Vector3 syncPos;
     Quaternion syncRot;
     [SerializeField]
     float lerpRate = 15;
+	public PhotonView PhotonView { get; private set;}
+
+	void Awake()
+	{
+		PhotonView = GetComponent<PhotonView> ();
+	}
 
     void Update()
     {
         LerpPlayer();        
     }
 
-    void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+	public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
         if (stream.isWriting)
         {
@@ -28,7 +34,7 @@ public class SyncTransform : Photon.MonoBehaviour
 
     void LerpPlayer()
     {
-        if (!photonView.isMine)
+		if (!PhotonView.isMine)
         {
             transform.position = Vector3.Lerp(transform.position, syncPos, Time.deltaTime * lerpRate);
             transform.rotation = Quaternion.Lerp(transform.rotation, syncRot, Time.deltaTime * lerpRate);

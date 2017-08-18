@@ -29,6 +29,8 @@ public class Shooting : Photon.MonoBehaviour
         hitMarkerSource = hitMarker.GetComponent<AudioSource>();
         ammoUI.text = "";
         gunBob = GetComponentInChildren<GunBob>();
+		PhotonNetwork.UsePrefabCache = true;
+		PhotonNetwork.UseRpcMonoBehaviourCache = true;
     }
 
     void Update()
@@ -133,6 +135,12 @@ public class Shooting : Photon.MonoBehaviour
         currentGun.shootingSource.PlayOneShot(currentGun.trailClip);
     }
 
+	public void Local_StartMuzzleFlash()
+	{
+		if (muzzleFlash == null) return;
+		StartCoroutine(MuzzleFlash());                                                                          //Activate the MuzzleFlash
+	}
+
     [PunRPC]
     public void RPC_StartMuzzleFlash()
     {
@@ -195,7 +203,8 @@ public class Shooting : Photon.MonoBehaviour
 
     void HitscanShot()
     {
-        photonView.RPC("RPC_StartMuzzleFlash", PhotonTargets.All);
+		Local_StartMuzzleFlash ();
+		photonView.RPC("RPC_StartMuzzleFlash", PhotonTargets.Others);
         RaycastHit hit = CastMyRay();
         if (hit.point == Vector3.zero) return;
 
@@ -208,48 +217,36 @@ public class Shooting : Photon.MonoBehaviour
 
             if (PhotonNetwork.isMasterClient)
                 SpawnBulletHole(position, rotation, "Player");
-
-
-            Vector3 direction = hit.point;
-            Vector3 hitNormal = hit.normal;
-            GameObject bullet = PhotonNetwork.Instantiate(currentGun.projectile.name, currentGun.gunbarrel.transform.position, currentGun.gunbarrel.transform.rotation, 0);
-            bullet.GetComponent<PhotonView>().RPC("RPC_SetProjectileVariables", PhotonTargets.All, currentGun.speed, direction, transform.name, hitNormal, (short)0, false);
-
         }
         else if (hit.transform.tag.Equals("Reaper"))
         {
             StartCoroutine(HitMarker());
             ReaperShot(transform.root.name, hit.transform.GetComponent<Reaper>().GetTargetPlayer(), _damage);
-
-            Vector3 direction = hit.point;
-            Vector3 hitNormal = hit.normal;
-            GameObject bullet = PhotonNetwork.Instantiate(currentGun.projectile.name, currentGun.gunbarrel.transform.position, currentGun.gunbarrel.transform.rotation, 0);
-            bullet.GetComponent<PhotonView>().RPC("RPC_SetProjectileVariables", PhotonTargets.All, currentGun.speed, direction, transform.name, hitNormal, (short)0, false);
         }
         else
         {
             Vector3 position = hit.point + (hit.normal * .1f);
             Quaternion rotation = Quaternion.LookRotation(hit.normal);
-            SpawnBulletHole(position, rotation, "Wall");
-
-
-            Vector3 direction = hit.point;
-            Vector3 hitNormal = hit.normal;
-            GameObject bullet = PhotonNetwork.Instantiate(currentGun.projectile.name, currentGun.gunbarrel.transform.position, currentGun.gunbarrel.transform.rotation, 0);
-            bullet.GetComponent<PhotonView>().RPC("RPC_SetProjectileVariables", PhotonTargets.All, currentGun.speed, direction, transform.name, hitNormal, (short)0, false);
+            SpawnBulletHole(position, rotation, "Wall");            
         }
 
-       
+		Vector3 direction = hit.point;
+		Vector3 hitNormal = hit.normal;
+		GameObject bullet = PhotonNetwork.Instantiate(currentGun.projectile.name, currentGun.gunbarrel.transform.position, currentGun.gunbarrel.transform.rotation, 0);
+		bullet.GetComponent<Projectile> ().Local_SetProjectileVariables (currentGun.speed, direction, transform.name, hitNormal, (short)0, false);
+		bullet.GetComponent<PhotonView>().RPC("RPC_SetProjectileVariables", PhotonTargets.Others, currentGun.speed, direction, transform.name, hitNormal, (short)0, false);
     }
 
     void ParticleShot()
     {
-        photonView.RPC("RPC_StartMuzzleFlash", PhotonTargets.All);
+		Local_StartMuzzleFlash ();
+		photonView.RPC("RPC_StartMuzzleFlash", PhotonTargets.Others);
     }
 
     void ProjectileShot()
     {
-        photonView.RPC("RPC_StartMuzzleFlash", PhotonTargets.All);
+		Local_StartMuzzleFlash ();
+		photonView.RPC("RPC_StartMuzzleFlash", PhotonTargets.Others);
         RaycastHit hit = CastMyRay();
         ProjectileShot(hit.point, hit.normal);
     }
@@ -263,7 +260,8 @@ public class Shooting : Photon.MonoBehaviour
                     currentGun.shootingAnim.SetTrigger("Fire");
 
             GameObject bullet = PhotonNetwork.Instantiate(currentGun.projectile.name, currentGun.gunbarrel.transform.position, currentGun.gunbarrel.transform.rotation, 0);
-            bullet.GetComponent<PhotonView>().RPC("RPC_SetProjectileVariables", PhotonTargets.All, currentGun.speed, direction, transform.name, hitNormal, _damage, true);
+			bullet.GetComponent<Projectile> ().Local_SetProjectileVariables (currentGun.speed, direction, transform.name, hitNormal, _damage, true);
+			bullet.GetComponent<PhotonView>().RPC("RPC_SetProjectileVariables", PhotonTargets.Others, currentGun.speed, direction, transform.name, hitNormal, _damage, true);
         }
     }
 

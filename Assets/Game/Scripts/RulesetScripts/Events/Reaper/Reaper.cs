@@ -58,9 +58,13 @@ public class Reaper : MonoBehaviour
             {
                 if (!targetPlayer.isDead)
                 {
-                    targetPlayer.GetComponent<PlayerHealth>().PhotonView.RPC("RPC_InstantDeath", PhotonTargets.All, "Reaper", CollisionDetection.CollisionFlag.Back);
-                    if (GameManager.instance.PhotonView != null)
-                        GameManager.instance.PhotonView.RPC("RPC_AddScore", PhotonTargets.All, GetTargetPlayer(), (short)-points);
+					PlayerHealth targetHealth = targetPlayer.GetComponent<PlayerHealth> ();
+					targetHealth.Local_InstantDeath ("Reaper", CollisionDetection.CollisionFlag.Back);
+					targetHealth.PhotonView.RPC("RPC_InstantDeath", PhotonTargets.Others, "Reaper", CollisionDetection.CollisionFlag.Back);
+					if (GameManager.instance.PhotonView != null) {
+						GameManager.instance.Local_AddScore (GetTargetPlayer (), (short)-points);
+						GameManager.instance.PhotonView.RPC ("RPC_AddScore", PhotonTargets.Others, GetTargetPlayer (), (short)-points);
+					}
                     currentSpeed = speed;
                 }
             }
@@ -73,7 +77,8 @@ public class Reaper : MonoBehaviour
             IncreaseSpeed();
         else
         {
-            PhotonView.RPC("RPC_ReaperTookDamage", PhotonTargets.All, damage);
+			Local_ReaperTookDamage (damage);
+			PhotonView.RPC("RPC_ReaperTookDamage", PhotonTargets.Others, damage);
         }
     }
 
@@ -82,13 +87,21 @@ public class Reaper : MonoBehaviour
         currentSpeed += shotSpeedIncrease;
     }
 
+	public void Local_ReaperTookDamage(short damage)
+	{
+		currentHealth -= damage;
+
+		if (currentHealth <= 0)
+			respawn = StartCoroutine(Respawn());
+	}
+
     [PunRPC]
     public void RPC_ReaperTookDamage(short damage)
     {
         currentHealth -= damage;
 
-        if (currentHealth <= 0)
-            respawn = StartCoroutine(Respawn());
+//        if (currentHealth <= 0)
+//            respawn = StartCoroutine(Respawn());
     }
 
     public string GetTargetPlayer()
@@ -115,10 +128,12 @@ public class Reaper : MonoBehaviour
 
     IEnumerator Respawn()
     {
-        PhotonView.RPC("RPC_SetReaperPosition", PhotonTargets.All, new Vector3(-1000, -1000, -1000), GetTargetPlayer());
+		Local_SetReaperPosition (new Vector3(-1000, -1000, -1000), GetTargetPlayer());
+		PhotonView.RPC("RPC_SetReaperPosition", PhotonTargets.Others, new Vector3(-1000, -1000, -1000), GetTargetPlayer());
         isDead = true;
         yield return new WaitForSeconds(1f);
-        PhotonView.RPC("RPC_SetReaperPosition", PhotonTargets.All, spawnPoint, GetTargetPlayer());
+		Local_SetReaperPosition (spawnPoint, GetTargetPlayer());
+		PhotonView.RPC("RPC_SetReaperPosition", PhotonTargets.Others, spawnPoint, GetTargetPlayer());
         transform.rotation = Quaternion.identity;
         currentSpeed = speed;
 
@@ -126,6 +141,14 @@ public class Reaper : MonoBehaviour
         isDead = false;
         gameObject.SetActive(true);
     }
+
+	void Local_SetReaperPosition(Vector3 newPosition, string whichReaper)
+	{
+		Reaper persuer = TheReaperComes.GetReaperChasingWhom(whichReaper);
+
+		if (persuer != null)
+			persuer.transform.position = newPosition;
+	}
 
     [PunRPC]
     void RPC_SetReaperPosition(Vector3 newPosition, string whichReaper)

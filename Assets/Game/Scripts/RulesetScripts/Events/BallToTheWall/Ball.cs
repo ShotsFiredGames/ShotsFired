@@ -31,6 +31,12 @@ public class Ball : MonoBehaviour
         ballToTheWall = _ballToTheWall;
     }
 
+	public void Local_SetFactionBall(string myFaction)
+	{
+		faction = myFaction;
+		rend.material = PlayerWrangler.GetFactionMaterial(faction);
+	}
+
     [PunRPC]
     public void RPC_SetFactionBall(string myFaction)
     {

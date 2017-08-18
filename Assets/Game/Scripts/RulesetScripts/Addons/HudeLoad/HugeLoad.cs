@@ -10,13 +10,15 @@ public class HugeLoad : AddOn
 
         foreach (PlayerManager player in allPlayers)
         {
-            player.GetComponent<PhotonView>().RPC("RPC_CancelAbility", PhotonTargets.All);
+			player.Local__CancelAbility ();
+			player.GetComponent<PhotonView>().RPC("RPC_CancelAbility", PhotonTargets.Others);
             foreach (PickUp.AbilityType ability in Enum.GetValues(typeof(PickUp.AbilityType)))
             {
-                if (player != null)
-                    player.PhotonView.RPC("RPC_AbilityPickedUp", PhotonTargets.All, ability.ToString());
+				if (player != null) {
+					player.Local_AbilityPickedUp (ability.ToString ());
+					player.PhotonView.RPC ("RPC_AbilityPickedUp", PhotonTargets.Others, ability.ToString ());
+				}
             }
         }
     }
-
 }

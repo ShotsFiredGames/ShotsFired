@@ -44,8 +44,10 @@ public class Juggernaut : MonoBehaviour
 
                     PlayerHealth health = other.transform.root.GetComponent<PlayerHealth>();
 
-                    if (!health.isPlayerDead())
-                        health.PhotonView.RPC("RPC_InstantDeath", PhotonTargets.All, transform.root.name, location);
+					if (!health.isPlayerDead ()) {
+						health.Local_InstantDeath (transform.root.name, location);
+						health.PhotonView.RPC ("RPC_InstantDeath", PhotonTargets.Others, transform.root.name, location);
+					}
                 }
             }            
         }

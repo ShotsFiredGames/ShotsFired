@@ -94,6 +94,13 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
         }
     }
 
+	public void Local_SetFactionPlayer(string myFaction)
+	{
+		faction = myFaction;
+		factionColor = PlayerWrangler.GetFactionMaterial(faction);
+		rend.material = factionColor;
+	}
+
     [PunRPC]
     public void RPC_SetFactionPlayer(string myFaction)
     {
@@ -206,7 +213,6 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
     {
         yRotationValue = value;
     }
-
 
     public void EnteredSpeedBoost()
     {
@@ -355,6 +361,20 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
         animationManager.StoppedFiring();
     }
 
+	public void Local_AbilityPickedUp(string abilityName)
+	{
+		switch (abilityName)
+		{
+		case "Juggernaut":
+			juggernaut.ActivateJuggernaut();
+			playerMovement.SuperBoots();
+			break;
+		case "Overcharged":
+			shooting.ActivateOvercharged();
+			break;
+		}
+	}
+
     [PunRPC]
     public void RPC_AbilityPickedUp(string abilityName)
     {
@@ -370,6 +390,13 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
         }
     }
 
+	public void Local__CancelAbility()
+	{
+		playerMovement.CancelSuperBoots();
+		juggernaut.CancelJuggernaut();
+		shooting.CancelOvercharged();
+	}
+
     [PunRPC]
     public void RPC_CancelAbility()
     {
@@ -377,6 +404,38 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
         juggernaut.CancelJuggernaut();
         shooting.CancelOvercharged();
     }
+
+	public void Local_WeaponPickedUp(string gunName)
+	{
+		if(oldGun != null)
+			oldGun.SetActiveGun(false);
+
+		shooting.UnArmed();
+		if (oldGun != null)
+		{
+			if(oldGun.anim != null && oldGun.anim.gameObject.activeSelf)
+				oldGun.anim.SetBool("IsFiring", false);
+			oldGun.SetActiveGun(false);
+		}
+
+		isArmed = true;
+		animationManager.Armed();
+		Gun newGun = FindGun(gunName);
+		oldGun = newGun;
+
+		if (newGun == null) Debug.LogError("Incorrect Name of Gun");
+
+		// animationManager.SetGunAnimator(newGun.anim);
+		shooting.SetWeapon(newGun);
+
+		shooting.NotAiming();
+		newGun.SetAmmo();
+
+		newGun.SetActiveGun(true);
+		isAiming = false;
+		playerCamera.StopAim();
+		animationManager.StoppedAiming();
+	}
 
     [PunRPC]
     public void RPC_WeaponPickedUp(string gunName)
@@ -411,6 +470,15 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
         animationManager.StoppedAiming();
     }
 
+	public void Local__Disarm()
+	{
+		isArmed = false;
+		shooting.UnArmed();
+		shooting.RemoveWeapon();
+		animationManager.Disarmed();
+		playerCamera.SetFieldOfView(60);
+	}
+
     [PunRPC]
     public void RPC_Disarm()
     {
@@ -420,6 +488,20 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
         animationManager.Disarmed();
         playerCamera.SetFieldOfView(60);
     }
+
+	public void Local__DeathState(bool isPlayerDead)
+	{
+		isDead = isPlayerDead;
+
+		if (isPlayerDead)
+		{
+			tag.Equals("Dead");
+		}
+		else
+		{
+			tag.Equals("Player");
+		}
+	}
 
     [PunRPC]
     public void RPC_DeathState(bool isPlayerDead)
@@ -438,25 +520,33 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
     
     public void Dead(string damageSource, CollisionDetection.CollisionFlag collisionLocation)
     {
-        photonView.RPC("RPC_DeathState", PhotonTargets.All, true);
+		Local__DeathState (true);
+        photonView.RPC("RPC_DeathState", PhotonTargets.Others, true);
 
-        if (hasFlag)
-            FlagManager.instance.photonView.RPC("RPC_FlagDropped", PhotonTargets.All, name);
+		if (hasFlag) {
+			FlagManager.instance.Local_FlagDropped (name);
+			FlagManager.instance.photonView.RPC ("RPC_FlagDropped", PhotonTargets.Others, name);
+		}
 
-        playerMovement.CancelSpeedBoost();        
-        photonView.RPC("RPC_Disarm", PhotonTargets.All);
-        photonView.RPC("RPC_CancelAbility", PhotonTargets.All);
+        playerMovement.CancelSpeedBoost();
+		Local__Disarm ();
+		Local__CancelAbility ();
+		photonView.RPC("RPC_Disarm", PhotonTargets.Others);
+		photonView.RPC("RPC_CancelAbility", PhotonTargets.Others);
         animationManager.IsDead(collisionLocation);
+
+		GameManager.instance.Local_AddScore (damageSource, GameCustomization.pointsPerKill);	//Add score locally
         PhotonView gmPhotonView = GameManager.instance.PhotonView;
         if (gmPhotonView != null)
-            gmPhotonView.RPC("RPC_AddScore", PhotonTargets.All, damageSource, GameCustomization.pointsPerKill);
+			gmPhotonView.RPC("RPC_AddScore", PhotonTargets.OthersBuffered, damageSource, GameCustomization.pointsPerKill);		//Send RPC to other clients to update scores
     }
 
     public void Respawn()
     {
         ReaperEffectsActivate(false);
         animationManager.IsRespawning();
-        photonView.RPC("RPC_DeathState", PhotonTargets.All, false);
+		Local__DeathState (false);
+		photonView.RPC("RPC_DeathState", PhotonTargets.Others, false);
     }
 
     Gun FindGun(string gunName)

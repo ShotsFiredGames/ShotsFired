@@ -16,6 +16,8 @@ public class PlayerNetwork : MonoBehaviour
 
         PhotonNetwork.sendRate = 60;
         PhotonNetwork.sendRateOnSerialize = 30;
+		PhotonNetwork.UseRpcMonoBehaviourCache = true;
+
 
         SceneManager.sceneLoaded += OnSceneFinishedLoading;
     }

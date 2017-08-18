@@ -50,7 +50,8 @@ public class AnnouncerManager : MonoBehaviour
         if (PhotonNetwork.isMasterClient)
         {
             int arrayIndex = GetRandomIndex(generalClips.GetStartMatchClipArray(sceneName).Length);
-            PhotonView.RPC("RPC_PlayStartMatchClip", PhotonTargets.All, sceneName, arrayIndex);
+			Local_PlayStartMatchClip (sceneName, arrayIndex);
+			PhotonView.RPC("RPC_PlayStartMatchClip", PhotonTargets.OthersBuffered, sceneName, arrayIndex);
         }
     }
 
@@ -70,12 +71,23 @@ public class AnnouncerManager : MonoBehaviour
             source.Play();
     }
 
+	void Local_PlayStartMatchClip(string sceneName, int arrayIndex)
+	{
+		AudioClip[] startMatch = generalClips.GetStartMatchClipArray(sceneName);
+		PlayRandomClipFromArray(startMatch, arrayIndex);
+	}
+
     [PunRPC]
     void RPC_PlayStartMatchClip(string sceneName, int arrayIndex)
     {
         AudioClip[] startMatch = generalClips.GetStartMatchClipArray(sceneName);
         PlayRandomClipFromArray(startMatch, arrayIndex);
     }
+
+	public void Local_PlayEndMatchClip(int arrayIndex)
+	{
+		PlayRandomClipFromArray(generalClips.endMatch, arrayIndex);
+	}
 
     [PunRPC]
     public void RPC_PlayEndMatchClip(int arrayIndex)
@@ -100,6 +112,25 @@ public class AnnouncerManager : MonoBehaviour
                 return 0;
         }
     }
+
+	public void Local_PlayEventStartClip(string eventName, int arrayIndex)
+	{
+		switch (eventName)
+		{
+		case "TheReaperComes":
+			PlayRandomClipFromArray(reaperClips.reaperStart, arrayIndex);
+			break;
+		case "SnatchNDash":
+			PlayRandomClipFromArray(sndClips.sndStart, arrayIndex);
+			break;
+		case "BallToTheWall":
+			PlayRandomClipFromArray(bttwClips.bttwStart, arrayIndex);
+			break;
+		default:
+			Debug.LogError("Could not find event: " + eventName + ". Did you forget to add it to the AnnouncerManager PlayEventStartClip method?");
+			break;
+		}
+	}
 
     [PunRPC]
     public void RPC_PlayEventStartClip(string eventName, int arrayIndex)
@@ -136,6 +167,25 @@ public class AnnouncerManager : MonoBehaviour
                 return 0;
         }
     }
+
+	public void Local_PlayAddOnStartClip(string addOnName, int arrayIndex)
+	{
+		switch (addOnName)
+		{
+		case "HugeLoad":
+			PlayRandomClipFromArray(addOnClips.hugeLoadClips, arrayIndex);
+			break;
+		case "MimicAppears":
+			PlayRandomClipFromArray(addOnClips.mimicClips, arrayIndex);
+			break;
+		case "BombsAway":
+			PlayRandomClipFromArray(addOnClips.bombsAwayClips, arrayIndex);
+			break;
+		default:
+			Debug.LogError("Could not find add-on: " + addOnName + ". Did you forget to add it to the AnnouncerManager PlayAddOnStartClip method?");
+			break;
+		}
+	}
 
     [PunRPC]
     public void RPC_PlayAddOnStartClip(string addOnName, int arrayIndex)

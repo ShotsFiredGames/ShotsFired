@@ -48,6 +48,28 @@ public class FlagManager : Photon.MonoBehaviour
         return flagNumber++;
     }
 
+	public void Local_FlagPickedUp(byte flagNum, string carrierName)
+	{
+		Flag flag = ConvertFlagFromIndex(flagNum);
+
+		if (flag.resetTimer != null)
+			StopCoroutine(flag.resetTimer);
+
+		PlayerManager newCarrier = PlayerWrangler.GetPlayer(carrierName);
+
+		if (!newCarrier.CheckAbilityToPickupFlag())
+			return;
+
+		flag.carrier = newCarrier;
+		flag.carrier.hasFlag = true;
+		flag.flagBase.hasFlag = false;
+		flag.transform.SetParent(flag.carrier.transform);
+		flag.transform.position = flag.carrier.transform.position + new Vector3(0, flag.carrier.transform.localScale.y, 0);
+
+		if (flag.flagBase != null)
+			flag.flagBase.hasFlag = false;
+	}
+
     [PunRPC]
     void RPC_FlagPickedUp(byte flagNum, string carrierName)
     {
@@ -71,6 +93,19 @@ public class FlagManager : Photon.MonoBehaviour
             flag.flagBase.hasFlag = false;
     }
 
+	public void Local_ReturnFlag(byte flagNum)
+	{
+		Flag flag = ConvertFlagFromIndex(flagNum);
+
+		if(PhotonNetwork.isMasterClient)
+			FlagReturned(flag.GetStringOfCarrier());
+		StartCoroutine(flag.CanBePickedUp());
+		flag.ResetFlagPosition();
+
+		if (flag.carrier != null)
+			flag.carrier.GetComponent<PlayerManager>().hasFlag = false;
+	}
+
     [PunRPC]
     void RPC_ReturnFlag(byte flagNum)
     {
@@ -84,6 +119,18 @@ public class FlagManager : Photon.MonoBehaviour
         if (flag.carrier != null)
             flag.carrier.GetComponent<PlayerManager>().hasFlag = false;
     }
+
+	public void Local_FlagDropped(string owner)
+	{
+		Flag flag = ConvertFlagFromPlayerName(owner);
+
+		if (flag != null && flag.carrier != null)
+			flag.carrier.GetComponent<PlayerManager>().hasFlag = false;
+
+		flag.transform.parent = null;
+		StartCoroutine(flag.CanBePickedUp());
+		flag.resetTimer = StartCoroutine(flag.ResetTimer());
+	}
 
     [PunRPC]
     public void RPC_FlagDropped(string owner)

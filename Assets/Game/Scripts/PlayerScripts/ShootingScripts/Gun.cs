@@ -71,7 +71,8 @@ public class Gun : MonoBehaviour
 
     public void Discard()
     {
-        playerManager.PhotonView.RPC("RPC_Disarm", PhotonTargets.All);
+		playerManager.Local__Disarm ();
+		playerManager.PhotonView.RPC("RPC_Disarm", PhotonTargets.Others);
     }
 
     //public void Overcharge();

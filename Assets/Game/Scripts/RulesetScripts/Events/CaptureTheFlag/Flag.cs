@@ -29,23 +29,17 @@ public class Flag : Photon.MonoBehaviour
         if (other.tag.Equals("Player"))
         {
 			if (!isPickedUp) {
-				if (other.GetComponent<PlayerManager> ().CheckAbilityToPickupFlag()) {
+				if (other.GetComponent<PlayerManager> ().CheckAbilityToPickupFlag ()) {
 					if (!flagBase.owner.Equals (other.GetComponent<PlayerManager> ())) {
 						isPickedUp = true;
-						FlagManager.instance.photonView.RPC ("RPC_FlagPickedUp", PhotonTargets.All, index, other.transform.root.name);
+						FlagManager.instance.Local_FlagPickedUp (index, other.transform.root.name);
+						FlagManager.instance.photonView.RPC ("RPC_FlagPickedUp", PhotonTargets.Others, index, other.transform.root.name);
 					} else {
 						if (!flagBase.hasFlag) {
 							ResetFlagPosition ();
-							//Debug.LogError("returned your flag");
-						} else {
-							//Debug.LogError ("This is your flag at base");
 						}
 					}
-				} else {
-					//Debug.Log ("They already have a flag");
 				}
-			} else {
-				//print ("someone already has it");
 			}
         }
     }
@@ -54,7 +48,8 @@ public class Flag : Photon.MonoBehaviour
     {
         ResetCarrier();
         yield return new WaitForSeconds(flagResetTime);
-		FlagManager.instance.photonView.RPC("RPC_ReturnFlag", PhotonTargets.All, index);
+		FlagManager.instance.Local_ReturnFlag (index);
+		FlagManager.instance.photonView.RPC("RPC_ReturnFlag", PhotonTargets.Others, index);
     }
 
     public IEnumerator CanBePickedUp()
