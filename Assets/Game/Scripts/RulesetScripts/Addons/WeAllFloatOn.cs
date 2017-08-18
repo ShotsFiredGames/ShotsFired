@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,18 +10,14 @@ public class WeAllFloatOn : AddOn
 
     Coroutine gravityChange;
 
+    void Start()
+    {
+        //allPlayers = PlayerWrangler.GetAllPlayers();
+    }
+
     public override void StartAddOn()
     {
         allPlayers = PlayerWrangler.GetAllPlayers();
-
-        if (gravityChange != null)
-            StopCoroutine(gravityChange);
-
-        gravityChange = StartCoroutine(SetSpeedValues());
-    }
-
-    IEnumerator SetSpeedValues()
-    {
         foreach (PlayerManager player in allPlayers)
         {
             if (player != null)
@@ -28,9 +25,10 @@ public class WeAllFloatOn : AddOn
                 player.PhotonView.RPC("RPC_SetGravity", PhotonTargets.All, newGravityValue);
             }
         }
+    }
 
-        yield return new WaitForSeconds(GameCustomization.eventOccurenceRate / 3);
-
+    public override void EndAddOn()
+    {
         foreach (PlayerManager player in allPlayers)
         {
             if (player != null)

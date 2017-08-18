@@ -21,15 +21,11 @@ public class NeedHealing : AddOn
 
     public override void StartAddOn()
     {
-        StartCoroutine(ActivateHealingPads());
+        ActivateAllPads(true);
     }
 
-    IEnumerator ActivateHealingPads()
+    public override void EndAddOn()
     {
-        ActivateAllPads(true);
-
-        yield return new WaitForSeconds(GameCustomization.eventOccurenceRate / 3);
-
         ActivateAllPads(false);
     }
 

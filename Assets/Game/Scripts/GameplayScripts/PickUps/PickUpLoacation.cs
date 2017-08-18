@@ -93,7 +93,7 @@ public class PickUpLoacation : Photon.MonoBehaviour
     
 
     [PunRPC]
-    public void RPC_ActivateMimic()
+    public void RPC_ActivateMimic(bool willActivate)
     {
         if (activePickUp == null)
         {
@@ -104,14 +104,17 @@ public class PickUpLoacation : Photon.MonoBehaviour
             }
         }
 
-        activePickUp.tag = ("Mimic");
+        if (willActivate)
+            activePickUp.tag.Equals("Mimic");
+        else
+            activePickUp.tag.Equals("Powerup");
 
         Rotate rotate = activePickUp.GetComponent<Rotate>();
 
         if (rotate == null)
             rotate = GetComponentInChildren<Rotate>();
         else
-            rotate.isMimic = true;
+            rotate.isMimic = willActivate;
     }
 
     [PunRPC]

@@ -25,6 +25,11 @@ public class BombsAway : AddOn
         StartCoroutine(SpawnBombs());
     }
 
+    public override void EndAddOn()
+    {
+       ///
+    }
+
     IEnumerator SpawnBombs()
     {
         for (int i = 0; i < bombs.Count; i++)
@@ -61,4 +66,6 @@ public class BombsAway : AddOn
             }
         }
     }
+
+    
 }

@@ -24,7 +24,7 @@ public class GiftedGun : AddOn
 
         foreach (PlayerManager player in allPlayers)
         {
-            if(player != null)
+            if (player != null)
             {
                 player.PhotonView.RPC("RPC_Disarm", PhotonTargets.All);
                 player.PhotonView.RPC("RPC_WeaponPickedUp", PhotonTargets.All, possibleGunNames[Random.Range(0, possibleGunNames.Count)]);
@@ -33,11 +33,19 @@ public class GiftedGun : AddOn
 
         for (byte index = 0; index < gunSpawns.Length; index++)
         {
-            StartCoroutine(ChangeGunSpawns(index, gunSpawns[index]));
+            ChangeGunSpawns(index, gunSpawns[index]);
         }
     }
 
-    IEnumerator ChangeGunSpawns(byte index, PickUpLoacation gunSpawn)
+    public override void EndAddOn()
+    {
+        for (byte index = 0; index < gunSpawns.Length; index++)
+        {
+            ReturnGunSpawns(index, gunSpawns[index]);
+        }
+    }
+
+    void ChangeGunSpawns(byte index, PickUpLoacation gunSpawn)
     {
         if (PhotonNetwork.isMasterClient)
         {
@@ -45,9 +53,11 @@ public class GiftedGun : AddOn
             Destroy(gunSpawn.activePickUp);
         }
 
-        gunSpawn.SpawnSelectPickup("ShotGun");
-        yield return new WaitForSeconds(GameCustomization.eventOccurenceRate / 3);
+        gunSpawn.SpawnSelectPickup(possibleGunNames[Random.Range(0, possibleGunNames.Count)]);
+    }
 
+    void ReturnGunSpawns(byte index, PickUpLoacation gunSpawn)
+    {
         if (PhotonNetwork.isMasterClient)
         {
             gunSpawn.photonView.RPC("RPC_DestoryItsPickup", PhotonTargets.OthersBuffered);

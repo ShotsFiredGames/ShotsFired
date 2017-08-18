@@ -11,11 +11,7 @@ public class StepItUp : AddOn
     public override void StartAddOn()
     {
         allPlayers = PlayerWrangler.GetAllPlayers();
-        StartCoroutine(SetSpeedValues());
-    }
 
-    IEnumerator SetSpeedValues()
-    {
         foreach (PlayerManager player in allPlayers)
         {
             if (player != null)
@@ -23,14 +19,15 @@ public class StepItUp : AddOn
                 player.PhotonView.RPC("RPC_SetSpeed", PhotonTargets.All, newSpeedValue);
             }
         }
+    }
 
-        yield return new WaitForSeconds(GameCustomization.eventOccurenceRate / 3);
-
+    public override void EndAddOn()
+    {
         foreach (PlayerManager player in allPlayers)
         {
             if (player != null)
             {
-                player.PhotonView.RPC("RPC_SetSpeed", PhotonTargets.All, (byte) GameCustomization.playerSpeed);
+                player.PhotonView.RPC("RPC_SetSpeed", PhotonTargets.All, (byte)GameCustomization.playerSpeed);
             }
         }
     }

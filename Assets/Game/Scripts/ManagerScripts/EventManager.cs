@@ -10,7 +10,7 @@ public class EventManager : Photon.MonoBehaviour
 
     public AddOn[] allAddOns;
     public static AddOn currentAddOn;
-    //AddOn nextAddOn;
+    AddOn nextAddOn;
 
     List<GameEvent> gameEvents = new List<GameEvent>();
     List<AddOn> addOns = new List<AddOn>();
@@ -65,6 +65,12 @@ public class EventManager : Photon.MonoBehaviour
     [PunRPC]
     void RPC_ActivateNextEvent(byte _newEvent)
     {
+        if (addOns.Count > 1)
+        {
+            currentAddOn.EndAddOn();
+            currentAddOn = null;
+        }            
+
         if (_newEvent != 255)
         {
             nextEvent = gameEvents[_newEvent];
@@ -118,7 +124,17 @@ public class EventManager : Photon.MonoBehaviour
     {
         if (_newAddOn != 255)
         {
-            currentAddOn = addOns[_newAddOn];
+            nextAddOn = addOns[_newAddOn];
+
+            if (currentAddOn != null)
+            {
+                if (currentAddOn.addOnName.Equals(nextAddOn.addOnName))
+                    return;
+                else
+                    currentAddOn.EndAddOn();
+            }            
+
+            currentAddOn = nextAddOn;
             currentAddOn.StartAddOn();
 
             if (PhotonNetwork.isMasterClient)
