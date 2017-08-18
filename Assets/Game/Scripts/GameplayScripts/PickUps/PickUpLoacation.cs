@@ -57,7 +57,9 @@ public class PickUpLoacation : Photon.MonoBehaviour
 
     public void SpawnSelectPickup(int pickupID)
     {
-        StopCoroutine(waitTime);
+        if (waitTime != null)
+            StopCoroutine(waitTime);
+
         if (PhotonNetwork.isMasterClient)
         {
             int viewID = PhotonNetwork.AllocateViewID();
