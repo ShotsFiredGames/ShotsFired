@@ -10,6 +10,13 @@ public class GiftedGun : AddOn
     GameObject[][] previousGunSpawns;
     PlayerManager[] allPlayers;
 
+    PhotonView pv;
+
+    void Awake()
+    {
+        pv = GetComponent<PhotonView>();
+    }
+
     public override void StartAddOn()
     {
         previousGunSpawns = new GameObject[gunSpawns.Length][];
@@ -38,8 +45,7 @@ public class GiftedGun : AddOn
             Destroy(gunSpawn.activePickUp);
         }
 
-        previousGunSpawns[index] = gunSpawn.pickUpTypes;
-        gunSpawn.pickUpTypes = gunThatSpawnFromGunSpawns;
+        pv.RPC("RPC_SetNewGunTypes", PhotonTargets.All, index);
         gunSpawn.SpawnSelectPickup(0);
         yield return new WaitForSeconds(GameCustomization.eventOccurenceRate / 3);
 
@@ -49,13 +55,22 @@ public class GiftedGun : AddOn
             Destroy(gunSpawn.activePickUp);
         }
 
-        gunSpawn.pickUpTypes = previousGunSpawns[index];
+        pv.RPC("RPC_SetOldGunTypes", PhotonTargets.All, index);
         gunSpawn.SpawnRandomPickup();
     }
 
     [PunRPC]
-    void SetNewGunTypes(int index)
+    void RPC_SetNewGunTypes(byte index)
     {
-        
+        Debug.LogError("Set the new guns of index: " + index);
+        previousGunSpawns[index] = gunSpawns[index].pickUpTypes;
+        gunSpawns[index].pickUpTypes = gunThatSpawnFromGunSpawns;
+    }
+
+    [PunRPC]
+    void RPC_SetOldGunTypes(byte index)
+    {
+        Debug.LogError("Set the old guns of index: " + index);
+        gunSpawns[index].pickUpTypes = previousGunSpawns[index];
     }
 }
