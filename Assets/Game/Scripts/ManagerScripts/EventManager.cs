@@ -48,10 +48,25 @@ public class EventManager : Photon.MonoBehaviour
         {
             Debug.LogError(ao.addOnName + " is an activated addon");
         }
+    }
 
+    void OnEnable()
+    {
+        CinematicCameraSystem.OnCinematicFinished += StartEvents;
+    }
+
+    void OnDisable()
+    {
+        CinematicCameraSystem.OnCinematicFinished -= StartEvents;
+    }
+
+    void StartEvents()
+    {
         if (PhotonNetwork.isMasterClient)
             InvokeRepeating("ActivateNextEvent", GameCustomization.eventOccurenceRate / 2, GameCustomization.eventOccurenceRate);
     }
+
+
 
     void ActivateNextEvent()
     {
