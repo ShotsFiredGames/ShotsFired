@@ -4,7 +4,7 @@ using System.Collections;
 public class Flag : Photon.MonoBehaviour
 {
     public Coroutine resetTimer;
-    public PlayerManager carrier;
+    public PlayerFlagInfo carrier;
     public float flagResetTime;
     public FlagBase flagBase;
 
@@ -12,6 +12,8 @@ public class Flag : Photon.MonoBehaviour
     public bool isPickedUp;
     public GameObject spawnPosition { get; set; }
     public byte index { get; set; }
+
+    PlayerFlagInfo newCarrier;
 
     void OnEnable()
     {
@@ -28,16 +30,27 @@ public class Flag : Photon.MonoBehaviour
     {
         if (other.tag.Equals("Player"))
         {
-			if (!isPickedUp) {
-				if (other.GetComponent<PlayerManager> ().CheckAbilityToPickupFlag()) {
-					if (!flagBase.owner.Equals (other.GetComponent<PlayerManager> ())) {
+            newCarrier = other.GetComponent<PlayerFlagInfo>();
+
+			if (!isPickedUp)
+            {
+				if (newCarrier.CheckAbilityToPickupFlag())
+                {
+					if (!flagBase.owner.name.Equals (newCarrier.name))
+                    {
+                        Debug.LogError("Pick up flag");
 						isPickedUp = true;
 						FlagManager.instance.photonView.RPC ("RPC_FlagPickedUp", PhotonTargets.All, index, other.transform.root.name);
-					} else {
-						if (!flagBase.hasFlag) {
+					}
+                    else
+                    {
+						if (!flagBase.hasFlag)
+                        {
 							ResetFlagPosition ();
 							//Debug.LogError("returned your flag");
-						} else {
+						}
+                        else
+                        {
 							//Debug.LogError ("This is your flag at base");
 						}
 					}

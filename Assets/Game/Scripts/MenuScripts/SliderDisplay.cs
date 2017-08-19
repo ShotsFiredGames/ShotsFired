@@ -18,7 +18,6 @@ public class SliderDisplay : MonoBehaviour
         display.onValueChanged.AddListener(delegate { ValueChangeCheck(); });
         message = text.text;
         formatString = "F" + decimalPoints.ToString();
-        print(formatString);
         text.text = message + display.value.ToString(formatString);
     }
 

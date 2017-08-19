@@ -10,6 +10,7 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
     PlayerCamera playerCamera;
     Juggernaut juggernaut;
     GameManager gameManager;
+    PlayerFlagInfo flagInfo;
 
     PlayerHealth playerHealth;
     public bool isDead;
@@ -40,9 +41,6 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
     public static bool isSprinting;
     [HideInInspector]
     public bool canMove;
-    [HideInInspector]
-    public bool hasFlag;
-    public Image haveFlag;
     public AudioMixer gameMixer;
     [HideInInspector]
     public int sprintFoV;
@@ -56,6 +54,7 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
         PhotonNetwork.OnEventCall += EnableMovement;
         playerHealth = GetComponent<PlayerHealth>();
         playerCamera = GetComponent<PlayerCamera>();
+        flagInfo = GetComponent<PlayerFlagInfo>();
         myCamera = playerCamera.myCamera.gameObject;
         gunBob = GetComponentInChildren<GunBob>();
         headBob = GetComponentInChildren<HeadBob>();
@@ -141,8 +140,6 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
     private void Update()
     {
         if (!photonView.isMine) return;
-
-        haveFlag.gameObject.SetActive(hasFlag);
 
         if (gameManager != null)
         {
@@ -355,8 +352,8 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
     {
         photonView.RPC("RPC_DeathState", PhotonTargets.All, true);
 
-        if (hasFlag)
-            FlagManager.instance.photonView.RPC("RPC_FlagDropped", PhotonTargets.All, name);
+        if (flagInfo != null)
+            flagInfo.DropFlag();
 
         //playerMovement.CancelSpeedBoost();        
         photonView.RPC("RPC_Disarm", PhotonTargets.All);
@@ -484,17 +481,6 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
             //turn off effects
         }
 
-    }
-
-    public bool CheckAbilityToPickupFlag()
-    {
-        if (isDead)
-            return false;
-
-        if (hasFlag)
-            return false;
-
-        return true;
     }
 
     void SaveBindings()

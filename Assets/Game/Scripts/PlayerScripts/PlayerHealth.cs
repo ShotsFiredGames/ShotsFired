@@ -20,6 +20,7 @@ public class PlayerHealth : Photon.MonoBehaviour
     public AudioClip[] hitEffects;
 
     public bool isBeingHealed { get; set; }
+    public bool isDead { get; set; }
 
     float respawnTime;
     float restoreHealth;
@@ -27,8 +28,7 @@ public class PlayerHealth : Photon.MonoBehaviour
     short currMaxHealth;
     short maxHealth;
     short currentHealth;
-
-    bool isDead;
+    
     bool isHealthIncreased;
 
     GameObject collisionDetection;

@@ -3,7 +3,7 @@
 public class FlagBase : MonoBehaviour
 {
     public Flag flag;
-    public PlayerManager owner;
+    public PlayerFlagInfo owner;
     public bool hasFlag = true;
 
     void Start()

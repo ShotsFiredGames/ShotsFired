@@ -58,14 +58,18 @@ public class FlagManager : Photon.MonoBehaviour
 
         PlayerManager newCarrier = PlayerWrangler.GetPlayer(carrierName);
 
-        if (!newCarrier.CheckAbilityToPickupFlag())
+        if (newCarrier == null)
             return;
 
-        flag.carrier = newCarrier;
-        flag.carrier.hasFlag = true;
-        flag.flagBase.hasFlag = false;
-        flag.transform.SetParent(flag.carrier.transform);
-        flag.transform.position = flag.carrier.transform.position + new Vector3(0, flag.carrier.transform.localScale.y, 0);
+        PlayerFlagInfo flagInfo = newCarrier.GetComponent<PlayerFlagInfo>(); 
+
+        if (!flagInfo.CheckAbilityToPickupFlag())
+            return;
+        
+        flag.carrier = flagInfo;
+        flagInfo.hasFlag = true;
+        flag.transform.SetParent(flagInfo.transform);
+        flag.transform.position = flagInfo.GetCarriedFlagPostion();
 
         if (flag.flagBase != null)
             flag.flagBase.hasFlag = false;
@@ -82,7 +86,7 @@ public class FlagManager : Photon.MonoBehaviour
         flag.ResetFlagPosition();
 
         if (flag.carrier != null)
-            flag.carrier.GetComponent<PlayerManager>().hasFlag = false;
+            flag.carrier.hasFlag = false;
     }
 
     [PunRPC]
@@ -94,7 +98,7 @@ public class FlagManager : Photon.MonoBehaviour
             return;
 
         if (flag.carrier != null)
-            flag.carrier.GetComponent<PlayerManager>().hasFlag = false;
+            flag.carrier.hasFlag = false;
 
         flag.transform.parent = null;
         StartCoroutine(flag.CanBePickedUp());

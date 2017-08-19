@@ -19,6 +19,11 @@ public class SnatchNDash : GameEvent
 	void Awake()
 	{
 		PhotonView = GetComponent<PhotonView>();
+
+        foreach (FlagBase bas in bases)
+        {
+            bas.gameObject.SetActive(false);
+        }
 	}
 
     private void InitFlags()
@@ -47,7 +52,7 @@ public class SnatchNDash : GameEvent
 		newFlag.flagResetTime = flagResetTime;
 		bases[index].flag = newFlag;
 		PlayerManager _owner = PlayerWrangler.GetPlayer (_ownerID);
-		bases[index].owner = _owner;
+		bases[index].owner = _owner.GetComponent<PlayerFlagInfo>();
 		newFlag.gameObject.SetActive(true);
         bases[index].gameObject.SetActive(true);
         bases[index].gameObject.GetComponent<Renderer>().material.color = PlayerWrangler.GetFactionMaterial(_owner.faction).color;
