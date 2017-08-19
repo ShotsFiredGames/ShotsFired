@@ -25,13 +25,12 @@ public class FirmlyGraspIt : GameEvent
     private void InitFlags()
     {
         int viewID = PhotonNetwork.AllocateViewID();
-        PhotonView.RPC("RPC_SpawnFlags", PhotonTargets.All, viewID);
-
+        PhotonView.RPC("RPC_SpawnFlag", PhotonTargets.All, viewID);
         spawnedFlags = true;
     }
 
     [PunRPC]
-    void RPC_SpawnFlags(int _viewID)
+    void RPC_SpawnFlag(int _viewID)
     {
         CarrierFlag newFlag = Instantiate(flagPrefab).GetComponent<CarrierFlag>();
         newFlag.GetComponent<PhotonView>().viewID = _viewID;
@@ -53,9 +52,15 @@ public class FirmlyGraspIt : GameEvent
         spawn.SetActive(true);
 
         if (!spawnedFlags)
-            InitFlags();
+        {
+            if (PhotonNetwork.isMasterClient)
+            {
+                InitFlags();
+            }              
+        }
 
-        usedFlag.gameObject.SetActive(true);
+        if (usedFlag != null)
+            usedFlag.gameObject.SetActive(true);            
 
         FlagManager.instance.pointsForHolding = pointsForHolding;
         gameEventDur = StartCoroutine(EventDuration());

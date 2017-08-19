@@ -483,6 +483,17 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
 
     }
 
+    public bool CheckAbilityToPickupFlag()
+    {
+        if (isDead)
+            return false;
+
+        if (flagInfo.hasFlag)
+            return false;
+
+        return true;
+    }
+
     void SaveBindings()
     {
         saveData = controls.Save();

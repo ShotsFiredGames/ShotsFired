@@ -8,13 +8,6 @@ public class PlayerFlagInfo : MonoBehaviour
     public bool hasFlag { get; set; }
     public Image haveFlag;
     public Transform carriedFlagPosition;
-
-    PlayerHealth health;
-
-    void Start()
-    {
-        health = GetComponent<PlayerHealth>();
-    }
 	
 	// Update is called once per frame
 	void FixedUpdate ()
@@ -31,16 +24,5 @@ public class PlayerFlagInfo : MonoBehaviour
     public Vector3 GetCarriedFlagPostion()
     {
         return carriedFlagPosition.position;
-    }
-
-    public bool CheckAbilityToPickupFlag()
-    {
-        if (health.isDead)
-            return false;
-
-        if (hasFlag)
-            return false;
-
-        return true;
     }
 }

@@ -56,16 +56,18 @@ public class FlagManager : Photon.MonoBehaviour
         if (flag.resetTimer != null)
             StopCoroutine(flag.resetTimer);
 
+        if (flag.carrier != null)
+            flag.carrier.hasFlag = false;
+
         PlayerManager newCarrier = PlayerWrangler.GetPlayer(carrierName);
 
         if (newCarrier == null)
             return;
 
-        PlayerFlagInfo flagInfo = newCarrier.GetComponent<PlayerFlagInfo>(); 
-
-        if (!flagInfo.CheckAbilityToPickupFlag())
+        if (!newCarrier.CheckAbilityToPickupFlag())
             return;
-        
+
+        PlayerFlagInfo flagInfo = newCarrier.GetComponent<PlayerFlagInfo>();         
         flag.carrier = flagInfo;
         flagInfo.hasFlag = true;
         flag.transform.SetParent(flagInfo.transform);

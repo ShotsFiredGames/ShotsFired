@@ -14,7 +14,7 @@ public class CarrierFlag : Flag
         {
             if (!isPickedUp)
             {
-                if (other.GetComponent<PlayerFlagInfo>().CheckAbilityToPickupFlag())
+                if (other.GetComponent<PlayerManager>().CheckAbilityToPickupFlag())
                 {
                     isPickedUp = true;
                     FlagManager.instance.photonView.RPC("RPC_FlagPickedUp", PhotonTargets.All, index, other.transform.root.name);
@@ -39,7 +39,11 @@ public class CarrierFlag : Flag
     {
         isCoroutineRunning = true;
         yield return new WaitForSeconds(timeIncrement);
-        FlagManager.instance.FlagHeld(carrier.name);
-        isCoroutineRunning = false;
+		isCoroutineRunning = false;
+
+		if (carrier != null)
+		{
+            FlagManager.instance.FlagHeld(carrier.name);
+        }		
     }
 }

@@ -34,7 +34,7 @@ public class Flag : Photon.MonoBehaviour
 
 			if (!isPickedUp)
             {
-				if (newCarrier.CheckAbilityToPickupFlag())
+				if (other.gameObject.GetComponent<PlayerManager>().CheckAbilityToPickupFlag())
                 {
 					if (!flagBase.owner.name.Equals (newCarrier.name))
                     {
