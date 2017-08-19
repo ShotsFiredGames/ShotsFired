@@ -12,4 +12,9 @@
                 player.PhotonView.RPC("RPC_Disarm", PhotonTargets.All);
         }
     }
+
+    public override void EndAddOn()
+    {
+        //
+    }
 }

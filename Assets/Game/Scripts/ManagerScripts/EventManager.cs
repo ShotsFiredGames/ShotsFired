@@ -10,7 +10,7 @@ public class EventManager : Photon.MonoBehaviour
 
     public AddOn[] allAddOns;
     public static AddOn currentAddOn;
-    //AddOn nextAddOn;
+    AddOn nextAddOn;
 
     List<GameEvent> gameEvents = new List<GameEvent>();
     List<AddOn> addOns = new List<AddOn>();
@@ -31,11 +31,10 @@ public class EventManager : Photon.MonoBehaviour
                 gameEvents.Add(allEvents[parse]);
         }
 
-         foreach (GameEvent ge in gameEvents)
-         {
-             Debug.LogError(ge.nameEvent + " is an activated Event");
-         }
-
+        foreach (GameEvent ge in gameEvents)
+        {
+            Debug.LogError(ge.nameEvent + " is an activated Event");
+        }
 
         for (int parse = 0; parse < addOnNames.Length; parse++)
         {
@@ -43,6 +42,11 @@ public class EventManager : Photon.MonoBehaviour
 
             if (charName.Equals("1"))
                 addOns.Add(allAddOns[parse]);
+        }
+
+        foreach (AddOn ao in addOns)
+        {
+            Debug.LogError(ao.addOnName + " is an activated addon");
         }
 
         if (PhotonNetwork.isMasterClient)
@@ -61,6 +65,15 @@ public class EventManager : Photon.MonoBehaviour
     [PunRPC]
     void RPC_ActivateNextEvent(byte _newEvent)
     {
+        if (addOns.Count > 1)
+        {
+            if (currentAddOn != null)
+            {
+                currentAddOn.EndAddOn();
+                currentAddOn = null;
+            }            
+        }
+
         if (_newEvent != 255)
         {
             nextEvent = gameEvents[_newEvent];
@@ -104,7 +117,7 @@ public class EventManager : Photon.MonoBehaviour
     void ActivateNextAddon()
     {
         byte newAddOn = 255;
-        if(addOns.Count > 0)
+        if (addOns.Count > 0)
             newAddOn = (byte)Random.Range(0, addOns.Count);
         photonView.RPC("RPC_ActivateNextAddOn", PhotonTargets.All, newAddOn);
     }
@@ -114,7 +127,17 @@ public class EventManager : Photon.MonoBehaviour
     {
         if (_newAddOn != 255)
         {
-            currentAddOn = addOns[_newAddOn];
+            nextAddOn = addOns[_newAddOn];
+
+            if (currentAddOn != null)
+            {
+                if (currentAddOn.addOnName.Equals(nextAddOn.addOnName))
+                    return;
+                else
+                    currentAddOn.EndAddOn();
+            }
+
+            currentAddOn = nextAddOn;
             currentAddOn.StartAddOn();
 
             if (PhotonNetwork.isMasterClient)

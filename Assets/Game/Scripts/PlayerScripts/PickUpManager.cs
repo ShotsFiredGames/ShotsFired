@@ -85,7 +85,7 @@ public class PickUpManager : Photon.MonoBehaviour
 
         if (other.tag.Equals("SpeedBoost"))
         {
-            playerManager.EnteredSpeedBoost();
+            //playerManager.EnteredSpeedBoost();
         }
     }
 
@@ -93,7 +93,7 @@ public class PickUpManager : Photon.MonoBehaviour
     {
         if (other.tag.Equals("SpeedBoost"))
         {
-            playerManager.SpeedBoost();
+            //playerManager.SpeedBoost();
         }
     }
 

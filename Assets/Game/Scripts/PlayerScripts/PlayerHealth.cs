@@ -19,7 +19,11 @@ public class PlayerHealth : Photon.MonoBehaviour
     public AudioSource source;
     public AudioClip[] hitEffects;
 
+    public bool isBeingHealed { get; set; }
+
     float respawnTime;
+    float restoreHealth;
+    double restoreFreq;
     short currMaxHealth;
     short maxHealth;
     short currentHealth;
@@ -67,9 +71,37 @@ public class PlayerHealth : Photon.MonoBehaviour
         if (isDead) return;
         currentHealth -= damage;
         Hit(collisionLocation);
+        if (!source.isPlaying)
+        {
+            source.clip = hitEffects[Random.Range(0, hitEffects.Length)];
+            source.Play();
+        }
 
-        source.PlayOneShot(hitEffects[Random.Range(0, hitEffects.Length)]); 
+        SetDamageEffect();
+        if (currentHealth <= 0)
+        {
+            Died(sourceID, collisionLocation);
+        }
+    }
 
+    [PunRPC]
+    public void RPC_RestoreHealth(byte healthRestore)
+    {
+        if (!photonView.isMine) return;
+        if (isDead) return;
+        currentHealth += healthRestore;
+
+        if (currentHealth > maxHealth)
+            currentHealth = maxHealth;
+
+        Debug.LogError("The health of " + name + " is " + currentHealth);
+
+        SetDamageEffect();
+    }
+
+
+    void SetDamageEffect()
+    {
         if (currentHealth > (short)(maxHealth * 0.75f))
         {
             StopHeartbeat();
@@ -85,10 +117,6 @@ public class PlayerHealth : Photon.MonoBehaviour
         else if (currentHealth > 0)
         {
             damageEffectAnim.SetInteger("DamageEffect", 3);
-        }
-        else
-        {
-            Died(sourceID, collisionLocation);
         }
     }
 
@@ -108,7 +136,7 @@ public class PlayerHealth : Photon.MonoBehaviour
     void Died(string damageSource, CollisionDetection.CollisionFlag collisionLocation)                                           //Died gets called when health is or goes below 0.
     {
         if (isDead == true) return;
-        if(!isDead)
+        if (!isDead)
         {
             isDead = true;
             StopHeartbeat();
@@ -132,8 +160,8 @@ public class PlayerHealth : Photon.MonoBehaviour
 
     IEnumerator Respawn()
     {
-		foreach (SkinnedMeshRenderer rend in playerMeshes)
-			rend.enabled = false;
+        foreach (SkinnedMeshRenderer rend in playerMeshes)
+            rend.enabled = false;
         yield return new WaitForSeconds(respawnTime);
 
 
@@ -227,6 +255,5 @@ public class PlayerHealth : Photon.MonoBehaviour
 
             isHealthIncreased = false;
         }
-        
     }
 }
