@@ -143,11 +143,10 @@ public class GameManager : Photon.PunBehaviour
     {
         for(byte i = 5; i > 0; i--)
         {
-            if(PhotonNetwork.isMasterClient)
-                countdownTime = i;
+            //countdownTime = i;
 
             countdownAnim.SetTrigger("Countdown");
-            countDownTimer.text = countdownTime.ToString();
+            countDownTimer.text = i.ToString();
             yield return new WaitForSeconds(1);
         }
         countDownTimer.text = "Fight!";
