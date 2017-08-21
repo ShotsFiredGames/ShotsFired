@@ -37,9 +37,8 @@ public class Jammer : Point
             {
                 string faction = player.GetComponent<PlayerManager>().GetFaction();
                 gameObject.GetComponent<Renderer>().material.color = PlayerWrangler.GetFactionMaterial(faction).color;
-            }
-
-            eventBase.UpdatePlayerJammerInfo(playerName);
+                eventBase.UpdatePlayerJammerInfo(playerName);
+            }            
         }        
     }
 

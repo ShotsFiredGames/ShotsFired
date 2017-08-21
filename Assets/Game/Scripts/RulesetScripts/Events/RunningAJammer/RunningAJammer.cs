@@ -50,16 +50,6 @@ public class RunningAJammer : GameEvent
         EventManager.currentEvent = null;
     }
 
-    // Use this for initialization
-    void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
     public void UpdatePlayerJammerInfo(string player)
     {
         if (!playerJammerInfo.ContainsKey(player)) return;
