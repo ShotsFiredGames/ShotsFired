@@ -104,6 +104,7 @@ public class GameManager : Photon.PunBehaviour, IPunObservable
 
         PhotonView = GetComponent<PhotonView>();
         playerScores = new Dictionary<string, short>();
+        countdownTime = 5;
         countdownAnim = countDownTimer.GetComponent<Animator>();
     }
 
@@ -140,25 +141,25 @@ public class GameManager : Photon.PunBehaviour, IPunObservable
     void StartGame()
     {
         countDownTimer.enabled = true;
-        StartCoroutine(StartCountdown());
+        if(PhotonNetwork.isMasterClient)
+            StartCoroutine(StartCountdown());
     }
 
     IEnumerator StartCountdown()
     {
         for(byte i = 5; i > 0; i--)
         {
-            if(PhotonNetwork.isMasterClient)
-                countdownTime = i;
+            countdownTime = i;
 
 //            countdownAnim.SetTrigger("Countdown");
 //            countDownTimer.text = countdownTime.ToString();
             yield return new WaitForSeconds(1);
         }
-        countDownTimer.text = "Fight!";
+        //countDownTimer.text = "Fight!";
         yield return new WaitForSeconds(1);
-        countDownTimer.enabled = false;
+        //countDownTimer.enabled = false;
 
-        timerText.enabled = true;
+        //timerText.enabled = true;
         if (PhotonNetwork.isMasterClient)
         {
             StartCoroutine(Timer());
@@ -176,10 +177,22 @@ public class GameManager : Photon.PunBehaviour, IPunObservable
 		
 		if (oldCountTime != countdownTime) {
 			oldCountTime = countdownTime;
-			countdownAnim.SetTrigger ("Countdown");
+            if (countdownTime == 0)
+            {
+                countDownTimer.text = "Fight!";
+                StartCoroutine(SwitchTimer(false));
+            }
+            countdownAnim.SetTrigger ("Countdown");
 			countDownTimer.text = countdownTime.ToString ();
 		}
 	}
+
+    IEnumerator SwitchTimer(bool isCountdownActive)
+    {
+        yield return new WaitForSeconds(1);
+        countDownTimer.enabled = isCountdownActive;
+        timerText.enabled = !isCountdownActive;
+    }
 
     IEnumerator Timer()
     {
