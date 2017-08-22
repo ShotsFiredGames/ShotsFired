@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HealingPad : MonoBehaviour
+public class HealingPad : Point
 {
     byte healthAmount;
     float healFreq;
@@ -13,18 +13,15 @@ public class HealingPad : MonoBehaviour
         healFreq = freq;
     }
 
-    private void OnTriggerStay(Collider other)
+    public override void PlayerStays(GameObject player)
     {
-        if (other.tag.Equals("Player"))
-        {
-            PlayerHealth health = other.GetComponent<PlayerHealth>();
+        PlayerHealth health = player.GetComponent<PlayerHealth>();
 
-            if (health != null)
+        if (health != null)
+        {
+            if (!health.isBeingHealed)
             {
-                if (!health.isBeingHealed)
-                {
-                    StartCoroutine(RestoreHealth(health));
-                }
+                StartCoroutine(RestoreHealth(health));
             }
         }
     }

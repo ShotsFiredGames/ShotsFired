@@ -35,12 +35,12 @@ public class FlagManager : Photon.MonoBehaviour
 
     public void FlagReturned(string player)
     {
-        GameManager.instance.FlagCaptured(player, pointsForCapture);
+        GameManager.instance.PlayerGainsPoints(player, pointsForCapture);
     }
 
     public void FlagHeld(string player)
     {
-        GameManager.instance.FlagCaptured(player, pointsForHolding);
+        GameManager.instance.PlayerGainsPoints(player, pointsForHolding);
     }
 
     public byte GetFlagNumber()
