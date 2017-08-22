@@ -112,6 +112,9 @@ public class PickUpManager : Photon.MonoBehaviour
             case PickUp.GunType.ShotGun:
                 playerManager.PhotonView.RPC("RPC_ApplyPickUp", PhotonTargets.All, "Gun", "ShotGun");
                 break;
+            case PickUp.GunType.LaserGun:
+                playerManager.PhotonView.RPC("RPC_ApplyPickUp", PhotonTargets.All, "Gun", "LaserGun");
+                break;
         }
     }
 

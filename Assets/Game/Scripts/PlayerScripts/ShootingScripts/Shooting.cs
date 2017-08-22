@@ -21,6 +21,7 @@ public class Shooting : Photon.MonoBehaviour
     bool isOvercharged;
     short _damage;                // this is the variable that gets affected by overcharged
     GunBob gunBob;
+    bool losingAmmo;
 
     void Start()
     {
@@ -70,7 +71,7 @@ public class Shooting : Photon.MonoBehaviour
                     ProjectileShot();
                     break;
                 case Gun.WeaponType.Sustained:
-                    SustainedShot();
+                    photonView.RPC("Rpc_SustainedShot", PhotonTargets.All);
                     break;
                 case Gun.WeaponType.Particle:
                     ParticleShot();
@@ -79,7 +80,7 @@ public class Shooting : Photon.MonoBehaviour
                     break;
             }
 
-            if (!isOvercharged)
+           if (!isOvercharged)
                 currentGun.currentAmmo--;
 
             gunBob.ApplyRecoil();
@@ -131,6 +132,8 @@ public class Shooting : Photon.MonoBehaviour
     public void StopFiring()
     {
         currentGun.shootingSource.PlayOneShot(currentGun.trailClip);
+        if (currentGun.weaponType == Gun.WeaponType.Sustained)
+            photonView.RPC("Rpc_StopSustainedShot", PhotonTargets.All);
     }
 
     [PunRPC]
@@ -147,11 +150,12 @@ public class Shooting : Photon.MonoBehaviour
         if (muzzleFlash == null) yield break;
 
         muzzleFlash.SetActive(true);
-        if(currentGun.thirdPersonMuzzle != null)
-        currentGun.thirdPersonMuzzle.SetActive(true);
-		yield return new WaitForSeconds(currentGun.muzzleFlashTimer);
+        if (currentGun.thirdPersonMuzzle != null)
+            currentGun.thirdPersonMuzzle.SetActive(true);
+        yield return new WaitForSeconds(currentGun.muzzleFlashTimer);
         if (currentGun.thirdPersonMuzzle != null)
             currentGun.thirdPersonMuzzle.SetActive(false);
+        if(muzzleFlash != null)
         muzzleFlash.SetActive(false);
     }
 
@@ -239,7 +243,7 @@ public class Shooting : Photon.MonoBehaviour
             bullet.GetComponent<PhotonView>().RPC("RPC_SetProjectileVariables", PhotonTargets.All, currentGun.speed, direction, transform.name, hitNormal, (short)0, false);
         }
 
-       
+
     }
 
     void ParticleShot()
@@ -267,9 +271,16 @@ public class Shooting : Photon.MonoBehaviour
         }
     }
 
-    void SustainedShot()
+    [PunRPC]
+    void Rpc_SustainedShot()
     {
+        currentGun.sustainedEffect.SetActive(true);
+    }
 
+    [PunRPC]
+    void Rpc_StopSustainedShot()
+    {
+        currentGun.sustainedEffect.SetActive(false);
     }
 
     public void ActivateOvercharged()

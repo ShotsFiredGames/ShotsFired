@@ -39,7 +39,7 @@ public class PickUpEditor : Editor
                 break;
         }
 
-        EditorGUILayout.PropertyField(pickupSound_prop, new GUIContent("Pickup Sound"));
+        //EditorGUILayout.PropertyField(pickupSound_prop, new GUIContent("Pickup Sound"));
 
         serializedObject.ApplyModifiedProperties();
     }

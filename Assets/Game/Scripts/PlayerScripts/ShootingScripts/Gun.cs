@@ -42,6 +42,8 @@ public class Gun : MonoBehaviour
 
     public PlayerManager playerManager;
 
+    public GameObject sustainedEffect;
+
     [HideInInspector]
     public bool isFiring = false;
 

@@ -14,7 +14,8 @@ public class PickUp : MonoBehaviour
         None,
         MachineGun, 
         RocketLauncher,
-		ShotGun
+		ShotGun,
+        LaserGun
     };
 
     public enum AbilityType
