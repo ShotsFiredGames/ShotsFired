@@ -37,6 +37,12 @@ public class Reaper : MonoBehaviour
     private void OnEnable()
     {
         collisionCollider.enabled = true;
+        GameManager.OnWinnerChanged += SetTargetPlayer;
+    }
+
+    private void OnDisable()
+    {
+        GameManager.OnWinnerChanged -= SetTargetPlayer;
     }
 
     public void Setup()
@@ -81,7 +87,6 @@ public class Reaper : MonoBehaviour
         else
         {
             PhotonView.RPC("RPC_ReaperTookDamage", PhotonTargets.All, damage);
-            print("taking damage");
         }
     }
 
@@ -105,9 +110,9 @@ public class Reaper : MonoBehaviour
         return targetPlayer.transform.name;
     }
 
-    public void SetTargetPlayer(PlayerManager target)
+    public void SetTargetPlayer(string targetPlayerName)
     {
-        targetPlayer = target;
+        targetPlayer = PlayerWrangler.GetPlayer(targetPlayerName);
         targetPlayer.ReaperEffectsActivate(true);
     }
 

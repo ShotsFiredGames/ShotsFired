@@ -34,6 +34,10 @@ public class GameManager : Photon.PunBehaviour
     byte seconds;
     byte countdownTime;
     byte playersInGame;
+    string currentWinner = "";
+
+    public delegate void WinnerHasChanged(string winningPlayer);
+    public static event WinnerHasChanged OnWinnerChanged;
 
     #region Photon Methods
     public override void OnLeftRoom()
@@ -218,6 +222,9 @@ public class GameManager : Photon.PunBehaviour
     void CheckScores()
     {
         string winningPlayer = GetWinningPlayer();
+
+        if (winningPlayer.Equals(currentWinner))
+            OnWinnerChanged(winningPlayer);
 
         if (playerScores[winningPlayer] >= GameCustomization.pointsToWin)
             gameOver = true;

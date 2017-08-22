@@ -6,7 +6,7 @@ public class TheReaperComes : GameEvent
     public GameObject[] objectsToSetActive;
     public GameObject reaper;
     public static List<Reaper> reapers = new List<Reaper>();
-    public Transform[] reaperSpawns;
+    public Transform reaperSpawn;
     [Tooltip("This number is subtracted. Make it positive if you want the player to lose points")]
     public byte pointsPlayerLosesOnDeath;
 
@@ -17,25 +17,20 @@ public class TheReaperComes : GameEvent
 
     private void InitReapers()
     {
-        PlayerManager[] players = PlayerWrangler.GetAllPlayers();
-
-        for (byte i = 0; i < players.Length; i++)
-        {
-            int viewID = PhotonNetwork.AllocateViewID();
-            PhotonView.RPC("RPC_SpawnReapers", PhotonTargets.All, viewID, i, players[i].name);
-        }
+        int viewID = PhotonNetwork.AllocateViewID();
+        PhotonView.RPC("RPC_SpawnReapers", PhotonTargets.All, viewID, GameManager.instance.GetWinningPlayer());
     }
 
     [PunRPC]
-    void RPC_SpawnReapers(int _viewID, byte index, string targetID)
+    void RPC_SpawnReapers(int _viewID, string targetID)
     {
         GameObject newReaper = Instantiate(reaper);
         Reaper _reaper = newReaper.GetComponent<Reaper>();
         newReaper.GetComponent<PhotonView>().viewID = _viewID;
         reapers.Add(_reaper);
         _reaper.enabled = true;
-        _reaper.SetTargetPlayer(PlayerWrangler.GetPlayer(targetID));
-        _reaper.SetSpawnPoint(reaperSpawns[index]);
+        _reaper.SetTargetPlayer(targetID);
+        _reaper.SetSpawnPoint(reaperSpawn);
         _reaper.SetPoints(pointsPlayerLosesOnDeath);
         _reaper.Setup();
 
