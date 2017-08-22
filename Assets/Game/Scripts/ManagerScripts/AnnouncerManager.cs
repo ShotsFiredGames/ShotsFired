@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
- 
+
+[RequireComponent(typeof(AudioSource))]
 public class AnnouncerManager : MonoBehaviour
 {
     //Version of instance taken from "http://wiki.unity3d.com/index.php/AManagerClass"

@@ -115,6 +115,7 @@ public class Reaper : MonoBehaviour
 
     IEnumerator Respawn()
     {
+        RefereeManager.instance.PlayReaperDies();
         PhotonView.RPC("RPC_SetReaperPosition", PhotonTargets.All, new Vector3(-1000, -1000, -1000), GetTargetPlayer());
         isDead = true;
         yield return new WaitForSeconds(1f);
