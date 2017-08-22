@@ -10,6 +10,11 @@ public class ParticleHit : MonoBehaviour
             particleCollision.DealDamage(other);
 
         if (other.tag.Equals("Reaper"))
+        {
+            print("Hit the reaper");
             particleCollision.DealDamage(other);
+        }
+
+
     }
 }

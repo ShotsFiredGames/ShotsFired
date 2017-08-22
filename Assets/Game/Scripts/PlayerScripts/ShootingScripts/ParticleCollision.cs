@@ -17,6 +17,9 @@ public class ParticleCollision : MonoBehaviour
             other.GetComponentInChildren<CollisionDetection>().OnHit(damage, transform.root.name);
 
         if (other.tag.Equals("Reaper"))
+        {
+            print("ParticleCollision Hit reaper");
             other.GetComponent<Reaper>().HitBy(damage, transform.root.name);
+        }
     }
 }

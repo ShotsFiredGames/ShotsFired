@@ -12,6 +12,8 @@ public class Reaper : MonoBehaviour
     public float shotSpeedIncrease;
     [Tooltip("The vertical offset for the players. 0 means feet.")]
     public float attackingOffset;
+    public LayerMask layermask;
+    public SphereCollider collisionCollider; 
 
     public PhotonView PhotonView { get; private set; }
 
@@ -30,6 +32,11 @@ public class Reaper : MonoBehaviour
     void Awake()
     {
         PhotonView = GetComponent<PhotonView>();
+    }
+
+    private void OnEnable()
+    {
+        collisionCollider.enabled = true;
     }
 
     public void Setup()
@@ -74,6 +81,7 @@ public class Reaper : MonoBehaviour
         else
         {
             PhotonView.RPC("RPC_ReaperTookDamage", PhotonTargets.All, damage);
+            print("taking damage");
         }
     }
 
@@ -145,5 +153,21 @@ public class Reaper : MonoBehaviour
         targetPlayer.ReaperEffectsActivate(false);
         gameObject.SetActive(false);
         this.enabled = false;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.gameObject.layer == layermask)
+        {
+            collisionCollider.enabled = false;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.layer == layermask)
+        {
+            collisionCollider.enabled = true;
+        }
     }
 }

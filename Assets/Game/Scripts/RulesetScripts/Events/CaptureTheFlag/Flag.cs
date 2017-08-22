@@ -41,6 +41,7 @@ public class Flag : Photon.MonoBehaviour
                         Debug.LogError("Pick up flag");
 						isPickedUp = true;
 						FlagManager.instance.photonView.RPC ("RPC_FlagPickedUp", PhotonTargets.All, index, other.transform.root.name);
+                        RefereeManager.instance.PlayFlagPickedUp();
 					}
                     else
                     {
