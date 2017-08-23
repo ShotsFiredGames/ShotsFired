@@ -43,6 +43,8 @@ public class Gun : MonoBehaviour
     public PlayerManager playerManager;
 
     public GameObject sustainedEffect;
+    public GameObject thirdPersonSustained;
+    public Collider sustainedCollider;
 
     [HideInInspector]
     public bool isFiring = false;

@@ -33,6 +33,7 @@ public class CollisionDetection : MonoBehaviour
     {
         if (sourceID == transform.root.name) return;
         if (health.isPlayerDead()) return;
+        Debug.LogError("Collision Detection Damamge");
         switch(collisionLocation)                                                                                         //Find the collisionLocation this collider is marked with.
         {
             case CollisionFlag.FrontHeadShot:

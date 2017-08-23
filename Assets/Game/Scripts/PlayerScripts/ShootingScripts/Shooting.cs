@@ -71,6 +71,7 @@ public class Shooting : Photon.MonoBehaviour
                     ProjectileShot();
                     break;
                 case Gun.WeaponType.Sustained:
+                    SustainedShot();
                     photonView.RPC("Rpc_SustainedShot", PhotonTargets.All);
                     break;
                 case Gun.WeaponType.Particle:
@@ -132,8 +133,11 @@ public class Shooting : Photon.MonoBehaviour
     public void StopFiring()
     {
         currentGun.shootingSource.PlayOneShot(currentGun.trailClip);
-        if (currentGun.weaponType == Gun.WeaponType.Sustained)
+        if(currentGun.weaponType == Gun.WeaponType.Sustained)
+        {
+            StopSustainedShot();
             photonView.RPC("Rpc_StopSustainedShot", PhotonTargets.All);
+        }
     }
 
     [PunRPC]
@@ -271,15 +275,32 @@ public class Shooting : Photon.MonoBehaviour
         }
     }
 
+    void SustainedShot()
+    {
+        currentGun.sustainedCollider.enabled = false;
+        currentGun.sustainedCollider.enabled = true;
+    }
+
+    void StopSustainedShot()
+    {
+        currentGun.sustainedCollider.enabled = false;
+    }
+
     [PunRPC]
     void Rpc_SustainedShot()
     {
+        if (currentGun.thirdPersonSustained != null)
+            currentGun.thirdPersonSustained.SetActive(true);
+
         currentGun.sustainedEffect.SetActive(true);
     }
 
     [PunRPC]
     void Rpc_StopSustainedShot()
     {
+        if(currentGun.thirdPersonSustained != null)
+            currentGun.thirdPersonSustained.SetActive(false);
+
         currentGun.sustainedEffect.SetActive(false);
     }
 
