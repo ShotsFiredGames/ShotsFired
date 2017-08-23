@@ -80,18 +80,15 @@ public class GameManager : Photon.PunBehaviour, IPunObservable
             {
                 stream.SendNext(minutes);
                 stream.SendNext(seconds);
-                stream.SendNext(countdownTime);
+                //stream.SendNext(countdownTime);
             }
         }
         else
         {
             minutes = (byte)stream.ReceiveNext();
             seconds = (byte)stream.ReceiveNext();
-            countdownTime = (byte)stream.ReceiveNext();
-        }
-
-		UpdateCountdownText ();
-		UpdateTimerText();
+            //countdownTime = (byte)stream.ReceiveNext();
+        }		
     }
     #endregion
 
@@ -125,6 +122,11 @@ public class GameManager : Photon.PunBehaviour, IPunObservable
         minutes = GameCustomization.gameLength;
     }
 
+    void Update()
+    {
+        UpdateTimerText();
+    }
+
     [PunRPC]
     void RPC_CinematicIsDone()
     {
@@ -150,16 +152,12 @@ public class GameManager : Photon.PunBehaviour, IPunObservable
         for(byte i = 5; i > 0; i--)
         {
             countdownTime = i;
-
-//            countdownAnim.SetTrigger("Countdown");
-//            countDownTimer.text = countdownTime.ToString();
+            photonView.RPC("RPC_UpdateCountdownText", PhotonTargets.All, false, countdownTime);
             yield return new WaitForSeconds(1);
         }
-        //countDownTimer.text = "Fight!";
+        photonView.RPC("RPC_UpdateCountdownText", PhotonTargets.All, true, countdownTime);
         yield return new WaitForSeconds(1);
-        //countDownTimer.enabled = false;
 
-        //timerText.enabled = true;
         if (PhotonNetwork.isMasterClient)
         {
             StartCoroutine(Timer());
@@ -170,21 +168,27 @@ public class GameManager : Photon.PunBehaviour, IPunObservable
         }
     }
 
-	void UpdateCountdownText()
+    [PunRPC]
+	void RPC_UpdateCountdownText(bool countdownFinished, byte _countdownTime)
 	{
 		if (!countDownTimer.enabled)
 			return;
-		
-		if (oldCountTime != countdownTime) {
-			oldCountTime = countdownTime;
-            if (countdownTime == 0)
+
+        if (countdownFinished)
+        {
+            countDownTimer.text = "Fight!";
+            StartCoroutine(SwitchTimer(false));
+        }
+        else
+        {
+            if (oldCountTime != _countdownTime)
             {
-                countDownTimer.text = "Fight!";
-                StartCoroutine(SwitchTimer(false));
+                oldCountTime = _countdownTime;
+                countdownTime = _countdownTime;
+                countdownAnim.SetTrigger("Countdown");
+                countDownTimer.text = countdownTime.ToString();
             }
-            countdownAnim.SetTrigger ("Countdown");
-			countDownTimer.text = countdownTime.ToString ();
-		}
+        }
 	}
 
     IEnumerator SwitchTimer(bool isCountdownActive)

@@ -43,7 +43,6 @@ public class PickUpLoacation : Photon.MonoBehaviour
         isSpawning = false;
     }
 
-
     public void SpawnRandomPickup()
     {
         if (PhotonNetwork.isMasterClient)
