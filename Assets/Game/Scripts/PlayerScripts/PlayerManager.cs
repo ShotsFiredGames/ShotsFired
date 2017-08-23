@@ -534,11 +534,18 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
 		photonView.RPC("RPC_Disarm", PhotonTargets.Others);
 		photonView.RPC("RPC_CancelAbility", PhotonTargets.Others);
         animationManager.IsDead(collisionLocation);
+        photonView.RPC("RPC_PlayDeathAnim", PhotonTargets.Others, collisionLocation);
 
 		GameManager.instance.Local_AddScore (damageSource, GameCustomization.pointsPerKill);	//Add score locally
         PhotonView gmPhotonView = GameManager.instance.PhotonView;
         if (gmPhotonView != null)
 			gmPhotonView.RPC("RPC_AddScore", PhotonTargets.OthersBuffered, damageSource, GameCustomization.pointsPerKill);		//Send RPC to other clients to update scores
+    }
+
+    [PunRPC]
+    void RPC_PlayDeathAnim(CollisionDetection.CollisionFlag collisionLocation)
+    {
+        animationManager.IsDead(collisionLocation);
     }
 
     public void Respawn()

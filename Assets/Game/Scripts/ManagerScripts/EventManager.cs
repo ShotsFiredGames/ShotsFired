@@ -10,7 +10,6 @@ public class EventManager : Photon.MonoBehaviour
 
     public AddOn[] allAddOns;
     public static AddOn currentAddOn;
-    //AddOn nextAddOn;
 
     List<GameEvent> gameEvents = new List<GameEvent>();
     List<AddOn> addOns = new List<AddOn>();
@@ -45,10 +44,10 @@ public class EventManager : Photon.MonoBehaviour
         }
 
         if (PhotonNetwork.isMasterClient)
-            InvokeRepeating("ActivateNextEvent", GameCustomization.eventOccurenceRate / 2, GameCustomization.eventOccurenceRate);
+            InvokeRepeating("ChooseNextEvent", GameCustomization.eventOccurenceRate / 2, GameCustomization.eventOccurenceRate);
     }
 
-    void ActivateNextEvent()
+    void ChooseNextEvent()
     {
         byte newEvent = 255;
         if (gameEvents.Count > 0)
@@ -98,19 +97,10 @@ public class EventManager : Photon.MonoBehaviour
             {
                 currentEvent = nextEvent;
                 currentEvent.StartEvent();
-//                if (PhotonNetwork.isMasterClient)
-//                {
-//                    int arrayIndex = AnnouncerManager.instance.GetRandomEventIndex(currentEvent.nameEvent);
-//					AnnouncerManager.instance.Local_PlayEventStartClip (currentEvent.nameEvent, arrayIndex);
-//                    AnnouncerManager.instance.PhotonView.RPC("RPC_PlayEventStartClip", PhotonTargets.All, currentEvent.nameEvent, arrayIndex);
-//                }
             }
         }
         else
             currentEvent = null;
-
-//        if (PhotonNetwork.isMasterClient && addOns.Count > 0)
-//            StartCoroutine(NextAddons(GetEventDuration(currentEvent)));
     }
 
     byte GetEventDuration(GameEvent _currentEvent)
@@ -124,12 +114,12 @@ public class EventManager : Photon.MonoBehaviour
     IEnumerator NextAddons(byte eventLength)
     {
         yield return new WaitForSeconds(eventLength / 3); //wait a third of the time
-        ActivateNextAddon();
+        ChooseNextAddon();
         yield return new WaitForSeconds(eventLength / 3); // wait another third of the time
-        ActivateNextAddon();
+        ChooseNextAddon();
     }
 
-    void ActivateNextAddon()
+    void ChooseNextAddon()
     {
         byte newAddOn = 255;
 		if (addOns.Count > 0)
@@ -162,12 +152,6 @@ public class EventManager : Photon.MonoBehaviour
         {
             currentAddOn = addOns[_newAddOn];
             currentAddOn.StartAddOn();
-
-//            if (PhotonNetwork.isMasterClient)
-//            {
-//                int arrayIndex = AnnouncerManager.instance.GetRandomAddOnIndex(currentAddOn.addOnName);
-//                AnnouncerManager.instance.PhotonView.RPC("RPC_PlayAddOnStartClip", PhotonTargets.All, currentAddOn.addOnName, arrayIndex);
-//            }
         }
     }
 }

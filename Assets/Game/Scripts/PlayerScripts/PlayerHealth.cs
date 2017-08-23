@@ -70,25 +70,15 @@ public class PlayerHealth : Photon.MonoBehaviour
 		source.PlayOneShot(hitEffects[Random.Range(0, hitEffects.Length)]); 
 
 		if (currentHealth > (short)(maxHealth * 0.75f))
-		{
 			StopHeartbeat();
-		}
 		else if (currentHealth > (short)(maxHealth * 0.5f))
-		{
 			damageEffectAnim.SetInteger("DamageEffect", 1);
-		}
 		else if (currentHealth > (short)(maxHealth * 0.25f))
-		{
 			damageEffectAnim.SetInteger("DamageEffect", 2);
-		}
 		else if (currentHealth > 0)
-		{
 			damageEffectAnim.SetInteger("DamageEffect", 3);
-		}
 		else
-		{
 			Died(sourceID, collisionLocation);
-		}
 	}
 
     [PunRPC]
@@ -97,30 +87,8 @@ public class PlayerHealth : Photon.MonoBehaviour
         if (!photonView.isMine) return;
         if (isDead) return;
         currentHealth -= damage;
-        Hit(collisionLocation);
-
-        source.PlayOneShot(hitEffects[Random.Range(0, hitEffects.Length)]); 
-
-        if (currentHealth > (short)(maxHealth * 0.75f))
-        {
-            StopHeartbeat();
-        }
-        else if (currentHealth > (short)(maxHealth * 0.5f))
-        {
-            damageEffectAnim.SetInteger("DamageEffect", 1);
-        }
-        else if (currentHealth > (short)(maxHealth * 0.25f))
-        {
-            damageEffectAnim.SetInteger("DamageEffect", 2);
-        }
-        else if (currentHealth > 0)
-        {
-            damageEffectAnim.SetInteger("DamageEffect", 3);
-        }
-        else
-        {
+        if(currentHealth <= 0)
             Died(sourceID, collisionLocation);
-        }
     }
 
     void StopHeartbeat()
@@ -162,19 +130,33 @@ public class PlayerHealth : Photon.MonoBehaviour
         }
     }
 
+    [PunRPC]
+    void RPC_PlayerRenderState(bool isEnabled)
+    {
+        foreach (SkinnedMeshRenderer rend in playerMeshes)
+            rend.enabled = isEnabled;
+    }
+
+    [PunRPC]
+    void RPC_DespawnEffectState(bool isEnabled)
+    {
+        despawnEffect.SetActive(isEnabled);
+    }
+
     IEnumerator DespawnEffect()
     {
         yield return new WaitForSeconds(.5f);
         despawnEffect.SetActive(true);
+        PhotonView.RPC("RPC_DespawnEffectState", PhotonTargets.Others, true);
     }
 
     IEnumerator Respawn()
     {
 		foreach (SkinnedMeshRenderer rend in playerMeshes)
 			rend.enabled = false;
+        PhotonView.RPC("RPC_PlayerRenderState", PhotonTargets.Others, false);
         yield return new WaitForSeconds(respawnTime);
-
-
+        
         if (ballToTheWall == null)
             ballToTheWall = GameObject.Find("BallToTheWall").GetComponent<BallToTheWall>();
 
@@ -189,11 +171,12 @@ public class PlayerHealth : Photon.MonoBehaviour
         if (!photonView.isMine)
             foreach (GameObject go in collisionLocations)
                 go.layer = LayerMask.NameToLayer("Collision");
-
-
+        
         foreach (SkinnedMeshRenderer rend in playerMeshes)
             rend.enabled = true;
+        PhotonView.RPC("RPC_PlayerRenderState", PhotonTargets.Others, true);
         despawnEffect.SetActive(false);
+        PhotonView.RPC("RPC_DespawnEffectState", PhotonTargets.Others, false);
 
         Init();
         playerManager.Respawn();

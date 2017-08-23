@@ -76,7 +76,6 @@ public class PickUpLoacation : Photon.MonoBehaviour
             activePickUp.GetComponent<PickUp>().SetAnimator(anim);
     }
     
-
     [PunRPC]
     public void RPC_ActivateMimic()
     {

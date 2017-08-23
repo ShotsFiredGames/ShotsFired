@@ -92,12 +92,12 @@ public class PickUpManager : Photon.MonoBehaviour
                     break;
             }
 
-            pv = other.GetComponent<PhotonView>();
-
             if (PhotonNetwork.isMasterClient)
             {
-                if(other.GetComponent<PhotonView>())
+                pv = other.GetComponent<PhotonView>();
+                if (pv)
                 {
+                    Debug.LogError("destroy pickup");
                     photonView.RPC("RPC_DestroyPickup", PhotonTargets.Others, pv.viewID);
                     Destroy(other.gameObject);
                 }
@@ -167,7 +167,7 @@ public class PickUpManager : Photon.MonoBehaviour
     [PunRPC]
     void RPC_DestroyPickup(int viewID)
     {
-        if(pv != null)
-            Destroy(pv.gameObject);
+        if (PhotonView.Find(viewID))
+            Destroy(PhotonView.Find(viewID).gameObject);
     }
 }

@@ -167,6 +167,7 @@ public class AnimationManager : MonoBehaviour
 
     public void IsDead(CollisionDetection.CollisionFlag collisionLocation)
     {
+        Debug.LogError("is dead anim manager");
         switch (collisionLocation)                                                                                         
         {
             case CollisionDetection.CollisionFlag.FrontHeadShot:
