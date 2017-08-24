@@ -33,7 +33,8 @@ public class BombsAway : AddOn
             if (PhotonNetwork.isMasterClient)
             {
                 byte bombIndex = (byte)Random.Range(0, availibleBombs.Count);
-                PhotonView.RPC("RPC_ActivateBomb", PhotonTargets.All, bombIndex);
+                Local_ActivateBomb(bombIndex);
+                PhotonView.RPC("RPC_ActivateBomb", PhotonTargets.Others, bombIndex);
             }
         }
     }
@@ -41,6 +42,13 @@ public class BombsAway : AddOn
     GameObject NextBomb()
     {
         return bombs[Random.Range(0, availibleBombs.Count)];
+    }
+
+    void Local_ActivateBomb(byte index)
+    {
+        GameObject bombToActivate = bombs[index];
+        bombToActivate.SetActive(true);
+        availibleBombs.Remove(bombToActivate);
     }
 
     [PunRPC]
