@@ -38,12 +38,21 @@ public class PlayerHealth : Photon.MonoBehaviour
 
     public SkinnedMeshRenderer[] playerMeshes;
 
+    [Header("Health UI")]
+    public Text health;
+
     void Awake()
     {
         respawnTime = GameCustomization.respawnTime;
         maxHealth = GameCustomization.playerHealth;
         playerManager = GetComponent<PlayerManager>();
         PhotonView = GetComponent<PhotonView>();
+        health.gameObject.SetActive(false);
+    }
+
+    void OnEnable()
+    {
+        CinematicCameraSystem.OnCinematicFinished += ActivateUI;
     }
 
     private void Start()
@@ -51,16 +60,30 @@ public class PlayerHealth : Photon.MonoBehaviour
         ballToTheWall = GameObject.Find("BallToTheWall").GetComponent<BallToTheWall>();
     }
 
+    void ActivateUI()
+    {
+        if (!PhotonNetwork.player.NickName.Equals(name))
+            return;
+
+        Debug.LogError("In hereh");
+        health.gameObject.SetActive(true);
+    }
+
     public void Init()
     {
         isDead = false;
         currentHealth = maxHealth;
         currMaxHealth = maxHealth;
+
+        SetDamageEffect();
+        
+        Debug.LogError("Turned on health for the player");
+
         if (!photonView.isMine)
         {
             collisionDetection = transform.Find("CollisionDetection").gameObject;
             foreach (Transform go in collisionDetection.GetComponentsInChildren<Transform>())
-                go.gameObject.layer = LayerMask.NameToLayer("Collision");
+                go.gameObject.layer = LayerMask.NameToLayer("Collision");            
         }
     }
 
@@ -118,6 +141,8 @@ public class PlayerHealth : Photon.MonoBehaviour
         {
             damageEffectAnim.SetInteger("DamageEffect", 3);
         }
+
+        health.text = currentHealth + " / " + currMaxHealth;
     }
 
     void StopHeartbeat()

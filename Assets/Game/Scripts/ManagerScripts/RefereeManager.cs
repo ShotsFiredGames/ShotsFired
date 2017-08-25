@@ -33,6 +33,7 @@ public class RefereeManager : MonoBehaviour
     public ReaperClips reaperClips;
     public SnatchNDashClips sndClips;
     public BallToTheWallClips bttwClips;
+    public JammerClips jammerClips;
 
     AudioSource source;
 
@@ -94,6 +95,17 @@ public class RefereeManager : MonoBehaviour
         PlayRandomClipFromArray(sndClips.flagPickedUp, randomInt);
     }
 
+    public void PlayFlagCaptured()
+    {
+        int randomInt = GetRandomIndex(sndClips.flagCaptured.Length);
+        PlayRandomClipFromArray(sndClips.flagCaptured, randomInt);
+    }
+
+    public void PlayJammersReset()
+    {
+        int randomInt = GetRandomIndex(jammerClips.jammersReset.Length);
+        PlayRandomClipFromArray(jammerClips.jammersReset, randomInt);
+    }
 
     #endregion
 
@@ -117,6 +129,13 @@ public class RefereeManager : MonoBehaviour
         public AudioClip[] flagDropped;
         public AudioClip[] flagReturned;
         public AudioClip[] flagPickedUp;
+        public AudioClip[] flagCaptured;
+    }
+
+    [System.Serializable]
+    public class JammerClips
+    {
+        public AudioClip[] jammersReset;
     }
     #endregion
 }

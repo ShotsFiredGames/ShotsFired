@@ -72,6 +72,7 @@ public class RunningAJammer : GameEvent
             }
 
             playerJammerInfo[player] = 0;
+            RefereeManager.instance.PlayJammersReset();
         }
     }
 
