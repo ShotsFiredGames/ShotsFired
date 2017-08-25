@@ -24,7 +24,7 @@ public class FlagBase : MonoBehaviour
                 //Debug.Log("Flag being captured is: " + capturedFlag.name);
                 if (!capturedFlag.index.Equals(flag.index)) //if the flag isn't the flag the base owns
                 {
-                    //Debug.Log("Flag reset");
+                    RefereeManager.instance.PlayFlagCaptured();
                     FlagManager.instance.photonView.RPC("RPC_ReturnFlag", PhotonTargets.All, other.GetComponent<Flag>().index);
                     hasFlag = false;
                 }

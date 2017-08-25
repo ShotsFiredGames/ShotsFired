@@ -7,6 +7,7 @@ public class Jammer : Point
     Dictionary<string, bool> jammerInfo;
     RunningAJammer eventBase;
     Color orginalColor;
+    AudioSource audSource;
 
     public void SetConnection(RunningAJammer jams)
     {
@@ -15,6 +16,7 @@ public class Jammer : Point
 
     public void InitJammer()
     {
+        audSource = GetComponent<AudioSource>();
         orginalColor = GetComponent<Renderer>().material.color;
         jammerInfo = new Dictionary<string, bool>();
         PlayerManager[] players = PlayerWrangler.GetAllPlayers();
@@ -38,6 +40,7 @@ public class Jammer : Point
                 string faction = player.GetComponent<PlayerManager>().GetFaction();
                 gameObject.GetComponent<Renderer>().material.color = PlayerWrangler.GetFactionMaterial(faction).color;
                 eventBase.UpdatePlayerJammerInfo(playerName);
+                audSource.Play();
             }            
         }        
     }

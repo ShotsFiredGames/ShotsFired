@@ -59,6 +59,12 @@ public class FlagManager : Photon.MonoBehaviour
         if (flag.carrier != null)
             flag.carrier.hasFlag = false;
 
+        if (flag.flagBase != null)
+        {
+            if (flag.flagBase.owner.name.Equals(PhotonNetwork.player.NickName)) // if the local player is the owner of the flag being picked up
+                RefereeManager.instance.PlayFlagStolen();
+        }
+
         PlayerManager newCarrier = PlayerWrangler.GetPlayer(carrierName);
 
         if (newCarrier == null)
@@ -69,6 +75,10 @@ public class FlagManager : Photon.MonoBehaviour
 
         PlayerFlagInfo flagInfo = newCarrier.GetComponent<PlayerFlagInfo>();         
         flag.carrier = flagInfo;
+
+        if (flag.GetStringOfCarrier().Equals(PhotonNetwork.player.NickName)) // if the local player is who picked up the flag
+            RefereeManager.instance.PlayFlagPickedUp();
+
         flagInfo.hasFlag = true;
         flag.transform.SetParent(flagInfo.transform);
         flag.transform.position = flagInfo.GetCarriedFlagPostion();
@@ -82,13 +92,26 @@ public class FlagManager : Photon.MonoBehaviour
     {
         Flag flag = ConvertFlagFromIndex(flagNum);
 
-		if(PhotonNetwork.isMasterClient)
-        	FlagReturned(flag.GetStringOfCarrier());
-        StartCoroutine(flag.CanBePickedUp());
-        flag.ResetFlagPosition();
-
         if (flag.carrier != null)
+        {
+            Debug.LogError("there was a carrier : " + flag.carrier.name);
             flag.carrier.hasFlag = false;
+            if (flag.GetStringOfCarrier().Equals(PhotonNetwork.player.NickName)) // if the local player is who returned the flag
+                RefereeManager.instance.PlayFlagCaptured();
+        }
+
+        if (flag.flagBase.owner != null)
+        {
+            if (flag.flagBase.owner.name.Equals(PhotonNetwork.player.NickName)) // if the local player is who returned the flag
+                RefereeManager.instance.PlayFlagReturned();
+        }
+
+
+        if (PhotonNetwork.isMasterClient)
+        	FlagReturned(flag.GetStringOfCarrier());
+
+        flag.ResetFlagPosition();
+        StartCoroutine(flag.CanBePickedUp());                    
     }
 
     [PunRPC]
@@ -100,7 +123,12 @@ public class FlagManager : Photon.MonoBehaviour
             return;
 
         if (flag.carrier != null)
+        {
             flag.carrier.hasFlag = false;
+
+            if (flag.GetStringOfCarrier().Equals(PhotonNetwork.player.NickName)) // if the local player is who returned up the flag
+                RefereeManager.instance.PlayFlagDropped();
+        }            
 
         flag.transform.parent = null;
         StartCoroutine(flag.CanBePickedUp());

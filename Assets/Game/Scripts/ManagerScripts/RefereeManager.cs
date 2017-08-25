@@ -33,6 +33,8 @@ public class RefereeManager : MonoBehaviour
     public ReaperClips reaperClips;
     public SnatchNDashClips sndClips;
     public BallToTheWallClips bttwClips;
+    public JammerClips jammerClips;
+    public ControlPointClips cntrlClips;
 
     AudioSource source;
 
@@ -94,6 +96,29 @@ public class RefereeManager : MonoBehaviour
         PlayRandomClipFromArray(sndClips.flagPickedUp, randomInt);
     }
 
+    public void PlayFlagCaptured()
+    {
+        int randomInt = GetRandomIndex(sndClips.flagCaptured.Length);
+        PlayRandomClipFromArray(sndClips.flagCaptured, randomInt);
+    }
+
+    public void PlayJammersReset()
+    {
+        int randomInt = GetRandomIndex(jammerClips.jammersReset.Length);
+        PlayRandomClipFromArray(jammerClips.jammersReset, randomInt);
+    }
+
+    public void PlayCapturePoint()
+    {
+        int randomInt = GetRandomIndex(cntrlClips.pointCaptured.Length);
+        PlayRandomClipFromArray(cntrlClips.pointCaptured, randomInt);
+    }
+
+    public void PlayCaptureContested()
+    {
+        int randomInt = GetRandomIndex(cntrlClips.pointContested.Length);
+        PlayRandomClipFromArray(cntrlClips.pointContested, randomInt);
+    }
 
     #endregion
 
@@ -117,6 +142,21 @@ public class RefereeManager : MonoBehaviour
         public AudioClip[] flagDropped;
         public AudioClip[] flagReturned;
         public AudioClip[] flagPickedUp;
+        public AudioClip[] flagCaptured;
     }
+
+    [System.Serializable]
+    public class JammerClips
+    {
+        public AudioClip[] jammersReset;
+    }
+
+    [System.Serializable]
+    public class ControlPointClips
+    {
+        public AudioClip[] pointCaptured;
+        public AudioClip[] pointContested;
+    }
+
     #endregion
 }
