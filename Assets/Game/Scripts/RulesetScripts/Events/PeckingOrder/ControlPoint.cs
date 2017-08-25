@@ -22,8 +22,16 @@ public class ControlPoint : Point
     {
         playersOnPoint++;
 
-        if (playersOnPoint != 1)
+        if (playersOnPoint > 1)
+        {
             gameObject.GetComponent<Renderer>().material.color = orginalColor;
+            RefereeManager.instance.PlayCaptureContested();
+        }
+        else //someone entered the point and they are the only ones on it
+        {
+            if (player.name.Equals(PhotonNetwork.player.NickName))
+                RefereeManager.instance.PlayCapturePoint();
+        }
     }
 
     public override void PlayerStays(GameObject player)
@@ -48,7 +56,15 @@ public class ControlPoint : Point
         playersOnPoint--;
 
         if (playersOnPoint == 0)
+        {
             gameObject.GetComponent<Renderer>().material.color = orginalColor;
+        }
+        else if (playersOnPoint == 1)
+        {
+            if (player.name.Equals(PhotonNetwork.player.NickName))
+                RefereeManager.instance.PlayCapturePoint();
+        }
+            
     }
 
     IEnumerator GivePointsOnPoint(string playerName)
