@@ -37,6 +37,9 @@ public class AnnouncerManager : MonoBehaviour
     public ReaperClips reaperClips;
     public SnatchNDashClips sndClips;
     public BallToTheWallClips bttwClips;
+    public FirmlyGraspItClips graspClips;
+    public PeckingOrderClips peckClips;
+    public RunningAJammerClips jammerClips;
     public AddOnClips addOnClips;
     public FillerClips fillerClips;
 
@@ -96,6 +99,12 @@ public class AnnouncerManager : MonoBehaviour
                 return GetRandomIndex(sndClips.sndStart.Length);
             case "BallToTheWall":
                 return GetRandomIndex(bttwClips.bttwStart.Length);
+            case "FirmlyGraspIt":
+                return GetRandomIndex(graspClips.graspItStart.Length);
+            case "PeckingOrder":
+                return GetRandomIndex(peckClips.peckingOrderStart.Length);
+            case "RunningAJammer":
+                return GetRandomIndex(jammerClips.jammerStart.Length);
             default:
                 Debug.LogError("Could not find event: " + eventName + ". Did you forget to add it to the AnnouncerManager PlayEventStartClip method?");
                 return 0;
@@ -115,6 +124,15 @@ public class AnnouncerManager : MonoBehaviour
                 break;
             case "BallToTheWall":
                 PlayRandomClipFromArray(bttwClips.bttwStart, arrayIndex);
+                break;
+            case "FirmlyGraspIt":
+                PlayRandomClipFromArray(graspClips.graspItStart, arrayIndex);
+                return;
+            case "PeckingOrder":
+                PlayRandomClipFromArray(peckClips.peckingOrderStart, arrayIndex);
+                break;
+            case "RunningAJammer":
+                PlayRandomClipFromArray(jammerClips.jammerStart, arrayIndex);
                 break;
             default:
                 Debug.LogError("Could not find event: " + eventName + ". Did you forget to add it to the AnnouncerManager PlayEventStartClip method?");
@@ -207,6 +225,24 @@ public class AnnouncerManager : MonoBehaviour
         public AudioClip[] bttwStart;
         public AudioClip[] bttwMostGoals;
         public AudioClip[] bttwEnd;
+    }
+
+    [System.Serializable]
+    public class FirmlyGraspItClips
+    {
+        public AudioClip[] graspItStart;
+    }
+
+    [System.Serializable]
+    public class PeckingOrderClips
+    {
+        public AudioClip[] peckingOrderStart;
+    }
+
+    [System.Serializable]
+    public class RunningAJammerClips
+    {
+        public AudioClip[] jammerStart;
     }
 
     [System.Serializable]
