@@ -62,22 +62,28 @@ public class PlayerWrangler : Photon.MonoBehaviour
             switch (playerCount)
             {
                 case 1:
-                    player.GetComponent<PhotonView>().RPC("RPC_SetFactionPlayer", PhotonTargets.AllBuffered, "Water");
+                    player.Local_SetFactionPlayer("Water");
+                    player.GetComponent<PhotonView>().RPC("RPC_SetFactionPlayer", PhotonTargets.OthersBuffered, "Water");
                     break;
                 case 2:
-                    player.GetComponent<PhotonView>().RPC("RPC_SetFactionPlayer", PhotonTargets.AllBuffered, "Earth");
+                    player.Local_SetFactionPlayer("Earth");
+                    player.GetComponent<PhotonView>().RPC("RPC_SetFactionPlayer", PhotonTargets.OthersBuffered, "Earth");
                     break;
                 case 3:
-                    player.GetComponent<PhotonView>().RPC("RPC_SetFactionPlayer", PhotonTargets.AllBuffered, "Fire");
+                    player.Local_SetFactionPlayer("Fire");
+                    player.GetComponent<PhotonView>().RPC("RPC_SetFactionPlayer", PhotonTargets.OthersBuffered, "Fire");
                     break;
                 case 4:
-                    player.GetComponent<PhotonView>().RPC("RPC_SetFactionPlayer", PhotonTargets.AllBuffered, "Air");
+                    player.Local_SetFactionPlayer("Air");
+                    player.GetComponent<PhotonView>().RPC("RPC_SetFactionPlayer", PhotonTargets.OthersBuffered, "Air");
                     break;
                 case 5:
-                    player.GetComponent<PhotonView>().RPC("RPC_SetFactionPlayer", PhotonTargets.AllBuffered, "Death");
+                    player.Local_SetFactionPlayer("Death");
+                    player.GetComponent<PhotonView>().RPC("RPC_SetFactionPlayer", PhotonTargets.OthersBuffered, "Death");
                     break;
                 case 6:
-                    player.GetComponent<PhotonView>().RPC("RPC_SetFactionPlayer", PhotonTargets.AllBuffered, "Life");
+                    player.Local_SetFactionPlayer("Life");
+                    player.GetComponent<PhotonView>().RPC("RPC_SetFactionPlayer", PhotonTargets.OthersBuffered, "Life");
                     break;
             }
         }

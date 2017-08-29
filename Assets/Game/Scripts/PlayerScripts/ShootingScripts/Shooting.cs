@@ -72,7 +72,7 @@ public class Shooting : Photon.MonoBehaviour
                     break;
                 case Gun.WeaponType.Sustained:
                     SustainedShot();
-                    photonView.RPC("Rpc_SustainedShot", PhotonTargets.All);
+                    photonView.RPC("RPC_SustainedShot", PhotonTargets.Others);
                     break;
                 case Gun.WeaponType.Particle:
                     ParticleShot();
@@ -136,8 +136,14 @@ public class Shooting : Photon.MonoBehaviour
         if(currentGun.weaponType == Gun.WeaponType.Sustained)
         {
             StopSustainedShot();
-            photonView.RPC("Rpc_StopSustainedShot", PhotonTargets.All);
+            photonView.RPC("RPC_StopSustainedShot", PhotonTargets.Others);
         }
+    }
+
+    public void Local_StartMuzzleFlash()
+    {
+        if (muzzleFlash == null) return;
+        StartCoroutine(MuzzleFlash());                                                                          //Activate the MuzzleFlash
     }
 
     [PunRPC]
@@ -203,7 +209,8 @@ public class Shooting : Photon.MonoBehaviour
 
     void HitscanShot()
     {
-        photonView.RPC("RPC_StartMuzzleFlash", PhotonTargets.All);
+        Local_StartMuzzleFlash();
+        photonView.RPC("RPC_StartMuzzleFlash", PhotonTargets.Others);
         RaycastHit hit = CastMyRay();
         if (hit.point == Vector3.zero) return;
 
@@ -216,48 +223,36 @@ public class Shooting : Photon.MonoBehaviour
 
             if (PhotonNetwork.isMasterClient)
                 SpawnBulletHole(position, rotation, "Player");
-
-
-            Vector3 direction = hit.point;
-            Vector3 hitNormal = hit.normal;
-            GameObject bullet = PhotonNetwork.Instantiate(currentGun.projectile.name, currentGun.gunbarrel.transform.position, currentGun.gunbarrel.transform.rotation, 0);
-            bullet.GetComponent<PhotonView>().RPC("RPC_SetProjectileVariables", PhotonTargets.All, currentGun.speed, direction, transform.name, hitNormal, (short)0, false);
-
         }
         else if (hit.transform.tag.Equals("Reaper"))
         {
             StartCoroutine(HitMarker());
             ReaperShot(transform.root.name, hit.transform.GetComponent<Reaper>().GetTargetPlayer(), _damage);
-
-            Vector3 direction = hit.point;
-            Vector3 hitNormal = hit.normal;
-            GameObject bullet = PhotonNetwork.Instantiate(currentGun.projectile.name, currentGun.gunbarrel.transform.position, currentGun.gunbarrel.transform.rotation, 0);
-            bullet.GetComponent<PhotonView>().RPC("RPC_SetProjectileVariables", PhotonTargets.All, currentGun.speed, direction, transform.name, hitNormal, (short)0, false);
         }
         else
         {
             Vector3 position = hit.point + (hit.normal * .1f);
             Quaternion rotation = Quaternion.LookRotation(hit.normal);
             SpawnBulletHole(position, rotation, "Wall");
-
-
-            Vector3 direction = hit.point;
-            Vector3 hitNormal = hit.normal;
-            GameObject bullet = PhotonNetwork.Instantiate(currentGun.projectile.name, currentGun.gunbarrel.transform.position, currentGun.gunbarrel.transform.rotation, 0);
-            bullet.GetComponent<PhotonView>().RPC("RPC_SetProjectileVariables", PhotonTargets.All, currentGun.speed, direction, transform.name, hitNormal, (short)0, false);
         }
 
-
+        Vector3 direction = hit.point;
+        Vector3 hitNormal = hit.normal;
+        GameObject bullet = PhotonNetwork.Instantiate(currentGun.projectile.name, currentGun.gunbarrel.transform.position, currentGun.gunbarrel.transform.rotation, 0);
+        bullet.GetComponent<Projectile>().Local_SetProjectileVariables(currentGun.speed, direction, transform.name, hitNormal, 0, false);
+        bullet.GetComponent<PhotonView>().RPC("RPC_SetProjectileVariables", PhotonTargets.Others, currentGun.speed, direction, transform.name, hitNormal, (short)0, false);
     }
 
     void ParticleShot()
     {
-        photonView.RPC("RPC_StartMuzzleFlash", PhotonTargets.All);
+        Local_StartMuzzleFlash();
+        photonView.RPC("RPC_StartMuzzleFlash", PhotonTargets.Others);
     }
 
     void ProjectileShot()
     {
-        photonView.RPC("RPC_StartMuzzleFlash", PhotonTargets.All);
+        Local_StartMuzzleFlash();
+        photonView.RPC("RPC_StartMuzzleFlash", PhotonTargets.Others);
         RaycastHit hit = CastMyRay();
         ProjectileShot(hit.point, hit.normal);
     }
@@ -271,7 +266,8 @@ public class Shooting : Photon.MonoBehaviour
                     currentGun.shootingAnim.SetTrigger("Fire");
 
             GameObject bullet = PhotonNetwork.Instantiate(currentGun.projectile.name, currentGun.gunbarrel.transform.position, currentGun.gunbarrel.transform.rotation, 0);
-            bullet.GetComponent<PhotonView>().RPC("RPC_SetProjectileVariables", PhotonTargets.All, currentGun.speed, direction, transform.name, hitNormal, _damage, true);
+            bullet.GetComponent<Projectile>().Local_SetProjectileVariables(currentGun.speed, direction, transform.name, hitNormal, _damage, true);
+            bullet.GetComponent<PhotonView>().RPC("RPC_SetProjectileVariables", PhotonTargets.Others, currentGun.speed, direction, transform.name, hitNormal, _damage, true);
         }
     }
 
@@ -279,15 +275,17 @@ public class Shooting : Photon.MonoBehaviour
     {
         currentGun.sustainedCollider.enabled = false;
         currentGun.sustainedCollider.enabled = true;
+        currentGun.sustainedEffect.SetActive(true);
     }
 
     void StopSustainedShot()
     {
         currentGun.sustainedCollider.enabled = false;
+        currentGun.sustainedEffect.SetActive(false);
     }
 
     [PunRPC]
-    void Rpc_SustainedShot()
+    void RPC_SustainedShot()
     {
         if (currentGun.thirdPersonSustained != null)
             currentGun.thirdPersonSustained.SetActive(true);
@@ -296,7 +294,7 @@ public class Shooting : Photon.MonoBehaviour
     }
 
     [PunRPC]
-    void Rpc_StopSustainedShot()
+    void RPC_StopSustainedShot()
     {
         if(currentGun.thirdPersonSustained != null)
             currentGun.thirdPersonSustained.SetActive(false);

@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Sustained : MonoBehaviour
 {
@@ -16,7 +14,6 @@ public class Sustained : MonoBehaviour
         if(other.tag.Equals("TriggerCollision"))
         {
             other.GetComponent<CollisionDetection>().OnHit(laserGun.damage, transform.root.name);
-            Debug.LogError("Dealing Damage");
         }
     }
 }

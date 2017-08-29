@@ -29,6 +29,11 @@ public class RocketExplosion : MonoBehaviour
         players.Clear();
     }
 
+    public void Local_SetExplosionVariables(string _playername)
+    {
+        playername = _playername;
+    }
+
     [PunRPC]
     public void RPC_SetExplosionVariables(string _playername)
     {

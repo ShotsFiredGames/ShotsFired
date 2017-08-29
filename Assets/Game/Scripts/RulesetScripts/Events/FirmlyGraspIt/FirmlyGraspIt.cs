@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Networking;
+﻿using UnityEngine;
 
 public class FirmlyGraspIt : GameEvent
 {
@@ -25,8 +22,23 @@ public class FirmlyGraspIt : GameEvent
     private void InitFlags()
     {
         int viewID = PhotonNetwork.AllocateViewID();
-        PhotonView.RPC("RPC_SpawnFlag", PhotonTargets.All, viewID);
+        Local_SpawnFlag(viewID);
+        PhotonView.RPC("RPC_SpawnFlag", PhotonTargets.Others, viewID);
         spawnedFlags = true;
+    }
+
+    void Local_SpawnFlag(int _viewID)
+    {
+        CarrierFlag newFlag = Instantiate(flagPrefab).GetComponent<CarrierFlag>();
+        newFlag.GetComponent<PhotonView>().viewID = _viewID;
+        FlagManager.instance.flags.Add(newFlag);
+
+        newFlag.index = FlagManager.instance.GetFlagNumber();
+        newFlag.spawnPosition = spawn;
+        newFlag.flagResetTime = flagResetTime;
+        newFlag.timeIncrement = timeIncrement;
+        newFlag.gameObject.SetActive(true);
+        usedFlag = newFlag;
     }
 
     [PunRPC]

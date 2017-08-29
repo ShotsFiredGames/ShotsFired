@@ -31,6 +31,29 @@ public class ExplosionManager : MonoBehaviour
     public GameObject explosion;
     List<GameObject> g_explosions = new List<GameObject>();
 
+    public void Local_ActivateExplosion(Vector3 location)
+    {
+        GameObject explosionToUse = null;
+        foreach (GameObject explode in g_explosions)
+        {
+            if (!explode.activeSelf)
+            {
+                explosionToUse = explode;
+                break;
+            }
+        }
+
+        if (explosionToUse == null)
+        {
+            explosionToUse = Instantiate(explosion, location, Quaternion.identity);
+            g_explosions.Add(explosionToUse);
+        }
+        else
+        {
+            explosionToUse.transform.position = location;
+        }
+    }
+
     [PunRPC]
     public void RPC_ActivateExplosion(Vector3 location)
     {

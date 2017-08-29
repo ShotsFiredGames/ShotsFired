@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class GiftedGun : AddOn
@@ -7,13 +6,6 @@ public class GiftedGun : AddOn
     public List<string> possibleGunNames;
     public PickUpLoacation[] gunSpawns;
     PlayerManager[] allPlayers;
-
-    PhotonView pv;
-
-    void Awake()
-    {
-        pv = GetComponent<PhotonView>();
-    }
 
     public override void StartAddOn()
     {
@@ -23,14 +15,24 @@ public class GiftedGun : AddOn
         {
             if (player != null)
             {
-                player.PhotonView.RPC("RPC_Disarm", PhotonTargets.All);
-                player.PhotonView.RPC("RPC_WeaponPickedUp", PhotonTargets.All, possibleGunNames[Random.Range(0, possibleGunNames.Count)]);
+                player.Local_Disarm();
+                player.PhotonView.RPC("RPC_Disarm", PhotonTargets.Others);
+
+                if (PhotonNetwork.isMasterClient)
+                {
+                    int rand = Random.Range(0, possibleGunNames.Count);
+                    player.Local_WeaponPickedUp(possibleGunNames[rand]);
+                    player.PhotonView.RPC("RPC_WeaponPickedUp", PhotonTargets.Others, possibleGunNames[rand]);
+                }
             }
         }
 
-        for (byte index = 0; index < gunSpawns.Length; index++)
+        if (PhotonNetwork.isMasterClient)
         {
-            ChangeGunSpawns(gunSpawns[index]);
+            for (byte index = 0; index < gunSpawns.Length; index++)
+            {
+                ChangeGunSpawns(gunSpawns[index]);
+            }
         }
     }
 
@@ -46,7 +48,7 @@ public class GiftedGun : AddOn
     {
         if (PhotonNetwork.isMasterClient)
         {
-            gunSpawn.photonView.RPC("RPC_DestoryItsPickup", PhotonTargets.OthersBuffered);
+            gunSpawn.photonView.RPC("RPC_DestroyItsPickup", PhotonTargets.OthersBuffered);
             Destroy(gunSpawn.activePickUp);
         }
 
@@ -57,7 +59,7 @@ public class GiftedGun : AddOn
     {
         if (PhotonNetwork.isMasterClient)
         {
-            gunSpawn.photonView.RPC("RPC_DestoryItsPickup", PhotonTargets.OthersBuffered);
+            gunSpawn.photonView.RPC("RPC_DestroyItsPickup", PhotonTargets.OthersBuffered);
             Destroy(gunSpawn.activePickUp);
         }
 

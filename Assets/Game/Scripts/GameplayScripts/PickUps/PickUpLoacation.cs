@@ -43,7 +43,6 @@ public class PickUpLoacation : Photon.MonoBehaviour
         isSpawning = false;
     }
 
-
     public void SpawnRandomPickup()
     {
         if (PhotonNetwork.isMasterClient)
@@ -51,7 +50,8 @@ public class PickUpLoacation : Photon.MonoBehaviour
             int randomPickUp = Random.Range(0, pickUpTypes.Length);
 
             int viewID = PhotonNetwork.AllocateViewID();
-            photonView.RPC("RPC_InstantiatePickUp", PhotonTargets.AllBuffered, viewID, randomPickUp);
+            Local_InstantiatePickUp(viewID, randomPickUp);
+            photonView.RPC("RPC_InstantiatePickUp", PhotonTargets.OthersBuffered, viewID, randomPickUp);
         }
     }
 
@@ -64,7 +64,8 @@ public class PickUpLoacation : Photon.MonoBehaviour
         {
             int viewID = PhotonNetwork.AllocateViewID();
             int pickupID = ConvertStringtoIndex(gunName);
-            photonView.RPC("RPC_InstantiatePickUp", PhotonTargets.AllBuffered, viewID, pickupID);
+            Local_InstantiatePickUp(viewID, pickupID);
+            photonView.RPC("RPC_InstantiatePickUp", PhotonTargets.OthersBuffered, viewID, pickupID);
         }
     }
 
@@ -79,6 +80,15 @@ public class PickUpLoacation : Photon.MonoBehaviour
         return 0;
     }
 
+    void Local_InstantiatePickUp(int id, int pickUp)
+    {
+        activePickUp = Instantiate(pickUpTypes[pickUp].gameObject, transform.position + spawnOffset, Quaternion.identity);
+        activePickUp.transform.SetParent(transform);
+        activePickUp.GetComponent<PhotonView>().viewID = id;
+
+        if (activePickUp.GetComponent<PickUp>() != null && anim != null)
+            activePickUp.GetComponent<PickUp>().SetAnimator(anim);
+    }
 
     [PunRPC]
     void RPC_InstantiatePickUp(int id, int pickUp)
@@ -91,6 +101,29 @@ public class PickUpLoacation : Photon.MonoBehaviour
             activePickUp.GetComponent<PickUp>().SetAnimator(anim);
     }
 
+    public void Local_ActivateMimic(bool willActivate)
+    {
+        if (activePickUp == null)
+        {
+            if (PhotonNetwork.isMasterClient)
+            {
+                activePickUp = PhotonNetwork.Instantiate(pickUpTypes[Random.Range(0, pickUpTypes.Length)].name, transform.position + spawnOffset, Quaternion.identity, 0);
+                activePickUp.transform.SetParent(transform);
+            }
+        }
+
+        if (willActivate)
+            activePickUp.tag.Equals("Mimic");
+        else
+            activePickUp.tag.Equals("Powerup");
+
+        Rotate rotate = activePickUp.GetComponent<Rotate>();
+
+        if (rotate == null)
+            rotate = GetComponentInChildren<Rotate>();
+        else
+            rotate.isMimic = willActivate;
+    }
 
     [PunRPC]
     public void RPC_ActivateMimic(bool willActivate)
@@ -118,7 +151,7 @@ public class PickUpLoacation : Photon.MonoBehaviour
     }
 
     [PunRPC]
-    public void RPC_DestoryItsPickup()
+    public void RPC_DestroyItsPickup()
     {
         PhotonView pv;
 
@@ -129,6 +162,5 @@ public class PickUpLoacation : Photon.MonoBehaviour
             if (pv != null)
                 Destroy(pv.gameObject);
         }
-
     }
 }

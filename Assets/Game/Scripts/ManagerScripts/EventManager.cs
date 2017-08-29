@@ -52,29 +52,67 @@ public class EventManager : Photon.MonoBehaviour
 
     void OnEnable()
     {
-        CinematicCameraSystem.OnCinematicFinished += StartEvents;
+        PhotonNetwork.OnEventCall += StartEvents;
     }
 
     void OnDisable()
     {
-        CinematicCameraSystem.OnCinematicFinished -= StartEvents;
+        PhotonNetwork.OnEventCall -= StartEvents;
     }
 
-    void StartEvents()
+    void StartEvents(byte eventcode, object content, int senderid)
     {
-        if (PhotonNetwork.isMasterClient)
-            InvokeRepeating("ActivateNextEvent", GameCustomization.eventOccurenceRate / 2, GameCustomization.eventOccurenceRate);
+        if (eventcode == 0)
+        {
+            if (PhotonNetwork.isMasterClient)
+                InvokeRepeating("ChooseNextEvent", GameCustomization.eventOccurenceRate / 2, GameCustomization.eventOccurenceRate);
+        }
     }
 
-
-
-    void ActivateNextEvent()
+    void ChooseNextEvent()
     {
         byte newEvent = 255;
         if (gameEvents.Count > 0)
             newEvent = (byte)Random.Range(0, gameEvents.Count);
 
-        photonView.RPC("RPC_ActivateNextEvent", PhotonTargets.All, newEvent);
+        Local_ActivateNextEvent(newEvent);
+        photonView.RPC("RPC_ActivateNextEvent", PhotonTargets.Others, newEvent);
+    }
+
+    void Local_ActivateNextEvent(byte _newEvent)
+    {
+        if (addOns.Count > 1)
+        {
+            if (currentAddOn != null)
+            {
+                currentAddOn.EndAddOn();
+                currentAddOn = null;
+            }
+        }
+
+        if (_newEvent != 255)
+        {
+            nextEvent = gameEvents[_newEvent];
+
+            if (currentEvent != null && nextEvent.nameEvent.Equals(currentEvent.nameEvent))
+                currentEvent.ResetEvent();
+            else
+            {
+                currentEvent = nextEvent;
+                currentEvent.StartEvent();
+                if (PhotonNetwork.isMasterClient)
+                {
+                    int arrayIndex = AnnouncerManager.instance.GetRandomEventIndex(currentEvent.nameEvent);
+                    AnnouncerManager.instance.Local_PlayEventStartClip(currentEvent.nameEvent, arrayIndex);
+                    AnnouncerManager.instance.PhotonView.RPC("RPC_PlayEventStartClip", PhotonTargets.Others, currentEvent.nameEvent, arrayIndex);
+                }
+            }
+        }
+        else
+            currentEvent = null;
+
+        if (PhotonNetwork.isMasterClient && addOns.Count > 0)
+            StartCoroutine(NextAddons(GetEventDuration(currentEvent)));
     }
 
     [PunRPC]
@@ -99,18 +137,10 @@ public class EventManager : Photon.MonoBehaviour
             {
                 currentEvent = nextEvent;
                 currentEvent.StartEvent();
-                if (PhotonNetwork.isMasterClient)
-                {
-                    int arrayIndex = AnnouncerManager.instance.GetRandomEventIndex(currentEvent.nameEvent);
-                    AnnouncerManager.instance.PhotonView.RPC("RPC_PlayEventStartClip", PhotonTargets.All, currentEvent.nameEvent, arrayIndex);
-                }
             }
         }
         else
             currentEvent = null;
-
-        if (PhotonNetwork.isMasterClient && addOns.Count > 0)
-            StartCoroutine(NextAddons(GetEventDuration(currentEvent)));
     }
 
     byte GetEventDuration(GameEvent _currentEvent)
@@ -124,17 +154,35 @@ public class EventManager : Photon.MonoBehaviour
     IEnumerator NextAddons(byte eventLength)
     {
         yield return new WaitForSeconds(eventLength / 3); //wait a third of the time
-        ActivateNextAddon();
+        ChooseNextAddon();
         yield return new WaitForSeconds(eventLength / 3); // wait another third of the time
-        ActivateNextAddon();
+        ChooseNextAddon();
     }
 
-    void ActivateNextAddon()
+    void ChooseNextAddon()
     {
         byte newAddOn = 255;
         if (addOns.Count > 0)
             newAddOn = (byte)Random.Range(0, addOns.Count);
-        photonView.RPC("RPC_ActivateNextAddOn", PhotonTargets.All, newAddOn);
+
+        Local_ActivateNextAddOn(newAddOn);
+        photonView.RPC("RPC_ActivateNextAddOn", PhotonTargets.Others, newAddOn);
+    }
+
+    void Local_ActivateNextAddOn(byte _newAddOn)
+    {
+        if (_newAddOn != 255)
+        {
+            currentAddOn = addOns[_newAddOn];
+            currentAddOn.StartAddOn();
+
+            if (PhotonNetwork.isMasterClient)
+            {
+                int arrayIndex = AnnouncerManager.instance.GetRandomAddOnIndex(currentAddOn.addOnName);
+                AnnouncerManager.instance.Local_PlayAddOnStartClip(currentAddOn.addOnName, arrayIndex);
+                AnnouncerManager.instance.PhotonView.RPC("RPC_PlayAddOnStartClip", PhotonTargets.Others, currentAddOn.addOnName, arrayIndex);
+            }
+        }
     }
 
     [PunRPC]
@@ -154,12 +202,6 @@ public class EventManager : Photon.MonoBehaviour
 
             currentAddOn = nextAddOn;
             currentAddOn.StartAddOn();
-
-            if (PhotonNetwork.isMasterClient)
-            {
-                int arrayIndex = AnnouncerManager.instance.GetRandomAddOnIndex(currentAddOn.addOnName);
-                AnnouncerManager.instance.PhotonView.RPC("RPC_PlayAddOnStartClip", PhotonTargets.All, currentAddOn.addOnName, arrayIndex);
-            }
         }
     }
 }

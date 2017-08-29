@@ -8,11 +8,13 @@ public class MimicAppears : AddOn
     public override void StartAddOn()
     {
         validLocation = validLocations[Random.Range(0, validLocations.Length)];
-        validLocation.photonView.RPC("RPC_ActivateMimic", PhotonTargets.All, true);
+        validLocation.GetComponent<PickUpLoacation>().Local_ActivateMimic(true);
+        validLocation.photonView.RPC("RPC_ActivateMimic", PhotonTargets.Others, true);
     }
 
     public override void EndAddOn()
     {
-        validLocation.photonView.RPC("RPC_ActivateMimic", PhotonTargets.All, false);
+        validLocation.GetComponent<PickUpLoacation>().Local_ActivateMimic(false);
+        validLocation.photonView.RPC("RPC_ActivateMimic", PhotonTargets.Others, false);
     }
 }

@@ -18,7 +18,22 @@ public class TheReaperComes : GameEvent
     private void InitReapers()
     {
         int viewID = PhotonNetwork.AllocateViewID();
-        PhotonView.RPC("RPC_SpawnReapers", PhotonTargets.All, viewID, GameManager.instance.GetWinningPlayer());
+        string target = GameManager.instance.GetWinningPlayer();
+        Local_SpawnReapers(viewID, target);
+        PhotonView.RPC("RPC_SpawnReapers", PhotonTargets.Others, viewID, target);
+    }
+
+    void Local_SpawnReapers(int _viewID, string targetID)
+    {
+        GameObject newReaper = Instantiate(reaper);
+        Reaper _reaper = newReaper.GetComponent<Reaper>();
+        newReaper.GetComponent<PhotonView>().viewID = _viewID;
+        reapers.Add(_reaper);
+        _reaper.enabled = true;
+        _reaper.SetTargetPlayer(targetID);
+        _reaper.SetSpawnPoint(reaperSpawn);
+        _reaper.SetPoints(pointsPlayerLosesOnDeath);
+        _reaper.Setup();
     }
 
     [PunRPC]
@@ -33,7 +48,6 @@ public class TheReaperComes : GameEvent
         _reaper.SetSpawnPoint(reaperSpawn);
         _reaper.SetPoints(pointsPlayerLosesOnDeath);
         _reaper.Setup();
-
     }
 
     public override void StartEvent()

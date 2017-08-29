@@ -17,14 +17,12 @@ public class CollisionDetection : MonoBehaviour
 
     PlayerHealth health;
     PlayerManager playerManager;
-    PhotonView photonView;
     string faction;
 
     IEnumerator Start()
     {
         health = GetComponentInParent<PlayerHealth>();                                                                    //References to the health and shooting scripts
         playerManager = GetComponentInParent<PlayerManager>();
-        photonView = GetComponentInParent<PhotonView>();
         yield return new WaitForSeconds(1);
         faction = playerManager.GetFaction();
     }
@@ -33,26 +31,31 @@ public class CollisionDetection : MonoBehaviour
     {
         if (sourceID == transform.root.name) return;
         if (health.isPlayerDead()) return;
-        Debug.LogError("Collision Detection Damamge");
         switch(collisionLocation)                                                                                         //Find the collisionLocation this collider is marked with.
         {
             case CollisionFlag.FrontHeadShot:
-                photonView.RPC("RPC_TookDamage", PhotonTargets.All, (short)(damage * 2), sourceID, CollisionFlag.FrontHeadShot);      //Tell our health script how much damage we took from the enemies shooting script and the location we were hit from.
+                health.Local_TookDamage((short)(damage * 2), sourceID, CollisionFlag.FrontHeadShot);
+                health.PhotonView.RPC("RPC_TookDamage", PhotonTargets.Others, (short)(damage * 2), sourceID, CollisionFlag.FrontHeadShot);      //Tell our health script how much damage we took from the enemies shooting script and the location we were hit from.
                 break;
             case CollisionFlag.BackHeadShot:
-                photonView.RPC("RPC_TookDamage", PhotonTargets.All, (short)(damage * 2), sourceID, CollisionFlag.FrontHeadShot);
+                health.Local_TookDamage((short)(damage * 2), sourceID, CollisionFlag.BackHeadShot);
+                health.PhotonView.RPC("RPC_TookDamage", PhotonTargets.Others, (short)(damage * 2), sourceID, CollisionFlag.BackHeadShot);
                 break;
             case CollisionFlag.Front:
-                photonView.RPC("RPC_TookDamage", PhotonTargets.All, damage, sourceID, CollisionFlag.FrontHeadShot);
+                health.Local_TookDamage(damage, sourceID, CollisionFlag.Front);
+                health.PhotonView.RPC("RPC_TookDamage", PhotonTargets.Others, damage, sourceID, CollisionFlag.Front);
                 break;
             case CollisionFlag.Back:
-                photonView.RPC("RPC_TookDamage", PhotonTargets.All, damage, sourceID, CollisionFlag.FrontHeadShot);
+                health.Local_TookDamage(damage, sourceID, CollisionFlag.Back);
+                health.PhotonView.RPC("RPC_TookDamage", PhotonTargets.Others, damage, sourceID, CollisionFlag.Back);
                 break;
             case CollisionFlag.Left:
-                photonView.RPC("RPC_TookDamage", PhotonTargets.All, damage, sourceID, CollisionFlag.FrontHeadShot);
+                health.Local_TookDamage(damage, sourceID, CollisionFlag.Left);
+                health.PhotonView.RPC("RPC_TookDamage", PhotonTargets.Others, damage, sourceID, CollisionFlag.Left);
                 break;
             case CollisionFlag.Right:
-                photonView.RPC("RPC_TookDamage", PhotonTargets.All, damage, sourceID, CollisionFlag.FrontHeadShot);
+                health.Local_TookDamage(damage, sourceID, CollisionFlag.Right);
+                health.PhotonView.RPC("RPC_TookDamage", PhotonTargets.Others, damage, sourceID, CollisionFlag.Right);
                 break;
         }
     }

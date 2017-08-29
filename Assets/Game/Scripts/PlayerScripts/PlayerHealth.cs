@@ -65,7 +65,6 @@ public class PlayerHealth : Photon.MonoBehaviour
         if (!PhotonNetwork.player.NickName.Equals(name))
             return;
 
-        Debug.LogError("In hereh");
         health.gameObject.SetActive(true);
     }
 
@@ -76,8 +75,7 @@ public class PlayerHealth : Photon.MonoBehaviour
         currMaxHealth = maxHealth;
 
         SetDamageEffect();
-        
-        Debug.LogError("Turned on health for the player");
+        SetHealthUI();
 
         if (!photonView.isMine)
         {
@@ -87,8 +85,7 @@ public class PlayerHealth : Photon.MonoBehaviour
         }
     }
 
-    [PunRPC]
-    public void RPC_TookDamage(short damage, string sourceID, CollisionDetection.CollisionFlag collisionLocation)                //This is called from CollisionDetection to determine the damage and the location of the incoming collision.
+    public void Local_TookDamage(short damage, string sourceID, CollisionDetection.CollisionFlag collisionLocation)                //This is called from CollisionDetection to determine the damage and the location of the incoming collision.
     {
         if (!photonView.isMine) return;
         if (isDead) return;
@@ -101,10 +98,34 @@ public class PlayerHealth : Photon.MonoBehaviour
         }
 
         SetDamageEffect();
+        SetHealthUI();
         if (currentHealth <= 0)
-        {
             Died(sourceID, collisionLocation);
-        }
+    }
+
+    [PunRPC]
+    public void RPC_TookDamage(short damage, string sourceID, CollisionDetection.CollisionFlag collisionLocation)                //This is called from CollisionDetection to determine the damage and the location of the incoming collision.
+    {
+        if (!photonView.isMine) return;
+        if (isDead) return;
+        currentHealth -= damage;
+        if (currentHealth <= 0)
+            Died(sourceID, collisionLocation);
+
+        SetHealthUI();
+    }
+
+    public void Local_RestoreHealth(byte healthRestore)
+    {
+        if (!photonView.isMine) return;
+        if (isDead) return;
+        currentHealth += healthRestore;
+
+        if (currentHealth > maxHealth)
+            currentHealth = maxHealth;
+
+        SetDamageEffect();
+        SetHealthUI();
     }
 
     [PunRPC]
@@ -117,9 +138,7 @@ public class PlayerHealth : Photon.MonoBehaviour
         if (currentHealth > maxHealth)
             currentHealth = maxHealth;
 
-        Debug.LogError("The health of " + name + " is " + currentHealth);
-
-        SetDamageEffect();
+        SetHealthUI();
     }
 
 
@@ -140,8 +159,11 @@ public class PlayerHealth : Photon.MonoBehaviour
         else if (currentHealth > 0)
         {
             damageEffectAnim.SetInteger("DamageEffect", 3);
-        }
+        }        
+    }
 
+    void SetHealthUI()
+    {
         health.text = currentHealth + " / " + currMaxHealth;
     }
 
@@ -150,11 +172,20 @@ public class PlayerHealth : Photon.MonoBehaviour
         damageEffectAnim.SetInteger("DamageEffect", 0);
     }
 
+    public void Local_InstantDeath(string damageSource, CollisionDetection.CollisionFlag collisionLocation)
+    {
+        if (isDead) return;
+        currentHealth = 0;
+        SetHealthUI();
+        Died(damageSource, collisionLocation);
+    }
+
     [PunRPC]
     public void RPC_InstantDeath(string damageSource, CollisionDetection.CollisionFlag collisionLocation)
     {
         if (isDead) return;
         currentHealth = 0;
+        SetHealthUI();
         Died(damageSource, collisionLocation);
     }
 
@@ -177,16 +208,31 @@ public class PlayerHealth : Photon.MonoBehaviour
         }
     }
 
+    [PunRPC]
+    void RPC_PlayerRenderState(bool isEnabled)
+    {
+        foreach (SkinnedMeshRenderer rend in playerMeshes)
+            rend.enabled = isEnabled;
+    }
+
+    [PunRPC]
+    void RPC_DespawnEffectState(bool isEnabled)
+    {
+        despawnEffect.SetActive(isEnabled);
+    }
+
     IEnumerator DespawnEffect()
     {
         yield return new WaitForSeconds(.5f);
         despawnEffect.SetActive(true);
+        PhotonView.RPC("RPC_DespawnEffectState", PhotonTargets.Others, true);
     }
 
     IEnumerator Respawn()
     {
         foreach (SkinnedMeshRenderer rend in playerMeshes)
             rend.enabled = false;
+        PhotonView.RPC("RPC_PlayerRenderState", PhotonTargets.Others, false);
         yield return new WaitForSeconds(respawnTime);
 
 
@@ -208,7 +254,9 @@ public class PlayerHealth : Photon.MonoBehaviour
 
         foreach (SkinnedMeshRenderer rend in playerMeshes)
             rend.enabled = true;
+        PhotonView.RPC("RPC_PlayerRenderState", PhotonTargets.Others, true);
         despawnEffect.SetActive(false);
+        PhotonView.RPC("RPC_DespawnEffectState", PhotonTargets.Others, false);
 
         Init();
         playerManager.Respawn();

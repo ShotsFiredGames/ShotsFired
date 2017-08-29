@@ -17,14 +17,14 @@ public class PickUpManager : Photon.MonoBehaviour
         playerManager = GetComponent<PlayerManager>();
     }
 
-    [PunRPC]
-    public void RPC_ApplyPickUp(string pickUpType, string pickUp)
+    public void Local_ApplyPickUp(string pickUpType, string pickUp)
     {
         switch (pickUpType)
         {
             case "Gun":
                 pickupSource.PlayOneShot(gunPickUpSound);
-                playerManager.PhotonView.RPC("RPC_WeaponPickedUp", PhotonTargets.All, pickUp);
+                playerManager.Local_WeaponPickedUp(pickUp);
+                playerManager.PhotonView.RPC("RPC_WeaponPickedUp", PhotonTargets.Others, pickUp);
                 break;
             case "Ability":
                 switch (pickUp)
@@ -39,7 +39,38 @@ public class PickUpManager : Photon.MonoBehaviour
                         pickupSource.PlayOneShot(juggernautSound);
                         break;
                 }
-                playerManager.PhotonView.RPC("RPC_AbilityPickedUp", PhotonTargets.All, pickUp);
+                playerManager.Local_AbilityPickedUp(pickUp);
+                playerManager.PhotonView.RPC("RPC_AbilityPickedUp", PhotonTargets.Others, pickUp);
+                break;
+        }
+    }
+
+    [PunRPC]
+    public void RPC_ApplyPickUp(string pickUpType, string pickUp)
+    {
+        switch (pickUpType)
+        {
+            case "Gun":
+                pickupSource.PlayOneShot(gunPickUpSound);
+                playerManager.Local_WeaponPickedUp(pickUp);
+                //playerManager.PhotonView.RPC("RPC_WeaponPickedUp", PhotonTargets.Others, pickUp);
+                break;
+            case "Ability":
+                switch (pickUp)
+                {
+                    case "Juggernaut":
+                        pickupSource.PlayOneShot(juggernautSound);
+                        break;
+                    case "Overcharged":
+                        pickupSource.PlayOneShot(overchargedSound);
+                        break;
+                    default:
+                        pickupSource.PlayOneShot(juggernautSound);
+                        break;
+                }
+
+                playerManager.Local_AbilityPickedUp(pickUp);
+                //playerManager.PhotonView.RPC("RPC_AbilityPickedUp", PhotonTargets.Others, pickUp);
                 break;
         }
     }
@@ -61,40 +92,32 @@ public class PickUpManager : Photon.MonoBehaviour
                 case PickUp.PickUpType.Ability:
                     Ability(pickup);
                     break;
-            }
-
-            pv = other.GetComponent<PhotonView>();
+            }            
 
             if (PhotonNetwork.isMasterClient)
             {
-                if(other.GetComponent<PhotonView>())
+                pv = other.GetComponent<PhotonView>();
+                if (pv)
                 {
                     photonView.RPC("RPC_DestroyPickup", PhotonTargets.OthersBuffered, pv.viewID);
                     Destroy(other.gameObject);
                 }
             }
         }
+        #region Mimic code
+        //if (other.tag.Equals("Mimic"))
+        //{
+        //    photonView.RPC("RpcActivateExplosion", PhotonTargets.All, other.gameObject.transform.position);
+        //    if (PhotonNetwork.isMasterClient)
+        //        PhotonNetwork.Destroy(other.GetComponent<PhotonView>());
+        //    photonView.RPC("RPC_InstantDeath", PhotonTargets.All, "Mimic", CollisionDetection.CollisionFlag.Front);
+        //}
 
-        if (other.tag.Equals("Mimic"))
-        {
-            photonView.RPC("RpcActivateExplosion", PhotonTargets.All, other.gameObject.transform.position);
-            if (PhotonNetwork.isMasterClient)
-                PhotonNetwork.Destroy(other.GetComponent<PhotonView>());
-            photonView.RPC("RPC_InstantDeath", PhotonTargets.All, "Mimic", CollisionDetection.CollisionFlag.Front);
-        }
-
-        if (other.tag.Equals("SpeedBoost"))
-        {
-            //playerManager.EnteredSpeedBoost();
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.tag.Equals("SpeedBoost"))
-        {
-            //playerManager.SpeedBoost();
-        }
+        //if (other.tag.Equals("SpeedBoost"))
+        //{
+        //    //playerManager.EnteredSpeedBoost();
+        //}
+        #endregion
     }
 
     public void Gun(PickUp pickup)
@@ -104,16 +127,20 @@ public class PickUpManager : Photon.MonoBehaviour
             case PickUp.GunType.None:
                 break;
             case PickUp.GunType.MachineGun:
-                playerManager.PhotonView.RPC("RPC_ApplyPickUp", PhotonTargets.All, "Gun", "MachineGun");
+                Local_ApplyPickUp("Gun", "MachineGun");
+                playerManager.PhotonView.RPC("RPC_ApplyPickUp", PhotonTargets.Others, "Gun", "MachineGun");
                 break;
             case PickUp.GunType.RocketLauncher:
-                playerManager.PhotonView.RPC("RPC_ApplyPickUp", PhotonTargets.All, "Gun", "RocketLauncher");
+                Local_ApplyPickUp("Gun", "RocketLauncher");
+                playerManager.PhotonView.RPC("RPC_ApplyPickUp", PhotonTargets.Others, "Gun", "RocketLauncher");
                 break;
             case PickUp.GunType.ShotGun:
-                playerManager.PhotonView.RPC("RPC_ApplyPickUp", PhotonTargets.All, "Gun", "ShotGun");
+                Local_ApplyPickUp("Gun", "ShotGun");
+                playerManager.PhotonView.RPC("RPC_ApplyPickUp", PhotonTargets.Others, "Gun", "ShotGun");
                 break;
             case PickUp.GunType.LaserGun:
-                playerManager.PhotonView.RPC("RPC_ApplyPickUp", PhotonTargets.All, "Gun", "LaserGun");
+                Local_ApplyPickUp("Gun", "LaserGun");
+                playerManager.PhotonView.RPC("RPC_ApplyPickUp", PhotonTargets.Others, "Gun", "LaserGun");
                 break;
         }
     }
@@ -125,10 +152,12 @@ public class PickUpManager : Photon.MonoBehaviour
             case PickUp.AbilityType.None:
                 break;
             case PickUp.AbilityType.Juggernaut:
-                playerManager.PhotonView.RPC("RPC_ApplyPickUp", PhotonTargets.All, "Ability", "Juggernaut");
+                Local_ApplyPickUp("Ability", "Juggernaut");
+                playerManager.PhotonView.RPC("RPC_ApplyPickUp", PhotonTargets.Others, "Ability", "Juggernaut");
                 break;
             case PickUp.AbilityType.Overcharged:
-                playerManager.PhotonView.RPC("RPC_ApplyPickUp", PhotonTargets.All, "Ability", "Overcharged");
+                Local_ApplyPickUp("Ability", "Overcharged");
+                playerManager.PhotonView.RPC("RPC_ApplyPickUp", PhotonTargets.Others, "Ability", "Overcharged");
                 break;
         }
     }
@@ -136,7 +165,8 @@ public class PickUpManager : Photon.MonoBehaviour
     [PunRPC]
     void RPC_DestroyPickup(int viewID)
     {
-        if(pv != null)
+        PhotonView pv = PhotonView.Find(viewID);
+        if (pv)
             Destroy(pv.gameObject);
     }
 }

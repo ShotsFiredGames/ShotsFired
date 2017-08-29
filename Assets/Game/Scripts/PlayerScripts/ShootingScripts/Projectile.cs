@@ -21,7 +21,10 @@ public class Projectile : Photon.MonoBehaviour
         rb = GetComponent<Rigidbody>();
         yield return new WaitForSeconds(destroyAfter);
         if (PhotonNetwork.isMasterClient)
-            photonView.RPC("RPC_DestroyProjectile", PhotonTargets.AllBuffered);
+        {
+            Destroy(gameObject);
+            photonView.RPC("RPC_DestroyProjectile", PhotonTargets.OthersBuffered);
+        }
     }
 
     void FixedUpdate()
@@ -61,9 +64,12 @@ public class Projectile : Photon.MonoBehaviour
                     if(explosive)
                     {
                         GameObject _explosion = PhotonNetwork.Instantiate(explosion.name, transform.position, Quaternion.FromToRotation(Vector3.up, impactNormal), 0);
-                        _explosion.GetComponent<PhotonView>().RPC("RPC_SetExplosionVariables", PhotonTargets.All, playername);
+                        _explosion.GetComponent<RocketExplosion>().Local_SetExplosionVariables(playername);
+                        _explosion.GetComponent<PhotonView>().RPC("RPC_SetExplosionVariables", PhotonTargets.Others, playername);
                     }
-                    photonView.RPC("RPC_DestroyProjectile", PhotonTargets.AllBuffered);
+
+                    Destroy(gameObject);
+                    photonView.RPC("RPC_DestroyProjectile", PhotonTargets.OthersBuffered);
                 }
             }
         }
@@ -73,6 +79,16 @@ public class Projectile : Photon.MonoBehaviour
     void RPC_DestroyProjectile()
     {
         Destroy(gameObject);
+    }
+
+    public void Local_SetProjectileVariables(float _speed, Vector3 _direction, string _playername, Vector3 hitNormal, short _damage, bool _explosive)
+    {
+        speed = _speed;
+        direction = _direction;
+        playername = _playername;
+        impactNormal = hitNormal;
+        damage = _damage;
+        explosive = _explosive;
     }
 
     [PunRPC]

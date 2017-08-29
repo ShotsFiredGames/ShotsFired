@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class RunningAJammer : GameEvent
@@ -83,5 +81,4 @@ public class RunningAJammer : GameEvent
             jam.gameObject.SetActive(isActive);
         }
     }
-
 }

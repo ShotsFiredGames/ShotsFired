@@ -93,6 +93,13 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
         }
     }
 
+    public void Local_SetFactionPlayer(string myFaction)
+    {
+        faction = myFaction;
+        factionColor = PlayerWrangler.GetFactionMaterial(faction);
+        rend.material = factionColor;
+    }
+
     [PunRPC]
     public void RPC_SetFactionPlayer(string myFaction)
     {
@@ -101,10 +108,15 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
         rend.material = factionColor;
     }
 
-    [PunRPC]
-    public void RPC_SetGravity(double newGravity)
+    public void Local_SetGravity(float newGravity)
     {
-        Physics.gravity = new Vector3(0, (float)-newGravity);
+        Physics.gravity = new Vector3(0, -newGravity);
+    }
+
+    [PunRPC]
+    public void RPC_SetGravity(float newGravity)
+    {
+        Physics.gravity = new Vector3(0, -newGravity);
     }
 
     public string GetFaction()
@@ -350,25 +362,47 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
 
     public void Dead(string damageSource, CollisionDetection.CollisionFlag collisionLocation)
     {
-        photonView.RPC("RPC_DeathState", PhotonTargets.All, true);
+        Local_DeathState(true);
+        photonView.RPC("RPC_DeathState", PhotonTargets.Others, true);
 
         if (flagInfo != null)
             flagInfo.DropFlag();
 
-        //playerMovement.CancelSpeedBoost();        
-        photonView.RPC("RPC_Disarm", PhotonTargets.All);
-        photonView.RPC("RPC_CancelAbility", PhotonTargets.All);
+        //playerMovement.CancelSpeedBoost(); 
+        Local_Disarm();
+        Local_CancelAbility();       
+        photonView.RPC("RPC_Disarm", PhotonTargets.Others);
+        photonView.RPC("RPC_CancelAbility", PhotonTargets.Others);
         animationManager.IsDead(collisionLocation);
         PhotonView gmPhotonView = GameManager.instance.PhotonView;
         if (gmPhotonView != null)
-            gmPhotonView.RPC("RPC_AddScore", PhotonTargets.All, damageSource, GameCustomization.pointsPerKill);
+        {
+            gameManager.Local_AddScore(damageSource, GameCustomization.pointsPerKill);
+            gmPhotonView.RPC("RPC_AddScore", PhotonTargets.Others, damageSource, GameCustomization.pointsPerKill);
+        }
     }
 
     public void Respawn()
     {
         ReaperEffectsActivate(false);
         animationManager.IsRespawning();
-        photonView.RPC("RPC_DeathState", PhotonTargets.All, false);
+        Local_DeathState(false);
+        photonView.RPC("RPC_DeathState", PhotonTargets.Others, false);
+    }
+
+    public void Local_AbilityPickedUp(string abilityName)
+    {
+        switch (abilityName)
+        {
+            case "Juggernaut":
+                juggernaut.ActivateJuggernaut();
+                playerMovement.juggActive = true;
+                //playerMovement.SuperBoots();
+                break;
+            case "Overcharged":
+                shooting.ActivateOvercharged();
+                break;
+        }
     }
 
     [PunRPC]
@@ -386,10 +420,23 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
         }
     }
 
+    public void Local_SetSpeed(byte newSpeed)
+    {
+        playerMovement.SetSpeed(newSpeed);
+    }
+
     [PunRPC]
     public void RPC_SetSpeed(byte newSpeed)
     {
         playerMovement.SetSpeed(newSpeed);
+    }
+
+    public void Local_CancelAbility()
+    {
+        //playerMovement.CancelSuperBoots();
+        juggernaut.CancelJuggernaut();
+        playerMovement.juggActive = false;
+        shooting.CancelOvercharged();
     }
 
     [PunRPC]
@@ -398,6 +445,38 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
         //playerMovement.CancelSuperBoots();
         juggernaut.CancelJuggernaut();
         shooting.CancelOvercharged();
+    }
+
+    public void Local_WeaponPickedUp(string gunName)
+    {
+        if (oldGun != null)
+            oldGun.SetActiveGun(false);
+
+        shooting.UnArmed();
+        if (oldGun != null)
+        {
+            if (oldGun.anim != null && oldGun.anim.gameObject.activeSelf)
+                oldGun.anim.SetBool("IsFiring", false);
+            oldGun.SetActiveGun(false);
+        }
+
+        isArmed = true;
+        animationManager.Armed();
+        Gun newGun = FindGun(gunName);
+        oldGun = newGun;
+
+        if (newGun == null) Debug.LogError("Incorrect Name of Gun");
+
+        // animationManager.SetGunAnimator(newGun.anim);
+        shooting.SetWeapon(newGun);
+
+        shooting.NotAiming();
+        newGun.SetAmmo();
+
+        newGun.SetActiveGun(true);
+        isAiming = false;
+        playerCamera.StopAim();
+        animationManager.StoppedAiming();
     }
 
     [PunRPC]
@@ -443,6 +522,15 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
         return null;
     }
 
+    public void Local_Disarm()
+    {
+        isArmed = false;
+        shooting.UnArmed();
+        shooting.RemoveWeapon();
+        animationManager.Disarmed();
+        playerCamera.SetFieldOfView(60);
+    }
+
     [PunRPC]
     public void RPC_Disarm()
     {
@@ -451,6 +539,20 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
         shooting.RemoveWeapon();
         animationManager.Disarmed();
         playerCamera.SetFieldOfView(60);
+    }
+
+    public void Local_DeathState(bool isPlayerDead)
+    {
+        isDead = isPlayerDead;
+
+        if (isPlayerDead)
+        {
+            tag.Equals("Dead");
+        }
+        else
+        {
+            tag.Equals("Player");
+        }
     }
 
     [PunRPC]

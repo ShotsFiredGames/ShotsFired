@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class HealingPad : Point
@@ -29,7 +28,8 @@ public class HealingPad : Point
     IEnumerator RestoreHealth(PlayerHealth health)
     {
         health.isBeingHealed = true;
-        health.PhotonView.RPC("RPC_RestoreHealth", PhotonTargets.All, healthAmount);
+        health.Local_RestoreHealth(healthAmount);
+        health.PhotonView.RPC("RPC_RestoreHealth", PhotonTargets.Others, healthAmount);
         yield return new WaitForSeconds(healFreq);
         health.isBeingHealed = false;
     }

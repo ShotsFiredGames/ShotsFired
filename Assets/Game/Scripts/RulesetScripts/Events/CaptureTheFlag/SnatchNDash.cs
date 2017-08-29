@@ -32,13 +32,33 @@ public class SnatchNDash : GameEvent
 		for (int i = 0; i < players.Count; i++)
         {
 			int viewID = PhotonNetwork.AllocateViewID ();
-			PhotonView.RPC ("RPC_SpawnFlags", PhotonTargets.All, viewID, i, players[i].name);
+            Local_SpawnFlags(viewID, i, players[i].name);
+			PhotonView.RPC ("RPC_SpawnFlags", PhotonTargets.Others, viewID, i, players[i].name);
         }
 
         spawnedFlags = true;
     }
 
-	[PunRPC]
+    void Local_SpawnFlags(int _viewID, int index, string _ownerID)
+    {
+        Flag newFlag = Instantiate(flag).GetComponent<Flag>();
+        newFlag.GetComponent<PhotonView>().viewID = _viewID;
+        newFlag.flagBase = bases[index];
+        FlagManager.instance.flags.Add(newFlag);
+        snashFlags.Add(newFlag);
+
+        newFlag.index = FlagManager.instance.GetFlagNumber();
+        newFlag.spawnPosition = bases[index].gameObject;
+        newFlag.flagResetTime = flagResetTime;
+        bases[index].flag = newFlag;
+        PlayerManager _owner = PlayerWrangler.GetPlayer(_ownerID);
+        bases[index].owner = _owner.GetComponent<PlayerFlagInfo>();
+        newFlag.gameObject.SetActive(true);
+        bases[index].gameObject.SetActive(true);
+        bases[index].gameObject.GetComponent<Renderer>().material.color = PlayerWrangler.GetFactionMaterial(_owner.faction).color;
+    }
+
+    [PunRPC]
 	void RPC_SpawnFlags(int _viewID, int index, string _ownerID)
 	{
 		Flag newFlag = Instantiate(flag).GetComponent<Flag>();

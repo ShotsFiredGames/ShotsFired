@@ -33,6 +33,7 @@ public class GameManager : Photon.PunBehaviour
     byte minutes;
     byte seconds;
     byte countdownTime;
+    byte oldCountTime;
     byte playersInGame;
     string currentWinner = "";
 
@@ -83,14 +84,12 @@ public class GameManager : Photon.PunBehaviour
             {
                 stream.SendNext(minutes);
                 stream.SendNext(seconds);
-                stream.SendNext(countdownTime);
             }
         }
         else
         {
             minutes = (byte)stream.ReceiveNext();
             seconds = (byte)stream.ReceiveNext();
-            countdownTime = (byte)stream.ReceiveNext();
         }
     }
     #endregion
@@ -140,24 +139,21 @@ public class GameManager : Photon.PunBehaviour
     void StartGame()
     {
         countDownTimer.enabled = true;
-        StartCoroutine(StartCountdown());
+        if(PhotonNetwork.isMasterClient)
+            StartCoroutine(StartCountdown());
     }
 
     IEnumerator StartCountdown()
     {
         for(byte i = 5; i > 0; i--)
         {
-            //countdownTime = i;
-
-            countdownAnim.SetTrigger("Countdown");
-            countDownTimer.text = i.ToString();
+            countdownTime = i;
+            photonView.RPC("RPC_UpdateCountdownText", PhotonTargets.All, false, countdownTime);
             yield return new WaitForSeconds(1);
         }
-        countDownTimer.text = "Fight!";
+        photonView.RPC("RPC_UpdateCountdownText", PhotonTargets.All, true, countdownTime);
         yield return new WaitForSeconds(1);
-        countDownTimer.enabled = false;
 
-        timerText.enabled = true;
         if (PhotonNetwork.isMasterClient)
         {
             StartCoroutine(Timer());
@@ -166,6 +162,36 @@ public class GameManager : Photon.PunBehaviour
             eventOptions.Receivers = ReceiverGroup.All;
             PhotonNetwork.RaiseEvent(eventcode, true, true, eventOptions);
         }
+    }
+
+    [PunRPC]
+    void RPC_UpdateCountdownText(bool countdownFinished, byte _countdownTime)
+    {
+        if (!countDownTimer.enabled)
+            return;
+
+        if (countdownFinished)
+        {
+            countDownTimer.text = "Fight!";
+            StartCoroutine(SwitchTimer(false));
+        }
+        else
+        {
+            if (oldCountTime != _countdownTime)
+            {
+                oldCountTime = _countdownTime;
+                countdownTime = _countdownTime;
+                countdownAnim.SetTrigger("Countdown");
+                countDownTimer.text = countdownTime.ToString();
+            }
+        }
+    }
+
+    IEnumerator SwitchTimer(bool isCountdownActive)
+    {
+        yield return new WaitForSeconds(1);
+        countDownTimer.enabled = isCountdownActive;
+        timerText.enabled = !isCountdownActive;
     }
 
     IEnumerator Timer()
@@ -206,6 +232,19 @@ public class GameManager : Photon.PunBehaviour
         isActive = _isActive;
     }
 
+    //this should be called for the local player so the RPC doesn't have to be targeted at everyone
+    public void Local_AddScore(string player, short amount)
+    {
+        if (player == null) return;
+        if (!playerScores.ContainsKey(player)) return;
+        playerScores[player] += amount;
+
+        if (playerScores[player] < 0) //check to prevent scores from being negative
+            playerScores[player] = 0;
+
+        CheckScores();
+    }
+
     [PunRPC]
     public void RPC_AddScore(string player, short amount)
     {
@@ -242,7 +281,8 @@ public class GameManager : Photon.PunBehaviour
         if (PhotonNetwork.isMasterClient)
         {
             int arrayIndex = AnnouncerManager.instance.GetRandomIndex(AnnouncerManager.instance.generalClips.endMatch.Length);
-            AnnouncerManager.instance.PhotonView.RPC("RPC_PlayEndMatchClip", PhotonTargets.All, arrayIndex);
+            AnnouncerManager.instance.Local_PlayEndMatchClip(arrayIndex);
+            AnnouncerManager.instance.PhotonView.RPC("RPC_PlayEndMatchClip", PhotonTargets.Others, arrayIndex);
         }
     }
 
@@ -283,7 +323,8 @@ public class GameManager : Photon.PunBehaviour
     //==========Event Methods==========
 	public void PlayerGainsPoints(string player, short score)
     {
-        photonView.RPC("RPC_AddScore", PhotonTargets.All, player, score);
+        Local_AddScore(player, score);
+        photonView.RPC("RPC_AddScore", PhotonTargets.OthersBuffered, player, score);
     }
 
     public string GetWinningPlayer()

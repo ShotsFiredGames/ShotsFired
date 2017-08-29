@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class WeAllFloatOn : AddOn
 {
-    public double newGravityValue;
+    public float newGravityValue;
     PlayerManager[] allPlayers;
 
     Coroutine gravityChange;
@@ -17,6 +14,7 @@ public class WeAllFloatOn : AddOn
         {
             if (player != null)
             {
+                player.Local_SetGravity(newGravityValue);
                 player.PhotonView.RPC("RPC_SetGravity", PhotonTargets.All, newGravityValue);
             }
         }
@@ -28,7 +26,8 @@ public class WeAllFloatOn : AddOn
         {
             if (player != null)
             {
-                player.PhotonView.RPC("RPC_SetGravity", PhotonTargets.All, 9.8);
+                player.Local_SetGravity(9.8f);
+                player.PhotonView.RPC("RPC_SetGravity", PhotonTargets.All, 9.8f);
             }
         }
     }

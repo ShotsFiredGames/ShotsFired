@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class NeedHealing : AddOn
+﻿public class NeedHealing : AddOn
 {
     public byte healthAmount;
     public float healFreq;

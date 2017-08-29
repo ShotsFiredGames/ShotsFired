@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ControlPoint : Point
@@ -76,8 +75,7 @@ public class ControlPoint : Point
         {
             if (PhotonNetwork.player.NickName.Equals(playerName))
                 GameManager.instance.PlayerGainsPoints(playerName, pointsRecieved);
-        }
-            
+        }            
 
         isGivingPoints = false;
     }

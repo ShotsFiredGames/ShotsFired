@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class StepItUp : AddOn
+﻿public class StepItUp : AddOn
 {
     public byte newSpeedValue;
     PlayerManager[] allPlayers;
@@ -16,7 +11,8 @@ public class StepItUp : AddOn
         {
             if (player != null)
             {
-                player.PhotonView.RPC("RPC_SetSpeed", PhotonTargets.All, newSpeedValue);
+                player.Local_SetSpeed(newSpeedValue);
+                player.PhotonView.RPC("RPC_SetSpeed", PhotonTargets.Others, newSpeedValue);
             }
         }
     }
@@ -27,7 +23,8 @@ public class StepItUp : AddOn
         {
             if (player != null)
             {
-                player.PhotonView.RPC("RPC_SetSpeed", PhotonTargets.All, (byte)GameCustomization.playerSpeed);
+                player.Local_SetSpeed((byte)GameCustomization.playerSpeed);
+                player.PhotonView.RPC("RPC_SetSpeed", PhotonTargets.Others, (byte)GameCustomization.playerSpeed);
             }
         }
     }
