@@ -125,34 +125,16 @@ public class AnnouncerManager : MonoBehaviour
 
     public void Local_PlayEventStartClip(string eventName, int arrayIndex)
     {
-        switch (eventName)
-        {
-            case "TheReaperComes":
-                PlayRandomClipFromArray(reaperClips.reaperStart, arrayIndex);
-                break;
-            case "SnatchNDash":
-                PlayRandomClipFromArray(sndClips.sndStart, arrayIndex);
-                break;
-            case "BallToTheWall":
-                PlayRandomClipFromArray(bttwClips.bttwStart, arrayIndex);
-                break;
-            case "FirmlyGraspIt":
-                PlayRandomClipFromArray(graspClips.graspItStart, arrayIndex);
-                return;
-            case "PeckingOrder":
-                PlayRandomClipFromArray(peckClips.peckingOrderStart, arrayIndex);
-                break;
-            case "RunningAJammer":
-                PlayRandomClipFromArray(jammerClips.jammerStart, arrayIndex);
-                break;
-            default:
-                Debug.LogError("Could not find event: " + eventName + ". Did you forget to add it to the AnnouncerManager PlayEventStartClip method?");
-                break;
-        }
+        PlayEventStartingClip(eventName, arrayIndex);
     }
 
     [PunRPC]
     public void RPC_PlayEventStartClip(string eventName, int arrayIndex)
+    {
+        PlayEventStartingClip(eventName, arrayIndex);
+    }
+
+    void PlayEventStartingClip(string eventName, int arrayIndex)
     {
         switch (eventName)
         {
@@ -206,37 +188,16 @@ public class AnnouncerManager : MonoBehaviour
 
     public void Local_PlayAddOnStartClip(string addOnName, int arrayIndex)
     {
-        switch (addOnName)
-        {
-            case "HugeLoad":
-                PlayRandomClipFromArray(addOnClips.hugeLoadClips, arrayIndex);
-                break;
-            case "MimicAppears":
-                PlayRandomClipFromArray(addOnClips.mimicClips, arrayIndex);
-                break;
-            case "BombsAway":
-                PlayRandomClipFromArray(addOnClips.bombsAwayClips, arrayIndex);
-                break;
-            case "StepItUp":
-                PlayRandomClipFromArray(addOnClips.stepItUpClips, arrayIndex);
-                break;
-            case "WeAllFloatOn":
-                PlayRandomClipFromArray(addOnClips.allFloatOnClips, arrayIndex);
-                break;
-            case "NeedHealing":
-                PlayRandomClipFromArray(addOnClips.needHealingClips, arrayIndex);
-                break;
-            case "ShotsAllAround":
-                PlayRandomClipFromArray(addOnClips.shotsAllAroundClips, arrayIndex);
-                break;
-            default:
-                Debug.LogError("Could not find add-on: " + addOnName + ". Did you forget to add it to the AnnouncerManager PlayAddOnStartClip method?");
-                break;
-        }
+        PlayAddOnStartClip(addOnName, arrayIndex);
     }
 
     [PunRPC]
     public void RPC_PlayAddOnStartClip(string addOnName, int arrayIndex)
+    {
+        PlayAddOnStartClip(addOnName, arrayIndex);
+    }
+
+    void PlayAddOnStartClip(string addOnName, int arrayIndex)
     {
         switch (addOnName)
         {
@@ -266,6 +227,7 @@ public class AnnouncerManager : MonoBehaviour
                 break;
         }
     }
+
 
     #endregion
 

@@ -45,8 +45,21 @@ public class CustomizationToServer : MonoBehaviour
         if (PhotonNetwork.room == null) return;
         if (roomProps != null) return;
 
-        string eventsString = ConvertTextTogglesToString(events);
-        string addonString = ConvertTextTogglesToString(addOns);
+        Debug.LogError("Init values");
+        string eventsString = "";
+
+        for (int i = 0; i < events.Count; i++)
+        {
+            eventsString += "1";
+        }
+
+        Debug.LogError("The events string is: " + eventsString);
+        string addonString = "";
+
+        for (int i = 0; i < addOns.Count; i++)
+        {
+            addonString += "1";
+        }
 
         roomProps = new Hashtable() { { PLAYERHEALTH, playerHealth.value }, { RESPAWNTIME, respawnTime.value} , { PLAYERSPEED, playerSpeed.value},
             {ABILITYDURATION, abilityDuration.value }, { EVENTOCCURENCE, eventOccurence.value}, { GAMELENGTH, gameLength.value}, { POINTSTOWIN, pointsToWin.value},

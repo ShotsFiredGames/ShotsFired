@@ -15,7 +15,8 @@ public class TextToggle : MonoBehaviour
     {
         toggle = GetComponent<Toggle>();
         info = GetComponentInChildren<Text>().text;
-	}
+        isActivate = toggle.isOn;
+    }
 	
 	// Update is called once per frame
 	void Update ()
