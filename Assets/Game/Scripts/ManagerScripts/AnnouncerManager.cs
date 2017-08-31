@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(AudioSource))]
 public class AnnouncerManager : MonoBehaviour
@@ -34,18 +35,31 @@ public class AnnouncerManager : MonoBehaviour
     public AudioSource source;
 
     public GeneralClips generalClips;
-    public ReaperClips reaperClips;
+
+    //Event Clips//
+    public EventClips reaperClips;
     public SnatchNDashClips sndClips;
     public BallToTheWallClips bttwClips;
-    public FirmlyGraspItClips graspClips;
-    public PeckingOrderClips peckClips;
-    public RunningAJammerClips jammerClips;
+    public EventClips graspClips;
+    public EventClips peckClips;
+    public EventClips jammerClips;
+
+    List<EventClips> eventClips = new List<EventClips>();
+
+    //======//
+
     public AddOnClips addOnClips;
     public FillerClips fillerClips;
 
     void Awake()
     {
         PhotonView = GetComponent<PhotonView>();
+
+        eventClips.Add(reaperClips);
+        eventClips.Add(sndClips);
+        eventClips.Add(graspClips);
+        eventClips.Add(peckClips);
+        eventClips.Add(jammerClips);
     }
 
     void Start()
@@ -103,24 +117,14 @@ public class AnnouncerManager : MonoBehaviour
 
     public int GetRandomEventIndex(string eventName)
     {
-        switch (eventName)
+        foreach (EventClips eC in eventClips)
         {
-            case "TheReaperComes":
-                return GetRandomIndex(reaperClips.reaperStart.Length);
-            case "SnatchNDash":
-                return GetRandomIndex(sndClips.sndStart.Length);
-            case "BallToTheWall":
-                return GetRandomIndex(bttwClips.bttwStart.Length);
-            case "FirmlyGraspIt":
-                return GetRandomIndex(graspClips.graspItStart.Length);
-            case "PeckingOrder":
-                return GetRandomIndex(peckClips.peckingOrderStart.Length);
-            case "RunningAJammer":
-                return GetRandomIndex(jammerClips.jammerStart.Length);
-            default:
-                Debug.LogError("Could not find event: " + eventName + ". Did you forget to add it to the AnnouncerManager PlayEventStartClip method?");
-                return 0;
+            if (eC.eventName.Equals(eventName))
+                return GetRandomIndex(eC.eventStart.Length);
         }
+
+        Debug.LogError("Could not find event: " + eventName + ". Did you forget to add it to the AnnouncerManager PlayEventStartClip method?");
+        return 0;
     }
 
     public void Local_PlayEventStartClip(string eventName, int arrayIndex)
@@ -136,29 +140,13 @@ public class AnnouncerManager : MonoBehaviour
 
     void PlayEventStartingClip(string eventName, int arrayIndex)
     {
-        switch (eventName)
+        foreach (EventClips eC in eventClips)
         {
-            case "TheReaperComes":
-                PlayRandomClipFromArray(reaperClips.reaperStart, arrayIndex);
-                break;
-            case "SnatchNDash":
-                PlayRandomClipFromArray(sndClips.sndStart, arrayIndex);
-                break;
-            case "BallToTheWall":
-                PlayRandomClipFromArray(bttwClips.bttwStart, arrayIndex);
-                break;
-            case "FirmlyGraspIt":
-                PlayRandomClipFromArray(graspClips.graspItStart, arrayIndex);
-                return;
-            case "PeckingOrder":
-                PlayRandomClipFromArray(peckClips.peckingOrderStart, arrayIndex);
-                break;
-            case "RunningAJammer":
-                PlayRandomClipFromArray(jammerClips.jammerStart, arrayIndex);
-                break;
-            default:
-                Debug.LogError("Could not find event: " + eventName + ". Did you forget to add it to the AnnouncerManager PlayEventStartClip method?");
-                break;
+            if (eC.eventName.Equals(eventName))
+            {
+                PlayRandomClipFromArray(eC.eventStart, arrayIndex);
+                Debug.LogError("Event Name for Start Clip: " + eventName);
+            }               
         }
     }
 
@@ -257,45 +245,25 @@ public class AnnouncerManager : MonoBehaviour
     }
 
     [System.Serializable]
-    public class ReaperClips
+    public class EventClips
     {
-        public AudioClip[] reaperStart;
-        public AudioClip[] reaperEnd;
+        public string eventName;
+        public AudioClip[] eventStart;
+        public AudioClip[] eventDescription;
+        public AudioClip[] eventEnd;
     }
 
     [System.Serializable]
-    public class SnatchNDashClips
+    public class SnatchNDashClips : EventClips
     {
-        public AudioClip[] sndStart;
         public AudioClip[] sndMostFlagsCapped;
         public AudioClip[] sndNoFlagsCapped;
-        public AudioClip[] sndEnd;
     }
 
     [System.Serializable]
-    public class BallToTheWallClips
+    public class BallToTheWallClips : EventClips
     {
-        public AudioClip[] bttwStart;
         public AudioClip[] bttwMostGoals;
-        public AudioClip[] bttwEnd;
-    }
-
-    [System.Serializable]
-    public class FirmlyGraspItClips
-    {
-        public AudioClip[] graspItStart;
-    }
-
-    [System.Serializable]
-    public class PeckingOrderClips
-    {
-        public AudioClip[] peckingOrderStart;
-    }
-
-    [System.Serializable]
-    public class RunningAJammerClips
-    {
-        public AudioClip[] jammerStart;
     }
 
     [System.Serializable]

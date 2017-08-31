@@ -45,7 +45,6 @@ public class CustomizationToServer : MonoBehaviour
         if (PhotonNetwork.room == null) return;
         if (roomProps != null) return;
 
-        Debug.LogError("Init values");
         string eventsString = "";
 
         for (int i = 0; i < events.Count; i++)
@@ -53,7 +52,6 @@ public class CustomizationToServer : MonoBehaviour
             eventsString += "1";
         }
 
-        Debug.LogError("The events string is: " + eventsString);
         string addonString = "";
 
         for (int i = 0; i < addOns.Count; i++)
