@@ -266,8 +266,17 @@ public class Shooting : Photon.MonoBehaviour
                     currentGun.shootingAnim.SetTrigger("Fire");
 
             GameObject bullet = PhotonNetwork.Instantiate(currentGun.projectile.name, currentGun.gunbarrel.transform.position, currentGun.gunbarrel.transform.rotation, 0);
-            bullet.GetComponent<Projectile>().Local_SetProjectileVariables(currentGun.speed, direction, transform.name, hitNormal, _damage, true);
-            bullet.GetComponent<PhotonView>().RPC("RPC_SetProjectileVariables", PhotonTargets.Others, currentGun.speed, direction, transform.name, hitNormal, _damage, true);
+
+            if(currentGun.gunName == "MineGun")
+            {
+                bullet.GetComponent<Mine>().Local_SetProjectileVariables(currentGun.speed, direction, transform.name, hitNormal, _damage, true);
+                bullet.GetComponent<PhotonView>().RPC("RPC_SetProjectileVariables", PhotonTargets.Others, currentGun.speed, direction, transform.name, hitNormal, _damage, true);
+            }
+            else
+            {
+                bullet.GetComponent<Projectile>().Local_SetProjectileVariables(currentGun.speed, direction, transform.name, hitNormal, _damage, true);
+                bullet.GetComponent<PhotonView>().RPC("RPC_SetProjectileVariables", PhotonTargets.Others, currentGun.speed, direction, transform.name, hitNormal, _damage, true);
+            }
         }
     }
 
