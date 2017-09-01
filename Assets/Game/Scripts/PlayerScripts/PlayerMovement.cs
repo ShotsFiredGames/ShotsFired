@@ -74,7 +74,7 @@ public class PlayerMovement : MonoBehaviour
     {
         //speed = GameCustomization.playerSpeed;
         //sprintSpeed = (speed + (speed * .5f));
-        //aimSpeed = (speed - (speed * .5f));
+        //aimSpeed = (speed - (speed * .5f 
 
         SetSpeed((byte)GameCustomization.playerSpeed);
         rb = GetComponent<Rigidbody>();

@@ -188,8 +188,6 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
             Sprinting();
         else if (controls.Move && controls.Sprint && controls.Aim)
             Moving();
-        else
-            Idling();
 
         if (controls.Jump.WasPressed)
             Jumping();

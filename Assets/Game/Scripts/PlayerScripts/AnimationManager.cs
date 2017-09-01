@@ -5,17 +5,15 @@ public class AnimationManager : MonoBehaviour
     Animator anim;
     //Animator gunAnim;
     bool shooting;
+    Shooting shootingScript;
+
 
 	void Start ()
     {
-        anim = GetComponent<Animator>();	
+        anim = GetComponent<Animator>();
+        shootingScript = GetComponent<Shooting>();
 	}
-
-    //public void SetGunAnimator(Animator _gunAnim)
-    //{
-    //    gunAnim = _gunAnim;
-    //}
-    
+        
     public void Armed()
     {
         anim.SetBool("Armed", true);
@@ -125,10 +123,8 @@ public class AnimationManager : MonoBehaviour
         anim.SetInteger("State", 3);
         anim.SetBool("IsAiming", true);
 
-        //if (gunAnim == null || !gunAnim.gameObject.activeSelf) return;
-        //gunAnim.SetBool("IsAiming", true);
-
-        //gunAnim.SetBool("Stop", true);
+        if (shootingScript.currentGun.shootingAnim == null || !shootingScript.currentGun.gameObject.activeSelf) return;
+        shootingScript.currentGun.shootingAnim.SetBool("Aim", true);
     }
 
     public void StoppedAiming()
@@ -138,9 +134,9 @@ public class AnimationManager : MonoBehaviour
         else
             anim.SetInteger("State", 2);
 
-        //if (gunAnim == null || !gunAnim.gameObject.activeSelf) return;
-        //gunAnim.SetBool("IsAiming", false);
-        //gunAnim.SetBool("Stop", false);
+
+        if (shootingScript.currentGun.shootingAnim == null || !shootingScript.currentGun.gameObject.activeSelf) return;
+        shootingScript.currentGun.shootingAnim.SetBool("Aim", false);
     }
 
     public void IsFiring()
