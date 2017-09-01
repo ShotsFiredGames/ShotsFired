@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections;
 using System.Collections.Generic;
 
 [RequireComponent(typeof(AudioSource))]
@@ -51,6 +52,11 @@ public class AnnouncerManager : MonoBehaviour
     public AddOnClips addOnClips;
     public FillerClips fillerClips;
 
+    //======//
+
+    [SerializeField]
+    float waitTimeOffset = 1.0f;
+
     void Awake()
     {
         PhotonView = GetComponent<PhotonView>();
@@ -80,10 +86,10 @@ public class AnnouncerManager : MonoBehaviour
         return Random.Range(0, maxVal);
     }
 
-    void PlayRandomClipFromArray(AudioClip[] clips, int arrayIndex)
+    void PlayClipFromArray(AudioClip[] clips, int arrayIndex)
     {
         if (source.isPlaying)
-            source.Stop();        
+            source.Stop();
 
         source.clip = clips[arrayIndex];
 
@@ -94,25 +100,25 @@ public class AnnouncerManager : MonoBehaviour
     void Local_PlayStartMatchClip(string sceneName, int arrayIndex)
     {
         AudioClip[] startMatch = generalClips.GetStartMatchClipArray(sceneName);
-        PlayRandomClipFromArray(startMatch, arrayIndex);
+        PlayClipFromArray(startMatch, arrayIndex);
     }
 
     [PunRPC]
     void RPC_PlayStartMatchClip(string sceneName, int arrayIndex)
     {
         AudioClip[] startMatch = generalClips.GetStartMatchClipArray(sceneName);
-        PlayRandomClipFromArray(startMatch, arrayIndex);
+        PlayClipFromArray(startMatch, arrayIndex);
     }
 
     public void Local_PlayEndMatchClip(int arrayIndex)
     {
-        PlayRandomClipFromArray(generalClips.endMatch, arrayIndex);
+        PlayClipFromArray(generalClips.endMatch, arrayIndex);
     }
 
     [PunRPC]
     public void RPC_PlayEndMatchClip(int arrayIndex)
     {
-        PlayRandomClipFromArray(generalClips.endMatch, arrayIndex);
+        PlayClipFromArray(generalClips.endMatch, arrayIndex);
     }
 
     #region Event Methods
@@ -146,9 +152,44 @@ public class AnnouncerManager : MonoBehaviour
         {
             if (eC.eventName.Equals(eventName))
             {
-                PlayRandomClipFromArray(eC.eventStart, arrayIndex);
-                Debug.LogError("Event Name for Start Clip: " + eventName);
-            }               
+                PlayClipFromArray(eC.eventStart, arrayIndex);
+
+                if (PhotonNetwork.isMasterClient)
+                {
+                    if (eC.eventDescription.Length > 0)
+                    {
+                        float _waitTime = eC.eventStart[arrayIndex].length;
+                        int _arrayIndex = GetRandomIndex(eC.eventDescription.Length);
+                        StartCoroutine(WaitToPlayDesc(_waitTime, eC, _arrayIndex));
+                    }
+                }
+            }
+        }
+    }
+
+    IEnumerator WaitToPlayDesc(float waitTime, EventClips eventClips, int arrayIndex)
+    {
+        waitTime += waitTimeOffset;
+        yield return new WaitForSecondsRealtime(waitTime);
+        if (!source.isPlaying)
+        {
+            PlayEventDescClip(eventClips.eventName, arrayIndex);
+            PhotonView.RPC("RPC_PlayEventDescClip", PhotonTargets.Others, eventClips.eventName, arrayIndex);
+        }
+    }
+
+    [PunRPC]
+    void RPC_PlayEventDescClip(string eventName, int arrayIndex)
+    {
+        PlayEventDescClip(eventName, arrayIndex);
+    }
+
+    void PlayEventDescClip(string eventName, int arrayIndex)
+    {
+        foreach (EventClips eC in eventClips)
+        {
+            if (eC.eventName.Equals(eventName))
+                PlayClipFromArray(eC.eventDescription, arrayIndex);
         }
     }
 
@@ -180,14 +221,9 @@ public class AnnouncerManager : MonoBehaviour
         foreach (AddonClipInfo clips in addOnClips.addonClips)
         {
             if (clips.addOnName.Equals(addOnName))
-            {
-                PlayRandomClipFromArray(clips.clips, arrayIndex);
-                Debug.LogError("Event Name for Addon Clip: " + addOnName);
-            }                
+                PlayClipFromArray(clips.clips, arrayIndex);
         }
     }
-
-
     #endregion
 
     #region Clip Classes
