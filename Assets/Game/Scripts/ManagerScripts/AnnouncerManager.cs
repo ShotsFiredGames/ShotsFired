@@ -60,6 +60,8 @@ public class AnnouncerManager : MonoBehaviour
         eventClips.Add(graspClips);
         eventClips.Add(peckClips);
         eventClips.Add(jammerClips);
+
+        addOnClips.Init();
     }
 
     void Start()
@@ -152,26 +154,14 @@ public class AnnouncerManager : MonoBehaviour
 
     public int GetRandomAddOnIndex(string addOnName)
     {
-        switch (addOnName)
+        foreach (AddonClipInfo clips in addOnClips.addonClips)
         {
-            case "HugeLoad":
-                return GetRandomIndex(addOnClips.hugeLoadClips.Length);
-            case "MimicAppears":
-                return GetRandomIndex(addOnClips.mimicClips.Length);
-            case "BombsAway":
-                return GetRandomIndex(addOnClips.bombsAwayClips.Length);
-            case "StepItUp":
-                return GetRandomIndex(addOnClips.stepItUpClips.Length);
-            case "WeAllFloatOn":
-                return GetRandomIndex(addOnClips.allFloatOnClips.Length);
-            case "NeedHealing":
-                return GetRandomIndex(addOnClips.needHealingClips.Length);
-            case "ShotsAllAround":
-                return GetRandomIndex(addOnClips.shotsAllAroundClips.Length);
-            default:
-                Debug.LogError("Could not find add-on: " + addOnName + ". Did you forget to add it to the AnnouncerManager PlayAddOnStartClip method?");
-                return 0;
+            if (clips.addOnName.Equals(addOnName))
+                return GetRandomIndex(clips.clips.Length);
         }
+
+        Debug.LogError("Could not find add-on: " + addOnName + ". Did you forget to add it to the AnnouncerManager PlayAddOnStartClip method?");
+        return 0;
     }
 
     public void Local_PlayAddOnStartClip(string addOnName, int arrayIndex)
@@ -187,32 +177,13 @@ public class AnnouncerManager : MonoBehaviour
 
     void PlayAddOnStartClip(string addOnName, int arrayIndex)
     {
-        switch (addOnName)
+        foreach (AddonClipInfo clips in addOnClips.addonClips)
         {
-            case "HugeLoad":
-                PlayRandomClipFromArray(addOnClips.hugeLoadClips, arrayIndex);
-                break;
-            case "MimicAppears":
-                PlayRandomClipFromArray(addOnClips.mimicClips, arrayIndex);
-                break;
-            case "BombsAway":
-                PlayRandomClipFromArray(addOnClips.bombsAwayClips, arrayIndex);
-                break;
-            case "StepItUp":
-                PlayRandomClipFromArray(addOnClips.stepItUpClips, arrayIndex);
-                break;
-            case "WeAllFloatOn":
-                PlayRandomClipFromArray(addOnClips.allFloatOnClips, arrayIndex);
-                break;
-            case "NeedHealing":
-                PlayRandomClipFromArray(addOnClips.needHealingClips, arrayIndex);
-                break;
-            case "ShotsAllAround":
-                PlayRandomClipFromArray(addOnClips.shotsAllAroundClips, arrayIndex);
-                break;
-            default:
-                Debug.LogError("Could not find add-on: " + addOnName + ". Did you forget to add it to the AnnouncerManager PlayAddOnStartClip method?");
-                break;
+            if (clips.addOnName.Equals(addOnName))
+            {
+                PlayRandomClipFromArray(clips.clips, arrayIndex);
+                Debug.LogError("Event Name for Addon Clip: " + addOnName);
+            }                
         }
     }
 
@@ -269,13 +240,34 @@ public class AnnouncerManager : MonoBehaviour
     [System.Serializable]
     public class AddOnClips
     {
-        public AudioClip[] hugeLoadClips;
-        public AudioClip[] bombsAwayClips;
-        public AudioClip[] mimicClips;
-        public AudioClip[] shotsAllAroundClips;
-        public AudioClip[] needHealingClips;
-        public AudioClip[] stepItUpClips;
-        public AudioClip[] allFloatOnClips;
+        public AddonClipInfo hugeLoadClips;
+        public AddonClipInfo bombsAwayClips;
+        public AddonClipInfo mimicClips;
+        public AddonClipInfo shotsAllAroundClips;
+        public AddonClipInfo needHealingClips;
+        public AddonClipInfo stepItUpClips;
+        public AddonClipInfo allFloatOnClips;
+
+        [HideInInspector]
+        public List<AddonClipInfo> addonClips = new List<AddonClipInfo>();
+
+        public void Init()
+        {
+            addonClips.Add(hugeLoadClips);
+            addonClips.Add(bombsAwayClips);
+            addonClips.Add(mimicClips);
+            addonClips.Add(shotsAllAroundClips);
+            addonClips.Add(needHealingClips);
+            addonClips.Add(stepItUpClips);
+            addonClips.Add(allFloatOnClips);
+        }
+    }
+
+    [System.Serializable]
+    public class AddonClipInfo
+    {
+        public string addOnName;
+        public AudioClip[] clips;
     }
 
     [System.Serializable]
