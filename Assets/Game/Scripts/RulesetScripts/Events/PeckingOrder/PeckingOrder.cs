@@ -19,14 +19,7 @@ public class PeckingOrder : GameEvent
             cp.SetValues(pointsRecieved, pointFreq);
         }
 
-        if (PlayerWrangler.GetNumOfPlayers() < 3)
-        {
-            controlPoints[0].gameObject.SetActive(true);
-        }
-        else
-        {
-            ActivateCPs(true);
-        }
+        ActivateCPs(true);
 
         gameEventDur = StartCoroutine(EventDuration());
     }
