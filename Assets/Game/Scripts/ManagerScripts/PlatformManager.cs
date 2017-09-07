@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class PlatformManager : MonoBehaviour {
-
+public class PlatformManager : MonoBehaviour
+{
     public EventSystem es;
     public enum SystemType
     {

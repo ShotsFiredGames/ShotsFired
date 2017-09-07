@@ -1,17 +1,10 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEngine.Audio;
 using UnityEngine.UI;
 
 public class AudioMixerManager : MonoBehaviour
 {
     public AudioMixer mixer;
-    /*
-    public Slider masterVolumeSlider;
-    public Slider tankVolumeSlider;
-    public Slider musicVolumeSlider;
-    public Slider ambienceVolumeSlider;
-    */
 
     public Slider[] volumeSliders;
     public string[] volumeNames;
@@ -24,7 +17,6 @@ public class AudioMixerManager : MonoBehaviour
         if (PlayerPrefs.GetInt("NewGame") == 0)                                  //Check to see if this is the first time game ran on this computer
         {
             PlayerPrefs.SetInt("NewGame", 1);
-
             SetMixerToValue();
         }
         else

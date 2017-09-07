@@ -31,12 +31,8 @@ public class Projectile : Photon.MonoBehaviour
     {
         if(explosive)
         {
-
             lerpSpeed += speed * Time.deltaTime;
             transform.position = Vector3.Lerp(transform.position, direction, lerpSpeed);
-
-          //  transform.LookAt(direction);
-           // rb.AddForce(transform.forward * speed);
         }
         else
         {

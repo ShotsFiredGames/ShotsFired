@@ -14,7 +14,5 @@ public class ParticleHit : MonoBehaviour
             print("Hit the reaper");
             particleCollision.DealDamage(other);
         }
-
-
     }
 }

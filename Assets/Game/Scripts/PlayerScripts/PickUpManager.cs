@@ -4,10 +4,8 @@ public class PickUpManager : Photon.MonoBehaviour
 {
     PlayerManager playerManager;
     public AudioSource pickupSource;
-
     public AudioClip juggernautSound;
     public AudioClip overchargedSound;
-
     public AudioClip gunPickUpSound;
 
     PhotonView pv;
@@ -53,7 +51,6 @@ public class PickUpManager : Photon.MonoBehaviour
             case "Gun":
                 pickupSource.PlayOneShot(gunPickUpSound);
                 playerManager.Local_WeaponPickedUp(pickUp);
-                //playerManager.PhotonView.RPC("RPC_WeaponPickedUp", PhotonTargets.Others, pickUp);
                 break;
             case "Ability":
                 switch (pickUp)
@@ -70,7 +67,6 @@ public class PickUpManager : Photon.MonoBehaviour
                 }
 
                 playerManager.Local_AbilityPickedUp(pickUp);
-                //playerManager.PhotonView.RPC("RPC_AbilityPickedUp", PhotonTargets.Others, pickUp);
                 break;
         }
     }

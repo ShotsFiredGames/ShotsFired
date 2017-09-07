@@ -76,7 +76,7 @@ public class Reaper : MonoBehaviour
                     if (GameManager.instance.PhotonView != null)
                     {
                         GameManager.instance.Local_AddScore(GetTargetPlayer(), (short)-points);
-                        GameManager.instance.PhotonView.RPC("RPC_AddScore", PhotonTargets.All, GetTargetPlayer(), (short)-points);
+                        GameManager.instance.PhotonView.RPC("RPC_AddScore", PhotonTargets.Others, GetTargetPlayer(), (short)-points);
                     }
                     currentSpeed = speed;
                 }
@@ -91,7 +91,6 @@ public class Reaper : MonoBehaviour
         else
         {
             Local_ReaperTookDamage(damage);
-            //PhotonView.RPC("RPC_ReaperTookDamage", PhotonTargets.Others, damage);
         }
     }
 
@@ -143,11 +142,9 @@ public class Reaper : MonoBehaviour
     {
         RefereeManager.instance.PlayReaperDies();
         Local_SetReaperPosition(new Vector3(-1000, -1000, -1000), GetTargetPlayer());
-        //PhotonView.RPC("RPC_SetReaperPosition", PhotonTargets.Others, new Vector3(-1000, -1000, -1000), GetTargetPlayer());
         isDead = true;
         yield return new WaitForSeconds(1f);
         Local_SetReaperPosition(spawnPoint, GetTargetPlayer());
-        //PhotonView.RPC("RPC_SetReaperPosition", PhotonTargets.All, spawnPoint, GetTargetPlayer());
         transform.rotation = Quaternion.identity;
         currentSpeed = speed;
 

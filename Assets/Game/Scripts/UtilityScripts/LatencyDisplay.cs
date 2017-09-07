@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class LatencyDisplay : Photon.MonoBehaviour {
-
+public class LatencyDisplay : Photon.MonoBehaviour
+{
 	#region Latency Variables
 	private int latency;
 	[SerializeField]

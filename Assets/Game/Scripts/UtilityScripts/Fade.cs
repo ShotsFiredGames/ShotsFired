@@ -69,7 +69,6 @@ public class Fade : MonoBehaviour
     IEnumerator FadeIn()
     {
         yield return new WaitUntil(FadingIn);
-        print("Done");
     }
 
     bool FadingIn()
@@ -87,7 +86,6 @@ public class Fade : MonoBehaviour
     IEnumerator FadeOut()
     {
         yield return new WaitUntil(FadingOut);
-        print("Done");
     }
 
     bool FadingOut()

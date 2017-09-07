@@ -1,5 +1,4 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine.UI;
 
 public class PlayerLoadingBar : Photon.MonoBehaviour
 {
@@ -13,11 +12,8 @@ public class PlayerLoadingBar : Photon.MonoBehaviour
 
     void Update()
     {
-        //Debug.LogError(photonView.OwnerShipWasTransfered);
         if (photonView.OwnerShipWasTransfered)
         {
-            //Debug.LogError(PhotonNetwork.player + " is local player. " + photonView.owner.NickName + " owns this photonview");
-            //Debug.LogError(photonView.owner);
             if (photonView.isMine)
             {
                 loadBar.fillAmount = ServerLauncher.instance.Progress;

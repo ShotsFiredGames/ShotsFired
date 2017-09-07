@@ -1,15 +1,16 @@
 ﻿using UnityEngine.UI;
 using UnityEngine;
 
-public class RoomListing : MonoBehaviour {
-
+public class RoomListing : MonoBehaviour
+{
     [SerializeField]
     Text roomNameText;
 
     public bool Updated { get; set; }
     public string RoomName { get; private set; }
 
-	void Start () {
+	void Start ()
+    {
 		if(ServerLauncher.instance != null)
             GetComponent<Button>().onClick.AddListener(() => ServerLauncher.instance.JoinRoom(roomNameText.text));
 	}

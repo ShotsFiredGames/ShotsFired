@@ -71,15 +71,11 @@ public class Gun : MonoBehaviour
         SetAmmo();
     }
 
-    //public abstract IEnumerator Fire();
-
     public void Discard()
     {
         playerManager.Local_Disarm();
         playerManager.PhotonView.RPC("RPC_Disarm", PhotonTargets.Others);
     }
-
-    //public void Overcharge();
 
     public void SetAmmo()
     {

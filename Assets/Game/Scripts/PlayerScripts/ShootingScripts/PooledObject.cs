@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class PooledObject : MonoBehaviour
 {
@@ -11,13 +10,9 @@ public class PooledObject : MonoBehaviour
     public void ReturnToPool()
     {
         if (Pool)
-        {
             Pool.AddObject(this);
-        }
         else
-        {
             Destroy(gameObject);
-        }
     }
 
     public T GetPooledInstance<T>() where T : PooledObject

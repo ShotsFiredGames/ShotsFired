@@ -320,7 +320,7 @@ public class GameManager : Photon.PunBehaviour
             return false;
     }
 
-    //==========Event Methods==========
+    //==========Event Methods==========//
 	public void PlayerGainsPoints(string player, short score)
     {
         Local_AddScore(player, score);

@@ -141,7 +141,6 @@ public class PlayerHealth : Photon.MonoBehaviour
         SetHealthUI();
     }
 
-
     void SetDamageEffect()
     {
         if (currentHealth > (short)(maxHealth * 0.75f))

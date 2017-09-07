@@ -161,6 +161,4 @@ public static class BasicUtilities
     {
         Application.Quit();
     }
-
-    ///public static void updateCoroutine(float waitTime)
 }

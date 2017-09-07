@@ -96,7 +96,6 @@ public class TheReaperComes : GameEvent
                 break;
             }
         }
-
         return persuer;
     }
 }

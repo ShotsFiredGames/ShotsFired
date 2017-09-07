@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class ExplosionManager : MonoBehaviour
 {
+    #region Instance
     //Version of instance taken from "http://wiki.unity3d.com/index.php/AManagerClass"
     private static ExplosionManager s_Instance = null;
     public static ExplosionManager instance
@@ -27,6 +28,7 @@ public class ExplosionManager : MonoBehaviour
             return s_Instance;
         }
     }
+    #endregion
 
     public GameObject explosion;
     List<GameObject> g_explosions = new List<GameObject>();

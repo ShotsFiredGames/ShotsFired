@@ -1,5 +1,4 @@
-﻿//using System.Collections;
-using ExitGames.Client.Photon;
+﻿using ExitGames.Client.Photon;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -39,7 +38,6 @@ public class CustomizationToServer : MonoBehaviour
     public const string EVENTSLISTED = "el";
     public const string ADDONSLISTED = "al";
 
-    // Use this for initialization
     public void InitValues()
     {
         if (PhotonNetwork.room == null) return;

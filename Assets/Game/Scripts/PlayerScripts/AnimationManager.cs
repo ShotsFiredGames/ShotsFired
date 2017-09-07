@@ -3,7 +3,6 @@
 public class AnimationManager : MonoBehaviour
 {
     Animator anim;
-    //Animator gunAnim;
     bool shooting;
     Shooting shootingScript;
 
@@ -17,16 +16,11 @@ public class AnimationManager : MonoBehaviour
     public void Armed()
     {
         anim.SetBool("Armed", true);
-        //anim.SetLayerWeight(1, 1);
-        //anim.SetLayerWeight(2, 0);
     }
 
     public void Disarmed()
     {
         anim.SetBool("Armed", false);
-        //anim.SetLayerWeight(2, 1);
-        //anim.SetLayerWeight(1, 0);
-        //anim.SetLayerWeight(6, 0);
     }
     public void ApplyMovementInput(float leftStickX, float leftStickY, float rightStickX, float rightStickY)
     {
@@ -41,9 +35,6 @@ public class AnimationManager : MonoBehaviour
         anim.SetBool("IsSprinting", false);
         anim.SetInteger("State", 1);
         anim.SetBool("IsIdle", true);
-
-        //if (gunAnim == null || !gunAnim.gameObject.activeSelf) return;
-        //gunAnim.SetBool("IsIdle", true);
     }
 
     public void IsMoving()
@@ -51,71 +42,32 @@ public class AnimationManager : MonoBehaviour
         anim.SetInteger("State", 2);
         anim.SetBool("IsIdle", false);
         anim.SetBool("IsSprinting", false);
-
-        //if (gunAnim == null || !gunAnim.gameObject.activeSelf) return;
-        //if (gunAnim.GetBool("IsAiming"))
-        //    gunAnim.SetBool("IsIdle", true);
-        //else
-        //    gunAnim.SetBool("IsIdle", false);
     }
 
     public void IsSprinting()
     {
         anim.SetBool("IsSprinting", true);
         anim.SetBool("IsIdle", false);
-
-        //if (gunAnim == null || !gunAnim.gameObject.activeSelf) return;
-
-        //if (gunAnim.GetBool("IsAiming"))
-        //    gunAnim.SetBool("IsIdle", true);
-        //else
-        //    gunAnim.SetBool("IsSprinting", true);
     }
 
     public void StoppedSprinting()
     {
         anim.SetBool("IsSprinting", true);
-
-        //if (gunAnim == null || !gunAnim.gameObject.activeSelf) return;
-
-        //if (gunAnim.GetBool("IsAiming"))
-        //{
-        //    gunAnim.SetBool("IsIdle", true);
-        //    gunAnim.SetBool("IsSprinting", false);
-        //}
     }
 
     public void IsJumping()
     {
         anim.SetBool("IsJumping", true);
-
-        //if (gunAnim == null || !gunAnim.gameObject.activeSelf) return;
-
-
-        //if(shooting || gunAnim.GetBool("IsAiming"))
-        //    gunAnim.SetBool("IsJumping", false);
-        //else
-        //    gunAnim.SetBool("IsJumping", true);
     }
 
     public void IsLanding()
     {
         anim.SetBool("IsJumping", false);
-
-        //if (gunAnim == null || !gunAnim.gameObject.activeSelf) return;
-        //gunAnim.SetBool("IsJumping", false);
-        //gunAnim.SetBool("IsFalling", false);
     }
 
     public void IsFalling()
     {
         anim.SetBool("IsJumping", true);
-        //if (gunAnim == null || !gunAnim.gameObject.activeSelf) return;
-
-        //if (gunAnim.GetBool("IsAiming"))
-        //    gunAnim.SetBool("IsFalling", false);
-        //else
-        //    gunAnim.SetBool("IsFalling", true);
     }
 
     public void IsAiming()
@@ -145,9 +97,6 @@ public class AnimationManager : MonoBehaviour
             shooting = true;
 
         anim.SetBool("IsFiring", true);
-
-        //if (gunAnim == null || !gunAnim.gameObject.activeSelf) return;
-        //gunAnim.SetBool("IsFiring", true);
     }
 
     public void StoppedFiring()
@@ -156,9 +105,6 @@ public class AnimationManager : MonoBehaviour
             shooting = false;
 
         anim.SetBool("IsFiring", false);
-
-        //if (gunAnim == null || !gunAnim.gameObject.activeSelf) return;
-        //gunAnim.SetBool("IsFiring", false);
     }
 
     public void IsDead(CollisionDetection.CollisionFlag collisionLocation)

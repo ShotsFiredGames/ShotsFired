@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -19,7 +18,6 @@ public class ServerCreateTimer : MonoBehaviour
 
     public void StartTimer()
     {
-        print("Start Timer called");
         if(!countdownActive)
         {
             countdownActive = true;
@@ -37,7 +35,6 @@ public class ServerCreateTimer : MonoBehaviour
             print(i);
             countdownTimer.text = "Please wait " + i + " seconds to create another match.";
         }
-
 
         countdownTimer.text = "Create A Game";
         createButton.interactable = true;

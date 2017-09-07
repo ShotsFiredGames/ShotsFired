@@ -35,7 +35,6 @@ public class PlayerNetwork : MonoBehaviour
     void MasterLoadedGame()
     {
         photonView.RPC("RPC_LoadedGameScene", PhotonTargets.MasterClient);
-        //photonView.RPC("RPC_LoadGameOthers", PhotonTargets.Others);
     }
 
     void NonMasterLoadedGame()
@@ -71,8 +70,6 @@ public class PlayerNetwork : MonoBehaviour
             Destroy(child.gameObject);
         }
         Destroy(ServerLauncher.instance.gameObject.GetComponent<PhotonView>());
-        //Destroy(ServerLauncher.instance.loadingScreen);
-        //Destroy(ServerLauncher.instance.gameObject);
         StartCoroutine(CinematicCameraSystem.instance.StartCinematic());
     }
 

@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class DisableOnScene : MonoBehaviour {
-
+public class DisableOnScene : MonoBehaviour
+{
     public string sceneName;
     public GameObject objectToActivate;
 

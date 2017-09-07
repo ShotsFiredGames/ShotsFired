@@ -27,7 +27,6 @@ public class BombsAway : AddOn
 
     public override void EndAddOn()
     {
-        ///
     }
 
     IEnumerator SpawnBombs()

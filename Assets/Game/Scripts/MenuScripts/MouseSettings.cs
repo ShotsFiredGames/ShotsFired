@@ -1,14 +1,12 @@
 ﻿namespace InControl
 {
-    using System.Collections;
-    using System.Collections.Generic;
     using UnityEngine;
     using UnityEngine.UI;
 
     public class MouseSettings : MonoBehaviour
     {
         public Slider mouseSlider;
-        // Use this for initialization
+
         void Start()
         {
             mouseSlider.onValueChanged.AddListener(delegate { ValueChangeCheck(); });

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 
-public class Teleporter : MonoBehaviour {
+public class Teleporter : MonoBehaviour
+{
     public Transform otherTeleporter;
     public AudioSource teleSource;
     public AudioClip teleportClip;

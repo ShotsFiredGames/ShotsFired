@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class MainMenuObjectWrangler : MonoBehaviour {
-
+public class MainMenuObjectWrangler : MonoBehaviour
+{
     public static MainMenuObjectWrangler Instance { get; private set; }
 
     public GameObject mainMenuPanel;

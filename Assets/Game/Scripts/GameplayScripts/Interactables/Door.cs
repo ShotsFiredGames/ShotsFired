@@ -12,18 +12,12 @@ public class Door : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if(other.tag.Equals("Player"))
-        {
-            print("Open");
             anim.SetBool("IsOpen", true);
-        }
     }
 
     private void OnTriggerExit(Collider other)
     {
         if (other.tag.Equals("Player"))
-        {
-            print("Close");
             anim.SetBool("IsOpen", false);
-        }
     }
 }

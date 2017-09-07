@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.Audio;
-using UnityEngine.UI;
 
 public class PlayerManager : Photon.MonoBehaviour, IPunObservable
 {
@@ -366,7 +365,6 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
         if (flagInfo != null)
             flagInfo.DropFlag();
 
-        //playerMovement.CancelSpeedBoost(); 
         Local_Disarm();
         Local_CancelAbility();       
         photonView.RPC("RPC_Disarm", PhotonTargets.Others);
@@ -395,7 +393,6 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
             case "Juggernaut":
                 juggernaut.ActivateJuggernaut();
                 playerMovement.juggActive = true;
-                //playerMovement.SuperBoots();
                 break;
             case "Overcharged":
                 shooting.ActivateOvercharged();
@@ -410,7 +407,6 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
         {
             case "Juggernaut":
                 juggernaut.ActivateJuggernaut();
-                //playerMovement.SuperBoots();
                 break;
             case "Overcharged":
                 shooting.ActivateOvercharged();
@@ -431,7 +427,6 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
 
     public void Local_CancelAbility()
     {
-        //playerMovement.CancelSuperBoots();
         juggernaut.CancelJuggernaut();
         playerMovement.juggActive = false;
         shooting.CancelOvercharged();
@@ -440,7 +435,6 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
     [PunRPC]
     public void RPC_CancelAbility()
     {
-        //playerMovement.CancelSuperBoots();
         juggernaut.CancelJuggernaut();
         shooting.CancelOvercharged();
     }
@@ -465,7 +459,6 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
 
         if (newGun == null) Debug.LogError("Incorrect Name of Gun");
 
-        // animationManager.SetGunAnimator(newGun.anim);
         shooting.SetWeapon(newGun);
 
         shooting.NotAiming();
@@ -498,7 +491,6 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable
 
         if (newGun == null) Debug.LogError("Incorrect Name of Gun");
 
-        // animationManager.SetGunAnimator(newGun.anim);
         shooting.SetWeapon(newGun);
 
         shooting.NotAiming();

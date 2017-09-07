@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using InControl;
 
 public class Controls : PlayerActionSet
@@ -12,7 +11,6 @@ public class Controls : PlayerActionSet
     public PlayerAction Right;
     public PlayerAction Up;
     public PlayerAction Down;
-    public PlayerAction Crouch;
 
     public PlayerAction LookLeft;
     public PlayerAction LookRight;
@@ -24,7 +22,6 @@ public class Controls : PlayerActionSet
     
     public PlayerAction ScoreBoard;
 
-
     public Controls()
     {
         Fire = CreatePlayerAction("Fire");
@@ -35,7 +32,6 @@ public class Controls : PlayerActionSet
         Right = CreatePlayerAction("Move Right");
         Up = CreatePlayerAction("Move Up");
         Down = CreatePlayerAction("Move Down");
-        Crouch = CreatePlayerAction("Crouch");
 
         LookLeft = CreatePlayerAction("Look Left");
         LookRight = CreatePlayerAction("Look Right");
@@ -47,7 +43,6 @@ public class Controls : PlayerActionSet
         
         ScoreBoard = CreatePlayerAction("Score Board");
     }
-
 
     public static Controls CreateWithDefaultBindings()
     {
@@ -75,9 +70,6 @@ public class Controls : PlayerActionSet
         controls.Left.AddDefaultBinding(Key.A);
         controls.Right.AddDefaultBinding(Key.D);
 
-        controls.Crouch.AddDefaultBinding(InputControlType.RightStickButton);
-        controls.Crouch.AddDefaultBinding(Key.C);
-
         controls.Left.AddDefaultBinding(InputControlType.LeftStickLeft);
         controls.Right.AddDefaultBinding(InputControlType.LeftStickRight);
         controls.Up.AddDefaultBinding(InputControlType.LeftStickUp);
@@ -104,9 +96,6 @@ public class Controls : PlayerActionSet
         
         controls.ListenOptions.IncludeUnknownControllers = true;
         controls.ListenOptions.MaxAllowedBindings = 4;
-        //			playerActions.ListenOptions.MaxAllowedBindingsPerType = 1;
-        //			playerActions.ListenOptions.UnsetDuplicateBindingsOnSet = true;
-        //			playerActions.ListenOptions.IncludeMouseButtons = true;
 
         controls.ListenOptions.OnBindingFound = (action, binding) =>
         {

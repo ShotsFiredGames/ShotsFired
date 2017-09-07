@@ -1,10 +1,8 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class HeadBob : MonoBehaviour
 {
-
     public float headbobSpeed;
     public float headbobAmountX;
     public float headbobAmountY;

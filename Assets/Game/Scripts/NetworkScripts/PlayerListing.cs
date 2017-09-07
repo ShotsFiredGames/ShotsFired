@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerListing : MonoBehaviour {
-
+public class PlayerListing : MonoBehaviour
+{
     public PhotonPlayer PhotonPlayer { get; private set; }
 
     [SerializeField]

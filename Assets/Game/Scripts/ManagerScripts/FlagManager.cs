@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class FlagManager : Photon.MonoBehaviour
 {
+    #region Instance
     //Version of instance taken from "http://wiki.unity3d.com/index.php/AManagerClass"
     private static FlagManager s_Instance = null;
     public static FlagManager instance
@@ -27,6 +28,7 @@ public class FlagManager : Photon.MonoBehaviour
             return s_Instance;
         }
     }
+    #endregion
 
     public byte pointsForCapture { get; set; }
     public byte pointsForHolding { private get; set; }

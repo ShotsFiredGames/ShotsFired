@@ -86,8 +86,6 @@ public class Shooting : Photon.MonoBehaviour
 
             gunBob.ApplyRecoil();
 
-            //ammoUI.text = currentGun.currentAmmo + " / " + currentGun.ammo;
-
             yield return new WaitForSeconds(currentGun.fireFreq);
 
             if (currentGun.currentAmmo <= 0)
@@ -112,7 +110,6 @@ public class Shooting : Photon.MonoBehaviour
 
         currentGun.shootingSource.clip = currentGun.shootingSound;
         currentGun.isFiring = false;
-        //ammoUI.text = currentGun.ammo + " / " + currentGun.ammo;
         muzzleFlash = currentGun.muzzleFlash;
     }
 
@@ -125,11 +122,9 @@ public class Shooting : Photon.MonoBehaviour
                 if (currentGun.gameObject.activeSelf)
                     currentGun.shootingAnim.ResetTrigger("Fire");
             currentGun.SetActiveGun(false);
-            //ammoUI.text = "";
         }
     }
 
-    //maybe make RPC
     public void StopFiring()
     {
         currentGun.shootingSource.PlayOneShot(currentGun.trailClip);

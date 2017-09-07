@@ -6,6 +6,7 @@ using System.Collections.Generic;
 [RequireComponent(typeof(AudioSource))]
 public class AnnouncerManager : MonoBehaviour
 {
+    #region Instance
     //Version of instance taken from "http://wiki.unity3d.com/index.php/AManagerClass"
     private static AnnouncerManager s_Instance = null;
     public static AnnouncerManager instance
@@ -30,6 +31,7 @@ public class AnnouncerManager : MonoBehaviour
             return s_Instance;
         }
     }
+    #endregion
 
     public PhotonView PhotonView { get; private set; }
 
@@ -47,12 +49,8 @@ public class AnnouncerManager : MonoBehaviour
 
     List<EventClips> eventClips = new List<EventClips>();
 
-    //======//
-
     public AddOnClips addOnClips;
     public FillerClips fillerClips;
-
-    //======//
 
     [SerializeField]
     float waitTimeOffset = 1.0f;

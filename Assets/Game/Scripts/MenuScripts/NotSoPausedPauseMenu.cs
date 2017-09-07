@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
-public class NotSoPausedPauseMenu : MonoBehaviour {
-
+public class NotSoPausedPauseMenu : MonoBehaviour
+{
     [SerializeField]
     GameObject pauseMenu;
 
@@ -16,7 +16,8 @@ public class NotSoPausedPauseMenu : MonoBehaviour {
         UpdateCursorLock(true);
     }
 	
-	void Update () {
+	void Update ()
+    {
         if (Input.GetKeyUp(KeyCode.Escape))
             TogglePauseMenu();
 	}

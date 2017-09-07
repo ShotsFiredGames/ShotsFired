@@ -72,16 +72,11 @@ public class PlayerMovement : MonoBehaviour
 
     void Start()
     {
-        //speed = GameCustomization.playerSpeed;
-        //sprintSpeed = (speed + (speed * .5f));
-        //aimSpeed = (speed - (speed * .5f 
-
         SetSpeed((byte)GameCustomization.playerSpeed);
         rb = GetComponent<Rigidbody>();
         playerManager = GetComponent<PlayerManager>();
         _jump = jumpForce;
         playerCamera = GetComponent<PlayerCamera>();
-        //airSpeed = speed * .85f;
         canSprint = true;
         stamina = maxStamina;
         staminaBar.fillAmount = stamina / maxStamina;
@@ -119,7 +114,6 @@ public class PlayerMovement : MonoBehaviour
             {
                 landed = true;
                 jumping = false;
-                //lockMovement = false;
                 playerManager.Landed();
 
                 if (checkFall != null)
@@ -188,7 +182,6 @@ public class PlayerMovement : MonoBehaviour
         direction *= Time.fixedDeltaTime;
         direction = transform.TransformDirection(direction);
         rb.MovePosition(transform.position + direction);
-        //rb.velocity = new Vector3(direction.x, rb.velocity.y, direction.z);
     }
 
     public void Turn(float horizontal2)

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 
-public class DoNotDestroyOnLoad : MonoBehaviour {
+public class DoNotDestroyOnLoad : MonoBehaviour
+{
 
     public static DoNotDestroyOnLoad Instance { get; private set; }
 

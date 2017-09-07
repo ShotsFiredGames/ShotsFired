@@ -2,11 +2,12 @@
 using UnityEngine;
 
 [RequireComponent(typeof(InputField))]
-public class PlayerNameInputField : MonoBehaviour {
-
+public class PlayerNameInputField : MonoBehaviour
+{
     static string playerNamePrefKey = "PlayerName";
 
-	void Start () {
+	void Start ()
+    {
         string defaultName = "Player";
         InputField _inputField = GetComponent<InputField>();
         if(_inputField != null)
